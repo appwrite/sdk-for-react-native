@@ -17,7 +17,7 @@ Appwrite is an open-source backend as a service server that abstract and simplif
 To install
 
 ```bash
-npm install react-native-appwrite --save
+npm install react-native-appwrite react-native-fs react-native-url-polyfill --save
 ```
 
 ## Getting Started
@@ -27,10 +27,19 @@ For you to init your SDK and interact with Appwrite services you need to add a w
 
 From the options, choose to add a **Web** platform and add your client app hostname. By adding your hostname to your project platform you are allowing cross-domain communication between your project and the Appwrite API.
 
+## Setup
+
+On `index.js` add import for `react-native-url-polyfill`
+
+```
+import 'react-native-url-polyfill/auto'
+```
+
 ### Init your SDK
 Initialize your SDK with your Appwrite server API endpoint and project ID which can be found in your project settings page.
 
 ```js
+import { Client } from 'react-native-appwrite';
 // Init your Web SDK
 const client = new Client();
 
@@ -59,6 +68,7 @@ account.create(ID.unique(), 'me@example.com', 'password', 'Jane Doe')
 
 ### Full Example
 ```js
+import { Client, Account } from 'react-native-appwrite';
 // Init your Web SDK
 const client = new Client();
 
