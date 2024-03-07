@@ -11,14 +11,14 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
 
     # Setup Node.js environment
     - name: Use Node.js
-      uses: actions/setup-node@v1
+      uses: actions/setup-node@v4
       with:
-        node-version: '14'
-        registry-url: 'https://registry.npmjs.org/'
+        node-version: '20.x'
+        registry-url: 'https://npm.pkg.github.com'
 
     # Install dependencies (if any) and build your project (if necessary)
     - name: Install dependencies and build
