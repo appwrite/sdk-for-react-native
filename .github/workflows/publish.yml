@@ -18,15 +18,13 @@ jobs:
       uses: actions/setup-node@v4
       with:
         node-version: '20.x'
-        registry-url: 'https://npm.pkg.github.com'
+        registry-url: 'https://registry.npmjs.org'
 
     # Install dependencies (if any) and build your project (if necessary)
     - name: Install dependencies and build
       run: |
         npm install
         npm run build
-      env:
-        NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
 
     # Publish to NPM
     - name: Publish
