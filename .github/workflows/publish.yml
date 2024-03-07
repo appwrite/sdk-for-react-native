@@ -1,0 +1,33 @@
+name: Publish to NPM
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    # Setup Node.js environment
+    - name: Use Node.js
+      uses: actions/setup-node@v1
+      with:
+        node-version: '14'
+        registry-url: 'https://registry.npmjs.org/'
+
+    # Install dependencies (if any) and build your project (if necessary)
+    - name: Install dependencies and build
+      run: |
+        npm install
+        npm run build
+
+    # Publish to NPM
+    - name: Publish
+      run: npm publish
+      env:
+        NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
