@@ -25,6 +25,8 @@ jobs:
       run: |
         npm install
         npm run build
+      env:
+        NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
 
     # Publish to NPM
     - name: Publish
