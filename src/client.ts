@@ -1,6 +1,5 @@
 import 'isomorphic-form-data';
 import { fetch } from 'cross-fetch';
-import { Platform } from 'react-native';
 import { Models } from './models';
 import { Service } from './service';
 
@@ -93,19 +92,19 @@ class AppwriteException extends Error {
 
 class Client {
     config = {
-        endpoint: 'https://HOSTNAME/v1',
+        endpoint: 'https://cloud.appwrite.io/v1',
         endpointRealtime: '',
         project: '',
         jwt: '',
         locale: '',
-        platform: '',
+        session: '',
     };
     headers: Headers = {
-        'x-sdk-name': 'Web',
+        'x-sdk-name': 'React Native',
         'x-sdk-platform': 'client',
-        'x-sdk-language': 'web',
-        'x-sdk-version': '13.0.2',
-        'X-Appwrite-Response-Format': '1.4.0',
+        'x-sdk-language': 'reactnative',
+        'x-sdk-version': '0.2.0',
+        'X-Appwrite-Response-Format': '1.5.0',
     };
 
     /**
@@ -133,20 +132,6 @@ class Client {
      */
     setEndpointRealtime(endpointRealtime: string): this {
         this.config.endpointRealtime = endpointRealtime;
-
-        return this;
-    }
-
-    /**
-     * Set platform
-     * 
-     * Set platform. Will be used as origin for all requests.
-     * 
-     * @param {string} platform
-     * @returns {this}
-     */
-    setPlatform(platform: string): this {
-        this.config.platform = platform;
 
         return this;
     }
@@ -191,6 +176,21 @@ class Client {
     setLocale(value: string): this {
         this.headers['X-Appwrite-Locale'] = value;
         this.config.locale = value;
+        return this;
+    }
+
+    /**
+     * Set Session
+     *
+     * The user session to authenticate with
+     *
+     * @param value string
+     *
+     * @return {this}
+     */
+    setSession(value: string): this {
+        this.headers['X-Appwrite-Session'] = value;
+        this.config.session = value;
         return this;
     }
 
@@ -248,12 +248,7 @@ class Client {
                 }
 
                 this.realtime.url = url;
-                // @ts-ignore
-                this.realtime.socket = new WebSocket(url, undefined, {
-                    headers: {
-                        Origin: `appwrite-${Platform.OS}://${this.config.platform}`
-                    }
-                });
+                this.realtime.socket = new WebSocket(url);
                 this.realtime.socket.addEventListener('message', this.realtime.onMessage);
                 this.realtime.socket.addEventListener('open', _event => {
                     this.realtime.reconnectAttempts = 0;
@@ -280,7 +275,7 @@ class Client {
                 })
             }
         },
-        onMessage: async (event) => {
+        onMessage: (event) => {
             try {
                 const message: RealtimeResponse = JSON.parse(event.data);
                 this.realtime.lastMessage = message;
@@ -309,7 +304,7 @@ class Client {
         cleanUp: channels => {
             this.realtime.channels.forEach(channel => {
                 if (channels.includes(channel)) {
-                    let found = Array.from(this.realtime.subscriptions).some(([_key, subscription]) => {
+                    let found = Array.from(this.realtime.subscriptions).some(([_key, subscription] )=> {
                         return subscription.channels.includes(channel);
                     })
 
@@ -368,13 +363,18 @@ class Client {
     async call(method: string, url: URL, headers: Headers = {}, params: Payload = {}): Promise<any> {
         method = method.toUpperCase();
 
+
         headers = Object.assign({}, this.headers, headers);
-        headers.Origin = `appwrite-${Platform.OS}://${this.config.platform}`;
+
         let options: RequestInit = {
             method,
             headers,
             credentials: 'include'
         };
+
+        if (typeof window !== 'undefined' && window.localStorage) {
+            headers['X-Fallback-Cookies'] = window.localStorage.getItem('cookieFallback') ?? '';
+        }
 
         if (method === 'GET') {
             for (const [key, value] of Object.entries(Service.flatten(params))) {
@@ -419,6 +419,13 @@ class Client {
 
             if (400 <= response.status) {
                 throw new AppwriteException(data?.message, response.status, data?.type, data);
+            }
+
+            const cookieFallback = response.headers.get('X-Fallback-Cookies');
+
+            if (typeof window !== 'undefined' && window.localStorage && cookieFallback) {
+                window.console.warn('Appwrite is using localStorage for session management. Increase your security by adding a custom domain as your API endpoint.');
+                window.localStorage.setItem('cookieFallback', cookieFallback);
             }
 
             return data;

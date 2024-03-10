@@ -2,6 +2,8 @@ import { Service } from '../service';
 import { AppwriteException, Client } from '../client';
 import type { Models } from '../models';
 import type { UploadProgress, Payload } from '../client';
+import fs from 'react-native-fs'
+
 
 export class Teams extends Service {
 
