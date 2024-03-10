@@ -20,7 +20,6 @@ jobs:
         node-version: '20.x'
         registry-url: 'https://registry.npmjs.org'
 
-    # Install dependencies (if any) and build your project (if necessary)
     - name: Install dependencies and build
       run: |
         npm install
