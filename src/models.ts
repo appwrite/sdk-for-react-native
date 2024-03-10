@@ -365,9 +365,17 @@ export namespace Models {
          */
         phoneVerification: boolean;
         /**
+         * Multi factor authentication status.
+         */
+        mfa: boolean;
+        /**
          * User preferences as a key-value object
          */
         prefs: Preferences;
+        /**
+         * A user-owned message receiver. A single user may have multiple e.g. emails, phones, and a browser. Each target is registered with a single provider.
+         */
+        targets: Target[];
         /**
          * Most recent access date in ISO 8601 format. This attribute is only updated again after 24 hours.
          */
@@ -586,6 +594,18 @@ export namespace Models {
          * Returns true if this the current user session.
          */
         current: boolean;
+        /**
+         * Returns a list of active session factors.
+         */
+        factors: string[];
+        /**
+         * Secret used to authenticate the user. Only included if the request was made with an API key
+         */
+        secret: string;
+        /**
+         * Most recent date in ISO 8601 format when the session successfully passed MFA challenge.
+         */
+        mfaUpdatedAt: string;
     }
     /**
      * Identity
@@ -656,6 +676,10 @@ export namespace Models {
          * Token expiration date in ISO 8601 format.
          */
         expire: string;
+        /**
+         * Security phrase of a token. Empty if security phrase was not requested when creating a token. It includes randomly generated phrase which is also sent in the external resource such as email.
+         */
+        phrase: string;
     }
     /**
      * JWT
@@ -839,6 +863,10 @@ export namespace Models {
          */
         confirm: boolean;
         /**
+         * Multi factor authentication status, true if the user has MFA enabled or false otherwise.
+         */
+        mfa: boolean;
+        /**
          * User list of roles
          */
         roles: string[];
@@ -1017,5 +1045,143 @@ export namespace Models {
          * Header value.
          */
         value: string;
+    }
+    /**
+     * MFA Challenge
+     */
+    export type MfaChallenge = {
+        /**
+         * Token ID.
+         */
+        $id: string;
+        /**
+         * Token creation date in ISO 8601 format.
+         */
+        $createdAt: string;
+        /**
+         * User ID.
+         */
+        userId: string;
+        /**
+         * Token expiration date in ISO 8601 format.
+         */
+        expire: string;
+    }
+    /**
+     * MFA Recovery Codes
+     */
+    export type MfaRecoveryCodes = {
+        /**
+         * Recovery codes.
+         */
+        recoveryCodes: string[];
+    }
+    /**
+     * MFAType
+     */
+    export type MfaType = {
+        /**
+         * Secret token used for TOTP factor.
+         */
+        secret: string;
+        /**
+         * URI for authenticator apps.
+         */
+        uri: string;
+    }
+    /**
+     * MFAFactors
+     */
+    export type MfaFactors = {
+        /**
+         * TOTP
+         */
+        totp: boolean;
+        /**
+         * Phone
+         */
+        phone: boolean;
+        /**
+         * Email
+         */
+        email: boolean;
+    }
+    /**
+     * Subscriber
+     */
+    export type Subscriber = {
+        /**
+         * Subscriber ID.
+         */
+        $id: string;
+        /**
+         * Subscriber creation time in ISO 8601 format.
+         */
+        $createdAt: string;
+        /**
+         * Subscriber update date in ISO 8601 format.
+         */
+        $updatedAt: string;
+        /**
+         * Target ID.
+         */
+        targetId: string;
+        /**
+         * Target.
+         */
+        target: Target;
+        /**
+         * Topic ID.
+         */
+        userId: string;
+        /**
+         * User Name.
+         */
+        userName: string;
+        /**
+         * Topic ID.
+         */
+        topicId: string;
+        /**
+         * The target provider type. Can be one of the following: `email`, `sms` or `push`.
+         */
+        providerType: string;
+    }
+    /**
+     * Target
+     */
+    export type Target = {
+        /**
+         * Target ID.
+         */
+        $id: string;
+        /**
+         * Target creation time in ISO 8601 format.
+         */
+        $createdAt: string;
+        /**
+         * Target update date in ISO 8601 format.
+         */
+        $updatedAt: string;
+        /**
+         * Target Name.
+         */
+        name: string;
+        /**
+         * User ID.
+         */
+        userId: string;
+        /**
+         * Provider ID.
+         */
+        providerId?: string;
+        /**
+         * The target provider type. Can be one of the following: `email`, `sms` or `push`.
+         */
+        providerType: string;
+        /**
+         * The target identifier.
+         */
+        identifier: string;
     }
 }

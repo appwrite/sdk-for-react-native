@@ -2,6 +2,8 @@ import { Service } from '../service';
 import { AppwriteException, Client } from '../client';
 import type { Models } from '../models';
 import type { UploadProgress, Payload } from '../client';
+import fs from 'react-native-fs'
+
 
 export class Databases extends Service {
 
@@ -55,12 +57,12 @@ export class Databases extends Service {
      * @param {string} databaseId
      * @param {string} collectionId
      * @param {string} documentId
-     * @param {Omit<Document, keyof Models.Document>} data
+     * @param {object} data
      * @param {string[]} permissions
      * @throws {AppwriteException}
      * @returns {Promise}
     */
-    async createDocument<Document extends Models.Document>(databaseId: string, collectionId: string, documentId: string, data: Omit<Document, keyof Models.Document>, permissions?: string[]): Promise<Document> {
+    async createDocument<Document extends Models.Document>(databaseId: string, collectionId: string, documentId: string, data: object, permissions?: string[]): Promise<Document> {
         if (typeof databaseId === 'undefined') {
             throw new AppwriteException('Missing required parameter: "databaseId"');
         }
@@ -146,12 +148,12 @@ export class Databases extends Service {
      * @param {string} databaseId
      * @param {string} collectionId
      * @param {string} documentId
-     * @param {Partial<Omit<Document, keyof Models.Document>>} data
+     * @param {object} data
      * @param {string[]} permissions
      * @throws {AppwriteException}
      * @returns {Promise}
     */
-    async updateDocument<Document extends Models.Document>(databaseId: string, collectionId: string, documentId: string, data?: Partial<Omit<Document, keyof Models.Document>>, permissions?: string[]): Promise<Document> {
+    async updateDocument<Document extends Models.Document>(databaseId: string, collectionId: string, documentId: string, data?: object, permissions?: string[]): Promise<Document> {
         if (typeof databaseId === 'undefined') {
             throw new AppwriteException('Missing required parameter: "databaseId"');
         }

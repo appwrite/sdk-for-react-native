@@ -1,4 +1,4 @@
-Copyright (c) 2023 Appwrite (https://appwrite.io) and individual contributors.
+Copyright (c) 2024 Appwrite (https://appwrite.io) and individual contributors.
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
