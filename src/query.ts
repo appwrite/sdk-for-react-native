@@ -1,74 +1,101 @@
 type QueryTypesSingle = string | number | boolean;
-export type QueryTypesList = string[] | number[] | boolean[];
+export type QueryTypesList = string[] | number[] | boolean[] | Query[];
 export type QueryTypes = QueryTypesSingle | QueryTypesList;
+type AttributesTypes = string | string[];
 
 export class Query {
+  method: string;
+  attribute: AttributesTypes | undefined;
+  values: QueryTypesList | undefined;
+
+  constructor(
+    method: string,
+    attribute?: AttributesTypes,
+    values?: QueryTypes
+  ) {
+    this.method = method;
+    this.attribute = attribute;
+
+    if (values !== undefined) {
+      if (Array.isArray(values)) {
+        this.values = values;
+      } else {
+        this.values = [values] as QueryTypesList;
+      }
+    }
+  }
+
+  toString(): string {
+    return JSON.stringify({
+      method: this.method,
+      attribute: this.attribute,
+      values: this.values,
+    });
+  }
+
   static equal = (attribute: string, value: QueryTypes): string =>
-    Query.addQuery(attribute, "equal", value);
+    new Query("equal", attribute, value).toString();
 
   static notEqual = (attribute: string, value: QueryTypes): string =>
-    Query.addQuery(attribute, "notEqual", value);
+    new Query("notEqual", attribute, value).toString();
 
   static lessThan = (attribute: string, value: QueryTypes): string =>
-    Query.addQuery(attribute, "lessThan", value);
+    new Query("lessThan", attribute, value).toString();
 
   static lessThanEqual = (attribute: string, value: QueryTypes): string =>
-    Query.addQuery(attribute, "lessThanEqual", value);
+    new Query("lessThanEqual", attribute, value).toString();
 
   static greaterThan = (attribute: string, value: QueryTypes): string =>
-    Query.addQuery(attribute, "greaterThan", value);
+    new Query("greaterThan", attribute, value).toString();
 
   static greaterThanEqual = (attribute: string, value: QueryTypes): string =>
-    Query.addQuery(attribute, "greaterThanEqual", value);
+    new Query("greaterThanEqual", attribute, value).toString();
 
   static isNull = (attribute: string): string =>
-    `isNull("${attribute}")`;
+    new Query("isNull", attribute).toString();
 
   static isNotNull = (attribute: string): string =>
-    `isNotNull("${attribute}")`;
+    new Query("isNotNull", attribute).toString();
 
-  static between = (attribute: string, start: string|number, end: string|number): string =>
-    `between("${attribute}", ${Query.parseValues(start)}, ${Query.parseValues(end)})`;
+  static between = (attribute: string, start: string | number, end: string | number) =>
+    new Query("between", attribute, [start, end] as QueryTypesList).toString();
 
   static startsWith = (attribute: string, value: string): string =>
-    Query.addQuery(attribute, "startsWith", value);
+    new Query("startsWith", attribute, value).toString();
 
   static endsWith = (attribute: string, value: string): string =>
-    Query.addQuery(attribute, "endsWith", value);
+    new Query("endsWith", attribute, value).toString();
 
   static select = (attributes: string[]): string =>
-    `select([${attributes.map((attr: string) => `"${attr}"`).join(",")}])`;
+    new Query("select", undefined, attributes).toString();
 
   static search = (attribute: string, value: string): string =>
-    Query.addQuery(attribute, "search", value);
+    new Query("search", attribute, value).toString();
 
   static orderDesc = (attribute: string): string =>
-    `orderDesc("${attribute}")`;
+    new Query("orderDesc", attribute).toString();
 
   static orderAsc = (attribute: string): string =>
-    `orderAsc("${attribute}")`;
+    new Query("orderAsc", attribute).toString();
 
   static cursorAfter = (documentId: string): string =>
-    `cursorAfter("${documentId}")`;
+    new Query("cursorAfter", undefined, documentId).toString();
 
   static cursorBefore = (documentId: string): string =>
-    `cursorBefore("${documentId}")`;
+    new Query("cursorBefore", undefined, documentId).toString();
 
   static limit = (limit: number): string =>
-    `limit(${limit})`;
+    new Query("limit", undefined, limit).toString();
 
   static offset = (offset: number): string =>
-    `offset(${offset})`;
+    new Query("offset", undefined, offset).toString();
 
-  private static addQuery = (attribute: string, method: string, value: QueryTypes): string =>
-    value instanceof Array
-      ? `${method}("${attribute}", [${value
-          .map((v: QueryTypesSingle) => Query.parseValues(v))
-          .join(",")}])`
-      : `${method}("${attribute}", [${Query.parseValues(value)}])`;
+  static contains = (attribute: string, value: string | string[]): string =>
+    new Query("contains", attribute, value).toString();
 
-  private static parseValues = (value: QueryTypes): string =>
-    typeof value === "string" || value instanceof String
-      ? `"${value}"`
-      : `${value}`;
+  static or = (queries: string[]) =>
+    new Query("or", undefined, queries.map((query) => JSON.parse(query))).toString();
+
+  static and = (queries: string[]) =>
+    new Query("and", undefined, queries.map((query) => JSON.parse(query))).toString();
 }
