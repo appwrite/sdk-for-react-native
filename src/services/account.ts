@@ -732,11 +732,8 @@ export class Account extends Service {
         for (const [key, value] of Object.entries(Service.flatten(payload))) {
             uri.searchParams.append(key, value);
         }
-        if (typeof window !== 'undefined' && window?.location) {
-            window.location.href = uri.toString();
-        } else {
-            return uri;
-        }
+
+        throw new AppwriteException('Not yet supported', 500, 'NOT_SUPPORTED');
     }
 
     /**

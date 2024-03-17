@@ -1,4 +1,4 @@
-# Appwrite React Native SDK
+# Appwrite React Native SDK (BETA)
 
 ![License](https://img.shields.io/github/license/appwrite/sdk-for-react-native.svg?style=flat-square)
 ![Version](https://img.shields.io/badge/api%20version-1.4.12-blue.svg?style=flat-square)
@@ -11,6 +11,8 @@
 Appwrite is an open-source backend as a service server that abstract and simplify complex and repetitive development tasks behind a very simple to use REST API. Appwrite aims to help you develop your apps faster and in a more secure way. Use the React Native SDK to integrate your app with the Appwrite server to easily start interacting with all of Appwrite backend APIs and tools. For full API documentation and tutorials go to [https://appwrite.io/docs](https://appwrite.io/docs)
 
 ![Appwrite](https://github.com/appwrite/appwrite/raw/main/public/images/github.png)
+
+> Warning! - OAuth based session creation is not yet supported
 
 ## Installation
 
