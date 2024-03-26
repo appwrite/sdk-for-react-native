@@ -1,4 +1,3 @@
-import 'isomorphic-form-data';
 import { fetch } from 'cross-fetch';
 import { Models } from './models';
 import { Service } from './service';

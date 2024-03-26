@@ -4,11 +4,10 @@
   "description": "Appwrite is an open-source self-hosted backend server that abstract and simplify complex and repetitive development tasks behind a very simple REST API",
   "version": "0.1.1",
   "license": "BSD-3-Clause",
-  "main": "dist/cjs/sdk.js",
+  "main": "dist/esm/sdk.js",
   "exports": {
     ".": {
       "import": "./dist/esm/sdk.js",
-      "require": "./dist/cjs/sdk.js",
       "types": "./types/index.d.ts"
     },
     "./package.json": "./package.json"
@@ -33,13 +32,12 @@
     "typescript": "4.7.2"
   },
   "dependencies": {
-    "cross-fetch": "3.1.5",
-    "isomorphic-form-data": "2.0.0"
+    "cross-fetch": "4.0.0",
+    "expo-file-system": "16.0.8",
+    "expo-device": "5.9.3"
   },
   "peerDependencies": {
-      "expo": "*",
-      "expo-file-system": "16.0.8",
-      "expo-device": "5.9.3"
+      "expo": "*"
   },
   "jsdelivr": "dist/iife/sdk.js",
   "unpkg": "dist/iife/sdk.js"

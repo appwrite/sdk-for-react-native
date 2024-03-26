@@ -7,25 +7,9 @@ export default {
     plugins: [typescript()],
     output: [
         {
-            format: "cjs",
-            file: pkg.main,
-            esModule: false,
-            sourcemap: true,
-        },
-        {
             format: "es",
             file: pkg.module,
             sourcemap: true,
-        },
-        {
-            format: "iife",
-            file: pkg.jsdelivr,
-            name: "Appwrite",
-            extend: true,
-            globals: {
-                "cross-fetch": "window",
-                "FormData": "FormData",
-            },
-        },
+        }
     ],
 };
