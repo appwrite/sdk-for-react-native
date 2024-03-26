@@ -1,4 +1,3 @@
-import { fetch } from 'cross-fetch';
 import { Models } from './models';
 import { Service } from './service';
 import * as Device from 'expo-device';
