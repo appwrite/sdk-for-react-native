@@ -38,7 +38,8 @@
   },
   "peerDependencies": {
       "expo": "*",
-      "expo-file-system": "16.0.8"
+      "expo-file-system": "16.0.8",
+      "expo-device": "5.9.3"
   },
   "jsdelivr": "dist/iife/sdk.js",
   "unpkg": "dist/iife/sdk.js"
