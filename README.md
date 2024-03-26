@@ -1,4 +1,4 @@
-# Appwrite React Native SDK
+# Appwrite React Native SDK [BETA]
 
 ![License](https://img.shields.io/github/license/appwrite/sdk-for-react-native.svg?style=flat-square)
 ![Version](https://img.shields.io/badge/api%20version-1.4.12-blue.svg?style=flat-square)
@@ -17,13 +17,7 @@ Appwrite is an open-source backend as a service server that abstract and simplif
 To install
 
 ```bash
-npm install react-native-appwrite react-native-fs react-native-url-polyfill --save
-```
-
-For iOS apps, you will need to install cocoapod dependencies.
-
-```sh
-cd iOS && pod install && cd ..
+npx expo install react-native-appwrite react-native-url-polyfill
 ```
 
 ## Getting Started
@@ -41,18 +35,12 @@ Add your app's **name** and **package name**, Your package name is generally the
 
 ## Setup
 
-On `index.js` add import for `react-native-url-polyfill`
-
-```
-import 'react-native-url-polyfill/auto'
-```
-
 ### Init your SDK
 Initialize your SDK with your Appwrite server API endpoint and project ID which can be found in your project settings page.
 
 ```js
 import { Client } from 'react-native-appwrite';
-// Init your Web SDK
+// Init your react-native SDK
 const client = new Client();
 
 client
