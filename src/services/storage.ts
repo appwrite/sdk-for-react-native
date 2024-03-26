@@ -2,7 +2,7 @@ import { Service } from '../service';
 import { AppwriteException, Client } from '../client';
 import type { Models } from '../models';
 import type { UploadProgress, Payload } from '../client';
-import fs from 'react-native-fs'
+import * as FileSystem from 'expo-file-system';
 
 export class Storage extends Service {
 
@@ -134,7 +134,11 @@ export class Storage extends Service {
                 apiHeaders['x-appwrite-id'] = response.$id;
             }
 
-            let chunk = await fs.read(file.uri, Service.CHUNK_SIZE, offset, 'base64');
+            let chunk = await FileSystem.readAsStringAsync(file.uri, {
+                encoding: FileSystem.EncodingType.Base64,
+                position: offset,
+                length: Service.CHUNK_SIZE
+            });
 
             payload['file'] = {uri: `data:${file.type};base64,${chunk}`, name: file.name, type: file.type};
             response = await this.client.call('post', uri, apiHeaders, payload);

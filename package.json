@@ -30,7 +30,6 @@
     "rollup": "2.75.4",
     "serve-handler": "6.1.0",
     "tslib": "2.4.0",
-    "react-native-fs": "^2.20.0",
     "typescript": "4.7.2"
   },
   "dependencies": {
@@ -38,9 +37,8 @@
     "isomorphic-form-data": "2.0.0"
   },
   "peerDependencies": {
-    "react-native": "*",
-    "react-native-fs": "^2.20.0",
-    "react-native-url-polyfill": "^2.0.0"
+      "expo": "*",
+      "expo-file-system": "16.0.8"
   },
   "jsdelivr": "dist/iife/sdk.js",
   "unpkg": "dist/iife/sdk.js"
