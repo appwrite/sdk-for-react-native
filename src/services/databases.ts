@@ -2,7 +2,8 @@ import { Service } from '../service';
 import { AppwriteException, Client } from '../client';
 import type { Models } from '../models';
 import type { UploadProgress, Payload } from '../client';
-import fs from 'react-native-fs'
+import * as FileSystem from 'expo-file-system';
+import * as Device from 'expo-device';
 
 
 export class Databases extends Service {

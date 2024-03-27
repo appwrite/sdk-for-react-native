@@ -1,7 +1,6 @@
-import 'isomorphic-form-data';
-import { fetch } from 'cross-fetch';
 import { Models } from './models';
 import { Service } from './service';
+import * as Device from 'expo-device'
 
 type Payload = {
     [key: string]: any;
@@ -248,7 +247,11 @@ class Client {
                 }
 
                 this.realtime.url = url;
-                this.realtime.socket = new WebSocket(url);
+                this.realtime.socket = new WebSocket(url, undefined, {
+                    headers: {
+                        Origin: `appwrite-${Device.osName}://${this.config.platform}`
+                    }
+                });
                 this.realtime.socket.addEventListener('message', this.realtime.onMessage);
                 this.realtime.socket.addEventListener('open', _event => {
                     this.realtime.reconnectAttempts = 0;
@@ -365,6 +368,7 @@ class Client {
 
 
         headers = Object.assign({}, this.headers, headers);
+        headers.Origin = `appwrite-${Device.osName}://${this.config.platform}`
 
         let options: RequestInit = {
             method,
