@@ -38,7 +38,5 @@
   },
   "peerDependencies": {
       "expo": "*"
-  },
-  "jsdelivr": "dist/iife/sdk.js",
-  "unpkg": "dist/iife/sdk.js"
+  }
 }
