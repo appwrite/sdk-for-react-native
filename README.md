@@ -31,7 +31,7 @@ Then, under **Add a platform**, add a **Android app** or a **Apple app**. You ca
 Add your app **name** and **Bundle ID**. You can find your **Bundle Identifier** in the **General** tab for your app's primary target in XCode.
 
 #### Android steps
-Add your app's **name** and **package name**, Your package name is generally the **applicationId** in your app-level [build.gradle](https://github.com/appwrite/playground-for-flutter/blob/master/android/app/build.gradle#L41) file.
+Add your app's **name** and **package name**, Your package name is generally the **applicationId** in your app-level `build.gradle` file.
 
 ## Setup
 
