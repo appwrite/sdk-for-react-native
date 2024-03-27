@@ -706,37 +706,7 @@ export class Account extends Service {
      * @returns {void|string}
     */
     createOAuth2Session(provider: string, success?: string, failure?: string, scopes?: string[]): void | URL {
-        if (typeof provider === 'undefined') {
-            throw new AppwriteException('Missing required parameter: "provider"');
-        }
-
-        const apiPath = '/account/sessions/oauth2/{provider}'.replace('{provider}', provider);
-        const payload: Payload = {};
-
-        if (typeof success !== 'undefined') {
-            payload['success'] = success;
-        }
-
-        if (typeof failure !== 'undefined') {
-            payload['failure'] = failure;
-        }
-
-        if (typeof scopes !== 'undefined') {
-            payload['scopes'] = scopes;
-        }
-
-        const uri = new URL(this.client.config.endpoint + apiPath);
-        payload['project'] = this.client.config.project;
-
-
-        for (const [key, value] of Object.entries(Service.flatten(payload))) {
-            uri.searchParams.append(key, value);
-        }
-        if (typeof window !== 'undefined' && window?.location) {
-            window.location.href = uri.toString();
-        } else {
-            return uri;
-        }
+        throw new AppwriteException('Not yet supported');
     }
 
     /**
