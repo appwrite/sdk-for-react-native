@@ -3,6 +3,7 @@ import { AppwriteException, Client } from '../client';
 import type { Models } from '../models';
 import type { UploadProgress, Payload } from '../client';
 import * as FileSystem from 'expo-file-system';
+import * as Device from 'expo-device'
 
 export class Storage extends Service {
 
@@ -139,8 +140,12 @@ export class Storage extends Service {
                 position: offset,
                 length: Service.CHUNK_SIZE
             });
-
-            payload['file'] = {uri: `data:${file.type};base64,${chunk}`, name: file.name, type: file.type};
+            var path = `data:${file.type};base64,${chunk}`;
+            if (Device.osName == 'Android') {
+                path = FileSystem.cacheDirectory + '/tmp_chunk';
+                await FileSystem.writeAsStringAsync(path, chunk, {encoding: FileSystem.EncodingType.Base64});
+            }
+            payload['file'] = {uri: path, name: file.name, type: file.type};
             response = await this.client.call('post', uri, apiHeaders, payload);
 
             if (onProgress) {
