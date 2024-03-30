@@ -794,6 +794,44 @@ export class Account extends Service {
         }, payload);
     }
 
+         /**
+     * Create session
+     *
+     * Use this endpoint to create a session from token. Provide the **userId**
+     * and **secret** parameters from the successful response of authentication
+     * flows initiated by token creation. For example, magic URL and phone login.
+     *
+     * @param {string} userId
+     * @param {string} secret
+     * @throws {AppwriteException}
+     * @returns {Promise}
+    */
+    async createSession(userId: string, secret: string): Promise<Models.Session> {
+        if (typeof userId === 'undefined') {
+            throw new AppwriteException('Missing required parameter: "userId"');
+        }
+
+        if (typeof secret === 'undefined') {
+            throw new AppwriteException('Missing required parameter: "secret"');
+        }
+
+        const apiPath = '/account/sessions/token';
+        const payload: Payload = {};
+
+        if (typeof userId !== 'undefined') {
+            payload['userId'] = userId;
+        }
+
+        if (typeof secret !== 'undefined') {
+            payload['secret'] = secret;
+        }
+
+        const uri = new URL(this.client.config.endpoint + apiPath);
+        return await this.client.call('post', uri, {
+            'content-type': 'application/json',
+        }, payload);
+    }
+
     /**
      * Get session
      *
