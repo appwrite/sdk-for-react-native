@@ -34,9 +34,10 @@
   },
   "dependencies": {
     "expo-file-system": "16.0.8",
-    "expo-device": "5.9.3"
+    "react-native": "^0.73.6"
   },
   "peerDependencies": {
-      "expo": "*"
+    "expo": "*",
+    "react-native": "*"
   }
 }

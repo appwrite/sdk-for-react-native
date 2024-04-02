@@ -141,7 +141,7 @@ export class Storage extends Service {
                 length: Service.CHUNK_SIZE
             });
             var path = `data:${file.type};base64,${chunk}`;
-            if (Platform.os.toLowerCase() == 'android') {
+            if (Platform.OS.toLowerCase() == 'android') {
                 path = FileSystem.cacheDirectory + '/tmp_chunk';
                 await FileSystem.writeAsStringAsync(path, chunk, {encoding: FileSystem.EncodingType.Base64});
             }
