@@ -3,7 +3,7 @@ import { AppwriteException, Client } from '../client';
 import type { Models } from '../models';
 import type { UploadProgress, Payload } from '../client';
 import * as FileSystem from 'expo-file-system';
-import * as Device from 'expo-device';
+import { Platform } from 'react-native';
 
 
 export class Teams extends Service {

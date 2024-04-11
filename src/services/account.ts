@@ -3,7 +3,7 @@ import { AppwriteException, Client } from '../client';
 import type { Models } from '../models';
 import type { UploadProgress, Payload } from '../client';
 import * as FileSystem from 'expo-file-system';
-import * as Device from 'expo-device';
+import { Platform } from 'react-native';
 
 import { AuthenticatorType } from '../enums/authenticator-type';
 import { AuthenticationFactor } from '../enums/authentication-factor';
@@ -935,11 +935,7 @@ export class Account extends Service {
         for (const [key, value] of Object.entries(Service.flatten(payload))) {
             uri.searchParams.append(key, value);
         }
-        if (typeof window !== 'undefined' && window?.location) {
-            window.location.href = uri.toString();
-        } else {
-            return uri;
-        }
+        return uri;
     }
 
     /**
@@ -1370,11 +1366,7 @@ export class Account extends Service {
         for (const [key, value] of Object.entries(Service.flatten(payload))) {
             uri.searchParams.append(key, value);
         }
-        if (typeof window !== 'undefined' && window?.location) {
-            window.location.href = uri.toString();
-        } else {
-            return uri;
-        }
+        return uri;
     }
 
     /**

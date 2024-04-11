@@ -1,6 +1,6 @@
 import { Models } from './models';
 import { Service } from './service';
-import * as Device from 'expo-device'
+import { Platform } from 'react-native';
 
 type Payload = {
     [key: string]: any;
@@ -97,12 +97,13 @@ class Client {
         jwt: '',
         locale: '',
         session: '',
+        platform: '',
     };
     headers: Headers = {
         'x-sdk-name': 'React Native',
         'x-sdk-platform': 'client',
         'x-sdk-language': 'reactnative',
-        'x-sdk-version': '0.2.0',
+        'x-sdk-version': '0.3.0',
         'X-Appwrite-Response-Format': '1.5.0',
     };
 
@@ -131,6 +132,20 @@ class Client {
      */
     setEndpointRealtime(endpointRealtime: string): this {
         this.config.endpointRealtime = endpointRealtime;
+
+        return this;
+    }
+
+    /**
+     * Set platform
+     * 
+     * Set platform. Will be used as origin for all requests.
+     * 
+     * @param {string} platform
+     * @returns {this}
+     */
+    setPlatform(platform: string): this {
+        this.config.platform = platform;
 
         return this;
     }
@@ -247,9 +262,10 @@ class Client {
                 }
 
                 this.realtime.url = url;
+                // @ts-ignore
                 this.realtime.socket = new WebSocket(url, undefined, {
                     headers: {
-                        Origin: `appwrite-${Device.osName}://${this.config.platform}`
+                        Origin: `appwrite-${Platform.OS}://${this.config.platform}`
                     }
                 });
                 this.realtime.socket.addEventListener('message', this.realtime.onMessage);
@@ -368,17 +384,13 @@ class Client {
 
 
         headers = Object.assign({}, this.headers, headers);
-        headers.Origin = `appwrite-${Device.osName}://${this.config.platform}`
+        headers.Origin = `appwrite-${Platform.OS}://${this.config.platform}`
 
         let options: RequestInit = {
             method,
             headers,
             credentials: 'include'
         };
-
-        if (typeof window !== 'undefined' && window.localStorage) {
-            headers['X-Fallback-Cookies'] = window.localStorage.getItem('cookieFallback') ?? '';
-        }
 
         if (method === 'GET') {
             for (const [key, value] of Object.entries(Service.flatten(params))) {

@@ -3,7 +3,7 @@ import { AppwriteException, Client } from '../client';
 import type { Models } from '../models';
 import type { UploadProgress, Payload } from '../client';
 import * as FileSystem from 'expo-file-system';
-import * as Device from 'expo-device';
+import { Platform } from 'react-native';
 
 import { ImageGravity } from '../enums/image-gravity';
 import { ImageFormat } from '../enums/image-format';
@@ -130,6 +130,7 @@ export class Storage extends Service {
             }
         }
 
+        let timestamp = new Date().getTime();
         while (offset < size) {
             let end = Math.min(offset + Service.CHUNK_SIZE - 1, size - 1);
 
@@ -144,8 +145,8 @@ export class Storage extends Service {
                 length: Service.CHUNK_SIZE
             });
             var path = `data:${file.type};base64,${chunk}`;
-            if (Device.osName === 'Android') {
-                path = FileSystem.cacheDirectory + '/tmp_chunk';
+            if (Platform.OS.toLowerCase() === 'android') {
+                path = FileSystem.cacheDirectory + '/tmp_chunk_' + timestamp;
                 await FileSystem.writeAsStringAsync(path, chunk, {encoding: FileSystem.EncodingType.Base64});
             }
 
