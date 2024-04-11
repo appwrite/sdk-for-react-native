@@ -91,19 +91,20 @@ class AppwriteException extends Error {
 
 class Client {
     config = {
-        endpoint: 'https://HOSTNAME/v1',
+        endpoint: 'https://cloud.appwrite.io/v1',
         endpointRealtime: '',
         project: '',
         jwt: '',
         locale: '',
+        session: '',
         platform: '',
     };
     headers: Headers = {
-        'x-sdk-name': 'Web',
+        'x-sdk-name': 'React Native',
         'x-sdk-platform': 'client',
-        'x-sdk-language': 'web',
-        'x-sdk-version': '13.0.2',
-        'X-Appwrite-Response-Format': '1.4.0',
+        'x-sdk-language': 'reactnative',
+        'x-sdk-version': '0.3.0',
+        'X-Appwrite-Response-Format': '1.5.0',
     };
 
     /**
@@ -189,6 +190,21 @@ class Client {
     setLocale(value: string): this {
         this.headers['X-Appwrite-Locale'] = value;
         this.config.locale = value;
+        return this;
+    }
+
+    /**
+     * Set Session
+     *
+     * The user session to authenticate with
+     *
+     * @param value string
+     *
+     * @return {this}
+     */
+    setSession(value: string): this {
+        this.headers['X-Appwrite-Session'] = value;
+        this.config.session = value;
         return this;
     }
 
@@ -278,7 +294,7 @@ class Client {
                 })
             }
         },
-        onMessage: async (event) => {
+        onMessage: (event) => {
             try {
                 const message: RealtimeResponse = JSON.parse(event.data);
                 this.realtime.lastMessage = message;
@@ -307,7 +323,7 @@ class Client {
         cleanUp: channels => {
             this.realtime.channels.forEach(channel => {
                 if (channels.includes(channel)) {
-                    let found = Array.from(this.realtime.subscriptions).some(([_key, subscription]) => {
+                    let found = Array.from(this.realtime.subscriptions).some(([_key, subscription] )=> {
                         return subscription.channels.includes(channel);
                     })
 
@@ -366,8 +382,10 @@ class Client {
     async call(method: string, url: URL, headers: Headers = {}, params: Payload = {}): Promise<any> {
         method = method.toUpperCase();
 
+
         headers = Object.assign({}, this.headers, headers);
-        headers.Origin = `appwrite-${Platform.OS}://${this.config.platform}`;
+        headers.Origin = `appwrite-${Platform.OS}://${this.config.platform}`
+
         let options: RequestInit = {
             method,
             headers,
@@ -417,6 +435,13 @@ class Client {
 
             if (400 <= response.status) {
                 throw new AppwriteException(data?.message, response.status, data?.type, data);
+            }
+
+            const cookieFallback = response.headers.get('X-Fallback-Cookies');
+
+            if (typeof window !== 'undefined' && window.localStorage && cookieFallback) {
+                window.console.warn('Appwrite is using localStorage for session management. Increase your security by adding a custom domain as your API endpoint.');
+                window.localStorage.setItem('cookieFallback', cookieFallback);
             }
 
             return data;
