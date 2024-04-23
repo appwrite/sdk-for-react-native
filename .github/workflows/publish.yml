@@ -23,7 +23,7 @@ jobs:
     - name: Determine release tag
       id: release_tag
       run: |
-        if [[ "$" == *"-rc"* ]]; then
+        if [[ "${{ github.ref }}" == *"-rc"* ]]; then
           echo "tag=next" >> "$GITHUB_OUTPUT"
         else
           echo "tag=latest" >> "$GITHUB_OUTPUT"
@@ -37,6 +37,6 @@ jobs:
 
     # Publish to NPM with the appropriate tag
     - name: Publish
-      run: npm publish --tag $
+      run: npm publish --tag ${{ steps.release_tag.outputs.tag }}
       env:
         NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

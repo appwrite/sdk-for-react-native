@@ -238,7 +238,11 @@ class Client {
             }
         },
         createSocket: () => {
-            if (this.realtime.channels.size < 1) return;
+            if (this.realtime.channels.size < 1) {
+                this.realtime.reconnect = false;
+                this.realtime.socket?.close();
+                return;
+            }
 
             const channels = new URLSearchParams();
             channels.set('project', this.config.project);
@@ -382,7 +386,6 @@ class Client {
     async call(method: string, url: URL, headers: Headers = {}, params: Payload = {}): Promise<any> {
         method = method.toUpperCase();
 
-
         headers = Object.assign({}, this.headers, headers);
         headers.Origin = `appwrite-${Platform.OS}://${this.config.platform}`
 
@@ -455,6 +458,4 @@ class Client {
 }
 
 export { Client, AppwriteException };
-export { Query } from './query';
 export type { Models, Payload };
-export type { QueryTypes, QueryTypesList } from './query';

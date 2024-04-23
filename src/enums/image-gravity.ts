@@ -1,11 +1,11 @@
 export enum ImageGravity {
     Center = 'center',
-    Topleft = 'top-left',
+    TopLeft = 'top-left',
     Top = 'top',
-    Topright = 'top-right',
+    TopRight = 'top-right',
     Left = 'left',
     Right = 'right',
-    Bottomleft = 'bottom-left',
+    BottomLeft = 'bottom-left',
     Bottom = 'bottom',
-    Bottomright = 'bottom-right',
+    BottomRight = 'bottom-right',
 }
