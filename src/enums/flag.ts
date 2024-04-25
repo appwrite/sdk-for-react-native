@@ -140,6 +140,7 @@ export enum Flag {
     Palau = 'pw',
     PapuaNewGuinea = 'pg',
     Poland = 'pl',
+    FrenchPolynesia = 'pf',
     NorthKorea = 'kp',
     Portugal = 'pt',
     Paraguay = 'py',

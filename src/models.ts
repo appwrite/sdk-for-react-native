@@ -503,6 +503,10 @@ export namespace Models {
          */
         $createdAt: string;
         /**
+         * Session update date in ISO 8601 format.
+         */
+        $updatedAt: string;
+        /**
          * User ID.
          */
         userId: string;
@@ -1094,17 +1098,21 @@ export namespace Models {
      */
     export type MfaFactors = {
         /**
-         * TOTP
+         * Can TOTP be used for MFA challenge for this account.
          */
         totp: boolean;
         /**
-         * Phone
+         * Can phone (SMS) be used for MFA challenge for this account.
          */
         phone: boolean;
         /**
-         * Email
+         * Can email be used for MFA challenge for this account.
          */
         email: boolean;
+        /**
+         * Can recovery code be used for MFA challenge for this account.
+         */
+        recoveryCode: boolean;
     }
     /**
      * Subscriber
