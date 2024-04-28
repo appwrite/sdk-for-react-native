@@ -51,7 +51,7 @@ Initialize your SDK with your Appwrite server API endpoint and project ID which 
 
 ```js
 import { Client } from 'react-native-appwrite';
-// Init your Web SDK
+// Init your React Native SDK
 const client = new Client();
 
 client
@@ -80,7 +80,7 @@ account.create(ID.unique(), 'me@example.com', 'password', 'Jane Doe')
 ### Full Example
 ```js
 import { Client, Account } from 'react-native-appwrite';
-// Init your Web SDK
+// Init your React Native SDK
 const client = new Client();
 
 client
@@ -102,7 +102,7 @@ account.create(ID.unique(), 'me@example.com', 'password', 'Jane Doe')
 
 ### Learn more
 You can use the following resources to learn more and get help
-- 🚀 [Getting Started Tutorial](https://appwrite.io/docs/quick-starts/react-native)```
+- 🚀 [Getting Started Tutorial](https://appwrite.io/docs/quick-starts/react-native)
 - 📜 [Appwrite Docs](https://appwrite.io/docs)
 - 💬 [Discord Community](https://appwrite.io/discord)
 - 🚂 [Appwrite React Native Playground](https://github.com/appwrite/playground-for-react-native)

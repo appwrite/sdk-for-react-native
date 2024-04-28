@@ -23,7 +23,7 @@ jobs:
     - name: Determine release tag
       id: release_tag
       run: |
-        if [[ "${{ github.ref }}" == *"-rc"* ]]; then
+        if [[ "${{ github.ref }}" == *"-rc"* ]] || [[ "${{ github.ref }}" == *"-RC"* ]]; then
           echo "tag=next" >> "$GITHUB_OUTPUT"
         else
           echo "tag=latest" >> "$GITHUB_OUTPUT"
