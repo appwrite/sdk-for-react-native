@@ -73,12 +73,12 @@ export class Storage extends Service {
      *
      * @param {string} bucketId
      * @param {string} fileId
-     * @param {any} file
+     * @param {{name: string, type: string, size: number, uri: string}} file
      * @param {string[]} permissions
      * @throws {AppwriteException}
      * @returns {Promise}
     */
-    async createFile(bucketId: string, fileId: string, file: any, permissions?: string[], onProgress = (progress: UploadProgress) => {}): Promise<Models.File> {
+    async createFile(bucketId: string, fileId: string, file: {name: string, type: string, size: number, uri: string}, permissions?: string[], onProgress = (progress: UploadProgress) => {}): Promise<Models.File> {
         if (typeof bucketId === 'undefined') {
             throw new AppwriteException('Missing required parameter: "bucketId"');
         }
