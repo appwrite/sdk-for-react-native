@@ -4,7 +4,6 @@ on:
   release:
     types: [published]
   workflow_dispatch:
-    
 
 jobs:
   publish:
@@ -20,14 +19,24 @@ jobs:
         node-version: '20.x'
         registry-url: 'https://registry.npmjs.org'
 
+    # Determine release tag based on the tag name
+    - name: Determine release tag
+      id: release_tag
+      run: |
+        if [[ "${{ github.ref }}" == *"-rc"* ]] || [[ "${{ github.ref }}" == *"-RC"* ]]; then
+          echo "tag=next" >> "$GITHUB_OUTPUT"
+        else
+          echo "tag=latest" >> "$GITHUB_OUTPUT"
+        fi
+
     # Install dependencies (if any) and build your project (if necessary)
     - name: Install dependencies and build
       run: |
         npm install
         npm run build
 
-    # Publish to NPM
+    # Publish to NPM with the appropriate tag
     - name: Publish
-      run: npm publish
+      run: npm publish --tag ${{ steps.release_tag.outputs.tag }}
       env:
-        NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+        NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

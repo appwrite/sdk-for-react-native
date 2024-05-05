@@ -5,6 +5,9 @@ import type { UploadProgress, Payload } from '../client';
 import * as FileSystem from 'expo-file-system';
 import { Platform } from 'react-native';
 
+import { ImageGravity } from '../enums/image-gravity';
+import { ImageFormat } from '../enums/image-format';
+
 export class Storage extends Service {
 
      constructor(client: Client)
@@ -127,6 +130,7 @@ export class Storage extends Service {
             }
         }
 
+        let timestamp = new Date().getTime();
         while (offset < size) {
             let end = Math.min(offset + Service.CHUNK_SIZE - 1, size - 1);
 
@@ -141,11 +145,13 @@ export class Storage extends Service {
                 length: Service.CHUNK_SIZE
             });
             var path = `data:${file.type};base64,${chunk}`;
-            if (Platform.OS.toLowerCase() == 'android') {
-                path = FileSystem.cacheDirectory + '/tmp_chunk';
+            if (Platform.OS.toLowerCase() === 'android') {
+                path = FileSystem.cacheDirectory + '/tmp_chunk_' + timestamp;
                 await FileSystem.writeAsStringAsync(path, chunk, {encoding: FileSystem.EncodingType.Base64});
             }
-            payload['file'] = {uri: path, name: file.name, type: file.type};
+
+            payload['file'] = { uri: path, name: file.name, type: file.type };
+
             response = await this.client.call('post', uri, apiHeaders, payload);
 
             if (onProgress) {
@@ -306,7 +312,7 @@ export class Storage extends Service {
      * @param {string} fileId
      * @param {number} width
      * @param {number} height
-     * @param {string} gravity
+     * @param {ImageGravity} gravity
      * @param {number} quality
      * @param {number} borderWidth
      * @param {string} borderColor
@@ -314,11 +320,11 @@ export class Storage extends Service {
      * @param {number} opacity
      * @param {number} rotation
      * @param {string} background
-     * @param {string} output
+     * @param {ImageFormat} output
      * @throws {AppwriteException}
      * @returns {URL}
     */
-    getFilePreview(bucketId: string, fileId: string, width?: number, height?: number, gravity?: string, quality?: number, borderWidth?: number, borderColor?: string, borderRadius?: number, opacity?: number, rotation?: number, background?: string, output?: string): URL {
+    getFilePreview(bucketId: string, fileId: string, width?: number, height?: number, gravity?: ImageGravity, quality?: number, borderWidth?: number, borderColor?: string, borderRadius?: number, opacity?: number, rotation?: number, background?: string, output?: ImageFormat): URL {
         if (typeof bucketId === 'undefined') {
             throw new AppwriteException('Missing required parameter: "bucketId"');
         }
