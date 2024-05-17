@@ -2,7 +2,7 @@ export enum CreditCard {
     AmericanExpress = 'amex',
     Argencard = 'argencard',
     Cabal = 'cabal',
-    Consosud = 'censosud',
+    Cencosud = 'cencosud',
     DinersClub = 'diners',
     Discover = 'discover',
     Elo = 'elo',
