@@ -43,7 +43,7 @@ export class Account extends Service {
      * [/account/verfication](https://appwrite.io/docs/references/cloud/client-web/account#createVerification)
      * route to start verifying the user email address. To allow the new user to
      * login to their new account, you need to create a new [account
-     * session](https://appwrite.io/docs/references/cloud/client-web/account#createEmailSession).
+     * session](https://appwrite.io/docs/references/cloud/client-web/account#createEmailPasswordSession).
      *
      * @param {string} userId
      * @param {string} email
