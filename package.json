@@ -33,11 +33,11 @@
     "typescript": "4.7.2"
   },
   "dependencies": {
-    "expo-file-system": "16.0.8",
-    "react-native": "^0.73.6"
+    "react-native": "^0.73.6",
+    "react-native-fs": "^2.20.0"
   },
   "peerDependencies": {
-    "expo": "*",
+    "react-native-fs": "^2.20.0",
     "react-native": "*"
   }
 }
