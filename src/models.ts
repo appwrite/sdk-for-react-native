@@ -91,6 +91,19 @@ export namespace Models {
         memberships: Membership[];
     }
     /**
+     * Function Templates List
+     */
+    export type TemplateFunctionList = {
+        /**
+         * Total number of templates documents that matched your query.
+         */
+        total: number;
+        /**
+         * List of templates.
+         */
+        templates: TemplateFunction[];
+    }
+    /**
      * Executions List
      */
     export type ExecutionList = {
@@ -876,6 +889,129 @@ export namespace Models {
         roles: string[];
     }
     /**
+     * Template Function
+     */
+    export type TemplateFunction = {
+        /**
+         * Function Template Icon.
+         */
+        icon: string;
+        /**
+         * Function Template ID.
+         */
+        id: string;
+        /**
+         * Function Template Name.
+         */
+        name: string;
+        /**
+         * Function Template Tagline.
+         */
+        tagline: string;
+        /**
+         * Execution permissions.
+         */
+        permissions: string[];
+        /**
+         * Function trigger events.
+         */
+        events: string[];
+        /**
+         * Function execution schedult in CRON format.
+         */
+        cron: string;
+        /**
+         * Function execution timeout in seconds.
+         */
+        timeout: number;
+        /**
+         * Function use cases.
+         */
+        useCases: string[];
+        /**
+         * List of runtimes that can be used with this template.
+         */
+        runtimes: TemplateRuntime[];
+        /**
+         * Function Template Instructions.
+         */
+        instructions: string;
+        /**
+         * VCS (Version Control System) Provider.
+         */
+        vcsProvider: string;
+        /**
+         * VCS (Version Control System) Repository ID
+         */
+        providerRepositoryId: string;
+        /**
+         * VCS (Version Control System) Owner.
+         */
+        providerOwner: string;
+        /**
+         * VCS (Version Control System) branch version (tag).
+         */
+        providerVersion: string;
+        /**
+         * Function variables.
+         */
+        variables: TemplateVariable[];
+        /**
+         * Function scopes.
+         */
+        scopes: string[];
+    }
+    /**
+     * Template Runtime
+     */
+    export type TemplateRuntime = {
+        /**
+         * Runtime Name.
+         */
+        name: string;
+        /**
+         * The build command used to build the deployment.
+         */
+        commands: string;
+        /**
+         * The entrypoint file used to execute the deployment.
+         */
+        entrypoint: string;
+        /**
+         * Path to function in VCS (Version Control System) repository
+         */
+        providerRootDirectory: string;
+    }
+    /**
+     * Template Variable
+     */
+    export type TemplateVariable = {
+        /**
+         * Variable Name.
+         */
+        name: string;
+        /**
+         * Variable Description.
+         */
+        description: string;
+        /**
+         * Variable Value.
+         */
+        value: string;
+        /**
+         * Variable Placeholder.
+         */
+        placeholder: string;
+        /**
+         * Is the variable required?
+         */
+        required: boolean;
+        /**
+         * Variable Type.
+         */
+        type: string;
+    }
+    /**
      * Execution
      */
     export type Execution = {
@@ -943,6 +1079,10 @@ export namespace Models {
          * Function execution duration in seconds.
          */
         duration: number;
+        /**
+         * The scheduled time for execution. If left empty, execution will be queued immediately.
+         */
+        scheduledAt?: string;
     }
     /**
      * Country

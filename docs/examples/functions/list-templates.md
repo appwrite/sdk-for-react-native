@@ -6,9 +6,11 @@ const client = new Client()
 
 const functions = new Functions(client);
 
-const result = await functions.getExecution(
-    '<FUNCTION_ID>', // functionId
-    '<EXECUTION_ID>' // executionId
+const result = await functions.listTemplates(
+    [], // runtimes (optional)
+    [], // useCases (optional)
+    1, // limit (optional)
+    0 // offset (optional)
 );
 
 console.log(result);

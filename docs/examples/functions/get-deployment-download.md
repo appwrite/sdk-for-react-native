@@ -6,9 +6,9 @@ const client = new Client()
 
 const functions = new Functions(client);
 
-const result = await functions.getExecution(
+const result = functions.getDeploymentDownload(
     '<FUNCTION_ID>', // functionId
-    '<EXECUTION_ID>' // executionId
+    '<DEPLOYMENT_ID>' // deploymentId
 );
 
 console.log(result);
