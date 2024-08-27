@@ -91,19 +91,6 @@ export namespace Models {
         memberships: Membership[];
     }
     /**
-     * Function Templates List
-     */
-    export type TemplateFunctionList = {
-        /**
-         * Total number of templates documents that matched your query.
-         */
-        total: number;
-        /**
-         * List of templates.
-         */
-        templates: TemplateFunction[];
-    }
-    /**
      * Executions List
      */
     export type ExecutionList = {
