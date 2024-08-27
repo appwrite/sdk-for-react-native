@@ -943,6 +943,10 @@ export namespace Models {
          * Function execution duration in seconds.
          */
         duration: number;
+        /**
+         * The scheduled time for execution. If left empty, execution will be queued immediately.
+         */
+        scheduledAt?: string;
     }
     /**
      * Country

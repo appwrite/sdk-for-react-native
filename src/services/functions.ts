@@ -62,10 +62,11 @@ export class Functions extends Service {
      * @param {string} xpath
      * @param {ExecutionMethod} method
      * @param {object} headers
+     * @param {string} scheduledAt
      * @throws {AppwriteException}
      * @returns {Promise}
     */
-    async createExecution(functionId: string, body?: string, async?: boolean, xpath?: string, method?: ExecutionMethod, headers?: object): Promise<Models.Execution> {
+    async createExecution(functionId: string, body?: string, async?: boolean, xpath?: string, method?: ExecutionMethod, headers?: object, scheduledAt?: string): Promise<Models.Execution> {
         if (typeof functionId === 'undefined') {
             throw new AppwriteException('Missing required parameter: "functionId"');
         }
@@ -91,6 +92,10 @@ export class Functions extends Service {
 
         if (typeof headers !== 'undefined') {
             payload['headers'] = headers;
+        }
+
+        if (typeof scheduledAt !== 'undefined') {
+            payload['scheduledAt'] = scheduledAt;
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
