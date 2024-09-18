@@ -123,6 +123,7 @@ export class Avatars extends Service {
      * Use this endpoint to fetch the favorite icon (AKA favicon) of any remote
      * website URL.
      * 
+     * This endpoint does not follow HTTP redirects.
      *
      * @param {string} url
      * @throws {AppwriteException}
@@ -214,6 +215,7 @@ export class Avatars extends Service {
      * image at source quality. If dimensions are not specified, the default size
      * of image returned is 400x400px.
      * 
+     * This endpoint does not follow HTTP redirects.
      *
      * @param {string} url
      * @param {number} width

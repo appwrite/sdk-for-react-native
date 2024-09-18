@@ -57,15 +57,16 @@ export class Functions extends Service {
      * function execution process will start asynchronously.
      *
      * @param {string} functionId
-     * @param {string} body
+     * @param {payload} body
      * @param {boolean} async
      * @param {string} xpath
      * @param {ExecutionMethod} method
      * @param {object} headers
+     * @param {string} scheduledAt
      * @throws {AppwriteException}
      * @returns {Promise}
     */
-    async createExecution(functionId: string, body?: string, async?: boolean, xpath?: string, method?: ExecutionMethod, headers?: object): Promise<Models.Execution> {
+    async createExecution(functionId: string, body?: payload, async?: boolean, xpath?: string, method?: ExecutionMethod, headers?: object, scheduledAt?: string, onProgress = (progress: UploadProgress) => {}): Promise<Models.Execution> {
         if (typeof functionId === 'undefined') {
             throw new AppwriteException('Missing required parameter: "functionId"');
         }
@@ -93,10 +94,11 @@ export class Functions extends Service {
             payload['headers'] = headers;
         }
 
+        if (typeof scheduledAt !== 'undefined') {
+            payload['scheduledAt'] = scheduledAt;
+        }
+
         const uri = new URL(this.client.config.endpoint + apiPath);
-        return await this.client.call('post', uri, {
-            'content-type': 'application/json',
-        }, payload);
     }
 
     /**

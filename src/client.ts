@@ -103,8 +103,8 @@ class Client {
         'x-sdk-name': 'React Native',
         'x-sdk-platform': 'client',
         'x-sdk-language': 'reactnative',
-        'x-sdk-version': '0.4.0',
-        'X-Appwrite-Response-Format': '1.5.0',
+        'x-sdk-version': '0.6.0-rc1',
+        'X-Appwrite-Response-Format': '1.6.0',
     };
 
     /**
@@ -427,6 +427,11 @@ class Client {
         try {
             let data = null;
             const response = await fetch(url.toString(), options);
+
+            const warnings = response.headers.get('x-appwrite-warning');
+            if (warnings) {
+                warnings.split(';').forEach((warning: string) => console.warn('Warning: ' + warning));
+            }
 
             if (response.headers.get('content-type')?.includes('application/json')) {
                 data = await response.json();
