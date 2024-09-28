@@ -1,4 +1,5 @@
-# Appwrite React Native SDK
+# Appwrite React Native (Bare) SDK
+## NOTE: I fork this repo for supporting bare react native currently (the time I am writing this) appwrite react native package support expo apps, you can use this package for bare react native apps.
 
 ![License](https://img.shields.io/github/license/appwrite/sdk-for-react-native.svg?style=flat-square)
 ![Version](https://img.shields.io/badge/api%20version-1.5.7-blue.svg?style=flat-square)
