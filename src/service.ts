@@ -1,5 +1,5 @@
 import { Client } from './client';
-import type { Payload } from './client';
+import type { Params } from './client';
 
 export class Service {
     static CHUNK_SIZE = 5*1024*1024; // 5MB
@@ -10,9 +10,9 @@ export class Service {
         this.client = client;
     }
 
-    static flatten(data: Payload, prefix = ''): Payload {
-        let output: Payload = {};
-
+    static flatten(data: Params, prefix = ''): Params {
+        let output: Params = {};
+ 
         for (const [key, value] of Object.entries(data)) {
             let finalKey = prefix ? prefix + '[' + key +']' : key;
             if (Array.isArray(value)) {

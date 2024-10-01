@@ -1,12 +1,13 @@
 import { Service } from '../service';
 import { AppwriteException, Client } from '../client';
+import { Payload } from '../payload';
 import type { Models } from '../models';
-import type { UploadProgress, Payload } from '../client';
+import type { UploadProgress, Params } from '../client';
 import * as FileSystem from 'expo-file-system';
 import { Platform } from 'react-native';
 
-import { ImageGravity } from '../enums/image-gravity';
-import { ImageFormat } from '../enums/image-format';
+                            import { ImageGravity } from '../enums/image-gravity';
+                            import { ImageFormat } from '../enums/image-format';
 
 export class Storage extends Service {
 
@@ -18,8 +19,7 @@ export class Storage extends Service {
     /**
      * List files
      *
-     * Get a list of all the user files. You can use the query params to filter
-     * your results.
+     * Get a list of all the user files. You can use the query params to filter your results.
      *
      * @param {string} bucketId
      * @param {string[]} queries
@@ -27,58 +27,51 @@ export class Storage extends Service {
      * @throws {AppwriteException}
      * @returns {Promise}
     */
-    async listFiles(bucketId: string, queries?: string[], search?: string): Promise<Models.FileList> {
+    async listFiles(bucketId: string,queries?: string[],search?: string): Promise<Models.FileList> {
         if (typeof bucketId === 'undefined') {
             throw new AppwriteException('Missing required parameter: "bucketId"');
         }
 
         const apiPath = '/storage/buckets/{bucketId}/files'.replace('{bucketId}', bucketId);
-        const payload: Payload = {};
+        const params: Params = {};
 
         if (typeof queries !== 'undefined') {
-            payload['queries'] = queries;
+            params['queries'] = queries;
         }
 
         if (typeof search !== 'undefined') {
-            payload['search'] = search;
+            params['search'] = search;
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
-        return await this.client.call('get', uri, {
+
+        const apiHeaders: { [header: string]: string } = {
             'content-type': 'application/json',
-        }, payload);
+        }
+
+        return await this.client.call('get', uri, apiHeaders, params);
     }
 
     /**
      * Create file
      *
-     * Create a new file. Before using this route, you should create a new bucket
-     * resource using either a [server
-     * integration](https://appwrite.io/docs/server/storage#storageCreateBucket)
-     * API or directly from your Appwrite console.
-     * 
-     * Larger files should be uploaded using multiple requests with the
-     * [content-range](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Range)
-     * header to send a partial request with a maximum supported chunk of `5MB`.
-     * The `content-range` header values should always be in bytes.
-     * 
-     * When the first request is sent, the server will return the **File** object,
-     * and the subsequent part request must include the file's **id** in
-     * `x-appwrite-id` header to allow the server to know that the partial upload
-     * is for the existing file and not for a new one.
-     * 
-     * If you're creating a new file using one of the Appwrite SDKs, all the
-     * chunking logic will be managed by the SDK internally.
-     * 
+     * Create a new file. Before using this route, you should create a new bucket resource using either a [server integration](https://appwrite.io/docs/server/storage#storageCreateBucket) API or directly from your Appwrite console.
+
+Larger files should be uploaded using multiple requests with the [content-range](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Range) header to send a partial request with a maximum supported chunk of `5MB`. The `content-range` header values should always be in bytes.
+
+When the first request is sent, the server will return the **File** object, and the subsequent part request must include the file&#039;s **id** in `x-appwrite-id` header to allow the server to know that the partial upload is for the existing file and not for a new one.
+
+If you&#039;re creating a new file using one of the Appwrite SDKs, all the chunking logic will be managed by the SDK internally.
+
      *
      * @param {string} bucketId
      * @param {string} fileId
-     * @param {{name: string, type: string, size: number, uri: string}} file
+     * @param {Payload} file
      * @param {string[]} permissions
      * @throws {AppwriteException}
      * @returns {Promise}
     */
-    async createFile(bucketId: string, fileId: string, file: {name: string, type: string, size: number, uri: string}, permissions?: string[], onProgress = (progress: UploadProgress) => {}): Promise<Models.File> {
+    async createFile(bucketId: string,fileId: string,file: Payload,permissions?: string[], onProgress = (progress: UploadProgress) => {}): Promise<Models.File> {
         if (typeof bucketId === 'undefined') {
             throw new AppwriteException('Missing required parameter: "bucketId"');
         }
@@ -92,32 +85,32 @@ export class Storage extends Service {
         }
 
         const apiPath = '/storage/buckets/{bucketId}/files'.replace('{bucketId}', bucketId);
-        const payload: Payload = {};
+        const params: Params = {};
 
         if (typeof fileId !== 'undefined') {
-            payload['fileId'] = fileId;
+            params['fileId'] = fileId;
         }
 
         if (typeof file !== 'undefined') {
-            payload['file'] = file;
+            params['file'] = file;
         }
 
         if (typeof permissions !== 'undefined') {
-            payload['permissions'] = permissions;
+            params['permissions'] = permissions;
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
 
+        const apiHeaders: { [header: string]: string } = {
+            'content-type': 'multipart/form-data',
+        }
+
+
         const size = file.size;
 
         if (size <= Service.CHUNK_SIZE) {
-            return await this.client.call('post', uri, {
-                'content-type': 'multipart/form-data',
-            }, payload);
-        }
-
-        const apiHeaders: { [header: string]: string } = {
-            'content-type': 'multipart/form-data',
+            params['file'] = file.toFileObject();
+            return await this.client.call('post', uri, apiHeaders, params);
         }
 
         let offset = 0;
@@ -139,20 +132,22 @@ export class Storage extends Service {
                 apiHeaders['x-appwrite-id'] = response.$id;
             }
 
-            let chunk = await FileSystem.readAsStringAsync(file.uri, {
-                encoding: FileSystem.EncodingType.Base64,
-                position: offset,
-                length: Service.CHUNK_SIZE
-            });
-            var path = `data:${file.type};base64,${chunk}`;
+            let chunkBuffer = file.toBinary(offset, end - offset + 1);
+            let chunk = btoa(String.fromCharCode(...chunkBuffer));
+
+            var path = `data:$file.type};base64,${chunk}`;
             if (Platform.OS.toLowerCase() === 'android') {
                 path = FileSystem.cacheDirectory + '/tmp_chunk_' + timestamp;
                 await FileSystem.writeAsStringAsync(path, chunk, {encoding: FileSystem.EncodingType.Base64});
             }
 
-            payload['file'] = { uri: path, name: file.name, type: file.type };
+            params['file'] = {
+                uri: path,
+                name: file.filename,
+                type: file.type
+            };
 
-            response = await this.client.call('post', uri, apiHeaders, payload);
+            response = await this.client.call('post', uri, apiHeaders, params);
 
             if (onProgress) {
                 onProgress({
@@ -171,15 +166,14 @@ export class Storage extends Service {
     /**
      * Get file
      *
-     * Get a file by its unique ID. This endpoint response returns a JSON object
-     * with the file metadata.
+     * Get a file by its unique ID. This endpoint response returns a JSON object with the file metadata.
      *
      * @param {string} bucketId
      * @param {string} fileId
      * @throws {AppwriteException}
      * @returns {Promise}
     */
-    async getFile(bucketId: string, fileId: string): Promise<Models.File> {
+    async getFile(bucketId: string,fileId: string): Promise<Models.File> {
         if (typeof bucketId === 'undefined') {
             throw new AppwriteException('Missing required parameter: "bucketId"');
         }
@@ -189,19 +183,21 @@ export class Storage extends Service {
         }
 
         const apiPath = '/storage/buckets/{bucketId}/files/{fileId}'.replace('{bucketId}', bucketId).replace('{fileId}', fileId);
-        const payload: Payload = {};
+        const params: Params = {};
 
         const uri = new URL(this.client.config.endpoint + apiPath);
-        return await this.client.call('get', uri, {
+
+        const apiHeaders: { [header: string]: string } = {
             'content-type': 'application/json',
-        }, payload);
+        }
+
+        return await this.client.call('get', uri, apiHeaders, params);
     }
 
     /**
      * Update file
      *
-     * Update a file by its unique ID. Only users with write permissions have
-     * access to update this resource.
+     * Update a file by its unique ID. Only users with write permissions have access to update this resource.
      *
      * @param {string} bucketId
      * @param {string} fileId
@@ -210,7 +206,7 @@ export class Storage extends Service {
      * @throws {AppwriteException}
      * @returns {Promise}
     */
-    async updateFile(bucketId: string, fileId: string, name?: string, permissions?: string[]): Promise<Models.File> {
+    async updateFile(bucketId: string,fileId: string,name?: string,permissions?: string[]): Promise<Models.File> {
         if (typeof bucketId === 'undefined') {
             throw new AppwriteException('Missing required parameter: "bucketId"');
         }
@@ -220,34 +216,36 @@ export class Storage extends Service {
         }
 
         const apiPath = '/storage/buckets/{bucketId}/files/{fileId}'.replace('{bucketId}', bucketId).replace('{fileId}', fileId);
-        const payload: Payload = {};
+        const params: Params = {};
 
         if (typeof name !== 'undefined') {
-            payload['name'] = name;
+            params['name'] = name;
         }
 
         if (typeof permissions !== 'undefined') {
-            payload['permissions'] = permissions;
+            params['permissions'] = permissions;
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
-        return await this.client.call('put', uri, {
+
+        const apiHeaders: { [header: string]: string } = {
             'content-type': 'application/json',
-        }, payload);
+        }
+
+        return await this.client.call('put', uri, apiHeaders, params);
     }
 
     /**
-     * Delete File
+     * Delete file
      *
-     * Delete a file by its unique ID. Only users with write permissions have
-     * access to delete this resource.
+     * Delete a file by its unique ID. Only users with write permissions have access to delete this resource.
      *
      * @param {string} bucketId
      * @param {string} fileId
      * @throws {AppwriteException}
      * @returns {Promise}
     */
-    async deleteFile(bucketId: string, fileId: string): Promise<{}> {
+    async deleteFile(bucketId: string,fileId: string): Promise<{}> {
         if (typeof bucketId === 'undefined') {
             throw new AppwriteException('Missing required parameter: "bucketId"');
         }
@@ -257,27 +255,28 @@ export class Storage extends Service {
         }
 
         const apiPath = '/storage/buckets/{bucketId}/files/{fileId}'.replace('{bucketId}', bucketId).replace('{fileId}', fileId);
-        const payload: Payload = {};
+        const params: Params = {};
 
         const uri = new URL(this.client.config.endpoint + apiPath);
-        return await this.client.call('delete', uri, {
+
+        const apiHeaders: { [header: string]: string } = {
             'content-type': 'application/json',
-        }, payload);
+        }
+
+        return await this.client.call('delete', uri, apiHeaders, params);
     }
 
     /**
      * Get file for download
      *
-     * Get a file content by its unique ID. The endpoint response return with a
-     * 'Content-Disposition: attachment' header that tells the browser to start
-     * downloading the file to user downloads directory.
+     * Get a file content by its unique ID. The endpoint response return with a &#039;Content-Disposition: attachment&#039; header that tells the browser to start downloading the file to user downloads directory.
      *
      * @param {string} bucketId
      * @param {string} fileId
      * @throws {AppwriteException}
      * @returns {URL}
     */
-    getFileDownload(bucketId: string, fileId: string): URL {
+    getFileDownload(bucketId: string,fileId: string): URL {
         if (typeof bucketId === 'undefined') {
             throw new AppwriteException('Missing required parameter: "bucketId"');
         }
@@ -287,13 +286,13 @@ export class Storage extends Service {
         }
 
         const apiPath = '/storage/buckets/{bucketId}/files/{fileId}/download'.replace('{bucketId}', bucketId).replace('{fileId}', fileId);
-        const payload: Payload = {};
+        const params: Params = {};
 
         const uri = new URL(this.client.config.endpoint + apiPath);
-        payload['project'] = this.client.config.project;
 
+        params['project'] = this.client.config.project;
 
-        for (const [key, value] of Object.entries(Service.flatten(payload))) {
+        for (const [key, value] of Object.entries(Service.flatten(params))) {
             uri.searchParams.append(key, value);
         }
         return uri;
@@ -302,11 +301,7 @@ export class Storage extends Service {
     /**
      * Get file preview
      *
-     * Get a file preview image. Currently, this method supports preview for image
-     * files (jpg, png, and gif), other supported formats, like pdf, docs, slides,
-     * and spreadsheets, will return the file icon image. You can also pass query
-     * string arguments for cutting and resizing your preview image. Preview is
-     * supported only for image files smaller than 10MB.
+     * Get a file preview image. Currently, this method supports preview for image files (jpg, png, and gif), other supported formats, like pdf, docs, slides, and spreadsheets, will return the file icon image. You can also pass query string arguments for cutting and resizing your preview image. Preview is supported only for image files smaller than 10MB.
      *
      * @param {string} bucketId
      * @param {string} fileId
@@ -324,7 +319,7 @@ export class Storage extends Service {
      * @throws {AppwriteException}
      * @returns {URL}
     */
-    getFilePreview(bucketId: string, fileId: string, width?: number, height?: number, gravity?: ImageGravity, quality?: number, borderWidth?: number, borderColor?: string, borderRadius?: number, opacity?: number, rotation?: number, background?: string, output?: ImageFormat): URL {
+    getFilePreview(bucketId: string,fileId: string,width?: number,height?: number,gravity?: ImageGravity,quality?: number,borderWidth?: number,borderColor?: string,borderRadius?: number,opacity?: number,rotation?: number,background?: string,output?: ImageFormat): URL {
         if (typeof bucketId === 'undefined') {
             throw new AppwriteException('Missing required parameter: "bucketId"');
         }
@@ -334,57 +329,57 @@ export class Storage extends Service {
         }
 
         const apiPath = '/storage/buckets/{bucketId}/files/{fileId}/preview'.replace('{bucketId}', bucketId).replace('{fileId}', fileId);
-        const payload: Payload = {};
+        const params: Params = {};
 
         if (typeof width !== 'undefined') {
-            payload['width'] = width;
+            params['width'] = width;
         }
 
         if (typeof height !== 'undefined') {
-            payload['height'] = height;
+            params['height'] = height;
         }
 
         if (typeof gravity !== 'undefined') {
-            payload['gravity'] = gravity;
+            params['gravity'] = gravity;
         }
 
         if (typeof quality !== 'undefined') {
-            payload['quality'] = quality;
+            params['quality'] = quality;
         }
 
         if (typeof borderWidth !== 'undefined') {
-            payload['borderWidth'] = borderWidth;
+            params['borderWidth'] = borderWidth;
         }
 
         if (typeof borderColor !== 'undefined') {
-            payload['borderColor'] = borderColor;
+            params['borderColor'] = borderColor;
         }
 
         if (typeof borderRadius !== 'undefined') {
-            payload['borderRadius'] = borderRadius;
+            params['borderRadius'] = borderRadius;
         }
 
         if (typeof opacity !== 'undefined') {
-            payload['opacity'] = opacity;
+            params['opacity'] = opacity;
         }
 
         if (typeof rotation !== 'undefined') {
-            payload['rotation'] = rotation;
+            params['rotation'] = rotation;
         }
 
         if (typeof background !== 'undefined') {
-            payload['background'] = background;
+            params['background'] = background;
         }
 
         if (typeof output !== 'undefined') {
-            payload['output'] = output;
+            params['output'] = output;
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
-        payload['project'] = this.client.config.project;
 
+        params['project'] = this.client.config.project;
 
-        for (const [key, value] of Object.entries(Service.flatten(payload))) {
+        for (const [key, value] of Object.entries(Service.flatten(params))) {
             uri.searchParams.append(key, value);
         }
         return uri;
@@ -393,16 +388,14 @@ export class Storage extends Service {
     /**
      * Get file for view
      *
-     * Get a file content by its unique ID. This endpoint is similar to the
-     * download method but returns with no  'Content-Disposition: attachment'
-     * header.
+     * Get a file content by its unique ID. This endpoint is similar to the download method but returns with no  &#039;Content-Disposition: attachment&#039; header.
      *
      * @param {string} bucketId
      * @param {string} fileId
      * @throws {AppwriteException}
      * @returns {URL}
     */
-    getFileView(bucketId: string, fileId: string): URL {
+    getFileView(bucketId: string,fileId: string): URL {
         if (typeof bucketId === 'undefined') {
             throw new AppwriteException('Missing required parameter: "bucketId"');
         }
@@ -412,13 +405,13 @@ export class Storage extends Service {
         }
 
         const apiPath = '/storage/buckets/{bucketId}/files/{fileId}/view'.replace('{bucketId}', bucketId).replace('{fileId}', fileId);
-        const payload: Payload = {};
+        const params: Params = {};
 
         const uri = new URL(this.client.config.endpoint + apiPath);
-        payload['project'] = this.client.config.project;
 
+        params['project'] = this.client.config.project;
 
-        for (const [key, value] of Object.entries(Service.flatten(payload))) {
+        for (const [key, value] of Object.entries(Service.flatten(params))) {
             uri.searchParams.append(key, value);
         }
         return uri;

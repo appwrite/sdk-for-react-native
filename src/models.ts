@@ -1,3 +1,5 @@
+import { Payload } from './payload';
+
 export namespace Models {
     /**
      * Documents List
@@ -926,7 +928,7 @@ export namespace Models {
         /**
          * HTTP response body. This will return empty unless execution is created as synchronous.
          */
-        responseBody: string;
+        responseBody: Payload;
         /**
          * HTTP response headers as a key-value object. This will return only whitelisted headers. All headers are returned if execution is created as synchronous.
          */
