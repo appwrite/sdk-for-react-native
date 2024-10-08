@@ -4,4 +4,5 @@ export enum ImageFormat {
     Gif = 'gif',
     Png = 'png',
     Webp = 'webp',
+    Avif = 'avif',
 }
