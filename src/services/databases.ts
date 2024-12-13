@@ -1,8 +1,7 @@
 import { Service } from '../service';
 import { AppwriteException, Client } from '../client';
-import { Payload } from '../payload';
 import type { Models } from '../models';
-import type { UploadProgress, Params } from '../client';
+import type { UploadProgress, Payload } from '../client';
 import * as FileSystem from 'expo-file-system';
 import { Platform } from 'react-native';
 
@@ -17,7 +16,8 @@ export class Databases extends Service {
     /**
      * List documents
      *
-     * Get a list of all the user&#039;s documents in a given collection. You can use the query params to filter your results.
+     * Get a list of all the user's documents in a given collection. You can use
+     * the query params to filter your results.
      *
      * @param {string} databaseId
      * @param {string} collectionId
@@ -25,7 +25,7 @@ export class Databases extends Service {
      * @throws {AppwriteException}
      * @returns {Promise}
     */
-    async listDocuments<Document extends Models.Document>(databaseId: string,collectionId: string,queries?: string[]): Promise<Models.DocumentList<Document>> {
+    async listDocuments<Document extends Models.Document>(databaseId: string, collectionId: string, queries?: string[]): Promise<Models.DocumentList<Document>> {
         if (typeof databaseId === 'undefined') {
             throw new AppwriteException('Missing required parameter: "databaseId"');
         }
@@ -35,25 +35,25 @@ export class Databases extends Service {
         }
 
         const apiPath = '/databases/{databaseId}/collections/{collectionId}/documents'.replace('{databaseId}', databaseId).replace('{collectionId}', collectionId);
-        const params: Params = {};
+        const payload: Payload = {};
 
         if (typeof queries !== 'undefined') {
-            params['queries'] = queries;
+            payload['queries'] = queries;
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
-
-        const apiHeaders: { [header: string]: string } = {
+        return await this.client.call('get', uri, {
             'content-type': 'application/json',
-        }
-
-        return await this.client.call('get', uri, apiHeaders, params);
+        }, payload);
     }
 
     /**
      * Create document
      *
-     * Create a new Document. Before using this route, you should create a new collection resource using either a [server integration](https://appwrite.io/docs/server/databases#databasesCreateCollection) API or directly from your database console.
+     * Create a new Document. Before using this route, you should create a new
+     * collection resource using either a [server
+     * integration](https://appwrite.io/docs/server/databases#databasesCreateCollection)
+     * API or directly from your database console.
      *
      * @param {string} databaseId
      * @param {string} collectionId
@@ -63,7 +63,7 @@ export class Databases extends Service {
      * @throws {AppwriteException}
      * @returns {Promise}
     */
-    async createDocument<Document extends Models.Document>(databaseId: string,collectionId: string,documentId: string,data: object,permissions?: string[]): Promise<Document> {
+    async createDocument<Document extends Models.Document>(databaseId: string, collectionId: string, documentId: string, data: object, permissions?: string[]): Promise<Document> {
         if (typeof databaseId === 'undefined') {
             throw new AppwriteException('Missing required parameter: "databaseId"');
         }
@@ -81,33 +81,31 @@ export class Databases extends Service {
         }
 
         const apiPath = '/databases/{databaseId}/collections/{collectionId}/documents'.replace('{databaseId}', databaseId).replace('{collectionId}', collectionId);
-        const params: Params = {};
+        const payload: Payload = {};
 
         if (typeof documentId !== 'undefined') {
-            params['documentId'] = documentId;
+            payload['documentId'] = documentId;
         }
 
         if (typeof data !== 'undefined') {
-            params['data'] = data;
+            payload['data'] = data;
         }
 
         if (typeof permissions !== 'undefined') {
-            params['permissions'] = permissions;
+            payload['permissions'] = permissions;
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
-
-        const apiHeaders: { [header: string]: string } = {
+        return await this.client.call('post', uri, {
             'content-type': 'application/json',
-        }
-
-        return await this.client.call('post', uri, apiHeaders, params);
+        }, payload);
     }
 
     /**
      * Get document
      *
-     * Get a document by its unique ID. This endpoint response returns a JSON object with the document data.
+     * Get a document by its unique ID. This endpoint response returns a JSON
+     * object with the document data.
      *
      * @param {string} databaseId
      * @param {string} collectionId
@@ -116,7 +114,7 @@ export class Databases extends Service {
      * @throws {AppwriteException}
      * @returns {Promise}
     */
-    async getDocument<Document extends Models.Document>(databaseId: string,collectionId: string,documentId: string,queries?: string[]): Promise<Document> {
+    async getDocument<Document extends Models.Document>(databaseId: string, collectionId: string, documentId: string, queries?: string[]): Promise<Document> {
         if (typeof databaseId === 'undefined') {
             throw new AppwriteException('Missing required parameter: "databaseId"');
         }
@@ -130,25 +128,23 @@ export class Databases extends Service {
         }
 
         const apiPath = '/databases/{databaseId}/collections/{collectionId}/documents/{documentId}'.replace('{databaseId}', databaseId).replace('{collectionId}', collectionId).replace('{documentId}', documentId);
-        const params: Params = {};
+        const payload: Payload = {};
 
         if (typeof queries !== 'undefined') {
-            params['queries'] = queries;
+            payload['queries'] = queries;
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
-
-        const apiHeaders: { [header: string]: string } = {
+        return await this.client.call('get', uri, {
             'content-type': 'application/json',
-        }
-
-        return await this.client.call('get', uri, apiHeaders, params);
+        }, payload);
     }
 
     /**
      * Update document
      *
-     * Update a document by its unique ID. Using the patch method you can pass only specific fields that will get updated.
+     * Update a document by its unique ID. Using the patch method you can pass
+     * only specific fields that will get updated.
      *
      * @param {string} databaseId
      * @param {string} collectionId
@@ -158,7 +154,7 @@ export class Databases extends Service {
      * @throws {AppwriteException}
      * @returns {Promise}
     */
-    async updateDocument<Document extends Models.Document>(databaseId: string,collectionId: string,documentId: string,data?: object,permissions?: string[]): Promise<Document> {
+    async updateDocument<Document extends Models.Document>(databaseId: string, collectionId: string, documentId: string, data?: object, permissions?: string[]): Promise<Document> {
         if (typeof databaseId === 'undefined') {
             throw new AppwriteException('Missing required parameter: "databaseId"');
         }
@@ -172,23 +168,20 @@ export class Databases extends Service {
         }
 
         const apiPath = '/databases/{databaseId}/collections/{collectionId}/documents/{documentId}'.replace('{databaseId}', databaseId).replace('{collectionId}', collectionId).replace('{documentId}', documentId);
-        const params: Params = {};
+        const payload: Payload = {};
 
         if (typeof data !== 'undefined') {
-            params['data'] = data;
+            payload['data'] = data;
         }
 
         if (typeof permissions !== 'undefined') {
-            params['permissions'] = permissions;
+            payload['permissions'] = permissions;
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
-
-        const apiHeaders: { [header: string]: string } = {
+        return await this.client.call('patch', uri, {
             'content-type': 'application/json',
-        }
-
-        return await this.client.call('patch', uri, apiHeaders, params);
+        }, payload);
     }
 
     /**
@@ -202,7 +195,7 @@ export class Databases extends Service {
      * @throws {AppwriteException}
      * @returns {Promise}
     */
-    async deleteDocument(databaseId: string,collectionId: string,documentId: string): Promise<{}> {
+    async deleteDocument(databaseId: string, collectionId: string, documentId: string): Promise<{}> {
         if (typeof databaseId === 'undefined') {
             throw new AppwriteException('Missing required parameter: "databaseId"');
         }
@@ -216,14 +209,11 @@ export class Databases extends Service {
         }
 
         const apiPath = '/databases/{databaseId}/collections/{collectionId}/documents/{documentId}'.replace('{databaseId}', databaseId).replace('{collectionId}', collectionId).replace('{documentId}', documentId);
-        const params: Params = {};
+        const payload: Payload = {};
 
         const uri = new URL(this.client.config.endpoint + apiPath);
-
-        const apiHeaders: { [header: string]: string } = {
+        return await this.client.call('delete', uri, {
             'content-type': 'application/json',
-        }
-
-        return await this.client.call('delete', uri, apiHeaders, params);
+        }, payload);
     }
 };

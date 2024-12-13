@@ -8,7 +8,7 @@ const functions = new Functions(client);
 
 const result = await functions.createExecution(
     '<FUNCTION_ID>', // functionId
-    await pickSingle(), // body (optional)
+    '<BODY>', // body (optional)
     false, // async (optional)
     '<PATH>', // path (optional)
     ExecutionMethod.GET, // method (optional)

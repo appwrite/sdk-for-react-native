@@ -1,12 +1,11 @@
 import { Service } from '../service';
 import { AppwriteException, Client } from '../client';
-import { Payload } from '../payload';
 import type { Models } from '../models';
-import type { UploadProgress, Params } from '../client';
+import type { UploadProgress, Payload } from '../client';
 import * as FileSystem from 'expo-file-system';
 import { Platform } from 'react-native';
 
-                            import { ExecutionMethod } from '../enums/execution-method';
+import { ExecutionMethod } from '../enums/execution-method';
 
 export class Functions extends Service {
 
@@ -18,7 +17,8 @@ export class Functions extends Service {
     /**
      * List executions
      *
-     * Get a list of all the current user function execution logs. You can use the query params to filter your results.
+     * Get a list of all the current user function execution logs. You can use the
+     * query params to filter your results.
      *
      * @param {string} functionId
      * @param {string[]} queries
@@ -26,38 +26,38 @@ export class Functions extends Service {
      * @throws {AppwriteException}
      * @returns {Promise}
     */
-    async listExecutions(functionId: string,queries?: string[],search?: string): Promise<Models.ExecutionList> {
+    async listExecutions(functionId: string, queries?: string[], search?: string): Promise<Models.ExecutionList> {
         if (typeof functionId === 'undefined') {
             throw new AppwriteException('Missing required parameter: "functionId"');
         }
 
         const apiPath = '/functions/{functionId}/executions'.replace('{functionId}', functionId);
-        const params: Params = {};
+        const payload: Payload = {};
 
         if (typeof queries !== 'undefined') {
-            params['queries'] = queries;
+            payload['queries'] = queries;
         }
 
         if (typeof search !== 'undefined') {
-            params['search'] = search;
+            payload['search'] = search;
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
-
-        const apiHeaders: { [header: string]: string } = {
+        return await this.client.call('get', uri, {
             'content-type': 'application/json',
-        }
-
-        return await this.client.call('get', uri, apiHeaders, params);
+        }, payload);
     }
 
     /**
      * Create execution
      *
-     * Trigger a function execution. The returned object will return you the current execution status. You can ping the `Get Execution` endpoint to get updates on the current execution status. Once this endpoint is called, your function execution process will start asynchronously.
+     * Trigger a function execution. The returned object will return you the
+     * current execution status. You can ping the `Get Execution` endpoint to get
+     * updates on the current execution status. Once this endpoint is called, your
+     * function execution process will start asynchronously.
      *
      * @param {string} functionId
-     * @param {Payload} body
+     * @param {string} body
      * @param {boolean} async
      * @param {string} xpath
      * @param {ExecutionMethod} method
@@ -66,45 +66,42 @@ export class Functions extends Service {
      * @throws {AppwriteException}
      * @returns {Promise}
     */
-    async createExecution(functionId: string,body?: Payload,async?: boolean,xpath?: string,method?: ExecutionMethod,headers?: object,scheduledAt?: string, onProgress = (progress: UploadProgress) => {}): Promise<Models.Execution> {
+    async createExecution(functionId: string, body?: string, async?: boolean, xpath?: string, method?: ExecutionMethod, headers?: object, scheduledAt?: string): Promise<Models.Execution> {
         if (typeof functionId === 'undefined') {
             throw new AppwriteException('Missing required parameter: "functionId"');
         }
 
         const apiPath = '/functions/{functionId}/executions'.replace('{functionId}', functionId);
-        const params: Params = {};
+        const payload: Payload = {};
 
         if (typeof body !== 'undefined') {
-            params['body'] = body;
+            payload['body'] = body;
         }
 
         if (typeof async !== 'undefined') {
-            params['async'] = async;
+            payload['async'] = async;
         }
 
         if (typeof xpath !== 'undefined') {
-            params['path'] = xpath;
+            payload['path'] = xpath;
         }
 
         if (typeof method !== 'undefined') {
-            params['method'] = method;
+            payload['method'] = method;
         }
 
         if (typeof headers !== 'undefined') {
-            params['headers'] = headers;
+            payload['headers'] = headers;
         }
 
         if (typeof scheduledAt !== 'undefined') {
-            params['scheduledAt'] = scheduledAt;
+            payload['scheduledAt'] = scheduledAt;
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
-
-        const apiHeaders: { [header: string]: string } = {
-            'content-type': 'multipart/form-data',
-        }
-
-        return await this.client.call('post', uri, apiHeaders, params);
+        return await this.client.call('post', uri, {
+            'content-type': 'application/json',
+        }, payload);
     }
 
     /**
@@ -117,7 +114,7 @@ export class Functions extends Service {
      * @throws {AppwriteException}
      * @returns {Promise}
     */
-    async getExecution(functionId: string,executionId: string): Promise<Models.Execution> {
+    async getExecution(functionId: string, executionId: string): Promise<Models.Execution> {
         if (typeof functionId === 'undefined') {
             throw new AppwriteException('Missing required parameter: "functionId"');
         }
@@ -127,14 +124,11 @@ export class Functions extends Service {
         }
 
         const apiPath = '/functions/{functionId}/executions/{executionId}'.replace('{functionId}', functionId).replace('{executionId}', executionId);
-        const params: Params = {};
+        const payload: Payload = {};
 
         const uri = new URL(this.client.config.endpoint + apiPath);
-
-        const apiHeaders: { [header: string]: string } = {
+        return await this.client.call('get', uri, {
             'content-type': 'application/json',
-        }
-
-        return await this.client.call('get', uri, apiHeaders, params);
+        }, payload);
     }
 };
