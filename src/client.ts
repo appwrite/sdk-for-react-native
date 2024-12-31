@@ -49,7 +49,17 @@ type RealtimeRequestAuthenticate = {
 
 type Realtime = {
     socket?: WebSocket;
+
+    /**
+     * Timeout for reconnect operations.
+     */
     timeout?: number;
+
+    /**
+     * Heartbeat interval for the realtime connection.
+    */
+    heartbeat?: number;
+
     url?: string;
     lastMessage?: RealtimeResponse;
     channels: Set<string>;
@@ -63,6 +73,7 @@ type Realtime = {
     getTimeout: () => number;
     connect: () => void;
     createSocket: () => void;
+    createHeartbeat: () => void;
     cleanUp: (channels: string[]) => void;
     onMessage: (event: MessageEvent) => void;
 }
@@ -103,7 +114,7 @@ class Client {
         'x-sdk-name': 'React Native',
         'x-sdk-platform': 'client',
         'x-sdk-language': 'reactnative',
-        'x-sdk-version': '0.5.0',
+        'x-sdk-version': '0.6.0',
         'X-Appwrite-Response-Format': '1.6.0',
     };
 
@@ -212,6 +223,7 @@ class Client {
     private realtime: Realtime = {
         socket: undefined,
         timeout: undefined,
+        heartbeat: undefined,
         url: '',
         channels: new Set(),
         subscriptions: new Map(),
@@ -236,6 +248,17 @@ class Client {
                 default:
                     return 60_000;
             }
+        },
+        createHeartbeat: () => {
+            if (this.realtime.heartbeat) {
+                clearTimeout(this.realtime.heartbeat);
+            }
+
+            this.realtime.heartbeat = window?.setInterval(() => {
+                this.realtime.socket?.send(JSON.stringify({
+                    type: 'ping'
+                }));
+            }, 20_000);
         },
         createSocket: () => {
             if (this.realtime.channels.size < 1) {
@@ -275,6 +298,7 @@ class Client {
                 this.realtime.socket.addEventListener('message', this.realtime.onMessage);
                 this.realtime.socket.addEventListener('open', _event => {
                     this.realtime.reconnectAttempts = 0;
+                    this.realtime.createHeartbeat();
                 });
                 this.realtime.socket.addEventListener('close', event => {
                     if (

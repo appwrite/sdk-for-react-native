@@ -168,7 +168,8 @@ export class Teams extends Service {
      * List team memberships
      *
      * Use this endpoint to list a team's members using the team's ID. All team
-     * members have read access to this endpoint.
+     * members have read access to this endpoint. Hide sensitive attributes from
+     * the response by toggling membership privacy in the Console.
      *
      * @param {string} teamId
      * @param {string[]} queries
@@ -279,7 +280,8 @@ export class Teams extends Service {
      * Get team membership
      *
      * Get a team member by the membership unique id. All team members have read
-     * access for this resource.
+     * access for this resource. Hide sensitive attributes from the response by
+     * toggling membership privacy in the Console.
      *
      * @param {string} teamId
      * @param {string} membershipId
