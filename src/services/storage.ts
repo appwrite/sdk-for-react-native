@@ -122,12 +122,10 @@ export class Storage extends Service {
 
         let offset = 0;
         let response = undefined;
-        if(fileId != 'unique()') {
-            try {
-                response = await this.client.call('GET', new URL(this.client.config.endpoint + apiPath + '/' + fileId), apiHeaders);
-                offset = response.chunksUploaded * Service.CHUNK_SIZE;
-            } catch(e) {
-            }
+        try {
+            response = await this.client.call('GET', new URL(this.client.config.endpoint + apiPath + '/' + fileId), apiHeaders);
+            offset = response.chunksUploaded * Service.CHUNK_SIZE;
+        } catch(e) {
         }
 
         let timestamp = new Date().getTime();

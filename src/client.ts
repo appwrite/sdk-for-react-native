@@ -11,8 +11,8 @@ type Headers = {
 }
 
 type RealtimeResponse = {
-    type: 'error' | 'event' | 'connected' | 'response';
-    data: RealtimeResponseAuthenticated | RealtimeResponseConnected | RealtimeResponseError | RealtimeResponseEvent<unknown>;
+    type: 'error' | 'event' | 'connected' | 'response' | 'pong';
+    data: RealtimeResponseAuthenticated | RealtimeResponseConnected | RealtimeResponseError | RealtimeResponseEvent<unknown> | undefined;
 }
 
 type RealtimeRequest = {
@@ -114,7 +114,7 @@ class Client {
         'x-sdk-name': 'React Native',
         'x-sdk-platform': 'client',
         'x-sdk-language': 'reactnative',
-        'x-sdk-version': '0.6.0',
+        'x-sdk-version': '0.7.0',
         'X-Appwrite-Response-Format': '1.6.0',
     };
 
@@ -339,6 +339,8 @@ class Client {
                             })
                         }
                         break;
+                    case 'pong':
+                        break; // Handle pong response if needed
                     case 'error':
                         throw message.data;
                     default:
