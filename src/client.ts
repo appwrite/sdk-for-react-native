@@ -114,7 +114,7 @@ class Client {
         'x-sdk-name': 'React Native',
         'x-sdk-platform': 'client',
         'x-sdk-language': 'reactnative',
-        'x-sdk-version': '0.7.0',
+        'x-sdk-version': '0.6.0',
         'X-Appwrite-Response-Format': '1.6.0',
     };
 
@@ -453,6 +453,7 @@ class Client {
         try {
             let data = null;
             const response = await fetch(url.toString(), options);
+            const text = await response.text()
 
             const warnings = response.headers.get('x-appwrite-warning');
             if (warnings) {
@@ -463,12 +464,12 @@ class Client {
                 data = await response.json();
             } else {
                 data = {
-                    message: await response.text()
+                    message: text
                 };
             }
 
             if (400 <= response.status) {
-                throw new AppwriteException(data?.message, response.status, data?.type, data);
+                throw new AppwriteException(data?.message, response.status, data?.type, text);
             }
 
             const cookieFallback = response.headers.get('X-Fallback-Cookies');

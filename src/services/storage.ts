@@ -16,8 +16,6 @@ export class Storage extends Service {
      }
 
     /**
-     * List files
-     *
      * Get a list of all the user files. You can use the query params to filter
      * your results.
      *
@@ -44,14 +42,12 @@ export class Storage extends Service {
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
-        return await this.client.call('get', uri, {
+        return this.client.call('get', uri, {
             'content-type': 'application/json',
         }, payload);
     }
 
     /**
-     * Create file
-     *
      * Create a new file. Before using this route, you should create a new bucket
      * resource using either a [server
      * integration](https://appwrite.io/docs/server/storage#storageCreateBucket)
@@ -111,7 +107,7 @@ export class Storage extends Service {
         const size = file.size;
 
         if (size <= Service.CHUNK_SIZE) {
-            return await this.client.call('post', uri, {
+            return this.client.call('post', uri, {
                 'content-type': 'multipart/form-data',
             }, payload);
         }
@@ -167,8 +163,6 @@ export class Storage extends Service {
     }
 
     /**
-     * Get file
-     *
      * Get a file by its unique ID. This endpoint response returns a JSON object
      * with the file metadata.
      *
@@ -190,14 +184,12 @@ export class Storage extends Service {
         const payload: Payload = {};
 
         const uri = new URL(this.client.config.endpoint + apiPath);
-        return await this.client.call('get', uri, {
+        return this.client.call('get', uri, {
             'content-type': 'application/json',
         }, payload);
     }
 
     /**
-     * Update file
-     *
      * Update a file by its unique ID. Only users with write permissions have
      * access to update this resource.
      *
@@ -229,14 +221,12 @@ export class Storage extends Service {
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
-        return await this.client.call('put', uri, {
+        return this.client.call('put', uri, {
             'content-type': 'application/json',
         }, payload);
     }
 
     /**
-     * Delete file
-     *
      * Delete a file by its unique ID. Only users with write permissions have
      * access to delete this resource.
      *
@@ -258,14 +248,12 @@ export class Storage extends Service {
         const payload: Payload = {};
 
         const uri = new URL(this.client.config.endpoint + apiPath);
-        return await this.client.call('delete', uri, {
+        return this.client.call('delete', uri, {
             'content-type': 'application/json',
         }, payload);
     }
 
     /**
-     * Get file for download
-     *
      * Get a file content by its unique ID. The endpoint response return with a
      * 'Content-Disposition: attachment' header that tells the browser to start
      * downloading the file to user downloads directory.
@@ -298,8 +286,6 @@ export class Storage extends Service {
     }
 
     /**
-     * Get file preview
-     *
      * Get a file preview image. Currently, this method supports preview for image
      * files (jpg, png, and gif), other supported formats, like pdf, docs, slides,
      * and spreadsheets, will return the file icon image. You can also pass query
@@ -389,8 +375,6 @@ export class Storage extends Service {
     }
 
     /**
-     * Get file for view
-     *
      * Get a file content by its unique ID. This endpoint is similar to the
      * download method but returns with no  'Content-Disposition: attachment'
      * header.

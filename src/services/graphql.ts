@@ -14,8 +14,6 @@ export class Graphql extends Service {
      }
 
     /**
-     * GraphQL endpoint
-     *
      * Execute a GraphQL mutation.
      *
      * @param {object} query
@@ -35,15 +33,13 @@ export class Graphql extends Service {
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
-        return await this.client.call('post', uri, {
+        return this.client.call('post', uri, {
             'x-sdk-graphql': 'true',
             'content-type': 'application/json',
         }, payload);
     }
 
     /**
-     * GraphQL endpoint
-     *
      * Execute a GraphQL mutation.
      *
      * @param {object} query
@@ -63,7 +59,7 @@ export class Graphql extends Service {
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
-        return await this.client.call('post', uri, {
+        return this.client.call('post', uri, {
             'x-sdk-graphql': 'true',
             'content-type': 'application/json',
         }, payload);
