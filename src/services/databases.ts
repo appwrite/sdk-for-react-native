@@ -14,8 +14,6 @@ export class Databases extends Service {
      }
 
     /**
-     * List documents
-     *
      * Get a list of all the user's documents in a given collection. You can use
      * the query params to filter your results.
      *
@@ -25,7 +23,7 @@ export class Databases extends Service {
      * @throws {AppwriteException}
      * @returns {Promise}
     */
-    async listDocuments<Document extends Models.Document>(databaseId: string, collectionId: string, queries?: string[]): Promise<Models.DocumentList<Document>> {
+    listDocuments<Document extends Models.Document>(databaseId: string, collectionId: string, queries?: string[]): Promise<Models.DocumentList<Document>> {
         if (typeof databaseId === 'undefined') {
             throw new AppwriteException('Missing required parameter: "databaseId"');
         }
@@ -42,14 +40,12 @@ export class Databases extends Service {
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
-        return await this.client.call('get', uri, {
+        return this.client.call('get', uri, {
             'content-type': 'application/json',
         }, payload);
     }
 
     /**
-     * Create document
-     *
      * Create a new Document. Before using this route, you should create a new
      * collection resource using either a [server
      * integration](https://appwrite.io/docs/server/databases#databasesCreateCollection)
@@ -63,7 +59,7 @@ export class Databases extends Service {
      * @throws {AppwriteException}
      * @returns {Promise}
     */
-    async createDocument<Document extends Models.Document>(databaseId: string, collectionId: string, documentId: string, data: object, permissions?: string[]): Promise<Document> {
+    createDocument<Document extends Models.Document>(databaseId: string, collectionId: string, documentId: string, data: object, permissions?: string[]): Promise<Document> {
         if (typeof databaseId === 'undefined') {
             throw new AppwriteException('Missing required parameter: "databaseId"');
         }
@@ -96,14 +92,12 @@ export class Databases extends Service {
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
-        return await this.client.call('post', uri, {
+        return this.client.call('post', uri, {
             'content-type': 'application/json',
         }, payload);
     }
 
     /**
-     * Get document
-     *
      * Get a document by its unique ID. This endpoint response returns a JSON
      * object with the document data.
      *
@@ -114,7 +108,7 @@ export class Databases extends Service {
      * @throws {AppwriteException}
      * @returns {Promise}
     */
-    async getDocument<Document extends Models.Document>(databaseId: string, collectionId: string, documentId: string, queries?: string[]): Promise<Document> {
+    getDocument<Document extends Models.Document>(databaseId: string, collectionId: string, documentId: string, queries?: string[]): Promise<Document> {
         if (typeof databaseId === 'undefined') {
             throw new AppwriteException('Missing required parameter: "databaseId"');
         }
@@ -135,14 +129,12 @@ export class Databases extends Service {
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
-        return await this.client.call('get', uri, {
+        return this.client.call('get', uri, {
             'content-type': 'application/json',
         }, payload);
     }
 
     /**
-     * Update document
-     *
      * Update a document by its unique ID. Using the patch method you can pass
      * only specific fields that will get updated.
      *
@@ -154,7 +146,7 @@ export class Databases extends Service {
      * @throws {AppwriteException}
      * @returns {Promise}
     */
-    async updateDocument<Document extends Models.Document>(databaseId: string, collectionId: string, documentId: string, data?: object, permissions?: string[]): Promise<Document> {
+    updateDocument<Document extends Models.Document>(databaseId: string, collectionId: string, documentId: string, data?: object, permissions?: string[]): Promise<Document> {
         if (typeof databaseId === 'undefined') {
             throw new AppwriteException('Missing required parameter: "databaseId"');
         }
@@ -179,14 +171,12 @@ export class Databases extends Service {
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
-        return await this.client.call('patch', uri, {
+        return this.client.call('patch', uri, {
             'content-type': 'application/json',
         }, payload);
     }
 
     /**
-     * Delete document
-     *
      * Delete a document by its unique ID.
      *
      * @param {string} databaseId
@@ -195,7 +185,7 @@ export class Databases extends Service {
      * @throws {AppwriteException}
      * @returns {Promise}
     */
-    async deleteDocument(databaseId: string, collectionId: string, documentId: string): Promise<{}> {
+    deleteDocument(databaseId: string, collectionId: string, documentId: string): Promise<{}> {
         if (typeof databaseId === 'undefined') {
             throw new AppwriteException('Missing required parameter: "databaseId"');
         }
@@ -212,7 +202,7 @@ export class Databases extends Service {
         const payload: Payload = {};
 
         const uri = new URL(this.client.config.endpoint + apiPath);
-        return await this.client.call('delete', uri, {
+        return this.client.call('delete', uri, {
             'content-type': 'application/json',
         }, payload);
     }
