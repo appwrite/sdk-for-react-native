@@ -23,7 +23,7 @@ export class Databases extends Service {
      * @throws {AppwriteException}
      * @returns {Promise}
     */
-    async listDocuments<Document extends Models.Document>(databaseId: string, collectionId: string, queries?: string[]): Promise<Models.DocumentList<Document>> {
+    listDocuments<Document extends Models.Document>(databaseId: string, collectionId: string, queries?: string[]): Promise<Models.DocumentList<Document>> {
         if (typeof databaseId === 'undefined') {
             throw new AppwriteException('Missing required parameter: "databaseId"');
         }
@@ -59,7 +59,7 @@ export class Databases extends Service {
      * @throws {AppwriteException}
      * @returns {Promise}
     */
-    async createDocument<Document extends Models.Document>(databaseId: string, collectionId: string, documentId: string, data: object, permissions?: string[]): Promise<Document> {
+    createDocument<Document extends Models.Document>(databaseId: string, collectionId: string, documentId: string, data: object, permissions?: string[]): Promise<Document> {
         if (typeof databaseId === 'undefined') {
             throw new AppwriteException('Missing required parameter: "databaseId"');
         }
@@ -108,7 +108,7 @@ export class Databases extends Service {
      * @throws {AppwriteException}
      * @returns {Promise}
     */
-    async getDocument<Document extends Models.Document>(databaseId: string, collectionId: string, documentId: string, queries?: string[]): Promise<Document> {
+    getDocument<Document extends Models.Document>(databaseId: string, collectionId: string, documentId: string, queries?: string[]): Promise<Document> {
         if (typeof databaseId === 'undefined') {
             throw new AppwriteException('Missing required parameter: "databaseId"');
         }
@@ -146,7 +146,7 @@ export class Databases extends Service {
      * @throws {AppwriteException}
      * @returns {Promise}
     */
-    async updateDocument<Document extends Models.Document>(databaseId: string, collectionId: string, documentId: string, data?: object, permissions?: string[]): Promise<Document> {
+    updateDocument<Document extends Models.Document>(databaseId: string, collectionId: string, documentId: string, data?: object, permissions?: string[]): Promise<Document> {
         if (typeof databaseId === 'undefined') {
             throw new AppwriteException('Missing required parameter: "databaseId"');
         }
@@ -185,7 +185,7 @@ export class Databases extends Service {
      * @throws {AppwriteException}
      * @returns {Promise}
     */
-    async deleteDocument(databaseId: string, collectionId: string, documentId: string): Promise<{}> {
+    deleteDocument(databaseId: string, collectionId: string, documentId: string): Promise<{}> {
         if (typeof databaseId === 'undefined') {
             throw new AppwriteException('Missing required parameter: "databaseId"');
         }
