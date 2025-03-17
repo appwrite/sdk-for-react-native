@@ -15,4 +15,5 @@ export enum CreditCard {
     Visa = 'visa',
     MIR = 'mir',
     Maestro = 'maestro',
+    Rupay = 'rupay',
 }

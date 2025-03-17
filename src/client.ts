@@ -114,7 +114,7 @@ class Client {
         'x-sdk-name': 'React Native',
         'x-sdk-platform': 'client',
         'x-sdk-language': 'reactnative',
-        'x-sdk-version': '0.7.1',
+        'x-sdk-version': '0.7.2',
         'X-Appwrite-Response-Format': '1.6.0',
     };
 
@@ -452,8 +452,8 @@ class Client {
 
         try {
             let data = null;
+
             const response = await fetch(url.toString(), options);
-            const text = await response.text()
 
             const warnings = response.headers.get('x-appwrite-warning');
             if (warnings) {
@@ -464,12 +464,18 @@ class Client {
                 data = await response.json();
             } else {
                 data = {
-                    message: text
+                    message: await response.text()
                 };
             }
 
             if (400 <= response.status) {
-                throw new AppwriteException(data?.message, response.status, data?.type, text);
+                let responseText = '';
+                if (response.headers.get('content-type')?.includes('application/json') || responseType === 'arrayBuffer') {
+                    responseText = JSON.stringify(data);
+                } else {
+                    responseText = data?.message;
+                }
+                throw new AppwriteException(data?.message, response.status, data?.type, responseText);
             }
 
             const cookieFallback = response.headers.get('X-Fallback-Cookies');
