@@ -470,7 +470,7 @@ class Client {
 
             if (400 <= response.status) {
                 let responseText = '';
-                if (response.headers.get('content-type')?.includes('application/json') || responseType === 'arrayBuffer') {
+                if (response.headers.get('content-type')?.includes('application/json')) {
                     responseText = JSON.stringify(data);
                 } else {
                     responseText = data?.message;

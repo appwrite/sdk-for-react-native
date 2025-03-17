@@ -30,11 +30,11 @@
     "rollup": "2.75.4",
     "serve-handler": "6.1.0",
     "tslib": "2.4.0",
-    "typescript": "4.7.2"
+    "typescript": "^5.3.3"
   },
   "dependencies": {
-    "expo-file-system": "16.0.8",
-    "react-native": "^0.73.6"
+    "expo-file-system": "~18.0.11",
+    "react-native": "0.76.7"
   },
   "peerDependencies": {
     "expo": "*",
