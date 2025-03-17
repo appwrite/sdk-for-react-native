@@ -114,7 +114,7 @@ class Client {
         'x-sdk-name': 'React Native',
         'x-sdk-platform': 'client',
         'x-sdk-language': 'reactnative',
-        'x-sdk-version': '0.7.2',
+        'x-sdk-version': '0.7.3',
         'X-Appwrite-Response-Format': '1.6.0',
     };
 
@@ -470,7 +470,7 @@ class Client {
 
             if (400 <= response.status) {
                 let responseText = '';
-                if (response.headers.get('content-type')?.includes('application/json') || responseType === 'arrayBuffer') {
+                if (response.headers.get('content-type')?.includes('application/json')) {
                     responseText = JSON.stringify(data);
                 } else {
                     responseText = data?.message;
