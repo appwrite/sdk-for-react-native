@@ -43,7 +43,6 @@ export class Storage extends Service {
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call('get', uri, {
-            'content-type': 'application/json',
         }, payload);
     }
 
@@ -185,7 +184,6 @@ export class Storage extends Service {
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call('get', uri, {
-            'content-type': 'application/json',
         }, payload);
     }
 

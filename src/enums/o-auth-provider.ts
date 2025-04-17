@@ -13,6 +13,7 @@ export enum OAuthProvider {
     Dropbox = 'dropbox',
     Etsy = 'etsy',
     Facebook = 'facebook',
+    Figma = 'figma',
     Github = 'github',
     Gitlab = 'gitlab',
     Google = 'google',
