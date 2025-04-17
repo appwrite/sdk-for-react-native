@@ -114,7 +114,7 @@ class Client {
         'x-sdk-name': 'React Native',
         'x-sdk-platform': 'client',
         'x-sdk-language': 'reactnative',
-        'x-sdk-version': '0.7.2',
+        'x-sdk-version': '0.7.3',
         'X-Appwrite-Response-Format': '1.6.0',
     };
 
@@ -128,8 +128,12 @@ class Client {
      * @returns {this}
      */
     setEndpoint(endpoint: string): this {
+        if (!endpoint.startsWith('http://') && !endpoint.startsWith('https://')) {
+            throw new AppwriteException('Invalid endpoint URL: ' + endpoint);
+        }
+
         this.config.endpoint = endpoint;
-        this.config.endpointRealtime = this.config.endpointRealtime || this.config.endpoint.replace('https://', 'wss://').replace('http://', 'ws://');
+        this.config.endpointRealtime = endpoint.replace('https://', 'wss://').replace('http://', 'ws://');
 
         return this;
     }
@@ -142,8 +146,11 @@ class Client {
      * @returns {this}
      */
     setEndpointRealtime(endpointRealtime: string): this {
-        this.config.endpointRealtime = endpointRealtime;
+        if (!endpointRealtime.startsWith('ws://') && !endpointRealtime.startsWith('wss://')) {
+            throw new AppwriteException('Invalid realtime endpoint URL: ' + endpointRealtime);
+        }
 
+        this.config.endpointRealtime = endpointRealtime;
         return this;
     }
 
