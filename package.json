@@ -2,7 +2,7 @@
   "name": "react-native-appwrite",
   "homepage": "https://appwrite.io/support",
   "description": "Appwrite is an open-source self-hosted backend server that abstract and simplify complex and repetitive development tasks behind a very simple REST API",
-  "version": "0.7.3",
+  "version": "0.7.4",
   "license": "BSD-3-Clause",
   "main": "dist/cjs/sdk.js",
   "exports": {
@@ -33,8 +33,8 @@
     "typescript": "^5.3.3"
   },
   "dependencies": {
-    "expo-file-system": "~18.0.11",
-    "react-native": "0.76.7"
+    "expo-file-system": "18.*.*",
+    "react-native": ">=0.76.7 <1.0.0"
   },
   "peerDependencies": {
     "expo": "*",

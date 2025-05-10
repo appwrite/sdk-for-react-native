@@ -49,7 +49,6 @@ export class Databases extends Service {
      * collection resource using either a [server
      * integration](https://appwrite.io/docs/server/databases#databasesCreateCollection)
      * API or directly from your database console.
-     * 
      *
      * @param {string} databaseId
      * @param {string} collectionId
