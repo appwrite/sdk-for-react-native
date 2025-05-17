@@ -940,7 +940,7 @@ export namespace Models {
          */
         errors: string;
         /**
-         * Function execution duration in seconds.
+         * Resource(function/site) execution duration in seconds.
          */
         duration: number;
         /**
