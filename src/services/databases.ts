@@ -97,44 +97,6 @@ export class Databases extends Service {
     }
 
     /**
-     * Create new Documents. Before using this route, you should create a new
-     * collection resource using either a [server
-     * integration](https://appwrite.io/docs/server/databases#databasesCreateCollection)
-     * API or directly from your database console.
-     *
-     * @param {string} databaseId
-     * @param {string} collectionId
-     * @param {object[]} documents
-     * @throws {AppwriteException}
-     * @returns {Promise}
-    */
-    createDocuments<Document extends Models.Document>(databaseId: string, collectionId: string, documents: object[]): Promise<Models.DocumentList<Document>> {
-        if (typeof databaseId === 'undefined') {
-            throw new AppwriteException('Missing required parameter: "databaseId"');
-        }
-
-        if (typeof collectionId === 'undefined') {
-            throw new AppwriteException('Missing required parameter: "collectionId"');
-        }
-
-        if (typeof documents === 'undefined') {
-            throw new AppwriteException('Missing required parameter: "documents"');
-        }
-
-        const apiPath = '/databases/{databaseId}/collections/{collectionId}/documents'.replace('{databaseId}', databaseId).replace('{collectionId}', collectionId);
-        const payload: Payload = {};
-
-        if (typeof documents !== 'undefined') {
-            payload['documents'] = documents;
-        }
-
-        const uri = new URL(this.client.config.endpoint + apiPath);
-        return this.client.call('post', uri, {
-            'content-type': 'application/json',
-        }, payload);
-    }
-
-    /**
      * Get a document by its unique ID. This endpoint response returns a JSON
      * object with the document data.
      *
