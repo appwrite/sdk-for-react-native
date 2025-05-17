@@ -114,8 +114,8 @@ class Client {
         'x-sdk-name': 'React Native',
         'x-sdk-platform': 'client',
         'x-sdk-language': 'reactnative',
-        'x-sdk-version': '0.7.4',
-        'X-Appwrite-Response-Format': '1.6.0',
+        'x-sdk-version': '0.8.0',
+        'X-Appwrite-Response-Format': '1.7.0',
     };
 
     /**
