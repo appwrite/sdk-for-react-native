@@ -258,10 +258,11 @@ export class Storage extends Service {
      *
      * @param {string} bucketId
      * @param {string} fileId
+     * @param {string} token
      * @throws {AppwriteException}
      * @returns {URL}
     */
-    getFileDownload(bucketId: string, fileId: string): URL {
+    getFileDownload(bucketId: string, fileId: string, token?: string): URL {
         if (typeof bucketId === 'undefined') {
             throw new AppwriteException('Missing required parameter: "bucketId"');
         }
@@ -272,6 +273,10 @@ export class Storage extends Service {
 
         const apiPath = '/storage/buckets/{bucketId}/files/{fileId}/download'.replace('{bucketId}', bucketId).replace('{fileId}', fileId);
         const payload: Payload = {};
+
+        if (typeof token !== 'undefined') {
+            payload['token'] = token;
+        }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         payload['project'] = this.client.config.project;
@@ -303,10 +308,11 @@ export class Storage extends Service {
      * @param {number} rotation
      * @param {string} background
      * @param {ImageFormat} output
+     * @param {string} token
      * @throws {AppwriteException}
      * @returns {URL}
     */
-    getFilePreview(bucketId: string, fileId: string, width?: number, height?: number, gravity?: ImageGravity, quality?: number, borderWidth?: number, borderColor?: string, borderRadius?: number, opacity?: number, rotation?: number, background?: string, output?: ImageFormat): URL {
+    getFilePreview(bucketId: string, fileId: string, width?: number, height?: number, gravity?: ImageGravity, quality?: number, borderWidth?: number, borderColor?: string, borderRadius?: number, opacity?: number, rotation?: number, background?: string, output?: ImageFormat, token?: string): URL {
         if (typeof bucketId === 'undefined') {
             throw new AppwriteException('Missing required parameter: "bucketId"');
         }
@@ -362,6 +368,10 @@ export class Storage extends Service {
             payload['output'] = output;
         }
 
+        if (typeof token !== 'undefined') {
+            payload['token'] = token;
+        }
+
         const uri = new URL(this.client.config.endpoint + apiPath);
         payload['project'] = this.client.config.project;
 
@@ -379,10 +389,11 @@ export class Storage extends Service {
      *
      * @param {string} bucketId
      * @param {string} fileId
+     * @param {string} token
      * @throws {AppwriteException}
      * @returns {URL}
     */
-    getFileView(bucketId: string, fileId: string): URL {
+    getFileView(bucketId: string, fileId: string, token?: string): URL {
         if (typeof bucketId === 'undefined') {
             throw new AppwriteException('Missing required parameter: "bucketId"');
         }
@@ -393,6 +404,10 @@ export class Storage extends Service {
 
         const apiPath = '/storage/buckets/{bucketId}/files/{fileId}/view'.replace('{bucketId}', bucketId).replace('{fileId}', fileId);
         const payload: Payload = {};
+
+        if (typeof token !== 'undefined') {
+            payload['token'] = token;
+        }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         payload['project'] = this.client.config.project;

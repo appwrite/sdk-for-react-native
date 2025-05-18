@@ -20,11 +20,10 @@ export class Functions extends Service {
      *
      * @param {string} functionId
      * @param {string[]} queries
-     * @param {string} search
      * @throws {AppwriteException}
      * @returns {Promise}
     */
-    listExecutions(functionId: string, queries?: string[], search?: string): Promise<Models.ExecutionList> {
+    listExecutions(functionId: string, queries?: string[]): Promise<Models.ExecutionList> {
         if (typeof functionId === 'undefined') {
             throw new AppwriteException('Missing required parameter: "functionId"');
         }
@@ -34,10 +33,6 @@ export class Functions extends Service {
 
         if (typeof queries !== 'undefined') {
             payload['queries'] = queries;
-        }
-
-        if (typeof search !== 'undefined') {
-            payload['search'] = search;
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
