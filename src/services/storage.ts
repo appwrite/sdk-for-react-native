@@ -432,10 +432,10 @@ export class Storage extends Service {
      * @param {string} fileId
      * @param {string} token
      * @throws {AppwriteException}
-     * @returns ArrayBuffer
+     * @returns {URL}
 
     */
-    getFileDownloadURL(bucketId: string, fileId: string, token?: string): Promise<ArrayBuffer> {
+    getFileDownloadURL(bucketId: string, fileId: string, token?: string): URL {
         const apiPath = '/storage/buckets/{bucketId}/files/{fileId}/download'.replace('{bucketId}', bucketId).replace('{fileId}', fileId);
         const payload: Payload = {};
 
@@ -445,8 +445,7 @@ export class Storage extends Service {
 
         const uri = new URL(this.client.config.endpoint + apiPath);
 
-        return this.client.call('get', uri, {
-        }, payload);
+        return uri;
     }
 
     /**
@@ -471,10 +470,10 @@ export class Storage extends Service {
      * @param {ImageFormat} output
      * @param {string} token
      * @throws {AppwriteException}
-     * @returns ArrayBuffer
+     * @returns {URL}
 
     */
-    getFilePreviewURL(bucketId: string, fileId: string, width?: number, height?: number, gravity?: ImageGravity, quality?: number, borderWidth?: number, borderColor?: string, borderRadius?: number, opacity?: number, rotation?: number, background?: string, output?: ImageFormat, token?: string): Promise<ArrayBuffer> {
+    getFilePreviewURL(bucketId: string, fileId: string, width?: number, height?: number, gravity?: ImageGravity, quality?: number, borderWidth?: number, borderColor?: string, borderRadius?: number, opacity?: number, rotation?: number, background?: string, output?: ImageFormat, token?: string): URL {
         const apiPath = '/storage/buckets/{bucketId}/files/{fileId}/preview'.replace('{bucketId}', bucketId).replace('{fileId}', fileId);
         const payload: Payload = {};
 
@@ -528,8 +527,7 @@ export class Storage extends Service {
 
         const uri = new URL(this.client.config.endpoint + apiPath);
 
-        return this.client.call('get', uri, {
-        }, payload);
+        return uri;
     }
 
     /**
@@ -541,10 +539,10 @@ export class Storage extends Service {
      * @param {string} fileId
      * @param {string} token
      * @throws {AppwriteException}
-     * @returns ArrayBuffer
+     * @returns {URL}
 
     */
-    getFileViewURL(bucketId: string, fileId: string, token?: string): Promise<ArrayBuffer> {
+    getFileViewURL(bucketId: string, fileId: string, token?: string): URL {
         const apiPath = '/storage/buckets/{bucketId}/files/{fileId}/view'.replace('{bucketId}', bucketId).replace('{fileId}', fileId);
         const payload: Payload = {};
 
@@ -554,7 +552,6 @@ export class Storage extends Service {
 
         const uri = new URL(this.client.config.endpoint + apiPath);
 
-        return this.client.call('get', uri, {
-        }, payload);
+        return uri;
     }
 };

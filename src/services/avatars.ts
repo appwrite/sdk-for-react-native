@@ -369,10 +369,10 @@ export class Avatars extends Service {
      * @param {number} height
      * @param {number} quality
      * @throws {AppwriteException}
-     * @returns ArrayBuffer
+     * @returns {URL}
 
     */
-    getBrowserURL(code: Browser, width?: number, height?: number, quality?: number): Promise<ArrayBuffer> {
+    getBrowserURL(code: Browser, width?: number, height?: number, quality?: number): URL {
         const apiPath = '/avatars/browsers/{code}'.replace('{code}', code);
         const payload: Payload = {};
 
@@ -390,8 +390,7 @@ export class Avatars extends Service {
 
         const uri = new URL(this.client.config.endpoint + apiPath);
 
-        return this.client.call('get', uri, {
-        }, payload);
+        return uri;
     }
 
     /**
@@ -410,10 +409,10 @@ export class Avatars extends Service {
      * @param {number} height
      * @param {number} quality
      * @throws {AppwriteException}
-     * @returns ArrayBuffer
+     * @returns {URL}
 
     */
-    getCreditCardURL(code: CreditCard, width?: number, height?: number, quality?: number): Promise<ArrayBuffer> {
+    getCreditCardURL(code: CreditCard, width?: number, height?: number, quality?: number): URL {
         const apiPath = '/avatars/credit-cards/{code}'.replace('{code}', code);
         const payload: Payload = {};
 
@@ -431,8 +430,7 @@ export class Avatars extends Service {
 
         const uri = new URL(this.client.config.endpoint + apiPath);
 
-        return this.client.call('get', uri, {
-        }, payload);
+        return uri;
     }
 
     /**
@@ -443,10 +441,10 @@ export class Avatars extends Service {
      *
      * @param {string} url
      * @throws {AppwriteException}
-     * @returns ArrayBuffer
+     * @returns {URL}
 
     */
-    getFaviconURL(url: string): Promise<ArrayBuffer> {
+    getFaviconURL(url: string): URL {
         const apiPath = '/avatars/favicon';
         const payload: Payload = {};
 
@@ -456,8 +454,7 @@ export class Avatars extends Service {
 
         const uri = new URL(this.client.config.endpoint + apiPath);
 
-        return this.client.call('get', uri, {
-        }, payload);
+        return uri;
     }
 
     /**
@@ -477,10 +474,10 @@ export class Avatars extends Service {
      * @param {number} height
      * @param {number} quality
      * @throws {AppwriteException}
-     * @returns ArrayBuffer
+     * @returns {URL}
 
     */
-    getFlagURL(code: Flag, width?: number, height?: number, quality?: number): Promise<ArrayBuffer> {
+    getFlagURL(code: Flag, width?: number, height?: number, quality?: number): URL {
         const apiPath = '/avatars/flags/{code}'.replace('{code}', code);
         const payload: Payload = {};
 
@@ -498,8 +495,7 @@ export class Avatars extends Service {
 
         const uri = new URL(this.client.config.endpoint + apiPath);
 
-        return this.client.call('get', uri, {
-        }, payload);
+        return uri;
     }
 
     /**
@@ -519,10 +515,10 @@ export class Avatars extends Service {
      * @param {number} width
      * @param {number} height
      * @throws {AppwriteException}
-     * @returns ArrayBuffer
+     * @returns {URL}
 
     */
-    getImageURL(url: string, width?: number, height?: number): Promise<ArrayBuffer> {
+    getImageURL(url: string, width?: number, height?: number): URL {
         const apiPath = '/avatars/image';
         const payload: Payload = {};
 
@@ -540,8 +536,7 @@ export class Avatars extends Service {
 
         const uri = new URL(this.client.config.endpoint + apiPath);
 
-        return this.client.call('get', uri, {
-        }, payload);
+        return uri;
     }
 
     /**
@@ -567,10 +562,10 @@ export class Avatars extends Service {
      * @param {number} height
      * @param {string} background
      * @throws {AppwriteException}
-     * @returns ArrayBuffer
+     * @returns {URL}
 
     */
-    getInitialsURL(name?: string, width?: number, height?: number, background?: string): Promise<ArrayBuffer> {
+    getInitialsURL(name?: string, width?: number, height?: number, background?: string): URL {
         const apiPath = '/avatars/initials';
         const payload: Payload = {};
 
@@ -592,8 +587,7 @@ export class Avatars extends Service {
 
         const uri = new URL(this.client.config.endpoint + apiPath);
 
-        return this.client.call('get', uri, {
-        }, payload);
+        return uri;
     }
 
     /**
@@ -606,10 +600,10 @@ export class Avatars extends Service {
      * @param {number} margin
      * @param {boolean} download
      * @throws {AppwriteException}
-     * @returns ArrayBuffer
+     * @returns {URL}
 
     */
-    getQRURL(text: string, size?: number, margin?: number, download?: boolean): Promise<ArrayBuffer> {
+    getQRURL(text: string, size?: number, margin?: number, download?: boolean): URL {
         const apiPath = '/avatars/qr';
         const payload: Payload = {};
 
@@ -631,7 +625,6 @@ export class Avatars extends Service {
 
         const uri = new URL(this.client.config.endpoint + apiPath);
 
-        return this.client.call('get', uri, {
-        }, payload);
+        return uri;
     }
 };
