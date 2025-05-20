@@ -416,7 +416,7 @@ class Client {
         }
     }
 
-    async call(method: string, url: URL, headers: Headers = {}, params: Payload = {}): Promise<any> {
+    async call(method: string, url: URL, headers: Headers = {}, params: Payload = {}, responseType = 'json'): Promise<any> {
         method = method.toUpperCase();
 
         headers = Object.assign({}, this.headers, headers);
@@ -469,6 +469,8 @@ class Client {
 
             if (response.headers.get('content-type')?.includes('application/json')) {
                 data = await response.json();
+            } else if (responseType === 'arrayBuffer') {
+                data = await response.arrayBuffer();
             } else {
                 data = {
                     message: await response.text()
