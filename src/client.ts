@@ -115,7 +115,7 @@ class Client {
         'x-sdk-name': 'React Native',
         'x-sdk-platform': 'client',
         'x-sdk-language': 'reactnative',
-        'x-sdk-version': '0.9.1',
+        'x-sdk-version': '0.9.2',
         'X-Appwrite-Response-Format': '1.7.0',
     };
 
@@ -441,8 +441,11 @@ class Client {
         let options: RequestInit = {
             method,
             headers,
-            credentials: 'include'
         };
+
+        if (headers['X-Appwrite-Dev-Key'] === undefined) {
+            options.credentials = 'include';
+        }
 
         if (method === 'GET') {
             for (const [key, value] of Object.entries(Service.flatten(params))) {
