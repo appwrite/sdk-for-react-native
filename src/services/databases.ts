@@ -97,44 +97,6 @@ export class Databases extends Service {
     }
 
     /**
-     * Create new Documents. Before using this route, you should create a new
-     * collection resource using either a [server
-     * integration](https://appwrite.io/docs/server/databases#databasesCreateCollection)
-     * API or directly from your database console.
-     *
-     * @param {string} databaseId
-     * @param {string} collectionId
-     * @param {object[]} documents
-     * @throws {AppwriteException}
-     * @returns {Promise}
-    */
-    createDocuments<Document extends Models.Document>(databaseId: string, collectionId: string, documents: object[]): Promise<Models.DocumentList<Document>> {
-        if (typeof databaseId === 'undefined') {
-            throw new AppwriteException('Missing required parameter: "databaseId"');
-        }
-
-        if (typeof collectionId === 'undefined') {
-            throw new AppwriteException('Missing required parameter: "collectionId"');
-        }
-
-        if (typeof documents === 'undefined') {
-            throw new AppwriteException('Missing required parameter: "documents"');
-        }
-
-        const apiPath = '/databases/{databaseId}/collections/{collectionId}/documents'.replace('{databaseId}', databaseId).replace('{collectionId}', collectionId);
-        const payload: Payload = {};
-
-        if (typeof documents !== 'undefined') {
-            payload['documents'] = documents;
-        }
-
-        const uri = new URL(this.client.config.endpoint + apiPath);
-        return this.client.call('post', uri, {
-            'content-type': 'application/json',
-        }, payload);
-    }
-
-    /**
      * Get a document by its unique ID. This endpoint response returns a JSON
      * object with the document data.
      *
@@ -167,6 +129,54 @@ export class Databases extends Service {
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call('get', uri, {
+        }, payload);
+    }
+
+    /**
+     * Create or update a Document. Before using this route, you should create a
+     * new collection resource using either a [server
+     * integration](https://appwrite.io/docs/server/databases#databasesCreateCollection)
+     * API or directly from your database console.
+     *
+     * @param {string} databaseId
+     * @param {string} collectionId
+     * @param {string} documentId
+     * @param {object} data
+     * @param {string[]} permissions
+     * @throws {AppwriteException}
+     * @returns {Promise}
+    */
+    upsertDocument<Document extends Models.Document>(databaseId: string, collectionId: string, documentId: string, data: object, permissions?: string[]): Promise<Document> {
+        if (typeof databaseId === 'undefined') {
+            throw new AppwriteException('Missing required parameter: "databaseId"');
+        }
+
+        if (typeof collectionId === 'undefined') {
+            throw new AppwriteException('Missing required parameter: "collectionId"');
+        }
+
+        if (typeof documentId === 'undefined') {
+            throw new AppwriteException('Missing required parameter: "documentId"');
+        }
+
+        if (typeof data === 'undefined') {
+            throw new AppwriteException('Missing required parameter: "data"');
+        }
+
+        const apiPath = '/databases/{databaseId}/collections/{collectionId}/documents/{documentId}'.replace('{databaseId}', databaseId).replace('{collectionId}', collectionId).replace('{documentId}', documentId);
+        const payload: Payload = {};
+
+        if (typeof data !== 'undefined') {
+            payload['data'] = data;
+        }
+
+        if (typeof permissions !== 'undefined') {
+            payload['permissions'] = permissions;
+        }
+
+        const uri = new URL(this.client.config.endpoint + apiPath);
+        return this.client.call('put', uri, {
+            'content-type': 'application/json',
         }, payload);
     }
 

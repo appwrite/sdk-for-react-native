@@ -108,6 +108,7 @@ class Client {
         jwt: '',
         locale: '',
         session: '',
+        devkey: '',
         platform: '',
     };
     headers: Headers = {
@@ -223,6 +224,21 @@ class Client {
     setSession(value: string): this {
         this.headers['X-Appwrite-Session'] = value;
         this.config.session = value;
+        return this;
+    }
+
+    /**
+     * Set DevKey
+     *
+     * Your secret dev API key
+     *
+     * @param value string
+     *
+     * @return {this}
+     */
+    setDevKey(value: string): this {
+        this.headers['X-Appwrite-Dev-Key'] = value;
+        this.config.devkey = value;
         return this;
     }
 

@@ -2,14 +2,16 @@ import { Client, Databases } from "react-native-appwrite";
 
 const client = new Client()
     .setEndpoint('https://<REGION>.cloud.appwrite.io/v1') // Your API Endpoint
-    .setKey(''); // 
+    .setProject('<YOUR_PROJECT_ID>'); // Your project ID
 
 const databases = new Databases(client);
 
-const result = await databases.createDocuments(
+const result = await databases.upsertDocument(
     '<DATABASE_ID>', // databaseId
     '<COLLECTION_ID>', // collectionId
-    [] // documents
+    '<DOCUMENT_ID>', // documentId
+    {}, // data
+    ["read("any")"] // permissions (optional)
 );
 
 console.log(result);
