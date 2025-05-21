@@ -108,13 +108,14 @@ class Client {
         jwt: '',
         locale: '',
         session: '',
+        devkey: '',
         platform: '',
     };
     headers: Headers = {
         'x-sdk-name': 'React Native',
         'x-sdk-platform': 'client',
         'x-sdk-language': 'reactnative',
-        'x-sdk-version': '0.9.0',
+        'x-sdk-version': '0.9.1',
         'X-Appwrite-Response-Format': '1.7.0',
     };
 
@@ -223,6 +224,21 @@ class Client {
     setSession(value: string): this {
         this.headers['X-Appwrite-Session'] = value;
         this.config.session = value;
+        return this;
+    }
+
+    /**
+     * Set DevKey
+     *
+     * Your secret dev API key
+     *
+     * @param value string
+     *
+     * @return {this}
+     */
+    setDevKey(value: string): this {
+        this.headers['X-Appwrite-Dev-Key'] = value;
+        this.config.devkey = value;
         return this;
     }
 
