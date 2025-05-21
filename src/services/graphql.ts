@@ -64,5 +64,4 @@ export class Graphql extends Service {
             'content-type': 'application/json',
         }, payload);
     }
-
 };
