@@ -422,7 +422,6 @@ export class Storage extends Service {
         }, payload, 'arrayBuffer');
     }
 
-
     /**
      * Get a file content by its unique ID. The endpoint response return with a
      * 'Content-Disposition: attachment' header that tells the browser to start
@@ -433,7 +432,6 @@ export class Storage extends Service {
      * @param {string} token
      * @throws {AppwriteException}
      * @returns {URL}
-
     */
     getFileDownloadURL(bucketId: string, fileId: string, token?: string): URL {
         const apiPath = '/storage/buckets/{bucketId}/files/{fileId}/download'.replace('{bucketId}', bucketId).replace('{fileId}', fileId);
@@ -471,7 +469,6 @@ export class Storage extends Service {
      * @param {string} token
      * @throws {AppwriteException}
      * @returns {URL}
-
     */
     getFilePreviewURL(bucketId: string, fileId: string, width?: number, height?: number, gravity?: ImageGravity, quality?: number, borderWidth?: number, borderColor?: string, borderRadius?: number, opacity?: number, rotation?: number, background?: string, output?: ImageFormat, token?: string): URL {
         const apiPath = '/storage/buckets/{bucketId}/files/{fileId}/preview'.replace('{bucketId}', bucketId).replace('{fileId}', fileId);
@@ -540,7 +537,6 @@ export class Storage extends Service {
      * @param {string} token
      * @throws {AppwriteException}
      * @returns {URL}
-
     */
     getFileViewURL(bucketId: string, fileId: string, token?: string): URL {
         const apiPath = '/storage/buckets/{bucketId}/files/{fileId}/view'.replace('{bucketId}', bucketId).replace('{fileId}', fileId);

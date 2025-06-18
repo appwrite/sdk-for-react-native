@@ -351,7 +351,6 @@ export class Avatars extends Service {
         }, payload, 'arrayBuffer');
     }
 
-
     /**
      * You can use this endpoint to show different browser icons to your users.
      * The code argument receives the browser code as it appears in your user [GET
@@ -370,7 +369,6 @@ export class Avatars extends Service {
      * @param {number} quality
      * @throws {AppwriteException}
      * @returns {URL}
-
     */
     getBrowserURL(code: Browser, width?: number, height?: number, quality?: number): URL {
         const apiPath = '/avatars/browsers/{code}'.replace('{code}', code);
@@ -410,7 +408,6 @@ export class Avatars extends Service {
      * @param {number} quality
      * @throws {AppwriteException}
      * @returns {URL}
-
     */
     getCreditCardURL(code: CreditCard, width?: number, height?: number, quality?: number): URL {
         const apiPath = '/avatars/credit-cards/{code}'.replace('{code}', code);
@@ -442,7 +439,6 @@ export class Avatars extends Service {
      * @param {string} url
      * @throws {AppwriteException}
      * @returns {URL}
-
     */
     getFaviconURL(url: string): URL {
         const apiPath = '/avatars/favicon';
@@ -475,7 +471,6 @@ export class Avatars extends Service {
      * @param {number} quality
      * @throws {AppwriteException}
      * @returns {URL}
-
     */
     getFlagURL(code: Flag, width?: number, height?: number, quality?: number): URL {
         const apiPath = '/avatars/flags/{code}'.replace('{code}', code);
@@ -516,7 +511,6 @@ export class Avatars extends Service {
      * @param {number} height
      * @throws {AppwriteException}
      * @returns {URL}
-
     */
     getImageURL(url: string, width?: number, height?: number): URL {
         const apiPath = '/avatars/image';
@@ -563,7 +557,6 @@ export class Avatars extends Service {
      * @param {string} background
      * @throws {AppwriteException}
      * @returns {URL}
-
     */
     getInitialsURL(name?: string, width?: number, height?: number, background?: string): URL {
         const apiPath = '/avatars/initials';
@@ -601,7 +594,6 @@ export class Avatars extends Service {
      * @param {boolean} download
      * @throws {AppwriteException}
      * @returns {URL}
-
     */
     getQRURL(text: string, size?: number, margin?: number, download?: boolean): URL {
         const apiPath = '/avatars/qr';

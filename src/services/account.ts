@@ -1457,5 +1457,4 @@ export class Account extends Service {
             'content-type': 'application/json',
         }, payload);
     }
-
 };

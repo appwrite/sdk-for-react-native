@@ -77,5 +77,4 @@ export class Messaging extends Service {
             'content-type': 'application/json',
         }, payload);
     }
-
 };
