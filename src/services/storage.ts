@@ -260,9 +260,9 @@ export class Storage extends Service {
      * @param {string} fileId
      * @param {string} token
      * @throws {AppwriteException}
-     * @returns {URL}
+     * @returns {ArrayBuffer}
     */
-    getFileDownload(bucketId: string, fileId: string, token?: string): URL {
+    getFileDownload(bucketId: string, fileId: string, token?: string): Promise<ArrayBuffer> {
         if (typeof bucketId === 'undefined') {
             throw new AppwriteException('Missing required parameter: "bucketId"');
         }
@@ -285,7 +285,8 @@ export class Storage extends Service {
         for (const [key, value] of Object.entries(Service.flatten(payload))) {
             uri.searchParams.append(key, value);
         }
-        return uri;
+        return this.client.call('get', uri, {
+        }, payload, 'arrayBuffer');
     }
 
     /**
@@ -310,9 +311,9 @@ export class Storage extends Service {
      * @param {ImageFormat} output
      * @param {string} token
      * @throws {AppwriteException}
-     * @returns {URL}
+     * @returns {ArrayBuffer}
     */
-    getFilePreview(bucketId: string, fileId: string, width?: number, height?: number, gravity?: ImageGravity, quality?: number, borderWidth?: number, borderColor?: string, borderRadius?: number, opacity?: number, rotation?: number, background?: string, output?: ImageFormat, token?: string): URL {
+    getFilePreview(bucketId: string, fileId: string, width?: number, height?: number, gravity?: ImageGravity, quality?: number, borderWidth?: number, borderColor?: string, borderRadius?: number, opacity?: number, rotation?: number, background?: string, output?: ImageFormat, token?: string): Promise<ArrayBuffer> {
         if (typeof bucketId === 'undefined') {
             throw new AppwriteException('Missing required parameter: "bucketId"');
         }
@@ -379,7 +380,8 @@ export class Storage extends Service {
         for (const [key, value] of Object.entries(Service.flatten(payload))) {
             uri.searchParams.append(key, value);
         }
-        return uri;
+        return this.client.call('get', uri, {
+        }, payload, 'arrayBuffer');
     }
 
     /**
@@ -391,9 +393,9 @@ export class Storage extends Service {
      * @param {string} fileId
      * @param {string} token
      * @throws {AppwriteException}
-     * @returns {URL}
+     * @returns {ArrayBuffer}
     */
-    getFileView(bucketId: string, fileId: string, token?: string): URL {
+    getFileView(bucketId: string, fileId: string, token?: string): Promise<ArrayBuffer> {
         if (typeof bucketId === 'undefined') {
             throw new AppwriteException('Missing required parameter: "bucketId"');
         }
@@ -416,6 +418,140 @@ export class Storage extends Service {
         for (const [key, value] of Object.entries(Service.flatten(payload))) {
             uri.searchParams.append(key, value);
         }
+        return this.client.call('get', uri, {
+        }, payload, 'arrayBuffer');
+    }
+
+
+    /**
+     * Get a file content by its unique ID. The endpoint response return with a
+     * 'Content-Disposition: attachment' header that tells the browser to start
+     * downloading the file to user downloads directory.
+     *
+     * @param {string} bucketId
+     * @param {string} fileId
+     * @param {string} token
+     * @throws {AppwriteException}
+     * @returns {URL}
+
+    */
+    getFileDownloadURL(bucketId: string, fileId: string, token?: string): URL {
+        const apiPath = '/storage/buckets/{bucketId}/files/{fileId}/download'.replace('{bucketId}', bucketId).replace('{fileId}', fileId);
+        const payload: Payload = {};
+
+        if (typeof token !== 'undefined') {
+            payload['token'] = token;
+        }
+
+        const uri = new URL(this.client.config.endpoint + apiPath);
+
+        return uri;
+    }
+
+    /**
+     * Get a file preview image. Currently, this method supports preview for image
+     * files (jpg, png, and gif), other supported formats, like pdf, docs, slides,
+     * and spreadsheets, will return the file icon image. You can also pass query
+     * string arguments for cutting and resizing your preview image. Preview is
+     * supported only for image files smaller than 10MB.
+     *
+     * @param {string} bucketId
+     * @param {string} fileId
+     * @param {number} width
+     * @param {number} height
+     * @param {ImageGravity} gravity
+     * @param {number} quality
+     * @param {number} borderWidth
+     * @param {string} borderColor
+     * @param {number} borderRadius
+     * @param {number} opacity
+     * @param {number} rotation
+     * @param {string} background
+     * @param {ImageFormat} output
+     * @param {string} token
+     * @throws {AppwriteException}
+     * @returns {URL}
+
+    */
+    getFilePreviewURL(bucketId: string, fileId: string, width?: number, height?: number, gravity?: ImageGravity, quality?: number, borderWidth?: number, borderColor?: string, borderRadius?: number, opacity?: number, rotation?: number, background?: string, output?: ImageFormat, token?: string): URL {
+        const apiPath = '/storage/buckets/{bucketId}/files/{fileId}/preview'.replace('{bucketId}', bucketId).replace('{fileId}', fileId);
+        const payload: Payload = {};
+
+        if (typeof width !== 'undefined') {
+            payload['width'] = width;
+        }
+
+        if (typeof height !== 'undefined') {
+            payload['height'] = height;
+        }
+
+        if (typeof gravity !== 'undefined') {
+            payload['gravity'] = gravity;
+        }
+
+        if (typeof quality !== 'undefined') {
+            payload['quality'] = quality;
+        }
+
+        if (typeof borderWidth !== 'undefined') {
+            payload['borderWidth'] = borderWidth;
+        }
+
+        if (typeof borderColor !== 'undefined') {
+            payload['borderColor'] = borderColor;
+        }
+
+        if (typeof borderRadius !== 'undefined') {
+            payload['borderRadius'] = borderRadius;
+        }
+
+        if (typeof opacity !== 'undefined') {
+            payload['opacity'] = opacity;
+        }
+
+        if (typeof rotation !== 'undefined') {
+            payload['rotation'] = rotation;
+        }
+
+        if (typeof background !== 'undefined') {
+            payload['background'] = background;
+        }
+
+        if (typeof output !== 'undefined') {
+            payload['output'] = output;
+        }
+
+        if (typeof token !== 'undefined') {
+            payload['token'] = token;
+        }
+
+        const uri = new URL(this.client.config.endpoint + apiPath);
+
+        return uri;
+    }
+
+    /**
+     * Get a file content by its unique ID. This endpoint is similar to the
+     * download method but returns with no  'Content-Disposition: attachment'
+     * header.
+     *
+     * @param {string} bucketId
+     * @param {string} fileId
+     * @param {string} token
+     * @throws {AppwriteException}
+     * @returns {URL}
+
+    */
+    getFileViewURL(bucketId: string, fileId: string, token?: string): URL {
+        const apiPath = '/storage/buckets/{bucketId}/files/{fileId}/view'.replace('{bucketId}', bucketId).replace('{fileId}', fileId);
+        const payload: Payload = {};
+
+        if (typeof token !== 'undefined') {
+            payload['token'] = token;
+        }
+
+        const uri = new URL(this.client.config.endpoint + apiPath);
+
         return uri;
     }
 };

@@ -145,4 +145,5 @@ export class Locale extends Service {
         return this.client.call('get', uri, {
         }, payload);
     }
+
 };

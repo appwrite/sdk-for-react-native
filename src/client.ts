@@ -115,7 +115,7 @@ class Client {
         'x-sdk-name': 'React Native',
         'x-sdk-platform': 'client',
         'x-sdk-language': 'reactnative',
-        'x-sdk-version': '0.9.2',
+        'x-sdk-version': '0.9.1',
         'X-Appwrite-Response-Format': '1.7.0',
     };
 
@@ -432,7 +432,7 @@ class Client {
         }
     }
 
-    async call(method: string, url: URL, headers: Headers = {}, params: Payload = {}): Promise<any> {
+    async call(method: string, url: URL, headers: Headers = {}, params: Payload = {}, responseType = 'json'): Promise<any> {
         method = method.toUpperCase();
 
         headers = Object.assign({}, this.headers, headers);
@@ -488,6 +488,8 @@ class Client {
 
             if (response.headers.get('content-type')?.includes('application/json')) {
                 data = await response.json();
+            } else if (responseType === 'arrayBuffer') {
+                data = await response.arrayBuffer();
             } else {
                 data = {
                     message: await response.text()
