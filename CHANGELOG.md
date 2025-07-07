@@ -1,5 +1,9 @@
 # Change log
 
+## 0.11.0
+
+* Version bump and SDK regeneration
+
 ## 0.10.0
 
 * Add generate file URL methods like`getFilePreviewURL`, `getFileViewURL` etc.
