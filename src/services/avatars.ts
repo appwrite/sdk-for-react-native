@@ -387,6 +387,11 @@ export class Avatars extends Service {
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
+        payload['project'] = this.client.config.project;
+
+        for (const [key, value] of Object.entries(Service.flatten(payload))) {
+            uri.searchParams.append(key, value);
+        }
 
         return uri;
     }
@@ -426,6 +431,11 @@ export class Avatars extends Service {
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
+        payload['project'] = this.client.config.project;
+
+        for (const [key, value] of Object.entries(Service.flatten(payload))) {
+            uri.searchParams.append(key, value);
+        }
 
         return uri;
     }
@@ -449,6 +459,11 @@ export class Avatars extends Service {
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
+        payload['project'] = this.client.config.project;
+
+        for (const [key, value] of Object.entries(Service.flatten(payload))) {
+            uri.searchParams.append(key, value);
+        }
 
         return uri;
     }
@@ -489,6 +504,11 @@ export class Avatars extends Service {
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
+        payload['project'] = this.client.config.project;
+
+        for (const [key, value] of Object.entries(Service.flatten(payload))) {
+            uri.searchParams.append(key, value);
+        }
 
         return uri;
     }
@@ -529,6 +549,11 @@ export class Avatars extends Service {
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
+        payload['project'] = this.client.config.project;
+
+        for (const [key, value] of Object.entries(Service.flatten(payload))) {
+            uri.searchParams.append(key, value);
+        }
 
         return uri;
     }
@@ -579,6 +604,11 @@ export class Avatars extends Service {
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
+        payload['project'] = this.client.config.project;
+
+        for (const [key, value] of Object.entries(Service.flatten(payload))) {
+            uri.searchParams.append(key, value);
+        }
 
         return uri;
     }
@@ -616,6 +646,11 @@ export class Avatars extends Service {
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
+        payload['project'] = this.client.config.project;
+
+        for (const [key, value] of Object.entries(Service.flatten(payload))) {
+            uri.searchParams.append(key, value);
+        }
 
         return uri;
     }
