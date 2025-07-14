@@ -39,4 +39,4 @@ jobs:
     - name: Publish
       run: npm publish --tag ${{ steps.release_tag.outputs.tag }}
       env:
-        NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN_NO_ORG }}
