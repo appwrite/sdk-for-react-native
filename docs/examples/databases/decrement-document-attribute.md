@@ -2,19 +2,17 @@ import { Client, Databases } from "react-native-appwrite";
 
 const client = new Client()
     .setEndpoint('https://<REGION>.cloud.appwrite.io/v1') // Your API Endpoint
-    .setAdmin('') // 
-    .setSession('') // The user session to authenticate with
-    .setKey('') // 
-    .setJWT('<YOUR_JWT>'); // Your secret JSON Web Token
+    .setProject('<YOUR_PROJECT_ID>'); // Your project ID
 
 const databases = new Databases(client);
 
-const result = await databases.createDocument(
+const result = await databases.decrementDocumentAttribute(
     '<DATABASE_ID>', // databaseId
     '<COLLECTION_ID>', // collectionId
     '<DOCUMENT_ID>', // documentId
-    {}, // data
-    ["read("any")"] // permissions (optional)
+    '', // attribute
+    null, // value (optional)
+    null // min (optional)
 );
 
 console.log(result);
