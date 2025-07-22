@@ -19,7 +19,7 @@ export class Graphql extends Service {
      * @param {object} query
      * @throws {AppwriteException}
      * @returns {Promise}
-    */
+     */
     query(query: object): Promise<{}> {
         if (typeof query === 'undefined') {
             throw new AppwriteException('Missing required parameter: "query"');
@@ -45,7 +45,7 @@ export class Graphql extends Service {
      * @param {object} query
      * @throws {AppwriteException}
      * @returns {Promise}
-    */
+     */
     mutation(query: object): Promise<{}> {
         if (typeof query === 'undefined') {
             throw new AppwriteException('Missing required parameter: "query"');

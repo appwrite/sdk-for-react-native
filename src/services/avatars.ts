@@ -34,7 +34,7 @@ export class Avatars extends Service {
      * @param {number} quality
      * @throws {AppwriteException}
      * @returns {ArrayBuffer}
-    */
+     */
     getBrowser(code: Browser, width?: number, height?: number, quality?: number): Promise<ArrayBuffer> {
         if (typeof code === 'undefined') {
             throw new AppwriteException('Missing required parameter: "code"');
@@ -83,7 +83,7 @@ export class Avatars extends Service {
      * @param {number} quality
      * @throws {AppwriteException}
      * @returns {ArrayBuffer}
-    */
+     */
     getCreditCard(code: CreditCard, width?: number, height?: number, quality?: number): Promise<ArrayBuffer> {
         if (typeof code === 'undefined') {
             throw new AppwriteException('Missing required parameter: "code"');
@@ -124,7 +124,7 @@ export class Avatars extends Service {
      * @param {string} url
      * @throws {AppwriteException}
      * @returns {ArrayBuffer}
-    */
+     */
     getFavicon(url: string): Promise<ArrayBuffer> {
         if (typeof url === 'undefined') {
             throw new AppwriteException('Missing required parameter: "url"');
@@ -166,7 +166,7 @@ export class Avatars extends Service {
      * @param {number} quality
      * @throws {AppwriteException}
      * @returns {ArrayBuffer}
-    */
+     */
     getFlag(code: Flag, width?: number, height?: number, quality?: number): Promise<ArrayBuffer> {
         if (typeof code === 'undefined') {
             throw new AppwriteException('Missing required parameter: "code"');
@@ -216,7 +216,7 @@ export class Avatars extends Service {
      * @param {number} height
      * @throws {AppwriteException}
      * @returns {ArrayBuffer}
-    */
+     */
     getImage(url: string, width?: number, height?: number): Promise<ArrayBuffer> {
         if (typeof url === 'undefined') {
             throw new AppwriteException('Missing required parameter: "url"');
@@ -272,7 +272,7 @@ export class Avatars extends Service {
      * @param {string} background
      * @throws {AppwriteException}
      * @returns {ArrayBuffer}
-    */
+     */
     getInitials(name?: string, width?: number, height?: number, background?: string): Promise<ArrayBuffer> {
         const apiPath = '/avatars/initials';
         const payload: Payload = {};
@@ -315,7 +315,7 @@ export class Avatars extends Service {
      * @param {boolean} download
      * @throws {AppwriteException}
      * @returns {ArrayBuffer}
-    */
+     */
     getQR(text: string, size?: number, margin?: number, download?: boolean): Promise<ArrayBuffer> {
         if (typeof text === 'undefined') {
             throw new AppwriteException('Missing required parameter: "text"');

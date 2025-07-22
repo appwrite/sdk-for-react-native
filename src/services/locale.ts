@@ -23,7 +23,7 @@ export class Locale extends Service {
      *
      * @throws {AppwriteException}
      * @returns {Promise}
-    */
+     */
     get(): Promise<Models.Locale> {
         const apiPath = '/locale';
         const payload: Payload = {};
@@ -39,7 +39,7 @@ export class Locale extends Service {
      *
      * @throws {AppwriteException}
      * @returns {Promise}
-    */
+     */
     listCodes(): Promise<Models.LocaleCodeList> {
         const apiPath = '/locale/codes';
         const payload: Payload = {};
@@ -55,7 +55,7 @@ export class Locale extends Service {
      *
      * @throws {AppwriteException}
      * @returns {Promise}
-    */
+     */
     listContinents(): Promise<Models.ContinentList> {
         const apiPath = '/locale/continents';
         const payload: Payload = {};
@@ -71,7 +71,7 @@ export class Locale extends Service {
      *
      * @throws {AppwriteException}
      * @returns {Promise}
-    */
+     */
     listCountries(): Promise<Models.CountryList> {
         const apiPath = '/locale/countries';
         const payload: Payload = {};
@@ -87,7 +87,7 @@ export class Locale extends Service {
      *
      * @throws {AppwriteException}
      * @returns {Promise}
-    */
+     */
     listCountriesEU(): Promise<Models.CountryList> {
         const apiPath = '/locale/countries/eu';
         const payload: Payload = {};
@@ -103,7 +103,7 @@ export class Locale extends Service {
      *
      * @throws {AppwriteException}
      * @returns {Promise}
-    */
+     */
     listCountriesPhones(): Promise<Models.PhoneList> {
         const apiPath = '/locale/countries/phones';
         const payload: Payload = {};
@@ -120,7 +120,7 @@ export class Locale extends Service {
      *
      * @throws {AppwriteException}
      * @returns {Promise}
-    */
+     */
     listCurrencies(): Promise<Models.CurrencyList> {
         const apiPath = '/locale/currencies';
         const payload: Payload = {};
@@ -136,7 +136,7 @@ export class Locale extends Service {
      *
      * @throws {AppwriteException}
      * @returns {Promise}
-    */
+     */
     listLanguages(): Promise<Models.LanguageList> {
         const apiPath = '/locale/languages';
         const payload: Payload = {};

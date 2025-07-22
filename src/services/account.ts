@@ -21,8 +21,8 @@ export class Account extends Service {
      *
      * @throws {AppwriteException}
      * @returns {Promise}
-    */
-    get<Preferences extends Models.Preferences>(): Promise<Models.User<Preferences>> {
+     */
+    get<Preferences extends Models.Preferences = Models.DefaultPreferences>(): Promise<Models.User<Preferences>> {
         const apiPath = '/account';
         const payload: Payload = {};
 
@@ -46,8 +46,8 @@ export class Account extends Service {
      * @param {string} name
      * @throws {AppwriteException}
      * @returns {Promise}
-    */
-    create<Preferences extends Models.Preferences>(userId: string, email: string, password: string, name?: string): Promise<Models.User<Preferences>> {
+     */
+    create<Preferences extends Models.Preferences = Models.DefaultPreferences>(userId: string, email: string, password: string, name?: string): Promise<Models.User<Preferences>> {
         if (typeof userId === 'undefined') {
             throw new AppwriteException('Missing required parameter: "userId"');
         }
@@ -99,8 +99,8 @@ export class Account extends Service {
      * @param {string} password
      * @throws {AppwriteException}
      * @returns {Promise}
-    */
-    updateEmail<Preferences extends Models.Preferences>(email: string, password: string): Promise<Models.User<Preferences>> {
+     */
+    updateEmail<Preferences extends Models.Preferences = Models.DefaultPreferences>(email: string, password: string): Promise<Models.User<Preferences>> {
         if (typeof email === 'undefined') {
             throw new AppwriteException('Missing required parameter: "email"');
         }
@@ -132,7 +132,7 @@ export class Account extends Service {
      * @param {string[]} queries
      * @throws {AppwriteException}
      * @returns {Promise}
-    */
+     */
     listIdentities(queries?: string[]): Promise<Models.IdentityList> {
         const apiPath = '/account/identities';
         const payload: Payload = {};
@@ -152,7 +152,7 @@ export class Account extends Service {
      * @param {string} identityId
      * @throws {AppwriteException}
      * @returns {Promise}
-    */
+     */
     deleteIdentity(identityId: string): Promise<{}> {
         if (typeof identityId === 'undefined') {
             throw new AppwriteException('Missing required parameter: "identityId"');
@@ -176,7 +176,7 @@ export class Account extends Service {
      *
      * @throws {AppwriteException}
      * @returns {Promise}
-    */
+     */
     createJWT(): Promise<Models.Jwt> {
         const apiPath = '/account/jwts';
         const payload: Payload = {};
@@ -194,7 +194,7 @@ export class Account extends Service {
      * @param {string[]} queries
      * @throws {AppwriteException}
      * @returns {Promise}
-    */
+     */
     listLogs(queries?: string[]): Promise<Models.LogList> {
         const apiPath = '/account/logs';
         const payload: Payload = {};
@@ -214,8 +214,8 @@ export class Account extends Service {
      * @param {boolean} mfa
      * @throws {AppwriteException}
      * @returns {Promise}
-    */
-    updateMFA<Preferences extends Models.Preferences>(mfa: boolean): Promise<Models.User<Preferences>> {
+     */
+    updateMFA<Preferences extends Models.Preferences = Models.DefaultPreferences>(mfa: boolean): Promise<Models.User<Preferences>> {
         if (typeof mfa === 'undefined') {
             throw new AppwriteException('Missing required parameter: "mfa"');
         }
@@ -242,7 +242,7 @@ export class Account extends Service {
      * @param {AuthenticatorType} type
      * @throws {AppwriteException}
      * @returns {Promise}
-    */
+     */
     createMfaAuthenticator(type: AuthenticatorType): Promise<Models.MfaType> {
         if (typeof type === 'undefined') {
             throw new AppwriteException('Missing required parameter: "type"');
@@ -266,8 +266,8 @@ export class Account extends Service {
      * @param {string} otp
      * @throws {AppwriteException}
      * @returns {Promise}
-    */
-    updateMfaAuthenticator<Preferences extends Models.Preferences>(type: AuthenticatorType, otp: string): Promise<Models.User<Preferences>> {
+     */
+    updateMfaAuthenticator<Preferences extends Models.Preferences = Models.DefaultPreferences>(type: AuthenticatorType, otp: string): Promise<Models.User<Preferences>> {
         if (typeof type === 'undefined') {
             throw new AppwriteException('Missing required parameter: "type"');
         }
@@ -295,7 +295,7 @@ export class Account extends Service {
      * @param {AuthenticatorType} type
      * @throws {AppwriteException}
      * @returns {Promise}
-    */
+     */
     deleteMfaAuthenticator(type: AuthenticatorType): Promise<{}> {
         if (typeof type === 'undefined') {
             throw new AppwriteException('Missing required parameter: "type"');
@@ -318,7 +318,7 @@ export class Account extends Service {
      * @param {AuthenticationFactor} factor
      * @throws {AppwriteException}
      * @returns {Promise}
-    */
+     */
     createMfaChallenge(factor: AuthenticationFactor): Promise<Models.MfaChallenge> {
         if (typeof factor === 'undefined') {
             throw new AppwriteException('Missing required parameter: "factor"');
@@ -348,7 +348,7 @@ export class Account extends Service {
      * @param {string} otp
      * @throws {AppwriteException}
      * @returns {Promise}
-    */
+     */
     updateMfaChallenge(challengeId: string, otp: string): Promise<Models.Session> {
         if (typeof challengeId === 'undefined') {
             throw new AppwriteException('Missing required parameter: "challengeId"');
@@ -380,7 +380,7 @@ export class Account extends Service {
      *
      * @throws {AppwriteException}
      * @returns {Promise}
-    */
+     */
     listMfaFactors(): Promise<Models.MfaFactors> {
         const apiPath = '/account/mfa/factors';
         const payload: Payload = {};
@@ -398,7 +398,7 @@ export class Account extends Service {
      *
      * @throws {AppwriteException}
      * @returns {Promise}
-    */
+     */
     getMfaRecoveryCodes(): Promise<Models.MfaRecoveryCodes> {
         const apiPath = '/account/mfa/recovery-codes';
         const payload: Payload = {};
@@ -417,7 +417,7 @@ export class Account extends Service {
      *
      * @throws {AppwriteException}
      * @returns {Promise}
-    */
+     */
     createMfaRecoveryCodes(): Promise<Models.MfaRecoveryCodes> {
         const apiPath = '/account/mfa/recovery-codes';
         const payload: Payload = {};
@@ -436,7 +436,7 @@ export class Account extends Service {
      *
      * @throws {AppwriteException}
      * @returns {Promise}
-    */
+     */
     updateMfaRecoveryCodes(): Promise<Models.MfaRecoveryCodes> {
         const apiPath = '/account/mfa/recovery-codes';
         const payload: Payload = {};
@@ -453,8 +453,8 @@ export class Account extends Service {
      * @param {string} name
      * @throws {AppwriteException}
      * @returns {Promise}
-    */
-    updateName<Preferences extends Models.Preferences>(name: string): Promise<Models.User<Preferences>> {
+     */
+    updateName<Preferences extends Models.Preferences = Models.DefaultPreferences>(name: string): Promise<Models.User<Preferences>> {
         if (typeof name === 'undefined') {
             throw new AppwriteException('Missing required parameter: "name"');
         }
@@ -481,8 +481,8 @@ export class Account extends Service {
      * @param {string} oldPassword
      * @throws {AppwriteException}
      * @returns {Promise}
-    */
-    updatePassword<Preferences extends Models.Preferences>(password: string, oldPassword?: string): Promise<Models.User<Preferences>> {
+     */
+    updatePassword<Preferences extends Models.Preferences = Models.DefaultPreferences>(password: string, oldPassword?: string): Promise<Models.User<Preferences>> {
         if (typeof password === 'undefined') {
             throw new AppwriteException('Missing required parameter: "password"');
         }
@@ -515,8 +515,8 @@ export class Account extends Service {
      * @param {string} password
      * @throws {AppwriteException}
      * @returns {Promise}
-    */
-    updatePhone<Preferences extends Models.Preferences>(phone: string, password: string): Promise<Models.User<Preferences>> {
+     */
+    updatePhone<Preferences extends Models.Preferences = Models.DefaultPreferences>(phone: string, password: string): Promise<Models.User<Preferences>> {
         if (typeof phone === 'undefined') {
             throw new AppwriteException('Missing required parameter: "phone"');
         }
@@ -547,8 +547,8 @@ export class Account extends Service {
      *
      * @throws {AppwriteException}
      * @returns {Promise}
-    */
-    getPrefs<Preferences extends Models.Preferences>(): Promise<Preferences> {
+     */
+    getPrefs<Preferences extends Models.Preferences = Models.DefaultPreferences>(): Promise<Preferences> {
         const apiPath = '/account/prefs';
         const payload: Payload = {};
 
@@ -565,8 +565,8 @@ export class Account extends Service {
      * @param {object} prefs
      * @throws {AppwriteException}
      * @returns {Promise}
-    */
-    updatePrefs<Preferences extends Models.Preferences>(prefs: object): Promise<Models.User<Preferences>> {
+     */
+    updatePrefs<Preferences extends Models.Preferences = Models.DefaultPreferences>(prefs: object): Promise<Models.User<Preferences>> {
         if (typeof prefs === 'undefined') {
             throw new AppwriteException('Missing required parameter: "prefs"');
         }
@@ -598,7 +598,7 @@ export class Account extends Service {
      * @param {string} url
      * @throws {AppwriteException}
      * @returns {Promise}
-    */
+     */
     createRecovery(email: string, url: string): Promise<Models.Token> {
         if (typeof email === 'undefined') {
             throw new AppwriteException('Missing required parameter: "email"');
@@ -642,7 +642,7 @@ export class Account extends Service {
      * @param {string} password
      * @throws {AppwriteException}
      * @returns {Promise}
-    */
+     */
     updateRecovery(userId: string, secret: string, password: string): Promise<Models.Token> {
         if (typeof userId === 'undefined') {
             throw new AppwriteException('Missing required parameter: "userId"');
@@ -683,7 +683,7 @@ export class Account extends Service {
      *
      * @throws {AppwriteException}
      * @returns {Promise}
-    */
+     */
     listSessions(): Promise<Models.SessionList> {
         const apiPath = '/account/sessions';
         const payload: Payload = {};
@@ -699,7 +699,7 @@ export class Account extends Service {
      *
      * @throws {AppwriteException}
      * @returns {Promise}
-    */
+     */
     deleteSessions(): Promise<{}> {
         const apiPath = '/account/sessions';
         const payload: Payload = {};
@@ -721,7 +721,7 @@ export class Account extends Service {
      *
      * @throws {AppwriteException}
      * @returns {Promise}
-    */
+     */
     createAnonymousSession(): Promise<Models.Session> {
         const apiPath = '/account/sessions/anonymous';
         const payload: Payload = {};
@@ -744,7 +744,7 @@ export class Account extends Service {
      * @param {string} password
      * @throws {AppwriteException}
      * @returns {Promise}
-    */
+     */
     createEmailPasswordSession(email: string, password: string): Promise<Models.Session> {
         if (typeof email === 'undefined') {
             throw new AppwriteException('Missing required parameter: "email"');
@@ -780,7 +780,8 @@ export class Account extends Service {
      * @param {string} secret
      * @throws {AppwriteException}
      * @returns {Promise}
-    */
+     * @deprecated This API has been deprecated.
+     */
     updateMagicURLSession(userId: string, secret: string): Promise<Models.Session> {
         if (typeof userId === 'undefined') {
             throw new AppwriteException('Missing required parameter: "userId"');
@@ -831,7 +832,7 @@ export class Account extends Service {
      * @param {string[]} scopes
      * @throws {AppwriteException}
      * @returns {void|string}
-    */
+     */
     createOAuth2Session(provider: OAuthProvider, success?: string, failure?: string, scopes?: string[]): void | URL {
         if (typeof provider === 'undefined') {
             throw new AppwriteException('Missing required parameter: "provider"');
@@ -871,7 +872,8 @@ export class Account extends Service {
      * @param {string} secret
      * @throws {AppwriteException}
      * @returns {Promise}
-    */
+     * @deprecated This API has been deprecated.
+     */
     updatePhoneSession(userId: string, secret: string): Promise<Models.Session> {
         if (typeof userId === 'undefined') {
             throw new AppwriteException('Missing required parameter: "userId"');
@@ -907,7 +909,7 @@ export class Account extends Service {
      * @param {string} secret
      * @throws {AppwriteException}
      * @returns {Promise}
-    */
+     */
     createSession(userId: string, secret: string): Promise<Models.Session> {
         if (typeof userId === 'undefined') {
             throw new AppwriteException('Missing required parameter: "userId"');
@@ -941,7 +943,7 @@ export class Account extends Service {
      * @param {string} sessionId
      * @throws {AppwriteException}
      * @returns {Promise}
-    */
+     */
     getSession(sessionId: string): Promise<Models.Session> {
         if (typeof sessionId === 'undefined') {
             throw new AppwriteException('Missing required parameter: "sessionId"');
@@ -963,7 +965,7 @@ export class Account extends Service {
      * @param {string} sessionId
      * @throws {AppwriteException}
      * @returns {Promise}
-    */
+     */
     updateSession(sessionId: string): Promise<Models.Session> {
         if (typeof sessionId === 'undefined') {
             throw new AppwriteException('Missing required parameter: "sessionId"');
@@ -988,7 +990,7 @@ export class Account extends Service {
      * @param {string} sessionId
      * @throws {AppwriteException}
      * @returns {Promise}
-    */
+     */
     deleteSession(sessionId: string): Promise<{}> {
         if (typeof sessionId === 'undefined') {
             throw new AppwriteException('Missing required parameter: "sessionId"');
@@ -1010,8 +1012,8 @@ export class Account extends Service {
      *
      * @throws {AppwriteException}
      * @returns {Promise}
-    */
-    updateStatus<Preferences extends Models.Preferences>(): Promise<Models.User<Preferences>> {
+     */
+    updateStatus<Preferences extends Models.Preferences = Models.DefaultPreferences>(): Promise<Models.User<Preferences>> {
         const apiPath = '/account/status';
         const payload: Payload = {};
 
@@ -1033,7 +1035,7 @@ export class Account extends Service {
      * @param {string} providerId
      * @throws {AppwriteException}
      * @returns {Promise}
-    */
+     */
     createPushTarget(targetId: string, identifier: string, providerId?: string): Promise<Models.Target> {
         if (typeof targetId === 'undefined') {
             throw new AppwriteException('Missing required parameter: "targetId"');
@@ -1075,7 +1077,7 @@ export class Account extends Service {
      * @param {string} identifier
      * @throws {AppwriteException}
      * @returns {Promise}
-    */
+     */
     updatePushTarget(targetId: string, identifier: string): Promise<Models.Target> {
         if (typeof targetId === 'undefined') {
             throw new AppwriteException('Missing required parameter: "targetId"');
@@ -1106,7 +1108,7 @@ export class Account extends Service {
      * @param {string} targetId
      * @throws {AppwriteException}
      * @returns {Promise}
-    */
+     */
     deletePushTarget(targetId: string): Promise<{}> {
         if (typeof targetId === 'undefined') {
             throw new AppwriteException('Missing required parameter: "targetId"');
@@ -1138,7 +1140,7 @@ export class Account extends Service {
      * @param {boolean} phrase
      * @throws {AppwriteException}
      * @returns {Promise}
-    */
+     */
     createEmailToken(userId: string, email: string, phrase?: boolean): Promise<Models.Token> {
         if (typeof userId === 'undefined') {
             throw new AppwriteException('Missing required parameter: "userId"');
@@ -1191,7 +1193,7 @@ export class Account extends Service {
      * @param {boolean} phrase
      * @throws {AppwriteException}
      * @returns {Promise}
-    */
+     */
     createMagicURLToken(userId: string, email: string, url?: string, phrase?: boolean): Promise<Models.Token> {
         if (typeof userId === 'undefined') {
             throw new AppwriteException('Missing required parameter: "userId"');
@@ -1248,7 +1250,7 @@ export class Account extends Service {
      * @param {string[]} scopes
      * @throws {AppwriteException}
      * @returns {void|string}
-    */
+     */
     createOAuth2Token(provider: OAuthProvider, success?: string, failure?: string, scopes?: string[]): void | URL {
         if (typeof provider === 'undefined') {
             throw new AppwriteException('Missing required parameter: "provider"');
@@ -1295,7 +1297,7 @@ export class Account extends Service {
      * @param {string} phone
      * @throws {AppwriteException}
      * @returns {Promise}
-    */
+     */
     createPhoneToken(userId: string, phone: string): Promise<Models.Token> {
         if (typeof userId === 'undefined') {
             throw new AppwriteException('Missing required parameter: "userId"');
@@ -1342,7 +1344,7 @@ export class Account extends Service {
      * @param {string} url
      * @throws {AppwriteException}
      * @returns {Promise}
-    */
+     */
     createVerification(url: string): Promise<Models.Token> {
         if (typeof url === 'undefined') {
             throw new AppwriteException('Missing required parameter: "url"');
@@ -1371,7 +1373,7 @@ export class Account extends Service {
      * @param {string} secret
      * @throws {AppwriteException}
      * @returns {Promise}
-    */
+     */
     updateVerification(userId: string, secret: string): Promise<Models.Token> {
         if (typeof userId === 'undefined') {
             throw new AppwriteException('Missing required parameter: "userId"');
@@ -1410,7 +1412,7 @@ export class Account extends Service {
      *
      * @throws {AppwriteException}
      * @returns {Promise}
-    */
+     */
     createPhoneVerification(): Promise<Models.Token> {
         const apiPath = '/account/verification/phone';
         const payload: Payload = {};
@@ -1431,7 +1433,7 @@ export class Account extends Service {
      * @param {string} secret
      * @throws {AppwriteException}
      * @returns {Promise}
-    */
+     */
     updatePhoneVerification(userId: string, secret: string): Promise<Models.Token> {
         if (typeof userId === 'undefined') {
             throw new AppwriteException('Missing required parameter: "userId"');

@@ -21,8 +21,8 @@ export class Teams extends Service {
      * @param {string} search
      * @throws {AppwriteException}
      * @returns {Promise}
-    */
-    list<Preferences extends Models.Preferences>(queries?: string[], search?: string): Promise<Models.TeamList<Preferences>> {
+     */
+    list<Preferences extends Models.Preferences = Models.DefaultPreferences>(queries?: string[], search?: string): Promise<Models.TeamList<Preferences>> {
         const apiPath = '/teams';
         const payload: Payload = {};
 
@@ -49,8 +49,8 @@ export class Teams extends Service {
      * @param {string[]} roles
      * @throws {AppwriteException}
      * @returns {Promise}
-    */
-    create<Preferences extends Models.Preferences>(teamId: string, name: string, roles?: string[]): Promise<Models.Team<Preferences>> {
+     */
+    create<Preferences extends Models.Preferences = Models.DefaultPreferences>(teamId: string, name: string, roles?: string[]): Promise<Models.Team<Preferences>> {
         if (typeof teamId === 'undefined') {
             throw new AppwriteException('Missing required parameter: "teamId"');
         }
@@ -86,8 +86,8 @@ export class Teams extends Service {
      * @param {string} teamId
      * @throws {AppwriteException}
      * @returns {Promise}
-    */
-    get<Preferences extends Models.Preferences>(teamId: string): Promise<Models.Team<Preferences>> {
+     */
+    get<Preferences extends Models.Preferences = Models.DefaultPreferences>(teamId: string): Promise<Models.Team<Preferences>> {
         if (typeof teamId === 'undefined') {
             throw new AppwriteException('Missing required parameter: "teamId"');
         }
@@ -107,8 +107,8 @@ export class Teams extends Service {
      * @param {string} name
      * @throws {AppwriteException}
      * @returns {Promise}
-    */
-    updateName<Preferences extends Models.Preferences>(teamId: string, name: string): Promise<Models.Team<Preferences>> {
+     */
+    updateName<Preferences extends Models.Preferences = Models.DefaultPreferences>(teamId: string, name: string): Promise<Models.Team<Preferences>> {
         if (typeof teamId === 'undefined') {
             throw new AppwriteException('Missing required parameter: "teamId"');
         }
@@ -137,7 +137,7 @@ export class Teams extends Service {
      * @param {string} teamId
      * @throws {AppwriteException}
      * @returns {Promise}
-    */
+     */
     delete(teamId: string): Promise<{}> {
         if (typeof teamId === 'undefined') {
             throw new AppwriteException('Missing required parameter: "teamId"');
@@ -162,7 +162,7 @@ export class Teams extends Service {
      * @param {string} search
      * @throws {AppwriteException}
      * @returns {Promise}
-    */
+     */
     listMemberships(teamId: string, queries?: string[], search?: string): Promise<Models.MembershipList> {
         if (typeof teamId === 'undefined') {
             throw new AppwriteException('Missing required parameter: "teamId"');
@@ -216,7 +216,7 @@ export class Teams extends Service {
      * @param {string} name
      * @throws {AppwriteException}
      * @returns {Promise}
-    */
+     */
     createMembership(teamId: string, roles: string[], email?: string, userId?: string, phone?: string, url?: string, name?: string): Promise<Models.Membership> {
         if (typeof teamId === 'undefined') {
             throw new AppwriteException('Missing required parameter: "teamId"');
@@ -268,7 +268,7 @@ export class Teams extends Service {
      * @param {string} membershipId
      * @throws {AppwriteException}
      * @returns {Promise}
-    */
+     */
     getMembership(teamId: string, membershipId: string): Promise<Models.Membership> {
         if (typeof teamId === 'undefined') {
             throw new AppwriteException('Missing required parameter: "teamId"');
@@ -297,7 +297,7 @@ export class Teams extends Service {
      * @param {string[]} roles
      * @throws {AppwriteException}
      * @returns {Promise}
-    */
+     */
     updateMembership(teamId: string, membershipId: string, roles: string[]): Promise<Models.Membership> {
         if (typeof teamId === 'undefined') {
             throw new AppwriteException('Missing required parameter: "teamId"');
@@ -333,7 +333,7 @@ export class Teams extends Service {
      * @param {string} membershipId
      * @throws {AppwriteException}
      * @returns {Promise}
-    */
+     */
     deleteMembership(teamId: string, membershipId: string): Promise<{}> {
         if (typeof teamId === 'undefined') {
             throw new AppwriteException('Missing required parameter: "teamId"');
@@ -367,7 +367,7 @@ export class Teams extends Service {
      * @param {string} secret
      * @throws {AppwriteException}
      * @returns {Promise}
-    */
+     */
     updateMembershipStatus(teamId: string, membershipId: string, userId: string, secret: string): Promise<Models.Membership> {
         if (typeof teamId === 'undefined') {
             throw new AppwriteException('Missing required parameter: "teamId"');
@@ -410,8 +410,8 @@ export class Teams extends Service {
      * @param {string} teamId
      * @throws {AppwriteException}
      * @returns {Promise}
-    */
-    getPrefs<Preferences extends Models.Preferences>(teamId: string): Promise<Preferences> {
+     */
+    getPrefs<Preferences extends Models.Preferences = Models.DefaultPreferences>(teamId: string): Promise<Preferences> {
         if (typeof teamId === 'undefined') {
             throw new AppwriteException('Missing required parameter: "teamId"');
         }
@@ -433,8 +433,8 @@ export class Teams extends Service {
      * @param {object} prefs
      * @throws {AppwriteException}
      * @returns {Promise}
-    */
-    updatePrefs<Preferences extends Models.Preferences>(teamId: string, prefs: object): Promise<Preferences> {
+     */
+    updatePrefs<Preferences extends Models.Preferences = Models.DefaultPreferences>(teamId: string, prefs: object): Promise<Preferences> {
         if (typeof teamId === 'undefined') {
             throw new AppwriteException('Missing required parameter: "teamId"');
         }

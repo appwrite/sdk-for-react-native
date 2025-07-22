@@ -1,4 +1,4 @@
-import { Client, Databases } from "react-native-appwrite";
+import { Client, Tables } from "react-native-appwrite";
 
 const client = new Client()
     .setEndpoint('https://<REGION>.cloud.appwrite.io/v1') // Your API Endpoint
@@ -6,12 +6,14 @@ const client = new Client()
     .setKey('') // 
     .setJWT('<YOUR_JWT>'); // Your secret JSON Web Token
 
-const databases = new Databases(client);
+const tables = new Tables(client);
 
-const result = await databases.upsertDocument(
+const result = await tables.createRow(
     '<DATABASE_ID>', // databaseId
-    '<COLLECTION_ID>', // collectionId
-    '<DOCUMENT_ID>' // documentId
+    '<TABLE_ID>', // tableId
+    '<ROW_ID>', // rowId
+    {}, // data
+    ["read("any")"] // permissions (optional)
 );
 
 console.log(result);

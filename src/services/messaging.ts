@@ -21,7 +21,7 @@ export class Messaging extends Service {
      * @param {string} targetId
      * @throws {AppwriteException}
      * @returns {Promise}
-    */
+     */
     createSubscriber(topicId: string, subscriberId: string, targetId: string): Promise<Models.Subscriber> {
         if (typeof topicId === 'undefined') {
             throw new AppwriteException('Missing required parameter: "topicId"');
@@ -59,7 +59,7 @@ export class Messaging extends Service {
      * @param {string} subscriberId
      * @throws {AppwriteException}
      * @returns {Promise}
-    */
+     */
     deleteSubscriber(topicId: string, subscriberId: string): Promise<{}> {
         if (typeof topicId === 'undefined') {
             throw new AppwriteException('Missing required parameter: "topicId"');

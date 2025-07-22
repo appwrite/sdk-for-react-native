@@ -2,6 +2,7 @@ export { Client, AppwriteException } from './client';
 export { Account } from './services/account';
 export { Avatars } from './services/avatars';
 export { Databases } from './services/databases';
+export { Tables } from './services/tables';
 export { Functions } from './services/functions';
 export { Graphql } from './services/graphql';
 export { Locale } from './services/locale';

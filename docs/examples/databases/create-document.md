@@ -2,7 +2,6 @@ import { Client, Databases } from "react-native-appwrite";
 
 const client = new Client()
     .setEndpoint('https://<REGION>.cloud.appwrite.io/v1') // Your API Endpoint
-    .setAdmin('') // 
     .setSession('') // The user session to authenticate with
     .setKey('') // 
     .setJWT('<YOUR_JWT>'); // Your secret JSON Web Token

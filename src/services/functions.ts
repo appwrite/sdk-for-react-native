@@ -22,7 +22,7 @@ export class Functions extends Service {
      * @param {string[]} queries
      * @throws {AppwriteException}
      * @returns {Promise}
-    */
+     */
     listExecutions(functionId: string, queries?: string[]): Promise<Models.ExecutionList> {
         if (typeof functionId === 'undefined') {
             throw new AppwriteException('Missing required parameter: "functionId"');
@@ -55,7 +55,7 @@ export class Functions extends Service {
      * @param {string} scheduledAt
      * @throws {AppwriteException}
      * @returns {Promise}
-    */
+     */
     createExecution(functionId: string, body?: string, async?: boolean, xpath?: string, method?: ExecutionMethod, headers?: object, scheduledAt?: string): Promise<Models.Execution> {
         if (typeof functionId === 'undefined') {
             throw new AppwriteException('Missing required parameter: "functionId"');
@@ -101,7 +101,7 @@ export class Functions extends Service {
      * @param {string} executionId
      * @throws {AppwriteException}
      * @returns {Promise}
-    */
+     */
     getExecution(functionId: string, executionId: string): Promise<Models.Execution> {
         if (typeof functionId === 'undefined') {
             throw new AppwriteException('Missing required parameter: "functionId"');
