@@ -1,23 +1,10 @@
 export namespace Models {
     /**
-     * Rows List
-     */
-    export type RowList<Row extends Models.Row = Models.DefaultRow> = {
-        /**
-         * Total number of rows rows that matched your query.
-         */
-        total: number;
-        /**
-         * List of rows.
-         */
-        rows: Row[];
-    }
-    /**
      * Documents List
      */
     export type DocumentList<Document extends Models.Document = Models.DefaultDocument> = {
         /**
-         * Total number of documents rows that matched your query.
+         * Total number of documents documents that matched your query.
          */
         total: number;
         /**
@@ -30,7 +17,7 @@ export namespace Models {
      */
     export type SessionList = {
         /**
-         * Total number of sessions rows that matched your query.
+         * Total number of sessions documents that matched your query.
          */
         total: number;
         /**
@@ -43,7 +30,7 @@ export namespace Models {
      */
     export type IdentityList = {
         /**
-         * Total number of identities rows that matched your query.
+         * Total number of identities documents that matched your query.
          */
         total: number;
         /**
@@ -56,7 +43,7 @@ export namespace Models {
      */
     export type LogList = {
         /**
-         * Total number of logs rows that matched your query.
+         * Total number of logs documents that matched your query.
          */
         total: number;
         /**
@@ -69,7 +56,7 @@ export namespace Models {
      */
     export type FileList = {
         /**
-         * Total number of files rows that matched your query.
+         * Total number of files documents that matched your query.
          */
         total: number;
         /**
@@ -82,7 +69,7 @@ export namespace Models {
      */
     export type TeamList<Preferences extends Models.Preferences = Models.DefaultPreferences> = {
         /**
-         * Total number of teams rows that matched your query.
+         * Total number of teams documents that matched your query.
          */
         total: number;
         /**
@@ -95,7 +82,7 @@ export namespace Models {
      */
     export type MembershipList = {
         /**
-         * Total number of memberships rows that matched your query.
+         * Total number of memberships documents that matched your query.
          */
         total: number;
         /**
@@ -108,7 +95,7 @@ export namespace Models {
      */
     export type ExecutionList = {
         /**
-         * Total number of executions rows that matched your query.
+         * Total number of executions documents that matched your query.
          */
         total: number;
         /**
@@ -121,7 +108,7 @@ export namespace Models {
      */
     export type CountryList = {
         /**
-         * Total number of countries rows that matched your query.
+         * Total number of countries documents that matched your query.
          */
         total: number;
         /**
@@ -134,7 +121,7 @@ export namespace Models {
      */
     export type ContinentList = {
         /**
-         * Total number of continents rows that matched your query.
+         * Total number of continents documents that matched your query.
          */
         total: number;
         /**
@@ -147,7 +134,7 @@ export namespace Models {
      */
     export type LanguageList = {
         /**
-         * Total number of languages rows that matched your query.
+         * Total number of languages documents that matched your query.
          */
         total: number;
         /**
@@ -160,7 +147,7 @@ export namespace Models {
      */
     export type CurrencyList = {
         /**
-         * Total number of currencies rows that matched your query.
+         * Total number of currencies documents that matched your query.
          */
         total: number;
         /**
@@ -173,7 +160,7 @@ export namespace Models {
      */
     export type PhoneList = {
         /**
-         * Total number of phones rows that matched your query.
+         * Total number of phones documents that matched your query.
          */
         total: number;
         /**
@@ -186,47 +173,13 @@ export namespace Models {
      */
     export type LocaleCodeList = {
         /**
-         * Total number of localeCodes rows that matched your query.
+         * Total number of localeCodes documents that matched your query.
          */
         total: number;
         /**
          * List of localeCodes.
          */
         localeCodes: LocaleCode[];
-    }
-    /**
-     * Row
-     */
-    export type Row = {
-        /**
-         * Row ID.
-         */
-        $id: string;
-        /**
-         * Row automatically incrementing ID.
-         */
-        $sequence: number;
-        /**
-         * Table ID.
-         */
-        $tableId: string;
-        /**
-         * Database ID.
-         */
-        $databaseId: string;
-        /**
-         * Row creation date in ISO 8601 format.
-         */
-        $createdAt: string;
-        /**
-         * Row update date in ISO 8601 format.
-         */
-        $updatedAt: string;
-        /**
-         * Row permissions. [Learn more about permissions](https://appwrite.io/docs/permissions).
-         */
-        $permissions: string[];
-        [key: string]: any;
     }
     /**
      * Document

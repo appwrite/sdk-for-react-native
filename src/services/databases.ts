@@ -22,7 +22,6 @@ export class Databases extends Service {
      * @param {string[]} queries
      * @throws {AppwriteException}
      * @returns {Promise}
-     * @deprecated This API has been deprecated since 1.8.0. Please use `Tables.listRows` instead.
      */
     listDocuments<Document extends Models.Document = Models.DefaultDocument>(databaseId: string, collectionId: string, queries?: string[]): Promise<Models.DocumentList<Document>> {
         if (typeof databaseId === 'undefined') {
@@ -58,7 +57,6 @@ export class Databases extends Service {
      * @param {string[]} permissions
      * @throws {AppwriteException}
      * @returns {Promise}
-     * @deprecated This API has been deprecated since 1.8.0. Please use `Tables.createRow` instead.
      */
     createDocument<Document extends Models.Document = Models.DefaultDocument>(databaseId: string, collectionId: string, documentId: string, data: object, permissions?: string[]): Promise<Document> {
         if (typeof databaseId === 'undefined') {
@@ -108,7 +106,6 @@ export class Databases extends Service {
      * @param {string[]} queries
      * @throws {AppwriteException}
      * @returns {Promise}
-     * @deprecated This API has been deprecated since 1.8.0. Please use `Tables.getRow` instead.
      */
     getDocument<Document extends Models.Document = Models.DefaultDocument>(databaseId: string, collectionId: string, documentId: string, queries?: string[]): Promise<Document> {
         if (typeof databaseId === 'undefined') {
@@ -148,11 +145,12 @@ export class Databases extends Service {
      * @param {string} databaseId
      * @param {string} collectionId
      * @param {string} documentId
+     * @param {object} data
+     * @param {string[]} permissions
      * @throws {AppwriteException}
      * @returns {Promise}
-     * @deprecated This API has been deprecated since 1.8.0. Please use `Tables.upsertRow` instead.
      */
-    upsertDocument<Document extends Models.Document = Models.DefaultDocument>(databaseId: string, collectionId: string, documentId: string): Promise<Document> {
+    upsertDocument<Document extends Models.Document = Models.DefaultDocument>(databaseId: string, collectionId: string, documentId: string, data: object, permissions?: string[]): Promise<Document> {
         if (typeof databaseId === 'undefined') {
             throw new AppwriteException('Missing required parameter: "databaseId"');
         }
@@ -165,8 +163,20 @@ export class Databases extends Service {
             throw new AppwriteException('Missing required parameter: "documentId"');
         }
 
+        if (typeof data === 'undefined') {
+            throw new AppwriteException('Missing required parameter: "data"');
+        }
+
         const apiPath = '/databases/{databaseId}/collections/{collectionId}/documents/{documentId}'.replace('{databaseId}', databaseId).replace('{collectionId}', collectionId).replace('{documentId}', documentId);
         const payload: Payload = {};
+
+        if (typeof data !== 'undefined') {
+            payload['data'] = data;
+        }
+
+        if (typeof permissions !== 'undefined') {
+            payload['permissions'] = permissions;
+        }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call('put', uri, {
@@ -185,7 +195,6 @@ export class Databases extends Service {
      * @param {string[]} permissions
      * @throws {AppwriteException}
      * @returns {Promise}
-     * @deprecated This API has been deprecated since 1.8.0. Please use `Tables.updateRow` instead.
      */
     updateDocument<Document extends Models.Document = Models.DefaultDocument>(databaseId: string, collectionId: string, documentId: string, data?: object, permissions?: string[]): Promise<Document> {
         if (typeof databaseId === 'undefined') {
@@ -225,7 +234,6 @@ export class Databases extends Service {
      * @param {string} documentId
      * @throws {AppwriteException}
      * @returns {Promise}
-     * @deprecated This API has been deprecated since 1.8.0. Please use `Tables.deleteRow` instead.
      */
     deleteDocument(databaseId: string, collectionId: string, documentId: string): Promise<{}> {
         if (typeof databaseId === 'undefined') {
@@ -245,6 +253,98 @@ export class Databases extends Service {
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call('delete', uri, {
+            'content-type': 'application/json',
+        }, payload);
+    }
+
+    /**
+     * Decrement a specific attribute of a document by a given value.
+     *
+     * @param {string} databaseId
+     * @param {string} collectionId
+     * @param {string} documentId
+     * @param {string} attribute
+     * @param {number} value
+     * @param {number} min
+     * @throws {AppwriteException}
+     * @returns {Promise}
+     */
+    decrementDocumentAttribute<Document extends Models.Document = Models.DefaultDocument>(databaseId: string, collectionId: string, documentId: string, attribute: string, value?: number, min?: number): Promise<Document> {
+        if (typeof databaseId === 'undefined') {
+            throw new AppwriteException('Missing required parameter: "databaseId"');
+        }
+
+        if (typeof collectionId === 'undefined') {
+            throw new AppwriteException('Missing required parameter: "collectionId"');
+        }
+
+        if (typeof documentId === 'undefined') {
+            throw new AppwriteException('Missing required parameter: "documentId"');
+        }
+
+        if (typeof attribute === 'undefined') {
+            throw new AppwriteException('Missing required parameter: "attribute"');
+        }
+
+        const apiPath = '/databases/{databaseId}/collections/{collectionId}/documents/{documentId}/{attribute}/decrement'.replace('{databaseId}', databaseId).replace('{collectionId}', collectionId).replace('{documentId}', documentId).replace('{attribute}', attribute);
+        const payload: Payload = {};
+
+        if (typeof value !== 'undefined') {
+            payload['value'] = value;
+        }
+
+        if (typeof min !== 'undefined') {
+            payload['min'] = min;
+        }
+
+        const uri = new URL(this.client.config.endpoint + apiPath);
+        return this.client.call('patch', uri, {
+            'content-type': 'application/json',
+        }, payload);
+    }
+
+    /**
+     * Increment a specific attribute of a document by a given value.
+     *
+     * @param {string} databaseId
+     * @param {string} collectionId
+     * @param {string} documentId
+     * @param {string} attribute
+     * @param {number} value
+     * @param {number} max
+     * @throws {AppwriteException}
+     * @returns {Promise}
+     */
+    incrementDocumentAttribute<Document extends Models.Document = Models.DefaultDocument>(databaseId: string, collectionId: string, documentId: string, attribute: string, value?: number, max?: number): Promise<Document> {
+        if (typeof databaseId === 'undefined') {
+            throw new AppwriteException('Missing required parameter: "databaseId"');
+        }
+
+        if (typeof collectionId === 'undefined') {
+            throw new AppwriteException('Missing required parameter: "collectionId"');
+        }
+
+        if (typeof documentId === 'undefined') {
+            throw new AppwriteException('Missing required parameter: "documentId"');
+        }
+
+        if (typeof attribute === 'undefined') {
+            throw new AppwriteException('Missing required parameter: "attribute"');
+        }
+
+        const apiPath = '/databases/{databaseId}/collections/{collectionId}/documents/{documentId}/{attribute}/increment'.replace('{databaseId}', databaseId).replace('{collectionId}', collectionId).replace('{documentId}', documentId).replace('{attribute}', attribute);
+        const payload: Payload = {};
+
+        if (typeof value !== 'undefined') {
+            payload['value'] = value;
+        }
+
+        if (typeof max !== 'undefined') {
+            payload['max'] = max;
+        }
+
+        const uri = new URL(this.client.config.endpoint + apiPath);
+        return this.client.call('patch', uri, {
             'content-type': 'application/json',
         }, payload);
     }
