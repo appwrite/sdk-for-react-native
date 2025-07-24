@@ -24,7 +24,7 @@ export class Storage extends Service {
      * @param {string} search
      * @throws {AppwriteException}
      * @returns {Promise}
-    */
+     */
     listFiles(bucketId: string, queries?: string[], search?: string): Promise<Models.FileList> {
         if (typeof bucketId === 'undefined') {
             throw new AppwriteException('Missing required parameter: "bucketId"');
@@ -72,7 +72,7 @@ export class Storage extends Service {
      * @param {string[]} permissions
      * @throws {AppwriteException}
      * @returns {Promise}
-    */
+     */
     async createFile(bucketId: string, fileId: string, file: {name: string, type: string, size: number, uri: string}, permissions?: string[], onProgress = (progress: UploadProgress) => {}): Promise<Models.File> {
         if (typeof bucketId === 'undefined') {
             throw new AppwriteException('Missing required parameter: "bucketId"');
@@ -169,7 +169,7 @@ export class Storage extends Service {
      * @param {string} fileId
      * @throws {AppwriteException}
      * @returns {Promise}
-    */
+     */
     getFile(bucketId: string, fileId: string): Promise<Models.File> {
         if (typeof bucketId === 'undefined') {
             throw new AppwriteException('Missing required parameter: "bucketId"');
@@ -197,7 +197,7 @@ export class Storage extends Service {
      * @param {string[]} permissions
      * @throws {AppwriteException}
      * @returns {Promise}
-    */
+     */
     updateFile(bucketId: string, fileId: string, name?: string, permissions?: string[]): Promise<Models.File> {
         if (typeof bucketId === 'undefined') {
             throw new AppwriteException('Missing required parameter: "bucketId"');
@@ -232,7 +232,7 @@ export class Storage extends Service {
      * @param {string} fileId
      * @throws {AppwriteException}
      * @returns {Promise}
-    */
+     */
     deleteFile(bucketId: string, fileId: string): Promise<{}> {
         if (typeof bucketId === 'undefined') {
             throw new AppwriteException('Missing required parameter: "bucketId"');
@@ -261,7 +261,7 @@ export class Storage extends Service {
      * @param {string} token
      * @throws {AppwriteException}
      * @returns {ArrayBuffer}
-    */
+     */
     getFileDownload(bucketId: string, fileId: string, token?: string): Promise<ArrayBuffer> {
         if (typeof bucketId === 'undefined') {
             throw new AppwriteException('Missing required parameter: "bucketId"');
@@ -312,7 +312,7 @@ export class Storage extends Service {
      * @param {string} token
      * @throws {AppwriteException}
      * @returns {ArrayBuffer}
-    */
+     */
     getFilePreview(bucketId: string, fileId: string, width?: number, height?: number, gravity?: ImageGravity, quality?: number, borderWidth?: number, borderColor?: string, borderRadius?: number, opacity?: number, rotation?: number, background?: string, output?: ImageFormat, token?: string): Promise<ArrayBuffer> {
         if (typeof bucketId === 'undefined') {
             throw new AppwriteException('Missing required parameter: "bucketId"');
@@ -394,7 +394,7 @@ export class Storage extends Service {
      * @param {string} token
      * @throws {AppwriteException}
      * @returns {ArrayBuffer}
-    */
+     */
     getFileView(bucketId: string, fileId: string, token?: string): Promise<ArrayBuffer> {
         if (typeof bucketId === 'undefined') {
             throw new AppwriteException('Missing required parameter: "bucketId"');

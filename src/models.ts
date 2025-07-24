@@ -2,7 +2,7 @@ export namespace Models {
     /**
      * Documents List
      */
-    export type DocumentList<Document extends Models.Document> = {
+    export type DocumentList<Document extends Models.Document = Models.DefaultDocument> = {
         /**
          * Total number of documents documents that matched your query.
          */
@@ -67,7 +67,7 @@ export namespace Models {
     /**
      * Teams List
      */
-    export type TeamList<Preferences extends Models.Preferences> = {
+    export type TeamList<Preferences extends Models.Preferences = Models.DefaultPreferences> = {
         /**
          * Total number of teams documents that matched your query.
          */
@@ -190,6 +190,10 @@ export namespace Models {
          */
         $id: string;
         /**
+         * Document automatically incrementing ID.
+         */
+        $sequence: number;
+        /**
          * Collection ID.
          */
         $collectionId: string;
@@ -303,7 +307,7 @@ export namespace Models {
     /**
      * User
      */
-    export type User<Preferences extends Models.Preferences> = {
+    export type User<Preferences extends Models.Preferences = Models.DefaultPreferences> = {
         /**
          * User ID.
          */
@@ -792,7 +796,7 @@ export namespace Models {
     /**
      * Team
      */
-    export type Team<Preferences extends Models.Preferences> = {
+    export type Team<Preferences extends Models.Preferences = Models.DefaultPreferences> = {
         /**
          * Team ID.
          */

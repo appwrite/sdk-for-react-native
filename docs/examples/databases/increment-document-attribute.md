@@ -6,12 +6,13 @@ const client = new Client()
 
 const databases = new Databases(client);
 
-const result = await databases.createDocument(
+const result = await databases.incrementDocumentAttribute(
     '<DATABASE_ID>', // databaseId
     '<COLLECTION_ID>', // collectionId
     '<DOCUMENT_ID>', // documentId
-    {}, // data
-    ["read("any")"] // permissions (optional)
+    '', // attribute
+    null, // value (optional)
+    null // max (optional)
 );
 
 console.log(result);
