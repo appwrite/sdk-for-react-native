@@ -1,4 +1,7 @@
 export namespace Models {
+
+    declare const __default: unique symbol;
+
     /**
      * Documents List
      */
@@ -12,6 +15,7 @@ export namespace Models {
          */
         documents: Document[];
     }
+
     /**
      * Sessions List
      */
@@ -25,6 +29,7 @@ export namespace Models {
          */
         sessions: Session[];
     }
+
     /**
      * Identities List
      */
@@ -38,6 +43,7 @@ export namespace Models {
          */
         identities: Identity[];
     }
+
     /**
      * Logs List
      */
@@ -51,6 +57,7 @@ export namespace Models {
          */
         logs: Log[];
     }
+
     /**
      * Files List
      */
@@ -64,6 +71,7 @@ export namespace Models {
          */
         files: File[];
     }
+
     /**
      * Teams List
      */
@@ -77,6 +85,7 @@ export namespace Models {
          */
         teams: Team<Preferences>[];
     }
+
     /**
      * Memberships List
      */
@@ -90,6 +99,7 @@ export namespace Models {
          */
         memberships: Membership[];
     }
+
     /**
      * Executions List
      */
@@ -103,6 +113,7 @@ export namespace Models {
          */
         executions: Execution[];
     }
+
     /**
      * Countries List
      */
@@ -116,6 +127,7 @@ export namespace Models {
          */
         countries: Country[];
     }
+
     /**
      * Continents List
      */
@@ -129,6 +141,7 @@ export namespace Models {
          */
         continents: Continent[];
     }
+
     /**
      * Languages List
      */
@@ -142,6 +155,7 @@ export namespace Models {
          */
         languages: Language[];
     }
+
     /**
      * Currencies List
      */
@@ -155,6 +169,7 @@ export namespace Models {
          */
         currencies: Currency[];
     }
+
     /**
      * Phones List
      */
@@ -168,6 +183,7 @@ export namespace Models {
          */
         phones: Phone[];
     }
+
     /**
      * Locale codes list
      */
@@ -181,6 +197,7 @@ export namespace Models {
          */
         localeCodes: LocaleCode[];
     }
+
     /**
      * Document
      */
@@ -213,8 +230,19 @@ export namespace Models {
          * Document permissions. [Learn more about permissions](https://appwrite.io/docs/permissions).
          */
         $permissions: string[];
-        [key: string]: any;
     }
+
+    export type DefaultDocument = Document & {
+        [key: string]: any;
+        [__default]: true;
+    };
+
+    export type DataWithoutDocumentKeys = {
+        [K in string]: any;
+    } & {
+        [K in keyof Document]?: never;
+    };
+
     /**
      * Log
      */
@@ -304,6 +332,7 @@ export namespace Models {
          */
         countryName: string;
     }
+
     /**
      * User
      */
@@ -385,6 +414,7 @@ export namespace Models {
          */
         accessedAt: string;
     }
+
     /**
      * AlgoMD5
      */
@@ -394,6 +424,7 @@ export namespace Models {
          */
         type: string;
     }
+
     /**
      * AlgoSHA
      */
@@ -403,6 +434,7 @@ export namespace Models {
          */
         type: string;
     }
+
     /**
      * AlgoPHPass
      */
@@ -412,6 +444,7 @@ export namespace Models {
          */
         type: string;
     }
+
     /**
      * AlgoBcrypt
      */
@@ -421,6 +454,7 @@ export namespace Models {
          */
         type: string;
     }
+
     /**
      * AlgoScrypt
      */
@@ -446,6 +480,7 @@ export namespace Models {
          */
         length: number;
     }
+
     /**
      * AlgoScryptModified
      */
@@ -467,6 +502,7 @@ export namespace Models {
          */
         signerKey: string;
     }
+
     /**
      * AlgoArgon2
      */
@@ -488,12 +524,24 @@ export namespace Models {
          */
         threads: number;
     }
+
     /**
      * Preferences
      */
     export type Preferences = {
-        [key: string]: any;
     }
+
+    export type DefaultPreferences = Preferences & {
+        [key: string]: any;
+        [__default]: true;
+    };
+
+    export type DataWithoutPreferencesKeys = {
+        [K in string]: any;
+    } & {
+        [K in keyof Preferences]?: never;
+    };
+
     /**
      * Session
      */
@@ -615,6 +663,7 @@ export namespace Models {
          */
         mfaUpdatedAt: string;
     }
+
     /**
      * Identity
      */
@@ -660,6 +709,7 @@ export namespace Models {
          */
         providerRefreshToken: string;
     }
+
     /**
      * Token
      */
@@ -689,6 +739,7 @@ export namespace Models {
          */
         phrase: string;
     }
+
     /**
      * JWT
      */
@@ -698,6 +749,7 @@ export namespace Models {
          */
         jwt: string;
     }
+
     /**
      * Locale
      */
@@ -731,6 +783,7 @@ export namespace Models {
          */
         currency: string;
     }
+
     /**
      * LocaleCode
      */
@@ -744,6 +797,7 @@ export namespace Models {
          */
         name: string;
     }
+
     /**
      * File
      */
@@ -793,6 +847,7 @@ export namespace Models {
          */
         chunksUploaded: number;
     }
+
     /**
      * Team
      */
@@ -822,6 +877,7 @@ export namespace Models {
          */
         prefs: Preferences;
     }
+
     /**
      * Membership
      */
@@ -879,6 +935,7 @@ export namespace Models {
          */
         roles: string[];
     }
+
     /**
      * Execution
      */
@@ -952,6 +1009,7 @@ export namespace Models {
          */
         scheduledAt?: string;
     }
+
     /**
      * Country
      */
@@ -965,6 +1023,7 @@ export namespace Models {
          */
         code: string;
     }
+
     /**
      * Continent
      */
@@ -978,6 +1037,7 @@ export namespace Models {
          */
         code: string;
     }
+
     /**
      * Language
      */
@@ -995,6 +1055,7 @@ export namespace Models {
          */
         nativeName: string;
     }
+
     /**
      * Currency
      */
@@ -1028,6 +1089,7 @@ export namespace Models {
          */
         namePlural: string;
     }
+
     /**
      * Phone
      */
@@ -1045,6 +1107,7 @@ export namespace Models {
          */
         countryName: string;
     }
+
     /**
      * Headers
      */
@@ -1058,6 +1121,7 @@ export namespace Models {
          */
         value: string;
     }
+
     /**
      * MFA Challenge
      */
@@ -1079,6 +1143,7 @@ export namespace Models {
          */
         expire: string;
     }
+
     /**
      * MFA Recovery Codes
      */
@@ -1088,6 +1153,7 @@ export namespace Models {
          */
         recoveryCodes: string[];
     }
+
     /**
      * MFAType
      */
@@ -1101,6 +1167,7 @@ export namespace Models {
          */
         uri: string;
     }
+
     /**
      * MFAFactors
      */
@@ -1122,6 +1189,7 @@ export namespace Models {
          */
         recoveryCode: boolean;
     }
+
     /**
      * Subscriber
      */
@@ -1163,6 +1231,7 @@ export namespace Models {
          */
         providerType: string;
     }
+
     /**
      * Target
      */
