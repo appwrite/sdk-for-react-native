@@ -90,8 +90,103 @@ export class Query {
   static offset = (offset: number): string =>
     new Query("offset", undefined, offset).toString();
 
+  /**
+   * Filter resources where attribute contains the specified value.
+   *
+   * @param {string} attribute
+   * @param {string | string[]} value
+   * @returns {string}
+   */
   static contains = (attribute: string, value: string | string[]): string =>
     new Query("contains", attribute, value).toString();
+
+  /**
+   * Filter resources where attribute does not contain the specified value.
+   *
+   * @param {string} attribute
+   * @param {string | string[]} value
+   * @returns {string}
+   */
+  static notContains = (attribute: string, value: string | string[]): string =>
+    new Query("notContains", attribute, value).toString();
+
+  /**
+   * Filter resources by searching attribute for value (inverse of search).
+   * A fulltext index on attribute is required for this query to work.
+   *
+   * @param {string} attribute
+   * @param {string} value
+   * @returns {string}
+   */
+  static notSearch = (attribute: string, value: string): string =>
+    new Query("notSearch", attribute, value).toString();
+
+  /**
+   * Filter resources where attribute is not between start and end (exclusive).
+   *
+   * @param {string} attribute
+   * @param {string | number} start
+   * @param {string | number} end
+   * @returns {string}
+   */
+  static notBetween = (attribute: string, start: string | number, end: string | number): string =>
+    new Query("notBetween", attribute, [start, end] as QueryTypesList).toString();
+
+  /**
+   * Filter resources where attribute does not start with value.
+   *
+   * @param {string} attribute
+   * @param {string} value
+   * @returns {string}
+   */
+  static notStartsWith = (attribute: string, value: string): string =>
+    new Query("notStartsWith", attribute, value).toString();
+
+  /**
+   * Filter resources where attribute does not end with value.
+   *
+   * @param {string} attribute
+   * @param {string} value
+   * @returns {string}
+   */
+  static notEndsWith = (attribute: string, value: string): string =>
+    new Query("notEndsWith", attribute, value).toString();
+
+  /**
+   * Filter resources where document was created before date.
+   *
+   * @param {string} value
+   * @returns {string}
+   */
+  static createdBefore = (value: string): string =>
+    new Query("createdBefore", undefined, value).toString();
+
+  /**
+   * Filter resources where document was created after date.
+   *
+   * @param {string} value
+   * @returns {string}
+   */
+  static createdAfter = (value: string): string =>
+    new Query("createdAfter", undefined, value).toString();
+
+  /**
+   * Filter resources where document was updated before date.
+   *
+   * @param {string} value
+   * @returns {string}
+   */
+  static updatedBefore = (value: string): string =>
+    new Query("updatedBefore", undefined, value).toString();
+
+  /**
+   * Filter resources where document was updated after date.
+   *
+   * @param {string} value
+   * @returns {string}
+   */
+  static updatedAfter = (value: string): string =>
+    new Query("updatedAfter", undefined, value).toString();
 
   static or = (queries: string[]) =>
     new Query("or", undefined, queries.map((query) => JSON.parse(query))).toString();

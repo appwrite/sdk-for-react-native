@@ -16,13 +16,45 @@ export class Messaging extends Service {
     /**
      * Create a new subscriber.
      *
-     * @param {string} topicId
-     * @param {string} subscriberId
-     * @param {string} targetId
+     * @param {string} topicId - Topic ID. The topic ID to subscribe to.
+     * @param {string} subscriberId - Subscriber ID. Choose a custom Subscriber ID or a new Subscriber ID.
+     * @param {string} targetId - Target ID. The target ID to link to the specified Topic ID.
      * @throws {AppwriteException}
      * @returns {Promise}
      */
-    createSubscriber(topicId: string, subscriberId: string, targetId: string): Promise<Models.Subscriber> {
+    createSubscriber(params: { topicId: string, subscriberId: string, targetId: string  }): Promise<Models.Subscriber>;
+    /**
+     * @deprecated Parameter-based methods will be removed in the upcoming version.
+     * Please use the object based method instead for better developer experience.
+     *
+     * @example
+     * // Old (deprecated)
+     * createSubscriber(topicId: string, subscriberId: string, targetId: string): Promise<Models.Subscriber>;
+     *
+     * // New (object based)
+     * createSubscriber(params: { topicId: string, subscriberId: string, targetId: string  }): Promise<Models.Subscriber>;
+     */
+    createSubscriber(topicId: string, subscriberId: string, targetId: string): Promise<Models.Subscriber>;
+    createSubscriber(
+        paramsOrFirst: { topicId: string, subscriberId: string, targetId: string } | string,
+        ...rest: [(string)?, (string)?]    
+    ): Promise<Models.Subscriber> {
+        let params: { topicId: string, subscriberId: string, targetId: string };
+
+        if (paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst)) {
+            params = paramsOrFirst as { topicId: string, subscriberId: string, targetId: string };
+        } else {
+            params = {
+                topicId: paramsOrFirst as string,
+                subscriberId: rest[0] as string,
+                targetId: rest[1] as string            
+            };
+        }
+
+        const topicId = params.topicId;
+        const subscriberId = params.subscriberId;
+        const targetId = params.targetId;
+
         if (typeof topicId === 'undefined') {
             throw new AppwriteException('Missing required parameter: "topicId"');
         }
@@ -55,12 +87,42 @@ export class Messaging extends Service {
     /**
      * Delete a subscriber by its unique ID.
      *
-     * @param {string} topicId
-     * @param {string} subscriberId
+     * @param {string} topicId - Topic ID. The topic ID subscribed to.
+     * @param {string} subscriberId - Subscriber ID.
      * @throws {AppwriteException}
      * @returns {Promise}
      */
-    deleteSubscriber(topicId: string, subscriberId: string): Promise<{}> {
+    deleteSubscriber(params: { topicId: string, subscriberId: string  }): Promise<{}>;
+    /**
+     * @deprecated Parameter-based methods will be removed in the upcoming version.
+     * Please use the object based method instead for better developer experience.
+     *
+     * @example
+     * // Old (deprecated)
+     * deleteSubscriber(topicId: string, subscriberId: string): Promise<{}>;
+     *
+     * // New (object based)
+     * deleteSubscriber(params: { topicId: string, subscriberId: string  }): Promise<{}>;
+     */
+    deleteSubscriber(topicId: string, subscriberId: string): Promise<{}>;
+    deleteSubscriber(
+        paramsOrFirst: { topicId: string, subscriberId: string } | string,
+        ...rest: [(string)?]    
+    ): Promise<{}> {
+        let params: { topicId: string, subscriberId: string };
+
+        if (paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst)) {
+            params = paramsOrFirst as { topicId: string, subscriberId: string };
+        } else {
+            params = {
+                topicId: paramsOrFirst as string,
+                subscriberId: rest[0] as string            
+            };
+        }
+
+        const topicId = params.topicId;
+        const subscriberId = params.subscriberId;
+
         if (typeof topicId === 'undefined') {
             throw new AppwriteException('Missing required parameter: "topicId"');
         }
