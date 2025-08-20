@@ -34,17 +34,24 @@ export class Account extends Service {
     /**
      * Use this endpoint to allow a new user to register a new account in your project. After the user registration completes successfully, you can use the [/account/verfication](https://appwrite.io/docs/references/cloud/client-web/account#createVerification) route to start verifying the user email address. To allow the new user to login to their new account, you need to create a new [account session](https://appwrite.io/docs/references/cloud/client-web/account#createEmailSession).
      *
-     * @param {string} userId - User ID. Choose a custom ID or generate a random ID with `ID.unique()`. Valid chars are a-z, A-Z, 0-9, period, hyphen, and underscore. Can't start with a special char. Max length is 36 chars.
-     * @param {string} email - User email.
-     * @param {string} password - New user password. Must be between 8 and 256 chars.
-     * @param {string} name - User name. Max length: 128 chars.
+     * @param {string} params.userId - User ID. Choose a custom ID or generate a random ID with `ID.unique()`. Valid chars are a-z, A-Z, 0-9, period, hyphen, and underscore. Can't start with a special char. Max length is 36 chars.
+     * @param {string} params.email - User email.
+     * @param {string} params.password - New user password. Must be between 8 and 256 chars.
+     * @param {string} params.name - User name. Max length: 128 chars.
      * @throws {AppwriteException}
      * @returns {Promise}
      */
     create<Preferences extends Models.Preferences = Models.DefaultPreferences>(params: { userId: string, email: string, password: string, name?: string  }): Promise<Models.User<Preferences>>;
     /**
-     * @deprecated Parameter-based methods will be removed in the upcoming version.
-     * Please use the object based method instead for better developer experience.
+     * Use this endpoint to allow a new user to register a new account in your project. After the user registration completes successfully, you can use the [/account/verfication](https://appwrite.io/docs/references/cloud/client-web/account#createVerification) route to start verifying the user email address. To allow the new user to login to their new account, you need to create a new [account session](https://appwrite.io/docs/references/cloud/client-web/account#createEmailSession).
+     *
+     * @param {string} userId - User ID. Choose a custom ID or generate a random ID with `ID.unique()`. Valid chars are a-z, A-Z, 0-9, period, hyphen, and underscore. Can't start with a special char. Max length is 36 chars.
+     * @param {string} email - User email.
+     * @param {string} password - New user password. Must be between 8 and 256 chars.
+     * @param {string} name - User name. Max length: 128 chars.
+     * @throws {AppwriteException}
+     * @returns {Promise}     * @deprecated Flat parameter style methods will be removed in a future version.
+     * Please use the object parameter style method instead for a better developer experience.
      *
      * @example
      * // Old (deprecated)
@@ -60,8 +67,8 @@ export class Account extends Service {
     ): Promise<Models.User<Preferences>> {
         let params: { userId: string, email: string, password: string, name?: string };
 
-        if (paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst)) {
-            params = paramsOrFirst as { userId: string, email: string, password: string, name?: string };
+        if ((paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst))) {
+            params = (paramsOrFirst || {}) as { userId: string, email: string, password: string, name?: string };
         } else {
             params = {
                 userId: paramsOrFirst as string,
@@ -118,15 +125,22 @@ export class Account extends Service {
      * This endpoint can also be used to convert an anonymous account to a normal one, by passing an email address and a new password.
      * 
      *
-     * @param {string} email - User email.
-     * @param {string} password - User password. Must be at least 8 chars.
+     * @param {string} params.email - User email.
+     * @param {string} params.password - User password. Must be at least 8 chars.
      * @throws {AppwriteException}
      * @returns {Promise}
      */
     updateEmail<Preferences extends Models.Preferences = Models.DefaultPreferences>(params: { email: string, password: string  }): Promise<Models.User<Preferences>>;
     /**
-     * @deprecated Parameter-based methods will be removed in the upcoming version.
-     * Please use the object based method instead for better developer experience.
+     * Update currently logged in user account email address. After changing user address, the user confirmation status will get reset. A new confirmation email is not sent automatically however you can use the send confirmation email endpoint again to send the confirmation email. For security measures, user password is required to complete this request.
+     * This endpoint can also be used to convert an anonymous account to a normal one, by passing an email address and a new password.
+     * 
+     *
+     * @param {string} email - User email.
+     * @param {string} password - User password. Must be at least 8 chars.
+     * @throws {AppwriteException}
+     * @returns {Promise}     * @deprecated Flat parameter style methods will be removed in a future version.
+     * Please use the object parameter style method instead for a better developer experience.
      *
      * @example
      * // Old (deprecated)
@@ -142,8 +156,8 @@ export class Account extends Service {
     ): Promise<Models.User<Preferences>> {
         let params: { email: string, password: string };
 
-        if (paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst)) {
-            params = paramsOrFirst as { email: string, password: string };
+        if ((paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst))) {
+            params = (paramsOrFirst || {}) as { email: string, password: string };
         } else {
             params = {
                 email: paramsOrFirst as string,
@@ -182,14 +196,18 @@ export class Account extends Service {
     /**
      * Get the list of identities for the currently logged in user.
      *
-     * @param {string[]} queries - Array of query strings generated using the Query class provided by the SDK. [Learn more about queries](https://appwrite.io/docs/queries). Maximum of 100 queries are allowed, each 4096 characters long. You may filter on the following attributes: userId, provider, providerUid, providerEmail, providerAccessTokenExpiry
+     * @param {string[]} params.queries - Array of query strings generated using the Query class provided by the SDK. [Learn more about queries](https://appwrite.io/docs/queries). Maximum of 100 queries are allowed, each 4096 characters long. You may filter on the following attributes: userId, provider, providerUid, providerEmail, providerAccessTokenExpiry
      * @throws {AppwriteException}
      * @returns {Promise}
      */
     listIdentities(params: { queries?: string[]  }): Promise<Models.IdentityList>;
     /**
-     * @deprecated Parameter-based methods will be removed in the upcoming version.
-     * Please use the object based method instead for better developer experience.
+     * Get the list of identities for the currently logged in user.
+     *
+     * @param {string[]} queries - Array of query strings generated using the Query class provided by the SDK. [Learn more about queries](https://appwrite.io/docs/queries). Maximum of 100 queries are allowed, each 4096 characters long. You may filter on the following attributes: userId, provider, providerUid, providerEmail, providerAccessTokenExpiry
+     * @throws {AppwriteException}
+     * @returns {Promise}     * @deprecated Flat parameter style methods will be removed in a future version.
+     * Please use the object parameter style method instead for a better developer experience.
      *
      * @example
      * // Old (deprecated)
@@ -204,8 +222,8 @@ export class Account extends Service {
     ): Promise<Models.IdentityList> {
         let params: { queries?: string[] };
 
-        if (paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst)) {
-            params = paramsOrFirst as { queries?: string[] };
+        if (!paramsOrFirst || (paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst))) {
+            params = (paramsOrFirst || {}) as { queries?: string[] };
         } else {
             params = {
                 queries: paramsOrFirst as string[]            
@@ -229,14 +247,18 @@ export class Account extends Service {
     /**
      * Delete an identity by its unique ID.
      *
-     * @param {string} identityId - Identity ID.
+     * @param {string} params.identityId - Identity ID.
      * @throws {AppwriteException}
      * @returns {Promise}
      */
     deleteIdentity(params: { identityId: string  }): Promise<{}>;
     /**
-     * @deprecated Parameter-based methods will be removed in the upcoming version.
-     * Please use the object based method instead for better developer experience.
+     * Delete an identity by its unique ID.
+     *
+     * @param {string} identityId - Identity ID.
+     * @throws {AppwriteException}
+     * @returns {Promise}     * @deprecated Flat parameter style methods will be removed in a future version.
+     * Please use the object parameter style method instead for a better developer experience.
      *
      * @example
      * // Old (deprecated)
@@ -251,8 +273,8 @@ export class Account extends Service {
     ): Promise<{}> {
         let params: { identityId: string };
 
-        if (paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst)) {
-            params = paramsOrFirst as { identityId: string };
+        if ((paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst))) {
+            params = (paramsOrFirst || {}) as { identityId: string };
         } else {
             params = {
                 identityId: paramsOrFirst as string            
@@ -293,14 +315,18 @@ export class Account extends Service {
     /**
      * Get the list of latest security activity logs for the currently logged in user. Each log returns user IP address, location and date and time of log.
      *
-     * @param {string[]} queries - Array of query strings generated using the Query class provided by the SDK. [Learn more about queries](https://appwrite.io/docs/queries). Only supported methods are limit and offset
+     * @param {string[]} params.queries - Array of query strings generated using the Query class provided by the SDK. [Learn more about queries](https://appwrite.io/docs/queries). Only supported methods are limit and offset
      * @throws {AppwriteException}
      * @returns {Promise}
      */
     listLogs(params: { queries?: string[]  }): Promise<Models.LogList>;
     /**
-     * @deprecated Parameter-based methods will be removed in the upcoming version.
-     * Please use the object based method instead for better developer experience.
+     * Get the list of latest security activity logs for the currently logged in user. Each log returns user IP address, location and date and time of log.
+     *
+     * @param {string[]} queries - Array of query strings generated using the Query class provided by the SDK. [Learn more about queries](https://appwrite.io/docs/queries). Only supported methods are limit and offset
+     * @throws {AppwriteException}
+     * @returns {Promise}     * @deprecated Flat parameter style methods will be removed in a future version.
+     * Please use the object parameter style method instead for a better developer experience.
      *
      * @example
      * // Old (deprecated)
@@ -315,8 +341,8 @@ export class Account extends Service {
     ): Promise<Models.LogList> {
         let params: { queries?: string[] };
 
-        if (paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst)) {
-            params = paramsOrFirst as { queries?: string[] };
+        if (!paramsOrFirst || (paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst))) {
+            params = (paramsOrFirst || {}) as { queries?: string[] };
         } else {
             params = {
                 queries: paramsOrFirst as string[]            
@@ -340,14 +366,18 @@ export class Account extends Service {
     /**
      * Enable or disable MFA on an account.
      *
-     * @param {boolean} mfa - Enable or disable MFA.
+     * @param {boolean} params.mfa - Enable or disable MFA.
      * @throws {AppwriteException}
      * @returns {Promise}
      */
     updateMFA<Preferences extends Models.Preferences = Models.DefaultPreferences>(params: { mfa: boolean  }): Promise<Models.User<Preferences>>;
     /**
-     * @deprecated Parameter-based methods will be removed in the upcoming version.
-     * Please use the object based method instead for better developer experience.
+     * Enable or disable MFA on an account.
+     *
+     * @param {boolean} mfa - Enable or disable MFA.
+     * @throws {AppwriteException}
+     * @returns {Promise}     * @deprecated Flat parameter style methods will be removed in a future version.
+     * Please use the object parameter style method instead for a better developer experience.
      *
      * @example
      * // Old (deprecated)
@@ -362,8 +392,8 @@ export class Account extends Service {
     ): Promise<Models.User<Preferences>> {
         let params: { mfa: boolean };
 
-        if (paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst)) {
-            params = paramsOrFirst as { mfa: boolean };
+        if ((paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst))) {
+            params = (paramsOrFirst || {}) as { mfa: boolean };
         } else {
             params = {
                 mfa: paramsOrFirst as boolean            
@@ -392,14 +422,18 @@ export class Account extends Service {
     /**
      * Add an authenticator app to be used as an MFA factor. Verify the authenticator using the [verify authenticator](/docs/references/cloud/client-web/account#updateMfaAuthenticator) method.
      *
-     * @param {AuthenticatorType} type - Type of authenticator. Must be `totp`
+     * @param {AuthenticatorType} params.type - Type of authenticator. Must be `totp`
      * @throws {AppwriteException}
      * @returns {Promise}
      */
     createMfaAuthenticator(params: { type: AuthenticatorType  }): Promise<Models.MfaType>;
     /**
-     * @deprecated Parameter-based methods will be removed in the upcoming version.
-     * Please use the object based method instead for better developer experience.
+     * Add an authenticator app to be used as an MFA factor. Verify the authenticator using the [verify authenticator](/docs/references/cloud/client-web/account#updateMfaAuthenticator) method.
+     *
+     * @param {AuthenticatorType} type - Type of authenticator. Must be `totp`
+     * @throws {AppwriteException}
+     * @returns {Promise}     * @deprecated Flat parameter style methods will be removed in a future version.
+     * Please use the object parameter style method instead for a better developer experience.
      *
      * @example
      * // Old (deprecated)
@@ -414,8 +448,8 @@ export class Account extends Service {
     ): Promise<Models.MfaType> {
         let params: { type: AuthenticatorType };
 
-        if (paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst) && 'type' in paramsOrFirst) {
-            params = paramsOrFirst as { type: AuthenticatorType };
+        if ((paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst) && 'type' in paramsOrFirst)) {
+            params = (paramsOrFirst || {}) as { type: AuthenticatorType };
         } else {
             params = {
                 type: paramsOrFirst as AuthenticatorType            
@@ -440,15 +474,20 @@ export class Account extends Service {
     /**
      * Verify an authenticator app after adding it using the [add authenticator](/docs/references/cloud/client-web/account#createMfaAuthenticator) method.
      *
-     * @param {AuthenticatorType} type - Type of authenticator.
-     * @param {string} otp - Valid verification token.
+     * @param {AuthenticatorType} params.type - Type of authenticator.
+     * @param {string} params.otp - Valid verification token.
      * @throws {AppwriteException}
      * @returns {Promise}
      */
     updateMfaAuthenticator<Preferences extends Models.Preferences = Models.DefaultPreferences>(params: { type: AuthenticatorType, otp: string  }): Promise<Models.User<Preferences>>;
     /**
-     * @deprecated Parameter-based methods will be removed in the upcoming version.
-     * Please use the object based method instead for better developer experience.
+     * Verify an authenticator app after adding it using the [add authenticator](/docs/references/cloud/client-web/account#createMfaAuthenticator) method.
+     *
+     * @param {AuthenticatorType} type - Type of authenticator.
+     * @param {string} otp - Valid verification token.
+     * @throws {AppwriteException}
+     * @returns {Promise}     * @deprecated Flat parameter style methods will be removed in a future version.
+     * Please use the object parameter style method instead for a better developer experience.
      *
      * @example
      * // Old (deprecated)
@@ -464,8 +503,8 @@ export class Account extends Service {
     ): Promise<Models.User<Preferences>> {
         let params: { type: AuthenticatorType, otp: string };
 
-        if (paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst) && 'type' in paramsOrFirst) {
-            params = paramsOrFirst as { type: AuthenticatorType, otp: string };
+        if ((paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst) && 'type' in paramsOrFirst)) {
+            params = (paramsOrFirst || {}) as { type: AuthenticatorType, otp: string };
         } else {
             params = {
                 type: paramsOrFirst as AuthenticatorType,
@@ -500,14 +539,18 @@ export class Account extends Service {
     /**
      * Delete an authenticator for a user by ID.
      *
-     * @param {AuthenticatorType} type - Type of authenticator.
+     * @param {AuthenticatorType} params.type - Type of authenticator.
      * @throws {AppwriteException}
      * @returns {Promise}
      */
     deleteMfaAuthenticator(params: { type: AuthenticatorType  }): Promise<{}>;
     /**
-     * @deprecated Parameter-based methods will be removed in the upcoming version.
-     * Please use the object based method instead for better developer experience.
+     * Delete an authenticator for a user by ID.
+     *
+     * @param {AuthenticatorType} type - Type of authenticator.
+     * @throws {AppwriteException}
+     * @returns {Promise}     * @deprecated Flat parameter style methods will be removed in a future version.
+     * Please use the object parameter style method instead for a better developer experience.
      *
      * @example
      * // Old (deprecated)
@@ -522,8 +565,8 @@ export class Account extends Service {
     ): Promise<{}> {
         let params: { type: AuthenticatorType };
 
-        if (paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst) && 'type' in paramsOrFirst) {
-            params = paramsOrFirst as { type: AuthenticatorType };
+        if ((paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst) && 'type' in paramsOrFirst)) {
+            params = (paramsOrFirst || {}) as { type: AuthenticatorType };
         } else {
             params = {
                 type: paramsOrFirst as AuthenticatorType            
@@ -548,14 +591,18 @@ export class Account extends Service {
     /**
      * Begin the process of MFA verification after sign-in. Finish the flow with [updateMfaChallenge](/docs/references/cloud/client-web/account#updateMfaChallenge) method.
      *
-     * @param {AuthenticationFactor} factor - Factor used for verification. Must be one of following: `email`, `phone`, `totp`, `recoveryCode`.
+     * @param {AuthenticationFactor} params.factor - Factor used for verification. Must be one of following: `email`, `phone`, `totp`, `recoveryCode`.
      * @throws {AppwriteException}
      * @returns {Promise}
      */
     createMfaChallenge(params: { factor: AuthenticationFactor  }): Promise<Models.MfaChallenge>;
     /**
-     * @deprecated Parameter-based methods will be removed in the upcoming version.
-     * Please use the object based method instead for better developer experience.
+     * Begin the process of MFA verification after sign-in. Finish the flow with [updateMfaChallenge](/docs/references/cloud/client-web/account#updateMfaChallenge) method.
+     *
+     * @param {AuthenticationFactor} factor - Factor used for verification. Must be one of following: `email`, `phone`, `totp`, `recoveryCode`.
+     * @throws {AppwriteException}
+     * @returns {Promise}     * @deprecated Flat parameter style methods will be removed in a future version.
+     * Please use the object parameter style method instead for a better developer experience.
      *
      * @example
      * // Old (deprecated)
@@ -570,8 +617,8 @@ export class Account extends Service {
     ): Promise<Models.MfaChallenge> {
         let params: { factor: AuthenticationFactor };
 
-        if (paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst) && 'factor' in paramsOrFirst) {
-            params = paramsOrFirst as { factor: AuthenticationFactor };
+        if ((paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst) && 'factor' in paramsOrFirst)) {
+            params = (paramsOrFirst || {}) as { factor: AuthenticationFactor };
         } else {
             params = {
                 factor: paramsOrFirst as AuthenticationFactor            
@@ -600,15 +647,20 @@ export class Account extends Service {
     /**
      * Complete the MFA challenge by providing the one-time password. Finish the process of MFA verification by providing the one-time password. To begin the flow, use [createMfaChallenge](/docs/references/cloud/client-web/account#createMfaChallenge) method.
      *
-     * @param {string} challengeId - ID of the challenge.
-     * @param {string} otp - Valid verification token.
+     * @param {string} params.challengeId - ID of the challenge.
+     * @param {string} params.otp - Valid verification token.
      * @throws {AppwriteException}
      * @returns {Promise}
      */
     updateMfaChallenge(params: { challengeId: string, otp: string  }): Promise<Models.Session>;
     /**
-     * @deprecated Parameter-based methods will be removed in the upcoming version.
-     * Please use the object based method instead for better developer experience.
+     * Complete the MFA challenge by providing the one-time password. Finish the process of MFA verification by providing the one-time password. To begin the flow, use [createMfaChallenge](/docs/references/cloud/client-web/account#createMfaChallenge) method.
+     *
+     * @param {string} challengeId - ID of the challenge.
+     * @param {string} otp - Valid verification token.
+     * @throws {AppwriteException}
+     * @returns {Promise}     * @deprecated Flat parameter style methods will be removed in a future version.
+     * Please use the object parameter style method instead for a better developer experience.
      *
      * @example
      * // Old (deprecated)
@@ -624,8 +676,8 @@ export class Account extends Service {
     ): Promise<Models.Session> {
         let params: { challengeId: string, otp: string };
 
-        if (paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst)) {
-            params = paramsOrFirst as { challengeId: string, otp: string };
+        if ((paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst))) {
+            params = (paramsOrFirst || {}) as { challengeId: string, otp: string };
         } else {
             params = {
                 challengeId: paramsOrFirst as string,
@@ -726,14 +778,18 @@ export class Account extends Service {
     /**
      * Update currently logged in user account name.
      *
-     * @param {string} name - User name. Max length: 128 chars.
+     * @param {string} params.name - User name. Max length: 128 chars.
      * @throws {AppwriteException}
      * @returns {Promise}
      */
     updateName<Preferences extends Models.Preferences = Models.DefaultPreferences>(params: { name: string  }): Promise<Models.User<Preferences>>;
     /**
-     * @deprecated Parameter-based methods will be removed in the upcoming version.
-     * Please use the object based method instead for better developer experience.
+     * Update currently logged in user account name.
+     *
+     * @param {string} name - User name. Max length: 128 chars.
+     * @throws {AppwriteException}
+     * @returns {Promise}     * @deprecated Flat parameter style methods will be removed in a future version.
+     * Please use the object parameter style method instead for a better developer experience.
      *
      * @example
      * // Old (deprecated)
@@ -748,8 +804,8 @@ export class Account extends Service {
     ): Promise<Models.User<Preferences>> {
         let params: { name: string };
 
-        if (paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst)) {
-            params = paramsOrFirst as { name: string };
+        if ((paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst))) {
+            params = (paramsOrFirst || {}) as { name: string };
         } else {
             params = {
                 name: paramsOrFirst as string            
@@ -778,15 +834,20 @@ export class Account extends Service {
     /**
      * Update currently logged in user password. For validation, user is required to pass in the new password, and the old password. For users created with OAuth, Team Invites and Magic URL, oldPassword is optional.
      *
-     * @param {string} password - New user password. Must be at least 8 chars.
-     * @param {string} oldPassword - Current user password. Must be at least 8 chars.
+     * @param {string} params.password - New user password. Must be at least 8 chars.
+     * @param {string} params.oldPassword - Current user password. Must be at least 8 chars.
      * @throws {AppwriteException}
      * @returns {Promise}
      */
     updatePassword<Preferences extends Models.Preferences = Models.DefaultPreferences>(params: { password: string, oldPassword?: string  }): Promise<Models.User<Preferences>>;
     /**
-     * @deprecated Parameter-based methods will be removed in the upcoming version.
-     * Please use the object based method instead for better developer experience.
+     * Update currently logged in user password. For validation, user is required to pass in the new password, and the old password. For users created with OAuth, Team Invites and Magic URL, oldPassword is optional.
+     *
+     * @param {string} password - New user password. Must be at least 8 chars.
+     * @param {string} oldPassword - Current user password. Must be at least 8 chars.
+     * @throws {AppwriteException}
+     * @returns {Promise}     * @deprecated Flat parameter style methods will be removed in a future version.
+     * Please use the object parameter style method instead for a better developer experience.
      *
      * @example
      * // Old (deprecated)
@@ -802,8 +863,8 @@ export class Account extends Service {
     ): Promise<Models.User<Preferences>> {
         let params: { password: string, oldPassword?: string };
 
-        if (paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst)) {
-            params = paramsOrFirst as { password: string, oldPassword?: string };
+        if ((paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst))) {
+            params = (paramsOrFirst || {}) as { password: string, oldPassword?: string };
         } else {
             params = {
                 password: paramsOrFirst as string,
@@ -838,15 +899,20 @@ export class Account extends Service {
     /**
      * Update the currently logged in user's phone number. After updating the phone number, the phone verification status will be reset. A confirmation SMS is not sent automatically, however you can use the [POST /account/verification/phone](https://appwrite.io/docs/references/cloud/client-web/account#createPhoneVerification) endpoint to send a confirmation SMS.
      *
-     * @param {string} phone - Phone number. Format this number with a leading '+' and a country code, e.g., +16175551212.
-     * @param {string} password - User password. Must be at least 8 chars.
+     * @param {string} params.phone - Phone number. Format this number with a leading '+' and a country code, e.g., +16175551212.
+     * @param {string} params.password - User password. Must be at least 8 chars.
      * @throws {AppwriteException}
      * @returns {Promise}
      */
     updatePhone<Preferences extends Models.Preferences = Models.DefaultPreferences>(params: { phone: string, password: string  }): Promise<Models.User<Preferences>>;
     /**
-     * @deprecated Parameter-based methods will be removed in the upcoming version.
-     * Please use the object based method instead for better developer experience.
+     * Update the currently logged in user's phone number. After updating the phone number, the phone verification status will be reset. A confirmation SMS is not sent automatically, however you can use the [POST /account/verification/phone](https://appwrite.io/docs/references/cloud/client-web/account#createPhoneVerification) endpoint to send a confirmation SMS.
+     *
+     * @param {string} phone - Phone number. Format this number with a leading '+' and a country code, e.g., +16175551212.
+     * @param {string} password - User password. Must be at least 8 chars.
+     * @throws {AppwriteException}
+     * @returns {Promise}     * @deprecated Flat parameter style methods will be removed in a future version.
+     * Please use the object parameter style method instead for a better developer experience.
      *
      * @example
      * // Old (deprecated)
@@ -862,8 +928,8 @@ export class Account extends Service {
     ): Promise<Models.User<Preferences>> {
         let params: { phone: string, password: string };
 
-        if (paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst)) {
-            params = paramsOrFirst as { phone: string, password: string };
+        if ((paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst))) {
+            params = (paramsOrFirst || {}) as { phone: string, password: string };
         } else {
             params = {
                 phone: paramsOrFirst as string,
@@ -917,14 +983,18 @@ export class Account extends Service {
     /**
      * Update currently logged in user account preferences. The object you pass is stored as is, and replaces any previous value. The maximum allowed prefs size is 64kB and throws error if exceeded.
      *
-     * @param {Partial<Preferences>} prefs - Prefs key-value JSON object.
+     * @param {Partial<Preferences>} params.prefs - Prefs key-value JSON object.
      * @throws {AppwriteException}
      * @returns {Promise}
      */
     updatePrefs<Preferences extends Models.Preferences = Models.DefaultPreferences>(params: { prefs: Partial<Preferences>  }): Promise<Models.User<Preferences>>;
     /**
-     * @deprecated Parameter-based methods will be removed in the upcoming version.
-     * Please use the object based method instead for better developer experience.
+     * Update currently logged in user account preferences. The object you pass is stored as is, and replaces any previous value. The maximum allowed prefs size is 64kB and throws error if exceeded.
+     *
+     * @param {Partial<Preferences>} prefs - Prefs key-value JSON object.
+     * @throws {AppwriteException}
+     * @returns {Promise}     * @deprecated Flat parameter style methods will be removed in a future version.
+     * Please use the object parameter style method instead for a better developer experience.
      *
      * @example
      * // Old (deprecated)
@@ -939,8 +1009,8 @@ export class Account extends Service {
     ): Promise<Models.User<Preferences>> {
         let params: { prefs: Partial<Preferences> };
 
-        if (paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst) && 'prefs' in paramsOrFirst) {
-            params = paramsOrFirst as { prefs: Partial<Preferences> };
+        if ((paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst) && 'prefs' in paramsOrFirst)) {
+            params = (paramsOrFirst || {}) as { prefs: Partial<Preferences> };
         } else {
             params = {
                 prefs: paramsOrFirst as Partial<Preferences>            
@@ -969,15 +1039,20 @@ export class Account extends Service {
     /**
      * Sends the user an email with a temporary secret key for password reset. When the user clicks the confirmation link he is redirected back to your app password reset URL with the secret key and email address values attached to the URL query string. Use the query string params to submit a request to the [PUT /account/recovery](https://appwrite.io/docs/references/cloud/client-web/account#updateRecovery) endpoint to complete the process. The verification link sent to the user's email address is valid for 1 hour.
      *
-     * @param {string} email - User email.
-     * @param {string} url - URL to redirect the user back to your app from the recovery email. Only URLs from hostnames in your project platform list are allowed. This requirement helps to prevent an [open redirect](https://cheatsheetseries.owasp.org/cheatsheets/Unvalidated_Redirects_and_Forwards_Cheat_Sheet.html) attack against your project API.
+     * @param {string} params.email - User email.
+     * @param {string} params.url - URL to redirect the user back to your app from the recovery email. Only URLs from hostnames in your project platform list are allowed. This requirement helps to prevent an [open redirect](https://cheatsheetseries.owasp.org/cheatsheets/Unvalidated_Redirects_and_Forwards_Cheat_Sheet.html) attack against your project API.
      * @throws {AppwriteException}
      * @returns {Promise}
      */
     createRecovery(params: { email: string, url: string  }): Promise<Models.Token>;
     /**
-     * @deprecated Parameter-based methods will be removed in the upcoming version.
-     * Please use the object based method instead for better developer experience.
+     * Sends the user an email with a temporary secret key for password reset. When the user clicks the confirmation link he is redirected back to your app password reset URL with the secret key and email address values attached to the URL query string. Use the query string params to submit a request to the [PUT /account/recovery](https://appwrite.io/docs/references/cloud/client-web/account#updateRecovery) endpoint to complete the process. The verification link sent to the user's email address is valid for 1 hour.
+     *
+     * @param {string} email - User email.
+     * @param {string} url - URL to redirect the user back to your app from the recovery email. Only URLs from hostnames in your project platform list are allowed. This requirement helps to prevent an [open redirect](https://cheatsheetseries.owasp.org/cheatsheets/Unvalidated_Redirects_and_Forwards_Cheat_Sheet.html) attack against your project API.
+     * @throws {AppwriteException}
+     * @returns {Promise}     * @deprecated Flat parameter style methods will be removed in a future version.
+     * Please use the object parameter style method instead for a better developer experience.
      *
      * @example
      * // Old (deprecated)
@@ -993,8 +1068,8 @@ export class Account extends Service {
     ): Promise<Models.Token> {
         let params: { email: string, url: string };
 
-        if (paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst)) {
-            params = paramsOrFirst as { email: string, url: string };
+        if ((paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst))) {
+            params = (paramsOrFirst || {}) as { email: string, url: string };
         } else {
             params = {
                 email: paramsOrFirst as string,
@@ -1035,16 +1110,24 @@ export class Account extends Service {
      * 
      * Please note that in order to avoid a [Redirect Attack](https://github.com/OWASP/CheatSheetSeries/blob/master/cheatsheets/Unvalidated_Redirects_and_Forwards_Cheat_Sheet.md) the only valid redirect URLs are the ones from domains you have set when adding your platforms in the console interface.
      *
-     * @param {string} userId - User ID.
-     * @param {string} secret - Valid reset token.
-     * @param {string} password - New user password. Must be between 8 and 256 chars.
+     * @param {string} params.userId - User ID.
+     * @param {string} params.secret - Valid reset token.
+     * @param {string} params.password - New user password. Must be between 8 and 256 chars.
      * @throws {AppwriteException}
      * @returns {Promise}
      */
     updateRecovery(params: { userId: string, secret: string, password: string  }): Promise<Models.Token>;
     /**
-     * @deprecated Parameter-based methods will be removed in the upcoming version.
-     * Please use the object based method instead for better developer experience.
+     * Use this endpoint to complete the user account password reset. Both the **userId** and **secret** arguments will be passed as query parameters to the redirect URL you have provided when sending your request to the [POST /account/recovery](https://appwrite.io/docs/references/cloud/client-web/account#createRecovery) endpoint.
+     * 
+     * Please note that in order to avoid a [Redirect Attack](https://github.com/OWASP/CheatSheetSeries/blob/master/cheatsheets/Unvalidated_Redirects_and_Forwards_Cheat_Sheet.md) the only valid redirect URLs are the ones from domains you have set when adding your platforms in the console interface.
+     *
+     * @param {string} userId - User ID.
+     * @param {string} secret - Valid reset token.
+     * @param {string} password - New user password. Must be between 8 and 256 chars.
+     * @throws {AppwriteException}
+     * @returns {Promise}     * @deprecated Flat parameter style methods will be removed in a future version.
+     * Please use the object parameter style method instead for a better developer experience.
      *
      * @example
      * // Old (deprecated)
@@ -1060,8 +1143,8 @@ export class Account extends Service {
     ): Promise<Models.Token> {
         let params: { userId: string, secret: string, password: string };
 
-        if (paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst)) {
-            params = paramsOrFirst as { userId: string, secret: string, password: string };
+        if ((paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst))) {
+            params = (paramsOrFirst || {}) as { userId: string, secret: string, password: string };
         } else {
             params = {
                 userId: paramsOrFirst as string,
@@ -1159,15 +1242,22 @@ export class Account extends Service {
      * 
      * A user is limited to 10 active sessions at a time by default. [Learn more about session limits](https://appwrite.io/docs/authentication-security#limits).
      *
-     * @param {string} email - User email.
-     * @param {string} password - User password. Must be at least 8 chars.
+     * @param {string} params.email - User email.
+     * @param {string} params.password - User password. Must be at least 8 chars.
      * @throws {AppwriteException}
      * @returns {Promise}
      */
     createEmailPasswordSession(params: { email: string, password: string  }): Promise<Models.Session>;
     /**
-     * @deprecated Parameter-based methods will be removed in the upcoming version.
-     * Please use the object based method instead for better developer experience.
+     * Allow the user to login into their account by providing a valid email and password combination. This route will create a new session for the user.
+     * 
+     * A user is limited to 10 active sessions at a time by default. [Learn more about session limits](https://appwrite.io/docs/authentication-security#limits).
+     *
+     * @param {string} email - User email.
+     * @param {string} password - User password. Must be at least 8 chars.
+     * @throws {AppwriteException}
+     * @returns {Promise}     * @deprecated Flat parameter style methods will be removed in a future version.
+     * Please use the object parameter style method instead for a better developer experience.
      *
      * @example
      * // Old (deprecated)
@@ -1183,8 +1273,8 @@ export class Account extends Service {
     ): Promise<Models.Session> {
         let params: { email: string, password: string };
 
-        if (paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst)) {
-            params = paramsOrFirst as { email: string, password: string };
+        if ((paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst))) {
+            params = (paramsOrFirst || {}) as { email: string, password: string };
         } else {
             params = {
                 email: paramsOrFirst as string,
@@ -1223,16 +1313,21 @@ export class Account extends Service {
     /**
      * Use this endpoint to create a session from token. Provide the **userId** and **secret** parameters from the successful response of authentication flows initiated by token creation. For example, magic URL and phone login.
      *
-     * @param {string} userId - User ID. Choose a custom ID or generate a random ID with `ID.unique()`. Valid chars are a-z, A-Z, 0-9, period, hyphen, and underscore. Can't start with a special char. Max length is 36 chars.
-     * @param {string} secret - Valid verification token.
+     * @param {string} params.userId - User ID. Choose a custom ID or generate a random ID with `ID.unique()`. Valid chars are a-z, A-Z, 0-9, period, hyphen, and underscore. Can't start with a special char. Max length is 36 chars.
+     * @param {string} params.secret - Valid verification token.
      * @throws {AppwriteException}
      * @returns {Promise}
      * @deprecated This API has been deprecated.
      */
     updateMagicURLSession(params: { userId: string, secret: string  }): Promise<Models.Session>;
     /**
-     * @deprecated Parameter-based methods will be removed in the upcoming version.
-     * Please use the object based method instead for better developer experience.
+     * Use this endpoint to create a session from token. Provide the **userId** and **secret** parameters from the successful response of authentication flows initiated by token creation. For example, magic URL and phone login.
+     *
+     * @param {string} userId - User ID. Choose a custom ID or generate a random ID with `ID.unique()`. Valid chars are a-z, A-Z, 0-9, period, hyphen, and underscore. Can't start with a special char. Max length is 36 chars.
+     * @param {string} secret - Valid verification token.
+     * @throws {AppwriteException}
+     * @returns {Promise}     * @deprecated Flat parameter style methods will be removed in a future version.
+     * Please use the object parameter style method instead for a better developer experience.
      *
      * @example
      * // Old (deprecated)
@@ -1248,8 +1343,8 @@ export class Account extends Service {
     ): Promise<Models.Session> {
         let params: { userId: string, secret: string };
 
-        if (paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst)) {
-            params = paramsOrFirst as { userId: string, secret: string };
+        if ((paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst))) {
+            params = (paramsOrFirst || {}) as { userId: string, secret: string };
         } else {
             params = {
                 userId: paramsOrFirst as string,
@@ -1293,17 +1388,29 @@ export class Account extends Service {
      * A user is limited to 10 active sessions at a time by default. [Learn more about session limits](https://appwrite.io/docs/authentication-security#limits).
      * 
      *
-     * @param {OAuthProvider} provider - OAuth2 Provider. Currently, supported providers are: amazon, apple, auth0, authentik, autodesk, bitbucket, bitly, box, dailymotion, discord, disqus, dropbox, etsy, facebook, figma, github, gitlab, google, linkedin, microsoft, notion, oidc, okta, paypal, paypalSandbox, podio, salesforce, slack, spotify, stripe, tradeshift, tradeshiftBox, twitch, wordpress, yahoo, yammer, yandex, zoho, zoom.
-     * @param {string} success - URL to redirect back to your app after a successful login attempt.  Only URLs from hostnames in your project's platform list are allowed. This requirement helps to prevent an [open redirect](https://cheatsheetseries.owasp.org/cheatsheets/Unvalidated_Redirects_and_Forwards_Cheat_Sheet.html) attack against your project API.
-     * @param {string} failure - URL to redirect back to your app after a failed login attempt.  Only URLs from hostnames in your project's platform list are allowed. This requirement helps to prevent an [open redirect](https://cheatsheetseries.owasp.org/cheatsheets/Unvalidated_Redirects_and_Forwards_Cheat_Sheet.html) attack against your project API.
-     * @param {string[]} scopes - A list of custom OAuth2 scopes. Check each provider internal docs for a list of supported scopes. Maximum of 100 scopes are allowed, each 4096 characters long.
+     * @param {OAuthProvider} params.provider - OAuth2 Provider. Currently, supported providers are: amazon, apple, auth0, authentik, autodesk, bitbucket, bitly, box, dailymotion, discord, disqus, dropbox, etsy, facebook, figma, github, gitlab, google, linkedin, microsoft, notion, oidc, okta, paypal, paypalSandbox, podio, salesforce, slack, spotify, stripe, tradeshift, tradeshiftBox, twitch, wordpress, yahoo, yammer, yandex, zoho, zoom.
+     * @param {string} params.success - URL to redirect back to your app after a successful login attempt.  Only URLs from hostnames in your project's platform list are allowed. This requirement helps to prevent an [open redirect](https://cheatsheetseries.owasp.org/cheatsheets/Unvalidated_Redirects_and_Forwards_Cheat_Sheet.html) attack against your project API.
+     * @param {string} params.failure - URL to redirect back to your app after a failed login attempt.  Only URLs from hostnames in your project's platform list are allowed. This requirement helps to prevent an [open redirect](https://cheatsheetseries.owasp.org/cheatsheets/Unvalidated_Redirects_and_Forwards_Cheat_Sheet.html) attack against your project API.
+     * @param {string[]} params.scopes - A list of custom OAuth2 scopes. Check each provider internal docs for a list of supported scopes. Maximum of 100 scopes are allowed, each 4096 characters long.
      * @throws {AppwriteException}
      * @returns {void|string}
      */
     createOAuth2Session(params: { provider: OAuthProvider, success?: string, failure?: string, scopes?: string[]  }): void | URL;
     /**
-     * @deprecated Parameter-based methods will be removed in the upcoming version.
-     * Please use the object based method instead for better developer experience.
+     * Allow the user to login to their account using the OAuth2 provider of their choice. Each OAuth2 provider should be enabled from the Appwrite console first. Use the success and failure arguments to provide a redirect URL's back to your app when login is completed.
+     * 
+     * If there is already an active session, the new session will be attached to the logged-in account. If there are no active sessions, the server will attempt to look for a user with the same email address as the email received from the OAuth2 provider and attach the new session to the existing user. If no matching user is found - the server will create a new user.
+     * 
+     * A user is limited to 10 active sessions at a time by default. [Learn more about session limits](https://appwrite.io/docs/authentication-security#limits).
+     * 
+     *
+     * @param {OAuthProvider} provider - OAuth2 Provider. Currently, supported providers are: amazon, apple, auth0, authentik, autodesk, bitbucket, bitly, box, dailymotion, discord, disqus, dropbox, etsy, facebook, figma, github, gitlab, google, linkedin, microsoft, notion, oidc, okta, paypal, paypalSandbox, podio, salesforce, slack, spotify, stripe, tradeshift, tradeshiftBox, twitch, wordpress, yahoo, yammer, yandex, zoho, zoom.
+     * @param {string} success - URL to redirect back to your app after a successful login attempt.  Only URLs from hostnames in your project's platform list are allowed. This requirement helps to prevent an [open redirect](https://cheatsheetseries.owasp.org/cheatsheets/Unvalidated_Redirects_and_Forwards_Cheat_Sheet.html) attack against your project API.
+     * @param {string} failure - URL to redirect back to your app after a failed login attempt.  Only URLs from hostnames in your project's platform list are allowed. This requirement helps to prevent an [open redirect](https://cheatsheetseries.owasp.org/cheatsheets/Unvalidated_Redirects_and_Forwards_Cheat_Sheet.html) attack against your project API.
+     * @param {string[]} scopes - A list of custom OAuth2 scopes. Check each provider internal docs for a list of supported scopes. Maximum of 100 scopes are allowed, each 4096 characters long.
+     * @throws {AppwriteException}
+     * @returns {void|string}     * @deprecated Flat parameter style methods will be removed in a future version.
+     * Please use the object parameter style method instead for a better developer experience.
      *
      * @example
      * // Old (deprecated)
@@ -1319,8 +1426,8 @@ export class Account extends Service {
     ): void | URL {
         let params: { provider: OAuthProvider, success?: string, failure?: string, scopes?: string[] };
 
-        if (paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst) && 'provider' in paramsOrFirst) {
-            params = paramsOrFirst as { provider: OAuthProvider, success?: string, failure?: string, scopes?: string[] };
+        if ((paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst) && 'provider' in paramsOrFirst)) {
+            params = (paramsOrFirst || {}) as { provider: OAuthProvider, success?: string, failure?: string, scopes?: string[] };
         } else {
             params = {
                 provider: paramsOrFirst as OAuthProvider,
@@ -1367,16 +1474,21 @@ export class Account extends Service {
     /**
      * Use this endpoint to create a session from token. Provide the **userId** and **secret** parameters from the successful response of authentication flows initiated by token creation. For example, magic URL and phone login.
      *
-     * @param {string} userId - User ID. Choose a custom ID or generate a random ID with `ID.unique()`. Valid chars are a-z, A-Z, 0-9, period, hyphen, and underscore. Can't start with a special char. Max length is 36 chars.
-     * @param {string} secret - Valid verification token.
+     * @param {string} params.userId - User ID. Choose a custom ID or generate a random ID with `ID.unique()`. Valid chars are a-z, A-Z, 0-9, period, hyphen, and underscore. Can't start with a special char. Max length is 36 chars.
+     * @param {string} params.secret - Valid verification token.
      * @throws {AppwriteException}
      * @returns {Promise}
      * @deprecated This API has been deprecated.
      */
     updatePhoneSession(params: { userId: string, secret: string  }): Promise<Models.Session>;
     /**
-     * @deprecated Parameter-based methods will be removed in the upcoming version.
-     * Please use the object based method instead for better developer experience.
+     * Use this endpoint to create a session from token. Provide the **userId** and **secret** parameters from the successful response of authentication flows initiated by token creation. For example, magic URL and phone login.
+     *
+     * @param {string} userId - User ID. Choose a custom ID or generate a random ID with `ID.unique()`. Valid chars are a-z, A-Z, 0-9, period, hyphen, and underscore. Can't start with a special char. Max length is 36 chars.
+     * @param {string} secret - Valid verification token.
+     * @throws {AppwriteException}
+     * @returns {Promise}     * @deprecated Flat parameter style methods will be removed in a future version.
+     * Please use the object parameter style method instead for a better developer experience.
      *
      * @example
      * // Old (deprecated)
@@ -1392,8 +1504,8 @@ export class Account extends Service {
     ): Promise<Models.Session> {
         let params: { userId: string, secret: string };
 
-        if (paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst)) {
-            params = paramsOrFirst as { userId: string, secret: string };
+        if ((paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst))) {
+            params = (paramsOrFirst || {}) as { userId: string, secret: string };
         } else {
             params = {
                 userId: paramsOrFirst as string,
@@ -1432,15 +1544,20 @@ export class Account extends Service {
     /**
      * Use this endpoint to create a session from token. Provide the **userId** and **secret** parameters from the successful response of authentication flows initiated by token creation. For example, magic URL and phone login.
      *
-     * @param {string} userId - User ID. Choose a custom ID or generate a random ID with `ID.unique()`. Valid chars are a-z, A-Z, 0-9, period, hyphen, and underscore. Can't start with a special char. Max length is 36 chars.
-     * @param {string} secret - Secret of a token generated by login methods. For example, the `createMagicURLToken` or `createPhoneToken` methods.
+     * @param {string} params.userId - User ID. Choose a custom ID or generate a random ID with `ID.unique()`. Valid chars are a-z, A-Z, 0-9, period, hyphen, and underscore. Can't start with a special char. Max length is 36 chars.
+     * @param {string} params.secret - Secret of a token generated by login methods. For example, the `createMagicURLToken` or `createPhoneToken` methods.
      * @throws {AppwriteException}
      * @returns {Promise}
      */
     createSession(params: { userId: string, secret: string  }): Promise<Models.Session>;
     /**
-     * @deprecated Parameter-based methods will be removed in the upcoming version.
-     * Please use the object based method instead for better developer experience.
+     * Use this endpoint to create a session from token. Provide the **userId** and **secret** parameters from the successful response of authentication flows initiated by token creation. For example, magic URL and phone login.
+     *
+     * @param {string} userId - User ID. Choose a custom ID or generate a random ID with `ID.unique()`. Valid chars are a-z, A-Z, 0-9, period, hyphen, and underscore. Can't start with a special char. Max length is 36 chars.
+     * @param {string} secret - Secret of a token generated by login methods. For example, the `createMagicURLToken` or `createPhoneToken` methods.
+     * @throws {AppwriteException}
+     * @returns {Promise}     * @deprecated Flat parameter style methods will be removed in a future version.
+     * Please use the object parameter style method instead for a better developer experience.
      *
      * @example
      * // Old (deprecated)
@@ -1456,8 +1573,8 @@ export class Account extends Service {
     ): Promise<Models.Session> {
         let params: { userId: string, secret: string };
 
-        if (paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst)) {
-            params = paramsOrFirst as { userId: string, secret: string };
+        if ((paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst))) {
+            params = (paramsOrFirst || {}) as { userId: string, secret: string };
         } else {
             params = {
                 userId: paramsOrFirst as string,
@@ -1496,14 +1613,18 @@ export class Account extends Service {
     /**
      * Use this endpoint to get a logged in user's session using a Session ID. Inputting 'current' will return the current session being used.
      *
-     * @param {string} sessionId - Session ID. Use the string 'current' to get the current device session.
+     * @param {string} params.sessionId - Session ID. Use the string 'current' to get the current device session.
      * @throws {AppwriteException}
      * @returns {Promise}
      */
     getSession(params: { sessionId: string  }): Promise<Models.Session>;
     /**
-     * @deprecated Parameter-based methods will be removed in the upcoming version.
-     * Please use the object based method instead for better developer experience.
+     * Use this endpoint to get a logged in user's session using a Session ID. Inputting 'current' will return the current session being used.
+     *
+     * @param {string} sessionId - Session ID. Use the string 'current' to get the current device session.
+     * @throws {AppwriteException}
+     * @returns {Promise}     * @deprecated Flat parameter style methods will be removed in a future version.
+     * Please use the object parameter style method instead for a better developer experience.
      *
      * @example
      * // Old (deprecated)
@@ -1518,8 +1639,8 @@ export class Account extends Service {
     ): Promise<Models.Session> {
         let params: { sessionId: string };
 
-        if (paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst)) {
-            params = paramsOrFirst as { sessionId: string };
+        if ((paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst))) {
+            params = (paramsOrFirst || {}) as { sessionId: string };
         } else {
             params = {
                 sessionId: paramsOrFirst as string            
@@ -1543,14 +1664,18 @@ export class Account extends Service {
     /**
      * Use this endpoint to extend a session's length. Extending a session is useful when session expiry is short. If the session was created using an OAuth provider, this endpoint refreshes the access token from the provider.
      *
-     * @param {string} sessionId - Session ID. Use the string 'current' to update the current device session.
+     * @param {string} params.sessionId - Session ID. Use the string 'current' to update the current device session.
      * @throws {AppwriteException}
      * @returns {Promise}
      */
     updateSession(params: { sessionId: string  }): Promise<Models.Session>;
     /**
-     * @deprecated Parameter-based methods will be removed in the upcoming version.
-     * Please use the object based method instead for better developer experience.
+     * Use this endpoint to extend a session's length. Extending a session is useful when session expiry is short. If the session was created using an OAuth provider, this endpoint refreshes the access token from the provider.
+     *
+     * @param {string} sessionId - Session ID. Use the string 'current' to update the current device session.
+     * @throws {AppwriteException}
+     * @returns {Promise}     * @deprecated Flat parameter style methods will be removed in a future version.
+     * Please use the object parameter style method instead for a better developer experience.
      *
      * @example
      * // Old (deprecated)
@@ -1565,8 +1690,8 @@ export class Account extends Service {
     ): Promise<Models.Session> {
         let params: { sessionId: string };
 
-        if (paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst)) {
-            params = paramsOrFirst as { sessionId: string };
+        if ((paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst))) {
+            params = (paramsOrFirst || {}) as { sessionId: string };
         } else {
             params = {
                 sessionId: paramsOrFirst as string            
@@ -1591,14 +1716,18 @@ export class Account extends Service {
     /**
      * Logout the user. Use 'current' as the session ID to logout on this device, use a session ID to logout on another device. If you're looking to logout the user on all devices, use [Delete Sessions](https://appwrite.io/docs/references/cloud/client-web/account#deleteSessions) instead.
      *
-     * @param {string} sessionId - Session ID. Use the string 'current' to delete the current device session.
+     * @param {string} params.sessionId - Session ID. Use the string 'current' to delete the current device session.
      * @throws {AppwriteException}
      * @returns {Promise}
      */
     deleteSession(params: { sessionId: string  }): Promise<{}>;
     /**
-     * @deprecated Parameter-based methods will be removed in the upcoming version.
-     * Please use the object based method instead for better developer experience.
+     * Logout the user. Use 'current' as the session ID to logout on this device, use a session ID to logout on another device. If you're looking to logout the user on all devices, use [Delete Sessions](https://appwrite.io/docs/references/cloud/client-web/account#deleteSessions) instead.
+     *
+     * @param {string} sessionId - Session ID. Use the string 'current' to delete the current device session.
+     * @throws {AppwriteException}
+     * @returns {Promise}     * @deprecated Flat parameter style methods will be removed in a future version.
+     * Please use the object parameter style method instead for a better developer experience.
      *
      * @example
      * // Old (deprecated)
@@ -1613,8 +1742,8 @@ export class Account extends Service {
     ): Promise<{}> {
         let params: { sessionId: string };
 
-        if (paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst)) {
-            params = paramsOrFirst as { sessionId: string };
+        if ((paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst))) {
+            params = (paramsOrFirst || {}) as { sessionId: string };
         } else {
             params = {
                 sessionId: paramsOrFirst as string            
@@ -1655,16 +1784,22 @@ export class Account extends Service {
     /**
      * Use this endpoint to register a device for push notifications. Provide a target ID (custom or generated using ID.unique()), a device identifier (usually a device token), and optionally specify which provider should send notifications to this target. The target is automatically linked to the current session and includes device information like brand and model.
      *
-     * @param {string} targetId - Target ID. Choose a custom ID or generate a random ID with `ID.unique()`. Valid chars are a-z, A-Z, 0-9, period, hyphen, and underscore. Can't start with a special char. Max length is 36 chars.
-     * @param {string} identifier - The target identifier (token, email, phone etc.)
-     * @param {string} providerId - Provider ID. Message will be sent to this target from the specified provider ID. If no provider ID is set the first setup provider will be used.
+     * @param {string} params.targetId - Target ID. Choose a custom ID or generate a random ID with `ID.unique()`. Valid chars are a-z, A-Z, 0-9, period, hyphen, and underscore. Can't start with a special char. Max length is 36 chars.
+     * @param {string} params.identifier - The target identifier (token, email, phone etc.)
+     * @param {string} params.providerId - Provider ID. Message will be sent to this target from the specified provider ID. If no provider ID is set the first setup provider will be used.
      * @throws {AppwriteException}
      * @returns {Promise}
      */
     createPushTarget(params: { targetId: string, identifier: string, providerId?: string  }): Promise<Models.Target>;
     /**
-     * @deprecated Parameter-based methods will be removed in the upcoming version.
-     * Please use the object based method instead for better developer experience.
+     * Use this endpoint to register a device for push notifications. Provide a target ID (custom or generated using ID.unique()), a device identifier (usually a device token), and optionally specify which provider should send notifications to this target. The target is automatically linked to the current session and includes device information like brand and model.
+     *
+     * @param {string} targetId - Target ID. Choose a custom ID or generate a random ID with `ID.unique()`. Valid chars are a-z, A-Z, 0-9, period, hyphen, and underscore. Can't start with a special char. Max length is 36 chars.
+     * @param {string} identifier - The target identifier (token, email, phone etc.)
+     * @param {string} providerId - Provider ID. Message will be sent to this target from the specified provider ID. If no provider ID is set the first setup provider will be used.
+     * @throws {AppwriteException}
+     * @returns {Promise}     * @deprecated Flat parameter style methods will be removed in a future version.
+     * Please use the object parameter style method instead for a better developer experience.
      *
      * @example
      * // Old (deprecated)
@@ -1680,8 +1815,8 @@ export class Account extends Service {
     ): Promise<Models.Target> {
         let params: { targetId: string, identifier: string, providerId?: string };
 
-        if (paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst)) {
-            params = paramsOrFirst as { targetId: string, identifier: string, providerId?: string };
+        if ((paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst))) {
+            params = (paramsOrFirst || {}) as { targetId: string, identifier: string, providerId?: string };
         } else {
             params = {
                 targetId: paramsOrFirst as string,
@@ -1726,15 +1861,20 @@ export class Account extends Service {
     /**
      * Update the currently logged in user's push notification target. You can modify the target's identifier (device token) and provider ID (token, email, phone etc.). The target must exist and belong to the current user. If you change the provider ID, notifications will be sent through the new messaging provider instead.
      *
-     * @param {string} targetId - Target ID.
-     * @param {string} identifier - The target identifier (token, email, phone etc.)
+     * @param {string} params.targetId - Target ID.
+     * @param {string} params.identifier - The target identifier (token, email, phone etc.)
      * @throws {AppwriteException}
      * @returns {Promise}
      */
     updatePushTarget(params: { targetId: string, identifier: string  }): Promise<Models.Target>;
     /**
-     * @deprecated Parameter-based methods will be removed in the upcoming version.
-     * Please use the object based method instead for better developer experience.
+     * Update the currently logged in user's push notification target. You can modify the target's identifier (device token) and provider ID (token, email, phone etc.). The target must exist and belong to the current user. If you change the provider ID, notifications will be sent through the new messaging provider instead.
+     *
+     * @param {string} targetId - Target ID.
+     * @param {string} identifier - The target identifier (token, email, phone etc.)
+     * @throws {AppwriteException}
+     * @returns {Promise}     * @deprecated Flat parameter style methods will be removed in a future version.
+     * Please use the object parameter style method instead for a better developer experience.
      *
      * @example
      * // Old (deprecated)
@@ -1750,8 +1890,8 @@ export class Account extends Service {
     ): Promise<Models.Target> {
         let params: { targetId: string, identifier: string };
 
-        if (paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst)) {
-            params = paramsOrFirst as { targetId: string, identifier: string };
+        if ((paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst))) {
+            params = (paramsOrFirst || {}) as { targetId: string, identifier: string };
         } else {
             params = {
                 targetId: paramsOrFirst as string,
@@ -1786,14 +1926,18 @@ export class Account extends Service {
     /**
      * Delete a push notification target for the currently logged in user. After deletion, the device will no longer receive push notifications. The target must exist and belong to the current user.
      *
-     * @param {string} targetId - Target ID.
+     * @param {string} params.targetId - Target ID.
      * @throws {AppwriteException}
      * @returns {Promise}
      */
     deletePushTarget(params: { targetId: string  }): Promise<{}>;
     /**
-     * @deprecated Parameter-based methods will be removed in the upcoming version.
-     * Please use the object based method instead for better developer experience.
+     * Delete a push notification target for the currently logged in user. After deletion, the device will no longer receive push notifications. The target must exist and belong to the current user.
+     *
+     * @param {string} targetId - Target ID.
+     * @throws {AppwriteException}
+     * @returns {Promise}     * @deprecated Flat parameter style methods will be removed in a future version.
+     * Please use the object parameter style method instead for a better developer experience.
      *
      * @example
      * // Old (deprecated)
@@ -1808,8 +1952,8 @@ export class Account extends Service {
     ): Promise<{}> {
         let params: { targetId: string };
 
-        if (paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst)) {
-            params = paramsOrFirst as { targetId: string };
+        if ((paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst))) {
+            params = (paramsOrFirst || {}) as { targetId: string };
         } else {
             params = {
                 targetId: paramsOrFirst as string            
@@ -1836,16 +1980,24 @@ export class Account extends Service {
      * 
      * A user is limited to 10 active sessions at a time by default. [Learn more about session limits](https://appwrite.io/docs/authentication-security#limits).
      *
-     * @param {string} userId - User ID. Choose a custom ID or generate a random ID with `ID.unique()`. Valid chars are a-z, A-Z, 0-9, period, hyphen, and underscore. Can't start with a special char. Max length is 36 chars.
-     * @param {string} email - User email.
-     * @param {boolean} phrase - Toggle for security phrase. If enabled, email will be send with a randomly generated phrase and the phrase will also be included in the response. Confirming phrases match increases the security of your authentication flow.
+     * @param {string} params.userId - User ID. Choose a custom ID or generate a random ID with `ID.unique()`. Valid chars are a-z, A-Z, 0-9, period, hyphen, and underscore. Can't start with a special char. Max length is 36 chars.
+     * @param {string} params.email - User email.
+     * @param {boolean} params.phrase - Toggle for security phrase. If enabled, email will be send with a randomly generated phrase and the phrase will also be included in the response. Confirming phrases match increases the security of your authentication flow.
      * @throws {AppwriteException}
      * @returns {Promise}
      */
     createEmailToken(params: { userId: string, email: string, phrase?: boolean  }): Promise<Models.Token>;
     /**
-     * @deprecated Parameter-based methods will be removed in the upcoming version.
-     * Please use the object based method instead for better developer experience.
+     * Sends the user an email with a secret key for creating a session. If the provided user ID has not be registered, a new user will be created. Use the returned user ID and secret and submit a request to the [POST /v1/account/sessions/token](https://appwrite.io/docs/references/cloud/client-web/account#createSession) endpoint to complete the login process. The secret sent to the user's email is valid for 15 minutes.
+     * 
+     * A user is limited to 10 active sessions at a time by default. [Learn more about session limits](https://appwrite.io/docs/authentication-security#limits).
+     *
+     * @param {string} userId - User ID. Choose a custom ID or generate a random ID with `ID.unique()`. Valid chars are a-z, A-Z, 0-9, period, hyphen, and underscore. Can't start with a special char. Max length is 36 chars.
+     * @param {string} email - User email.
+     * @param {boolean} phrase - Toggle for security phrase. If enabled, email will be send with a randomly generated phrase and the phrase will also be included in the response. Confirming phrases match increases the security of your authentication flow.
+     * @throws {AppwriteException}
+     * @returns {Promise}     * @deprecated Flat parameter style methods will be removed in a future version.
+     * Please use the object parameter style method instead for a better developer experience.
      *
      * @example
      * // Old (deprecated)
@@ -1861,8 +2013,8 @@ export class Account extends Service {
     ): Promise<Models.Token> {
         let params: { userId: string, email: string, phrase?: boolean };
 
-        if (paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst)) {
-            params = paramsOrFirst as { userId: string, email: string, phrase?: boolean };
+        if ((paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst))) {
+            params = (paramsOrFirst || {}) as { userId: string, email: string, phrase?: boolean };
         } else {
             params = {
                 userId: paramsOrFirst as string,
@@ -1910,17 +2062,27 @@ export class Account extends Service {
      * A user is limited to 10 active sessions at a time by default. [Learn more about session limits](https://appwrite.io/docs/authentication-security#limits).
      * 
      *
-     * @param {string} userId - Unique Id. Choose a custom ID or generate a random ID with `ID.unique()`. Valid chars are a-z, A-Z, 0-9, period, hyphen, and underscore. Can't start with a special char. Max length is 36 chars.
-     * @param {string} email - User email.
-     * @param {string} url - URL to redirect the user back to your app from the magic URL login. Only URLs from hostnames in your project platform list are allowed. This requirement helps to prevent an [open redirect](https://cheatsheetseries.owasp.org/cheatsheets/Unvalidated_Redirects_and_Forwards_Cheat_Sheet.html) attack against your project API.
-     * @param {boolean} phrase - Toggle for security phrase. If enabled, email will be send with a randomly generated phrase and the phrase will also be included in the response. Confirming phrases match increases the security of your authentication flow.
+     * @param {string} params.userId - Unique Id. Choose a custom ID or generate a random ID with `ID.unique()`. Valid chars are a-z, A-Z, 0-9, period, hyphen, and underscore. Can't start with a special char. Max length is 36 chars.
+     * @param {string} params.email - User email.
+     * @param {string} params.url - URL to redirect the user back to your app from the magic URL login. Only URLs from hostnames in your project platform list are allowed. This requirement helps to prevent an [open redirect](https://cheatsheetseries.owasp.org/cheatsheets/Unvalidated_Redirects_and_Forwards_Cheat_Sheet.html) attack against your project API.
+     * @param {boolean} params.phrase - Toggle for security phrase. If enabled, email will be send with a randomly generated phrase and the phrase will also be included in the response. Confirming phrases match increases the security of your authentication flow.
      * @throws {AppwriteException}
      * @returns {Promise}
      */
     createMagicURLToken(params: { userId: string, email: string, url?: string, phrase?: boolean  }): Promise<Models.Token>;
     /**
-     * @deprecated Parameter-based methods will be removed in the upcoming version.
-     * Please use the object based method instead for better developer experience.
+     * Sends the user an email with a secret key for creating a session. If the provided user ID has not been registered, a new user will be created. When the user clicks the link in the email, the user is redirected back to the URL you provided with the secret key and userId values attached to the URL query string. Use the query string parameters to submit a request to the [POST /v1/account/sessions/token](https://appwrite.io/docs/references/cloud/client-web/account#createSession) endpoint to complete the login process. The link sent to the user's email address is valid for 1 hour.
+     * 
+     * A user is limited to 10 active sessions at a time by default. [Learn more about session limits](https://appwrite.io/docs/authentication-security#limits).
+     * 
+     *
+     * @param {string} userId - Unique Id. Choose a custom ID or generate a random ID with `ID.unique()`. Valid chars are a-z, A-Z, 0-9, period, hyphen, and underscore. Can't start with a special char. Max length is 36 chars.
+     * @param {string} email - User email.
+     * @param {string} url - URL to redirect the user back to your app from the magic URL login. Only URLs from hostnames in your project platform list are allowed. This requirement helps to prevent an [open redirect](https://cheatsheetseries.owasp.org/cheatsheets/Unvalidated_Redirects_and_Forwards_Cheat_Sheet.html) attack against your project API.
+     * @param {boolean} phrase - Toggle for security phrase. If enabled, email will be send with a randomly generated phrase and the phrase will also be included in the response. Confirming phrases match increases the security of your authentication flow.
+     * @throws {AppwriteException}
+     * @returns {Promise}     * @deprecated Flat parameter style methods will be removed in a future version.
+     * Please use the object parameter style method instead for a better developer experience.
      *
      * @example
      * // Old (deprecated)
@@ -1936,8 +2098,8 @@ export class Account extends Service {
     ): Promise<Models.Token> {
         let params: { userId: string, email: string, url?: string, phrase?: boolean };
 
-        if (paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst)) {
-            params = paramsOrFirst as { userId: string, email: string, url?: string, phrase?: boolean };
+        if ((paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst))) {
+            params = (paramsOrFirst || {}) as { userId: string, email: string, url?: string, phrase?: boolean };
         } else {
             params = {
                 userId: paramsOrFirst as string,
@@ -1992,17 +2154,28 @@ export class Account extends Service {
      * 
      * A user is limited to 10 active sessions at a time by default. [Learn more about session limits](https://appwrite.io/docs/authentication-security#limits).
      *
-     * @param {OAuthProvider} provider - OAuth2 Provider. Currently, supported providers are: amazon, apple, auth0, authentik, autodesk, bitbucket, bitly, box, dailymotion, discord, disqus, dropbox, etsy, facebook, figma, github, gitlab, google, linkedin, microsoft, notion, oidc, okta, paypal, paypalSandbox, podio, salesforce, slack, spotify, stripe, tradeshift, tradeshiftBox, twitch, wordpress, yahoo, yammer, yandex, zoho, zoom.
-     * @param {string} success - URL to redirect back to your app after a successful login attempt.  Only URLs from hostnames in your project's platform list are allowed. This requirement helps to prevent an [open redirect](https://cheatsheetseries.owasp.org/cheatsheets/Unvalidated_Redirects_and_Forwards_Cheat_Sheet.html) attack against your project API.
-     * @param {string} failure - URL to redirect back to your app after a failed login attempt.  Only URLs from hostnames in your project's platform list are allowed. This requirement helps to prevent an [open redirect](https://cheatsheetseries.owasp.org/cheatsheets/Unvalidated_Redirects_and_Forwards_Cheat_Sheet.html) attack against your project API.
-     * @param {string[]} scopes - A list of custom OAuth2 scopes. Check each provider internal docs for a list of supported scopes. Maximum of 100 scopes are allowed, each 4096 characters long.
+     * @param {OAuthProvider} params.provider - OAuth2 Provider. Currently, supported providers are: amazon, apple, auth0, authentik, autodesk, bitbucket, bitly, box, dailymotion, discord, disqus, dropbox, etsy, facebook, figma, github, gitlab, google, linkedin, microsoft, notion, oidc, okta, paypal, paypalSandbox, podio, salesforce, slack, spotify, stripe, tradeshift, tradeshiftBox, twitch, wordpress, yahoo, yammer, yandex, zoho, zoom.
+     * @param {string} params.success - URL to redirect back to your app after a successful login attempt.  Only URLs from hostnames in your project's platform list are allowed. This requirement helps to prevent an [open redirect](https://cheatsheetseries.owasp.org/cheatsheets/Unvalidated_Redirects_and_Forwards_Cheat_Sheet.html) attack against your project API.
+     * @param {string} params.failure - URL to redirect back to your app after a failed login attempt.  Only URLs from hostnames in your project's platform list are allowed. This requirement helps to prevent an [open redirect](https://cheatsheetseries.owasp.org/cheatsheets/Unvalidated_Redirects_and_Forwards_Cheat_Sheet.html) attack against your project API.
+     * @param {string[]} params.scopes - A list of custom OAuth2 scopes. Check each provider internal docs for a list of supported scopes. Maximum of 100 scopes are allowed, each 4096 characters long.
      * @throws {AppwriteException}
      * @returns {void|string}
      */
     createOAuth2Token(params: { provider: OAuthProvider, success?: string, failure?: string, scopes?: string[]  }): void | URL;
     /**
-     * @deprecated Parameter-based methods will be removed in the upcoming version.
-     * Please use the object based method instead for better developer experience.
+     * Allow the user to login to their account using the OAuth2 provider of their choice. Each OAuth2 provider should be enabled from the Appwrite console first. Use the success and failure arguments to provide a redirect URL's back to your app when login is completed. 
+     * 
+     * If authentication succeeds, `userId` and `secret` of a token will be appended to the success URL as query parameters. These can be used to create a new session using the [Create session](https://appwrite.io/docs/references/cloud/client-web/account#createSession) endpoint.
+     * 
+     * A user is limited to 10 active sessions at a time by default. [Learn more about session limits](https://appwrite.io/docs/authentication-security#limits).
+     *
+     * @param {OAuthProvider} provider - OAuth2 Provider. Currently, supported providers are: amazon, apple, auth0, authentik, autodesk, bitbucket, bitly, box, dailymotion, discord, disqus, dropbox, etsy, facebook, figma, github, gitlab, google, linkedin, microsoft, notion, oidc, okta, paypal, paypalSandbox, podio, salesforce, slack, spotify, stripe, tradeshift, tradeshiftBox, twitch, wordpress, yahoo, yammer, yandex, zoho, zoom.
+     * @param {string} success - URL to redirect back to your app after a successful login attempt.  Only URLs from hostnames in your project's platform list are allowed. This requirement helps to prevent an [open redirect](https://cheatsheetseries.owasp.org/cheatsheets/Unvalidated_Redirects_and_Forwards_Cheat_Sheet.html) attack against your project API.
+     * @param {string} failure - URL to redirect back to your app after a failed login attempt.  Only URLs from hostnames in your project's platform list are allowed. This requirement helps to prevent an [open redirect](https://cheatsheetseries.owasp.org/cheatsheets/Unvalidated_Redirects_and_Forwards_Cheat_Sheet.html) attack against your project API.
+     * @param {string[]} scopes - A list of custom OAuth2 scopes. Check each provider internal docs for a list of supported scopes. Maximum of 100 scopes are allowed, each 4096 characters long.
+     * @throws {AppwriteException}
+     * @returns {void|string}     * @deprecated Flat parameter style methods will be removed in a future version.
+     * Please use the object parameter style method instead for a better developer experience.
      *
      * @example
      * // Old (deprecated)
@@ -2018,8 +2191,8 @@ export class Account extends Service {
     ): void | URL {
         let params: { provider: OAuthProvider, success?: string, failure?: string, scopes?: string[] };
 
-        if (paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst) && 'provider' in paramsOrFirst) {
-            params = paramsOrFirst as { provider: OAuthProvider, success?: string, failure?: string, scopes?: string[] };
+        if ((paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst) && 'provider' in paramsOrFirst)) {
+            params = (paramsOrFirst || {}) as { provider: OAuthProvider, success?: string, failure?: string, scopes?: string[] };
         } else {
             params = {
                 provider: paramsOrFirst as OAuthProvider,
@@ -2068,15 +2241,22 @@ export class Account extends Service {
      * 
      * A user is limited to 10 active sessions at a time by default. [Learn more about session limits](https://appwrite.io/docs/authentication-security#limits).
      *
-     * @param {string} userId - Unique Id. Choose a custom ID or generate a random ID with `ID.unique()`. Valid chars are a-z, A-Z, 0-9, period, hyphen, and underscore. Can't start with a special char. Max length is 36 chars.
-     * @param {string} phone - Phone number. Format this number with a leading '+' and a country code, e.g., +16175551212.
+     * @param {string} params.userId - Unique Id. Choose a custom ID or generate a random ID with `ID.unique()`. Valid chars are a-z, A-Z, 0-9, period, hyphen, and underscore. Can't start with a special char. Max length is 36 chars.
+     * @param {string} params.phone - Phone number. Format this number with a leading '+' and a country code, e.g., +16175551212.
      * @throws {AppwriteException}
      * @returns {Promise}
      */
     createPhoneToken(params: { userId: string, phone: string  }): Promise<Models.Token>;
     /**
-     * @deprecated Parameter-based methods will be removed in the upcoming version.
-     * Please use the object based method instead for better developer experience.
+     * Sends the user an SMS with a secret key for creating a session. If the provided user ID has not be registered, a new user will be created. Use the returned user ID and secret and submit a request to the [POST /v1/account/sessions/token](https://appwrite.io/docs/references/cloud/client-web/account#createSession) endpoint to complete the login process. The secret sent to the user's phone is valid for 15 minutes.
+     * 
+     * A user is limited to 10 active sessions at a time by default. [Learn more about session limits](https://appwrite.io/docs/authentication-security#limits).
+     *
+     * @param {string} userId - Unique Id. Choose a custom ID or generate a random ID with `ID.unique()`. Valid chars are a-z, A-Z, 0-9, period, hyphen, and underscore. Can't start with a special char. Max length is 36 chars.
+     * @param {string} phone - Phone number. Format this number with a leading '+' and a country code, e.g., +16175551212.
+     * @throws {AppwriteException}
+     * @returns {Promise}     * @deprecated Flat parameter style methods will be removed in a future version.
+     * Please use the object parameter style method instead for a better developer experience.
      *
      * @example
      * // Old (deprecated)
@@ -2092,8 +2272,8 @@ export class Account extends Service {
     ): Promise<Models.Token> {
         let params: { userId: string, phone: string };
 
-        if (paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst)) {
-            params = paramsOrFirst as { userId: string, phone: string };
+        if ((paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst))) {
+            params = (paramsOrFirst || {}) as { userId: string, phone: string };
         } else {
             params = {
                 userId: paramsOrFirst as string,
@@ -2135,14 +2315,21 @@ export class Account extends Service {
      * Please note that in order to avoid a [Redirect Attack](https://github.com/OWASP/CheatSheetSeries/blob/master/cheatsheets/Unvalidated_Redirects_and_Forwards_Cheat_Sheet.md), the only valid redirect URLs are the ones from domains you have set when adding your platforms in the console interface.
      * 
      *
-     * @param {string} url - URL to redirect the user back to your app from the verification email. Only URLs from hostnames in your project platform list are allowed. This requirement helps to prevent an [open redirect](https://cheatsheetseries.owasp.org/cheatsheets/Unvalidated_Redirects_and_Forwards_Cheat_Sheet.html) attack against your project API.
+     * @param {string} params.url - URL to redirect the user back to your app from the verification email. Only URLs from hostnames in your project platform list are allowed. This requirement helps to prevent an [open redirect](https://cheatsheetseries.owasp.org/cheatsheets/Unvalidated_Redirects_and_Forwards_Cheat_Sheet.html) attack against your project API.
      * @throws {AppwriteException}
      * @returns {Promise}
      */
     createVerification(params: { url: string  }): Promise<Models.Token>;
     /**
-     * @deprecated Parameter-based methods will be removed in the upcoming version.
-     * Please use the object based method instead for better developer experience.
+     * Use this endpoint to send a verification message to your user email address to confirm they are the valid owners of that address. Both the **userId** and **secret** arguments will be passed as query parameters to the URL you have provided to be attached to the verification email. The provided URL should redirect the user back to your app and allow you to complete the verification process by verifying both the **userId** and **secret** parameters. Learn more about how to [complete the verification process](https://appwrite.io/docs/references/cloud/client-web/account#updateVerification). The verification link sent to the user's email address is valid for 7 days.
+     * 
+     * Please note that in order to avoid a [Redirect Attack](https://github.com/OWASP/CheatSheetSeries/blob/master/cheatsheets/Unvalidated_Redirects_and_Forwards_Cheat_Sheet.md), the only valid redirect URLs are the ones from domains you have set when adding your platforms in the console interface.
+     * 
+     *
+     * @param {string} url - URL to redirect the user back to your app from the verification email. Only URLs from hostnames in your project platform list are allowed. This requirement helps to prevent an [open redirect](https://cheatsheetseries.owasp.org/cheatsheets/Unvalidated_Redirects_and_Forwards_Cheat_Sheet.html) attack against your project API.
+     * @throws {AppwriteException}
+     * @returns {Promise}     * @deprecated Flat parameter style methods will be removed in a future version.
+     * Please use the object parameter style method instead for a better developer experience.
      *
      * @example
      * // Old (deprecated)
@@ -2157,8 +2344,8 @@ export class Account extends Service {
     ): Promise<Models.Token> {
         let params: { url: string };
 
-        if (paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst)) {
-            params = paramsOrFirst as { url: string };
+        if ((paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst))) {
+            params = (paramsOrFirst || {}) as { url: string };
         } else {
             params = {
                 url: paramsOrFirst as string            
@@ -2187,15 +2374,20 @@ export class Account extends Service {
     /**
      * Use this endpoint to complete the user email verification process. Use both the **userId** and **secret** parameters that were attached to your app URL to verify the user email ownership. If confirmed this route will return a 200 status code.
      *
-     * @param {string} userId - User ID.
-     * @param {string} secret - Valid verification token.
+     * @param {string} params.userId - User ID.
+     * @param {string} params.secret - Valid verification token.
      * @throws {AppwriteException}
      * @returns {Promise}
      */
     updateVerification(params: { userId: string, secret: string  }): Promise<Models.Token>;
     /**
-     * @deprecated Parameter-based methods will be removed in the upcoming version.
-     * Please use the object based method instead for better developer experience.
+     * Use this endpoint to complete the user email verification process. Use both the **userId** and **secret** parameters that were attached to your app URL to verify the user email ownership. If confirmed this route will return a 200 status code.
+     *
+     * @param {string} userId - User ID.
+     * @param {string} secret - Valid verification token.
+     * @throws {AppwriteException}
+     * @returns {Promise}     * @deprecated Flat parameter style methods will be removed in a future version.
+     * Please use the object parameter style method instead for a better developer experience.
      *
      * @example
      * // Old (deprecated)
@@ -2211,8 +2403,8 @@ export class Account extends Service {
     ): Promise<Models.Token> {
         let params: { userId: string, secret: string };
 
-        if (paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst)) {
-            params = paramsOrFirst as { userId: string, secret: string };
+        if ((paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst))) {
+            params = (paramsOrFirst || {}) as { userId: string, secret: string };
         } else {
             params = {
                 userId: paramsOrFirst as string,
@@ -2267,15 +2459,20 @@ export class Account extends Service {
     /**
      * Use this endpoint to complete the user phone verification process. Use the **userId** and **secret** that were sent to your user's phone number to verify the user email ownership. If confirmed this route will return a 200 status code.
      *
-     * @param {string} userId - User ID.
-     * @param {string} secret - Valid verification token.
+     * @param {string} params.userId - User ID.
+     * @param {string} params.secret - Valid verification token.
      * @throws {AppwriteException}
      * @returns {Promise}
      */
     updatePhoneVerification(params: { userId: string, secret: string  }): Promise<Models.Token>;
     /**
-     * @deprecated Parameter-based methods will be removed in the upcoming version.
-     * Please use the object based method instead for better developer experience.
+     * Use this endpoint to complete the user phone verification process. Use the **userId** and **secret** that were sent to your user's phone number to verify the user email ownership. If confirmed this route will return a 200 status code.
+     *
+     * @param {string} userId - User ID.
+     * @param {string} secret - Valid verification token.
+     * @throws {AppwriteException}
+     * @returns {Promise}     * @deprecated Flat parameter style methods will be removed in a future version.
+     * Please use the object parameter style method instead for a better developer experience.
      *
      * @example
      * // Old (deprecated)
@@ -2291,8 +2488,8 @@ export class Account extends Service {
     ): Promise<Models.Token> {
         let params: { userId: string, secret: string };
 
-        if (paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst)) {
-            params = paramsOrFirst as { userId: string, secret: string };
+        if ((paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst))) {
+            params = (paramsOrFirst || {}) as { userId: string, secret: string };
         } else {
             params = {
                 userId: paramsOrFirst as string,

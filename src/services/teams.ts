@@ -16,15 +16,20 @@ export class Teams extends Service {
     /**
      * Get a list of all the teams in which the current user is a member. You can use the parameters to filter your results.
      *
-     * @param {string[]} queries - Array of query strings generated using the Query class provided by the SDK. [Learn more about queries](https://appwrite.io/docs/queries). Maximum of 100 queries are allowed, each 4096 characters long. You may filter on the following attributes: name, total, billingPlan
-     * @param {string} search - Search term to filter your list results. Max length: 256 chars.
+     * @param {string[]} params.queries - Array of query strings generated using the Query class provided by the SDK. [Learn more about queries](https://appwrite.io/docs/queries). Maximum of 100 queries are allowed, each 4096 characters long. You may filter on the following attributes: name, total, billingPlan
+     * @param {string} params.search - Search term to filter your list results. Max length: 256 chars.
      * @throws {AppwriteException}
      * @returns {Promise}
      */
     list<Preferences extends Models.Preferences = Models.DefaultPreferences>(params: { queries?: string[], search?: string  }): Promise<Models.TeamList<Preferences>>;
     /**
-     * @deprecated Parameter-based methods will be removed in the upcoming version.
-     * Please use the object based method instead for better developer experience.
+     * Get a list of all the teams in which the current user is a member. You can use the parameters to filter your results.
+     *
+     * @param {string[]} queries - Array of query strings generated using the Query class provided by the SDK. [Learn more about queries](https://appwrite.io/docs/queries). Maximum of 100 queries are allowed, each 4096 characters long. You may filter on the following attributes: name, total, billingPlan
+     * @param {string} search - Search term to filter your list results. Max length: 256 chars.
+     * @throws {AppwriteException}
+     * @returns {Promise}     * @deprecated Flat parameter style methods will be removed in a future version.
+     * Please use the object parameter style method instead for a better developer experience.
      *
      * @example
      * // Old (deprecated)
@@ -40,8 +45,8 @@ export class Teams extends Service {
     ): Promise<Models.TeamList<Preferences>> {
         let params: { queries?: string[], search?: string };
 
-        if (paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst)) {
-            params = paramsOrFirst as { queries?: string[], search?: string };
+        if (!paramsOrFirst || (paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst))) {
+            params = (paramsOrFirst || {}) as { queries?: string[], search?: string };
         } else {
             params = {
                 queries: paramsOrFirst as string[],
@@ -71,16 +76,22 @@ export class Teams extends Service {
     /**
      * Create a new team. The user who creates the team will automatically be assigned as the owner of the team. Only the users with the owner role can invite new members, add new owners and delete or update the team.
      *
-     * @param {string} teamId - Team ID. Choose a custom ID or generate a random ID with `ID.unique()`. Valid chars are a-z, A-Z, 0-9, period, hyphen, and underscore. Can't start with a special char. Max length is 36 chars.
-     * @param {string} name - Team name. Max length: 128 chars.
-     * @param {string[]} roles - Array of strings. Use this param to set the roles in the team for the user who created it. The default role is **owner**. A role can be any string. Learn more about [roles and permissions](https://appwrite.io/docs/permissions). Maximum of 100 roles are allowed, each 32 characters long.
+     * @param {string} params.teamId - Team ID. Choose a custom ID or generate a random ID with `ID.unique()`. Valid chars are a-z, A-Z, 0-9, period, hyphen, and underscore. Can't start with a special char. Max length is 36 chars.
+     * @param {string} params.name - Team name. Max length: 128 chars.
+     * @param {string[]} params.roles - Array of strings. Use this param to set the roles in the team for the user who created it. The default role is **owner**. A role can be any string. Learn more about [roles and permissions](https://appwrite.io/docs/permissions). Maximum of 100 roles are allowed, each 32 characters long.
      * @throws {AppwriteException}
      * @returns {Promise}
      */
     create<Preferences extends Models.Preferences = Models.DefaultPreferences>(params: { teamId: string, name: string, roles?: string[]  }): Promise<Models.Team<Preferences>>;
     /**
-     * @deprecated Parameter-based methods will be removed in the upcoming version.
-     * Please use the object based method instead for better developer experience.
+     * Create a new team. The user who creates the team will automatically be assigned as the owner of the team. Only the users with the owner role can invite new members, add new owners and delete or update the team.
+     *
+     * @param {string} teamId - Team ID. Choose a custom ID or generate a random ID with `ID.unique()`. Valid chars are a-z, A-Z, 0-9, period, hyphen, and underscore. Can't start with a special char. Max length is 36 chars.
+     * @param {string} name - Team name. Max length: 128 chars.
+     * @param {string[]} roles - Array of strings. Use this param to set the roles in the team for the user who created it. The default role is **owner**. A role can be any string. Learn more about [roles and permissions](https://appwrite.io/docs/permissions). Maximum of 100 roles are allowed, each 32 characters long.
+     * @throws {AppwriteException}
+     * @returns {Promise}     * @deprecated Flat parameter style methods will be removed in a future version.
+     * Please use the object parameter style method instead for a better developer experience.
      *
      * @example
      * // Old (deprecated)
@@ -96,8 +107,8 @@ export class Teams extends Service {
     ): Promise<Models.Team<Preferences>> {
         let params: { teamId: string, name: string, roles?: string[] };
 
-        if (paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst)) {
-            params = paramsOrFirst as { teamId: string, name: string, roles?: string[] };
+        if ((paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst))) {
+            params = (paramsOrFirst || {}) as { teamId: string, name: string, roles?: string[] };
         } else {
             params = {
                 teamId: paramsOrFirst as string,
@@ -142,14 +153,18 @@ export class Teams extends Service {
     /**
      * Get a team by its ID. All team members have read access for this resource.
      *
-     * @param {string} teamId - Team ID.
+     * @param {string} params.teamId - Team ID.
      * @throws {AppwriteException}
      * @returns {Promise}
      */
     get<Preferences extends Models.Preferences = Models.DefaultPreferences>(params: { teamId: string  }): Promise<Models.Team<Preferences>>;
     /**
-     * @deprecated Parameter-based methods will be removed in the upcoming version.
-     * Please use the object based method instead for better developer experience.
+     * Get a team by its ID. All team members have read access for this resource.
+     *
+     * @param {string} teamId - Team ID.
+     * @throws {AppwriteException}
+     * @returns {Promise}     * @deprecated Flat parameter style methods will be removed in a future version.
+     * Please use the object parameter style method instead for a better developer experience.
      *
      * @example
      * // Old (deprecated)
@@ -164,8 +179,8 @@ export class Teams extends Service {
     ): Promise<Models.Team<Preferences>> {
         let params: { teamId: string };
 
-        if (paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst)) {
-            params = paramsOrFirst as { teamId: string };
+        if ((paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst))) {
+            params = (paramsOrFirst || {}) as { teamId: string };
         } else {
             params = {
                 teamId: paramsOrFirst as string            
@@ -189,15 +204,20 @@ export class Teams extends Service {
     /**
      * Update the team's name by its unique ID.
      *
-     * @param {string} teamId - Team ID.
-     * @param {string} name - New team name. Max length: 128 chars.
+     * @param {string} params.teamId - Team ID.
+     * @param {string} params.name - New team name. Max length: 128 chars.
      * @throws {AppwriteException}
      * @returns {Promise}
      */
     updateName<Preferences extends Models.Preferences = Models.DefaultPreferences>(params: { teamId: string, name: string  }): Promise<Models.Team<Preferences>>;
     /**
-     * @deprecated Parameter-based methods will be removed in the upcoming version.
-     * Please use the object based method instead for better developer experience.
+     * Update the team's name by its unique ID.
+     *
+     * @param {string} teamId - Team ID.
+     * @param {string} name - New team name. Max length: 128 chars.
+     * @throws {AppwriteException}
+     * @returns {Promise}     * @deprecated Flat parameter style methods will be removed in a future version.
+     * Please use the object parameter style method instead for a better developer experience.
      *
      * @example
      * // Old (deprecated)
@@ -213,8 +233,8 @@ export class Teams extends Service {
     ): Promise<Models.Team<Preferences>> {
         let params: { teamId: string, name: string };
 
-        if (paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst)) {
-            params = paramsOrFirst as { teamId: string, name: string };
+        if ((paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst))) {
+            params = (paramsOrFirst || {}) as { teamId: string, name: string };
         } else {
             params = {
                 teamId: paramsOrFirst as string,
@@ -249,14 +269,18 @@ export class Teams extends Service {
     /**
      * Delete a team using its ID. Only team members with the owner role can delete the team.
      *
-     * @param {string} teamId - Team ID.
+     * @param {string} params.teamId - Team ID.
      * @throws {AppwriteException}
      * @returns {Promise}
      */
     delete(params: { teamId: string  }): Promise<{}>;
     /**
-     * @deprecated Parameter-based methods will be removed in the upcoming version.
-     * Please use the object based method instead for better developer experience.
+     * Delete a team using its ID. Only team members with the owner role can delete the team.
+     *
+     * @param {string} teamId - Team ID.
+     * @throws {AppwriteException}
+     * @returns {Promise}     * @deprecated Flat parameter style methods will be removed in a future version.
+     * Please use the object parameter style method instead for a better developer experience.
      *
      * @example
      * // Old (deprecated)
@@ -271,8 +295,8 @@ export class Teams extends Service {
     ): Promise<{}> {
         let params: { teamId: string };
 
-        if (paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst)) {
-            params = paramsOrFirst as { teamId: string };
+        if ((paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst))) {
+            params = (paramsOrFirst || {}) as { teamId: string };
         } else {
             params = {
                 teamId: paramsOrFirst as string            
@@ -297,16 +321,22 @@ export class Teams extends Service {
     /**
      * Use this endpoint to list a team's members using the team's ID. All team members have read access to this endpoint. Hide sensitive attributes from the response by toggling membership privacy in the Console.
      *
-     * @param {string} teamId - Team ID.
-     * @param {string[]} queries - Array of query strings generated using the Query class provided by the SDK. [Learn more about queries](https://appwrite.io/docs/queries). Maximum of 100 queries are allowed, each 4096 characters long. You may filter on the following attributes: userId, teamId, invited, joined, confirm, roles
-     * @param {string} search - Search term to filter your list results. Max length: 256 chars.
+     * @param {string} params.teamId - Team ID.
+     * @param {string[]} params.queries - Array of query strings generated using the Query class provided by the SDK. [Learn more about queries](https://appwrite.io/docs/queries). Maximum of 100 queries are allowed, each 4096 characters long. You may filter on the following attributes: userId, teamId, invited, joined, confirm, roles
+     * @param {string} params.search - Search term to filter your list results. Max length: 256 chars.
      * @throws {AppwriteException}
      * @returns {Promise}
      */
     listMemberships(params: { teamId: string, queries?: string[], search?: string  }): Promise<Models.MembershipList>;
     /**
-     * @deprecated Parameter-based methods will be removed in the upcoming version.
-     * Please use the object based method instead for better developer experience.
+     * Use this endpoint to list a team's members using the team's ID. All team members have read access to this endpoint. Hide sensitive attributes from the response by toggling membership privacy in the Console.
+     *
+     * @param {string} teamId - Team ID.
+     * @param {string[]} queries - Array of query strings generated using the Query class provided by the SDK. [Learn more about queries](https://appwrite.io/docs/queries). Maximum of 100 queries are allowed, each 4096 characters long. You may filter on the following attributes: userId, teamId, invited, joined, confirm, roles
+     * @param {string} search - Search term to filter your list results. Max length: 256 chars.
+     * @throws {AppwriteException}
+     * @returns {Promise}     * @deprecated Flat parameter style methods will be removed in a future version.
+     * Please use the object parameter style method instead for a better developer experience.
      *
      * @example
      * // Old (deprecated)
@@ -322,8 +352,8 @@ export class Teams extends Service {
     ): Promise<Models.MembershipList> {
         let params: { teamId: string, queries?: string[], search?: string };
 
-        if (paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst)) {
-            params = paramsOrFirst as { teamId: string, queries?: string[], search?: string };
+        if ((paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst))) {
+            params = (paramsOrFirst || {}) as { teamId: string, queries?: string[], search?: string };
         } else {
             params = {
                 teamId: paramsOrFirst as string,
@@ -366,6 +396,27 @@ export class Teams extends Service {
      * Please note that to avoid a [Redirect Attack](https://github.com/OWASP/CheatSheetSeries/blob/master/cheatsheets/Unvalidated_Redirects_and_Forwards_Cheat_Sheet.md) Appwrite will accept the only redirect URLs under the domains you have added as a platform on the Appwrite Console.
      * 
      *
+     * @param {string} params.teamId - Team ID.
+     * @param {string[]} params.roles - Array of strings. Use this param to set the user roles in the team. A role can be any string. Learn more about [roles and permissions](https://appwrite.io/docs/permissions). Maximum of 100 roles are allowed, each 32 characters long.
+     * @param {string} params.email - Email of the new team member.
+     * @param {string} params.userId - ID of the user to be added to a team.
+     * @param {string} params.phone - Phone number. Format this number with a leading '+' and a country code, e.g., +16175551212.
+     * @param {string} params.url - URL to redirect the user back to your app from the invitation email. This parameter is not required when an API key is supplied. Only URLs from hostnames in your project platform list are allowed. This requirement helps to prevent an [open redirect](https://cheatsheetseries.owasp.org/cheatsheets/Unvalidated_Redirects_and_Forwards_Cheat_Sheet.html) attack against your project API.
+     * @param {string} params.name - Name of the new team member. Max length: 128 chars.
+     * @throws {AppwriteException}
+     * @returns {Promise}
+     */
+    createMembership(params: { teamId: string, roles: string[], email?: string, userId?: string, phone?: string, url?: string, name?: string  }): Promise<Models.Membership>;
+    /**
+     * Invite a new member to join your team. Provide an ID for existing users, or invite unregistered users using an email or phone number. If initiated from a Client SDK, Appwrite will send an email or sms with a link to join the team to the invited user, and an account will be created for them if one doesn't exist. If initiated from a Server SDK, the new member will be added automatically to the team.
+     * 
+     * You only need to provide one of a user ID, email, or phone number. Appwrite will prioritize accepting the user ID > email > phone number if you provide more than one of these parameters.
+     * 
+     * Use the `url` parameter to redirect the user from the invitation email to your app. After the user is redirected, use the [Update Team Membership Status](https://appwrite.io/docs/references/cloud/client-web/teams#updateMembershipStatus) endpoint to allow the user to accept the invitation to the team. 
+     * 
+     * Please note that to avoid a [Redirect Attack](https://github.com/OWASP/CheatSheetSeries/blob/master/cheatsheets/Unvalidated_Redirects_and_Forwards_Cheat_Sheet.md) Appwrite will accept the only redirect URLs under the domains you have added as a platform on the Appwrite Console.
+     * 
+     *
      * @param {string} teamId - Team ID.
      * @param {string[]} roles - Array of strings. Use this param to set the user roles in the team. A role can be any string. Learn more about [roles and permissions](https://appwrite.io/docs/permissions). Maximum of 100 roles are allowed, each 32 characters long.
      * @param {string} email - Email of the new team member.
@@ -374,12 +425,8 @@ export class Teams extends Service {
      * @param {string} url - URL to redirect the user back to your app from the invitation email. This parameter is not required when an API key is supplied. Only URLs from hostnames in your project platform list are allowed. This requirement helps to prevent an [open redirect](https://cheatsheetseries.owasp.org/cheatsheets/Unvalidated_Redirects_and_Forwards_Cheat_Sheet.html) attack against your project API.
      * @param {string} name - Name of the new team member. Max length: 128 chars.
      * @throws {AppwriteException}
-     * @returns {Promise}
-     */
-    createMembership(params: { teamId: string, roles: string[], email?: string, userId?: string, phone?: string, url?: string, name?: string  }): Promise<Models.Membership>;
-    /**
-     * @deprecated Parameter-based methods will be removed in the upcoming version.
-     * Please use the object based method instead for better developer experience.
+     * @returns {Promise}     * @deprecated Flat parameter style methods will be removed in a future version.
+     * Please use the object parameter style method instead for a better developer experience.
      *
      * @example
      * // Old (deprecated)
@@ -395,8 +442,8 @@ export class Teams extends Service {
     ): Promise<Models.Membership> {
         let params: { teamId: string, roles: string[], email?: string, userId?: string, phone?: string, url?: string, name?: string };
 
-        if (paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst)) {
-            params = paramsOrFirst as { teamId: string, roles: string[], email?: string, userId?: string, phone?: string, url?: string, name?: string };
+        if ((paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst))) {
+            params = (paramsOrFirst || {}) as { teamId: string, roles: string[], email?: string, userId?: string, phone?: string, url?: string, name?: string };
         } else {
             params = {
                 teamId: paramsOrFirst as string,
@@ -461,15 +508,20 @@ export class Teams extends Service {
     /**
      * Get a team member by the membership unique id. All team members have read access for this resource. Hide sensitive attributes from the response by toggling membership privacy in the Console.
      *
-     * @param {string} teamId - Team ID.
-     * @param {string} membershipId - Membership ID.
+     * @param {string} params.teamId - Team ID.
+     * @param {string} params.membershipId - Membership ID.
      * @throws {AppwriteException}
      * @returns {Promise}
      */
     getMembership(params: { teamId: string, membershipId: string  }): Promise<Models.Membership>;
     /**
-     * @deprecated Parameter-based methods will be removed in the upcoming version.
-     * Please use the object based method instead for better developer experience.
+     * Get a team member by the membership unique id. All team members have read access for this resource. Hide sensitive attributes from the response by toggling membership privacy in the Console.
+     *
+     * @param {string} teamId - Team ID.
+     * @param {string} membershipId - Membership ID.
+     * @throws {AppwriteException}
+     * @returns {Promise}     * @deprecated Flat parameter style methods will be removed in a future version.
+     * Please use the object parameter style method instead for a better developer experience.
      *
      * @example
      * // Old (deprecated)
@@ -485,8 +537,8 @@ export class Teams extends Service {
     ): Promise<Models.Membership> {
         let params: { teamId: string, membershipId: string };
 
-        if (paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst)) {
-            params = paramsOrFirst as { teamId: string, membershipId: string };
+        if ((paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst))) {
+            params = (paramsOrFirst || {}) as { teamId: string, membershipId: string };
         } else {
             params = {
                 teamId: paramsOrFirst as string,
@@ -517,16 +569,23 @@ export class Teams extends Service {
      * Modify the roles of a team member. Only team members with the owner role have access to this endpoint. Learn more about [roles and permissions](https://appwrite.io/docs/permissions).
      * 
      *
-     * @param {string} teamId - Team ID.
-     * @param {string} membershipId - Membership ID.
-     * @param {string[]} roles - An array of strings. Use this param to set the user's roles in the team. A role can be any string. Learn more about [roles and permissions](https://appwrite.io/docs/permissions). Maximum of 100 roles are allowed, each 32 characters long.
+     * @param {string} params.teamId - Team ID.
+     * @param {string} params.membershipId - Membership ID.
+     * @param {string[]} params.roles - An array of strings. Use this param to set the user's roles in the team. A role can be any string. Learn more about [roles and permissions](https://appwrite.io/docs/permissions). Maximum of 100 roles are allowed, each 32 characters long.
      * @throws {AppwriteException}
      * @returns {Promise}
      */
     updateMembership(params: { teamId: string, membershipId: string, roles: string[]  }): Promise<Models.Membership>;
     /**
-     * @deprecated Parameter-based methods will be removed in the upcoming version.
-     * Please use the object based method instead for better developer experience.
+     * Modify the roles of a team member. Only team members with the owner role have access to this endpoint. Learn more about [roles and permissions](https://appwrite.io/docs/permissions).
+     * 
+     *
+     * @param {string} teamId - Team ID.
+     * @param {string} membershipId - Membership ID.
+     * @param {string[]} roles - An array of strings. Use this param to set the user's roles in the team. A role can be any string. Learn more about [roles and permissions](https://appwrite.io/docs/permissions). Maximum of 100 roles are allowed, each 32 characters long.
+     * @throws {AppwriteException}
+     * @returns {Promise}     * @deprecated Flat parameter style methods will be removed in a future version.
+     * Please use the object parameter style method instead for a better developer experience.
      *
      * @example
      * // Old (deprecated)
@@ -542,8 +601,8 @@ export class Teams extends Service {
     ): Promise<Models.Membership> {
         let params: { teamId: string, membershipId: string, roles: string[] };
 
-        if (paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst)) {
-            params = paramsOrFirst as { teamId: string, membershipId: string, roles: string[] };
+        if ((paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst))) {
+            params = (paramsOrFirst || {}) as { teamId: string, membershipId: string, roles: string[] };
         } else {
             params = {
                 teamId: paramsOrFirst as string,
@@ -584,15 +643,20 @@ export class Teams extends Service {
     /**
      * This endpoint allows a user to leave a team or for a team owner to delete the membership of any other team member. You can also use this endpoint to delete a user membership even if it is not accepted.
      *
-     * @param {string} teamId - Team ID.
-     * @param {string} membershipId - Membership ID.
+     * @param {string} params.teamId - Team ID.
+     * @param {string} params.membershipId - Membership ID.
      * @throws {AppwriteException}
      * @returns {Promise}
      */
     deleteMembership(params: { teamId: string, membershipId: string  }): Promise<{}>;
     /**
-     * @deprecated Parameter-based methods will be removed in the upcoming version.
-     * Please use the object based method instead for better developer experience.
+     * This endpoint allows a user to leave a team or for a team owner to delete the membership of any other team member. You can also use this endpoint to delete a user membership even if it is not accepted.
+     *
+     * @param {string} teamId - Team ID.
+     * @param {string} membershipId - Membership ID.
+     * @throws {AppwriteException}
+     * @returns {Promise}     * @deprecated Flat parameter style methods will be removed in a future version.
+     * Please use the object parameter style method instead for a better developer experience.
      *
      * @example
      * // Old (deprecated)
@@ -608,8 +672,8 @@ export class Teams extends Service {
     ): Promise<{}> {
         let params: { teamId: string, membershipId: string };
 
-        if (paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst)) {
-            params = paramsOrFirst as { teamId: string, membershipId: string };
+        if ((paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst))) {
+            params = (paramsOrFirst || {}) as { teamId: string, membershipId: string };
         } else {
             params = {
                 teamId: paramsOrFirst as string,
@@ -643,17 +707,27 @@ export class Teams extends Service {
      * If the request is successful, a session for the user is automatically created.
      * 
      *
-     * @param {string} teamId - Team ID.
-     * @param {string} membershipId - Membership ID.
-     * @param {string} userId - User ID.
-     * @param {string} secret - Secret key.
+     * @param {string} params.teamId - Team ID.
+     * @param {string} params.membershipId - Membership ID.
+     * @param {string} params.userId - User ID.
+     * @param {string} params.secret - Secret key.
      * @throws {AppwriteException}
      * @returns {Promise}
      */
     updateMembershipStatus(params: { teamId: string, membershipId: string, userId: string, secret: string  }): Promise<Models.Membership>;
     /**
-     * @deprecated Parameter-based methods will be removed in the upcoming version.
-     * Please use the object based method instead for better developer experience.
+     * Use this endpoint to allow a user to accept an invitation to join a team after being redirected back to your app from the invitation email received by the user.
+     * 
+     * If the request is successful, a session for the user is automatically created.
+     * 
+     *
+     * @param {string} teamId - Team ID.
+     * @param {string} membershipId - Membership ID.
+     * @param {string} userId - User ID.
+     * @param {string} secret - Secret key.
+     * @throws {AppwriteException}
+     * @returns {Promise}     * @deprecated Flat parameter style methods will be removed in a future version.
+     * Please use the object parameter style method instead for a better developer experience.
      *
      * @example
      * // Old (deprecated)
@@ -669,8 +743,8 @@ export class Teams extends Service {
     ): Promise<Models.Membership> {
         let params: { teamId: string, membershipId: string, userId: string, secret: string };
 
-        if (paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst)) {
-            params = paramsOrFirst as { teamId: string, membershipId: string, userId: string, secret: string };
+        if ((paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst))) {
+            params = (paramsOrFirst || {}) as { teamId: string, membershipId: string, userId: string, secret: string };
         } else {
             params = {
                 teamId: paramsOrFirst as string,
@@ -721,14 +795,18 @@ export class Teams extends Service {
     /**
      * Get the team's shared preferences by its unique ID. If a preference doesn't need to be shared by all team members, prefer storing them in [user preferences](https://appwrite.io/docs/references/cloud/client-web/account#getPrefs).
      *
-     * @param {string} teamId - Team ID.
+     * @param {string} params.teamId - Team ID.
      * @throws {AppwriteException}
      * @returns {Promise}
      */
     getPrefs<Preferences extends Models.Preferences = Models.DefaultPreferences>(params: { teamId: string  }): Promise<Preferences>;
     /**
-     * @deprecated Parameter-based methods will be removed in the upcoming version.
-     * Please use the object based method instead for better developer experience.
+     * Get the team's shared preferences by its unique ID. If a preference doesn't need to be shared by all team members, prefer storing them in [user preferences](https://appwrite.io/docs/references/cloud/client-web/account#getPrefs).
+     *
+     * @param {string} teamId - Team ID.
+     * @throws {AppwriteException}
+     * @returns {Promise}     * @deprecated Flat parameter style methods will be removed in a future version.
+     * Please use the object parameter style method instead for a better developer experience.
      *
      * @example
      * // Old (deprecated)
@@ -743,8 +821,8 @@ export class Teams extends Service {
     ): Promise<Preferences> {
         let params: { teamId: string };
 
-        if (paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst)) {
-            params = paramsOrFirst as { teamId: string };
+        if ((paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst))) {
+            params = (paramsOrFirst || {}) as { teamId: string };
         } else {
             params = {
                 teamId: paramsOrFirst as string            
@@ -768,15 +846,20 @@ export class Teams extends Service {
     /**
      * Update the team's preferences by its unique ID. The object you pass is stored as is and replaces any previous value. The maximum allowed prefs size is 64kB and throws an error if exceeded.
      *
-     * @param {string} teamId - Team ID.
-     * @param {object} prefs - Prefs key-value JSON object.
+     * @param {string} params.teamId - Team ID.
+     * @param {object} params.prefs - Prefs key-value JSON object.
      * @throws {AppwriteException}
      * @returns {Promise}
      */
     updatePrefs<Preferences extends Models.Preferences = Models.DefaultPreferences>(params: { teamId: string, prefs: object  }): Promise<Preferences>;
     /**
-     * @deprecated Parameter-based methods will be removed in the upcoming version.
-     * Please use the object based method instead for better developer experience.
+     * Update the team's preferences by its unique ID. The object you pass is stored as is and replaces any previous value. The maximum allowed prefs size is 64kB and throws an error if exceeded.
+     *
+     * @param {string} teamId - Team ID.
+     * @param {object} prefs - Prefs key-value JSON object.
+     * @throws {AppwriteException}
+     * @returns {Promise}     * @deprecated Flat parameter style methods will be removed in a future version.
+     * Please use the object parameter style method instead for a better developer experience.
      *
      * @example
      * // Old (deprecated)
@@ -792,8 +875,8 @@ export class Teams extends Service {
     ): Promise<Preferences> {
         let params: { teamId: string, prefs: object };
 
-        if (paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst)) {
-            params = paramsOrFirst as { teamId: string, prefs: object };
+        if ((paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst))) {
+            params = (paramsOrFirst || {}) as { teamId: string, prefs: object };
         } else {
             params = {
                 teamId: paramsOrFirst as string,

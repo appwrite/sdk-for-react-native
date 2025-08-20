@@ -16,14 +16,18 @@ export class Graphql extends Service {
     /**
      * Execute a GraphQL mutation.
      *
-     * @param {object} query - The query or queries to execute.
+     * @param {object} params.query - The query or queries to execute.
      * @throws {AppwriteException}
      * @returns {Promise}
      */
     query(params: { query: object  }): Promise<{}>;
     /**
-     * @deprecated Parameter-based methods will be removed in the upcoming version.
-     * Please use the object based method instead for better developer experience.
+     * Execute a GraphQL mutation.
+     *
+     * @param {object} query - The query or queries to execute.
+     * @throws {AppwriteException}
+     * @returns {Promise}     * @deprecated Flat parameter style methods will be removed in a future version.
+     * Please use the object parameter style method instead for a better developer experience.
      *
      * @example
      * // Old (deprecated)
@@ -38,8 +42,8 @@ export class Graphql extends Service {
     ): Promise<{}> {
         let params: { query: object };
 
-        if (paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst) && 'query' in paramsOrFirst) {
-            params = paramsOrFirst as { query: object };
+        if ((paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst) && 'query' in paramsOrFirst)) {
+            params = (paramsOrFirst || {}) as { query: object };
         } else {
             params = {
                 query: paramsOrFirst as object            
@@ -69,14 +73,18 @@ export class Graphql extends Service {
     /**
      * Execute a GraphQL mutation.
      *
-     * @param {object} query - The query or queries to execute.
+     * @param {object} params.query - The query or queries to execute.
      * @throws {AppwriteException}
      * @returns {Promise}
      */
     mutation(params: { query: object  }): Promise<{}>;
     /**
-     * @deprecated Parameter-based methods will be removed in the upcoming version.
-     * Please use the object based method instead for better developer experience.
+     * Execute a GraphQL mutation.
+     *
+     * @param {object} query - The query or queries to execute.
+     * @throws {AppwriteException}
+     * @returns {Promise}     * @deprecated Flat parameter style methods will be removed in a future version.
+     * Please use the object parameter style method instead for a better developer experience.
      *
      * @example
      * // Old (deprecated)
@@ -91,8 +99,8 @@ export class Graphql extends Service {
     ): Promise<{}> {
         let params: { query: object };
 
-        if (paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst) && 'query' in paramsOrFirst) {
-            params = paramsOrFirst as { query: object };
+        if ((paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst) && 'query' in paramsOrFirst)) {
+            params = (paramsOrFirst || {}) as { query: object };
         } else {
             params = {
                 query: paramsOrFirst as object            

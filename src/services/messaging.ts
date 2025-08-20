@@ -16,16 +16,22 @@ export class Messaging extends Service {
     /**
      * Create a new subscriber.
      *
-     * @param {string} topicId - Topic ID. The topic ID to subscribe to.
-     * @param {string} subscriberId - Subscriber ID. Choose a custom Subscriber ID or a new Subscriber ID.
-     * @param {string} targetId - Target ID. The target ID to link to the specified Topic ID.
+     * @param {string} params.topicId - Topic ID. The topic ID to subscribe to.
+     * @param {string} params.subscriberId - Subscriber ID. Choose a custom Subscriber ID or a new Subscriber ID.
+     * @param {string} params.targetId - Target ID. The target ID to link to the specified Topic ID.
      * @throws {AppwriteException}
      * @returns {Promise}
      */
     createSubscriber(params: { topicId: string, subscriberId: string, targetId: string  }): Promise<Models.Subscriber>;
     /**
-     * @deprecated Parameter-based methods will be removed in the upcoming version.
-     * Please use the object based method instead for better developer experience.
+     * Create a new subscriber.
+     *
+     * @param {string} topicId - Topic ID. The topic ID to subscribe to.
+     * @param {string} subscriberId - Subscriber ID. Choose a custom Subscriber ID or a new Subscriber ID.
+     * @param {string} targetId - Target ID. The target ID to link to the specified Topic ID.
+     * @throws {AppwriteException}
+     * @returns {Promise}     * @deprecated Flat parameter style methods will be removed in a future version.
+     * Please use the object parameter style method instead for a better developer experience.
      *
      * @example
      * // Old (deprecated)
@@ -41,8 +47,8 @@ export class Messaging extends Service {
     ): Promise<Models.Subscriber> {
         let params: { topicId: string, subscriberId: string, targetId: string };
 
-        if (paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst)) {
-            params = paramsOrFirst as { topicId: string, subscriberId: string, targetId: string };
+        if ((paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst))) {
+            params = (paramsOrFirst || {}) as { topicId: string, subscriberId: string, targetId: string };
         } else {
             params = {
                 topicId: paramsOrFirst as string,
@@ -87,15 +93,20 @@ export class Messaging extends Service {
     /**
      * Delete a subscriber by its unique ID.
      *
-     * @param {string} topicId - Topic ID. The topic ID subscribed to.
-     * @param {string} subscriberId - Subscriber ID.
+     * @param {string} params.topicId - Topic ID. The topic ID subscribed to.
+     * @param {string} params.subscriberId - Subscriber ID.
      * @throws {AppwriteException}
      * @returns {Promise}
      */
     deleteSubscriber(params: { topicId: string, subscriberId: string  }): Promise<{}>;
     /**
-     * @deprecated Parameter-based methods will be removed in the upcoming version.
-     * Please use the object based method instead for better developer experience.
+     * Delete a subscriber by its unique ID.
+     *
+     * @param {string} topicId - Topic ID. The topic ID subscribed to.
+     * @param {string} subscriberId - Subscriber ID.
+     * @throws {AppwriteException}
+     * @returns {Promise}     * @deprecated Flat parameter style methods will be removed in a future version.
+     * Please use the object parameter style method instead for a better developer experience.
      *
      * @example
      * // Old (deprecated)
@@ -111,8 +122,8 @@ export class Messaging extends Service {
     ): Promise<{}> {
         let params: { topicId: string, subscriberId: string };
 
-        if (paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst)) {
-            params = paramsOrFirst as { topicId: string, subscriberId: string };
+        if ((paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst))) {
+            params = (paramsOrFirst || {}) as { topicId: string, subscriberId: string };
         } else {
             params = {
                 topicId: paramsOrFirst as string,
