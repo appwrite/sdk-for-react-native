@@ -464,4 +464,174 @@ export class Databases extends Service {
             'content-type': 'application/json',
         }, payload);
     }
+
+    /**
+     * Decrement a specific attribute of a document by a given value.
+     *
+     * @param {string} databaseId - Database ID.
+     * @param {string} collectionId - Collection ID.
+     * @param {string} documentId - Document ID.
+     * @param {string} attribute - Attribute key.
+     * @param {number} value - Value to increment the attribute by. The value must be a number.
+     * @param {number} min - Minimum value for the attribute. If the current value is lesser than this value, an exception will be thrown.
+     * @throws {AppwriteException}
+     * @returns {Promise}
+     * @deprecated This API has been deprecated since 1.8.0. Please use `TablesDb.decrementRowColumn` instead.
+     */
+    decrementDocumentAttribute<Document extends Models.Document = Models.DefaultDocument>(params: { databaseId: string, collectionId: string, documentId: string, attribute: string, value?: number, min?: number  }): Promise<Document>;
+    /**
+     * @deprecated Parameter-based methods will be removed in the upcoming version.
+     * Please use the object based method instead for better developer experience.
+     *
+     * @example
+     * // Old (deprecated)
+     * decrementDocumentAttribute<Document extends Models.Document = Models.DefaultDocument>(databaseId: string, collectionId: string, documentId: string, attribute: string, value?: number, min?: number): Promise<Document>;
+     *
+     * // New (object based)
+     * decrementDocumentAttribute<Document extends Models.Document = Models.DefaultDocument>(params: { databaseId: string, collectionId: string, documentId: string, attribute: string, value?: number, min?: number  }): Promise<Document>;
+     */
+    decrementDocumentAttribute<Document extends Models.Document = Models.DefaultDocument>(databaseId: string, collectionId: string, documentId: string, attribute: string, value?: number, min?: number): Promise<Document>;
+    decrementDocumentAttribute<Document extends Models.Document = Models.DefaultDocument>(
+        paramsOrFirst: { databaseId: string, collectionId: string, documentId: string, attribute: string, value?: number, min?: number } | string,
+        ...rest: [(string)?, (string)?, (string)?, (number)?, (number)?]    
+    ): Promise<Document> {
+        let params: { databaseId: string, collectionId: string, documentId: string, attribute: string, value?: number, min?: number };
+
+        if (paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst)) {
+            params = paramsOrFirst as { databaseId: string, collectionId: string, documentId: string, attribute: string, value?: number, min?: number };
+        } else {
+            params = {
+                databaseId: paramsOrFirst as string,
+                collectionId: rest[0] as string,
+                documentId: rest[1] as string,
+                attribute: rest[2] as string,
+                value: rest[3] as number,
+                min: rest[4] as number            
+            };
+        }
+
+        const databaseId = params.databaseId;
+        const collectionId = params.collectionId;
+        const documentId = params.documentId;
+        const attribute = params.attribute;
+        const value = params.value;
+        const min = params.min;
+
+        if (typeof databaseId === 'undefined') {
+            throw new AppwriteException('Missing required parameter: "databaseId"');
+        }
+
+        if (typeof collectionId === 'undefined') {
+            throw new AppwriteException('Missing required parameter: "collectionId"');
+        }
+
+        if (typeof documentId === 'undefined') {
+            throw new AppwriteException('Missing required parameter: "documentId"');
+        }
+
+        if (typeof attribute === 'undefined') {
+            throw new AppwriteException('Missing required parameter: "attribute"');
+        }
+
+        const apiPath = '/databases/{databaseId}/collections/{collectionId}/documents/{documentId}/{attribute}/decrement'.replace('{databaseId}', databaseId).replace('{collectionId}', collectionId).replace('{documentId}', documentId).replace('{attribute}', attribute);
+        const payload: Payload = {};
+
+        if (typeof value !== 'undefined') {
+            payload['value'] = value;
+        }
+
+        if (typeof min !== 'undefined') {
+            payload['min'] = min;
+        }
+
+        const uri = new URL(this.client.config.endpoint + apiPath);
+        return this.client.call('patch', uri, {
+            'content-type': 'application/json',
+        }, payload);
+    }
+
+    /**
+     * Increment a specific attribute of a document by a given value.
+     *
+     * @param {string} databaseId - Database ID.
+     * @param {string} collectionId - Collection ID.
+     * @param {string} documentId - Document ID.
+     * @param {string} attribute - Attribute key.
+     * @param {number} value - Value to increment the attribute by. The value must be a number.
+     * @param {number} max - Maximum value for the attribute. If the current value is greater than this value, an error will be thrown.
+     * @throws {AppwriteException}
+     * @returns {Promise}
+     * @deprecated This API has been deprecated since 1.8.0. Please use `TablesDb.incrementRowColumn` instead.
+     */
+    incrementDocumentAttribute<Document extends Models.Document = Models.DefaultDocument>(params: { databaseId: string, collectionId: string, documentId: string, attribute: string, value?: number, max?: number  }): Promise<Document>;
+    /**
+     * @deprecated Parameter-based methods will be removed in the upcoming version.
+     * Please use the object based method instead for better developer experience.
+     *
+     * @example
+     * // Old (deprecated)
+     * incrementDocumentAttribute<Document extends Models.Document = Models.DefaultDocument>(databaseId: string, collectionId: string, documentId: string, attribute: string, value?: number, max?: number): Promise<Document>;
+     *
+     * // New (object based)
+     * incrementDocumentAttribute<Document extends Models.Document = Models.DefaultDocument>(params: { databaseId: string, collectionId: string, documentId: string, attribute: string, value?: number, max?: number  }): Promise<Document>;
+     */
+    incrementDocumentAttribute<Document extends Models.Document = Models.DefaultDocument>(databaseId: string, collectionId: string, documentId: string, attribute: string, value?: number, max?: number): Promise<Document>;
+    incrementDocumentAttribute<Document extends Models.Document = Models.DefaultDocument>(
+        paramsOrFirst: { databaseId: string, collectionId: string, documentId: string, attribute: string, value?: number, max?: number } | string,
+        ...rest: [(string)?, (string)?, (string)?, (number)?, (number)?]    
+    ): Promise<Document> {
+        let params: { databaseId: string, collectionId: string, documentId: string, attribute: string, value?: number, max?: number };
+
+        if (paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst)) {
+            params = paramsOrFirst as { databaseId: string, collectionId: string, documentId: string, attribute: string, value?: number, max?: number };
+        } else {
+            params = {
+                databaseId: paramsOrFirst as string,
+                collectionId: rest[0] as string,
+                documentId: rest[1] as string,
+                attribute: rest[2] as string,
+                value: rest[3] as number,
+                max: rest[4] as number            
+            };
+        }
+
+        const databaseId = params.databaseId;
+        const collectionId = params.collectionId;
+        const documentId = params.documentId;
+        const attribute = params.attribute;
+        const value = params.value;
+        const max = params.max;
+
+        if (typeof databaseId === 'undefined') {
+            throw new AppwriteException('Missing required parameter: "databaseId"');
+        }
+
+        if (typeof collectionId === 'undefined') {
+            throw new AppwriteException('Missing required parameter: "collectionId"');
+        }
+
+        if (typeof documentId === 'undefined') {
+            throw new AppwriteException('Missing required parameter: "documentId"');
+        }
+
+        if (typeof attribute === 'undefined') {
+            throw new AppwriteException('Missing required parameter: "attribute"');
+        }
+
+        const apiPath = '/databases/{databaseId}/collections/{collectionId}/documents/{documentId}/{attribute}/increment'.replace('{databaseId}', databaseId).replace('{collectionId}', collectionId).replace('{documentId}', documentId).replace('{attribute}', attribute);
+        const payload: Payload = {};
+
+        if (typeof value !== 'undefined') {
+            payload['value'] = value;
+        }
+
+        if (typeof max !== 'undefined') {
+            payload['max'] = max;
+        }
+
+        const uri = new URL(this.client.config.endpoint + apiPath);
+        return this.client.call('patch', uri, {
+            'content-type': 'application/json',
+        }, payload);
+    }
 };

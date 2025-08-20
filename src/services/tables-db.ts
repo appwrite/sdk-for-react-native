@@ -445,4 +445,172 @@ export class TablesDb extends Service {
             'content-type': 'application/json',
         }, payload);
     }
+
+    /**
+     * Decrement a specific column of a row by a given value.
+     *
+     * @param {string} databaseId - Database ID.
+     * @param {string} tableId - Table ID.
+     * @param {string} rowId - Row ID.
+     * @param {string} column - Column key.
+     * @param {number} value - Value to increment the column by. The value must be a number.
+     * @param {number} min - Minimum value for the column. If the current value is lesser than this value, an exception will be thrown.
+     * @throws {AppwriteException}
+     * @returns {Promise}
+     */
+    decrementRowColumn<Row extends Models.Row = Models.DefaultRow>(params: { databaseId: string, tableId: string, rowId: string, column: string, value?: number, min?: number  }): Promise<Row>;
+    /**
+     * @deprecated Parameter-based methods will be removed in the upcoming version.
+     * Please use the object based method instead for better developer experience.
+     *
+     * @example
+     * // Old (deprecated)
+     * decrementRowColumn<Row extends Models.Row = Models.DefaultRow>(databaseId: string, tableId: string, rowId: string, column: string, value?: number, min?: number): Promise<Row>;
+     *
+     * // New (object based)
+     * decrementRowColumn<Row extends Models.Row = Models.DefaultRow>(params: { databaseId: string, tableId: string, rowId: string, column: string, value?: number, min?: number  }): Promise<Row>;
+     */
+    decrementRowColumn<Row extends Models.Row = Models.DefaultRow>(databaseId: string, tableId: string, rowId: string, column: string, value?: number, min?: number): Promise<Row>;
+    decrementRowColumn<Row extends Models.Row = Models.DefaultRow>(
+        paramsOrFirst: { databaseId: string, tableId: string, rowId: string, column: string, value?: number, min?: number } | string,
+        ...rest: [(string)?, (string)?, (string)?, (number)?, (number)?]    
+    ): Promise<Row> {
+        let params: { databaseId: string, tableId: string, rowId: string, column: string, value?: number, min?: number };
+
+        if (paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst)) {
+            params = paramsOrFirst as { databaseId: string, tableId: string, rowId: string, column: string, value?: number, min?: number };
+        } else {
+            params = {
+                databaseId: paramsOrFirst as string,
+                tableId: rest[0] as string,
+                rowId: rest[1] as string,
+                column: rest[2] as string,
+                value: rest[3] as number,
+                min: rest[4] as number            
+            };
+        }
+
+        const databaseId = params.databaseId;
+        const tableId = params.tableId;
+        const rowId = params.rowId;
+        const column = params.column;
+        const value = params.value;
+        const min = params.min;
+
+        if (typeof databaseId === 'undefined') {
+            throw new AppwriteException('Missing required parameter: "databaseId"');
+        }
+
+        if (typeof tableId === 'undefined') {
+            throw new AppwriteException('Missing required parameter: "tableId"');
+        }
+
+        if (typeof rowId === 'undefined') {
+            throw new AppwriteException('Missing required parameter: "rowId"');
+        }
+
+        if (typeof column === 'undefined') {
+            throw new AppwriteException('Missing required parameter: "column"');
+        }
+
+        const apiPath = '/tablesdb/{databaseId}/tables/{tableId}/rows/{rowId}/{column}/decrement'.replace('{databaseId}', databaseId).replace('{tableId}', tableId).replace('{rowId}', rowId).replace('{column}', column);
+        const payload: Payload = {};
+
+        if (typeof value !== 'undefined') {
+            payload['value'] = value;
+        }
+
+        if (typeof min !== 'undefined') {
+            payload['min'] = min;
+        }
+
+        const uri = new URL(this.client.config.endpoint + apiPath);
+        return this.client.call('patch', uri, {
+            'content-type': 'application/json',
+        }, payload);
+    }
+
+    /**
+     * Increment a specific column of a row by a given value.
+     *
+     * @param {string} databaseId - Database ID.
+     * @param {string} tableId - Table ID.
+     * @param {string} rowId - Row ID.
+     * @param {string} column - Column key.
+     * @param {number} value - Value to increment the column by. The value must be a number.
+     * @param {number} max - Maximum value for the column. If the current value is greater than this value, an error will be thrown.
+     * @throws {AppwriteException}
+     * @returns {Promise}
+     */
+    incrementRowColumn<Row extends Models.Row = Models.DefaultRow>(params: { databaseId: string, tableId: string, rowId: string, column: string, value?: number, max?: number  }): Promise<Row>;
+    /**
+     * @deprecated Parameter-based methods will be removed in the upcoming version.
+     * Please use the object based method instead for better developer experience.
+     *
+     * @example
+     * // Old (deprecated)
+     * incrementRowColumn<Row extends Models.Row = Models.DefaultRow>(databaseId: string, tableId: string, rowId: string, column: string, value?: number, max?: number): Promise<Row>;
+     *
+     * // New (object based)
+     * incrementRowColumn<Row extends Models.Row = Models.DefaultRow>(params: { databaseId: string, tableId: string, rowId: string, column: string, value?: number, max?: number  }): Promise<Row>;
+     */
+    incrementRowColumn<Row extends Models.Row = Models.DefaultRow>(databaseId: string, tableId: string, rowId: string, column: string, value?: number, max?: number): Promise<Row>;
+    incrementRowColumn<Row extends Models.Row = Models.DefaultRow>(
+        paramsOrFirst: { databaseId: string, tableId: string, rowId: string, column: string, value?: number, max?: number } | string,
+        ...rest: [(string)?, (string)?, (string)?, (number)?, (number)?]    
+    ): Promise<Row> {
+        let params: { databaseId: string, tableId: string, rowId: string, column: string, value?: number, max?: number };
+
+        if (paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst)) {
+            params = paramsOrFirst as { databaseId: string, tableId: string, rowId: string, column: string, value?: number, max?: number };
+        } else {
+            params = {
+                databaseId: paramsOrFirst as string,
+                tableId: rest[0] as string,
+                rowId: rest[1] as string,
+                column: rest[2] as string,
+                value: rest[3] as number,
+                max: rest[4] as number            
+            };
+        }
+
+        const databaseId = params.databaseId;
+        const tableId = params.tableId;
+        const rowId = params.rowId;
+        const column = params.column;
+        const value = params.value;
+        const max = params.max;
+
+        if (typeof databaseId === 'undefined') {
+            throw new AppwriteException('Missing required parameter: "databaseId"');
+        }
+
+        if (typeof tableId === 'undefined') {
+            throw new AppwriteException('Missing required parameter: "tableId"');
+        }
+
+        if (typeof rowId === 'undefined') {
+            throw new AppwriteException('Missing required parameter: "rowId"');
+        }
+
+        if (typeof column === 'undefined') {
+            throw new AppwriteException('Missing required parameter: "column"');
+        }
+
+        const apiPath = '/tablesdb/{databaseId}/tables/{tableId}/rows/{rowId}/{column}/increment'.replace('{databaseId}', databaseId).replace('{tableId}', tableId).replace('{rowId}', rowId).replace('{column}', column);
+        const payload: Payload = {};
+
+        if (typeof value !== 'undefined') {
+            payload['value'] = value;
+        }
+
+        if (typeof max !== 'undefined') {
+            payload['max'] = max;
+        }
+
+        const uri = new URL(this.client.config.endpoint + apiPath);
+        return this.client.call('patch', uri, {
+            'content-type': 'application/json',
+        }, payload);
+    }
 };

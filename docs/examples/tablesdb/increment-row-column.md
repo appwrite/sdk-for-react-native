@@ -6,12 +6,13 @@ const client = new Client()
 
 const tablesDb = new TablesDb(client);
 
-const result = await tablesDb.createRow({
+const result = await tablesDb.incrementRowColumn({
     databaseId: '<DATABASE_ID>',
     tableId: '<TABLE_ID>',
     rowId: '<ROW_ID>',
-    data: {},
-    permissions: ["read("any")"]
+    column: '',
+    value: null,
+    max: null
 });
 
 console.log(result);

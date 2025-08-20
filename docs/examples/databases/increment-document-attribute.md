@@ -6,10 +6,13 @@ const client = new Client()
 
 const databases = new Databases(client);
 
-const result = await databases.listDocuments({
+const result = await databases.incrementDocumentAttribute({
     databaseId: '<DATABASE_ID>',
     collectionId: '<COLLECTION_ID>',
-    queries: []
+    documentId: '<DOCUMENT_ID>',
+    attribute: '',
+    value: null,
+    max: null
 });
 
 console.log(result);
