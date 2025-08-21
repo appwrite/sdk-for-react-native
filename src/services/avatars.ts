@@ -39,15 +39,8 @@ export class Avatars extends Service {
      * @param {number} height - Image height. Pass an integer between 0 to 2000. Defaults to 100.
      * @param {number} quality - Image quality. Pass an integer between 0 to 100. Defaults to keep existing image quality.
      * @throws {AppwriteException}
-     * @returns {ArrayBuffer}     * @deprecated Flat parameter style methods will be removed in a future version.
-     * Please use the object parameter style method instead for a better developer experience.
-     *
-     * @example
-     * // Old (deprecated)
-     * getBrowser(code: Browser, width?: number, height?: number, quality?: number): Promise<ArrayBuffer>;
-     *
-     * // New (object based)
-     * getBrowser(params: { code: Browser, width?: number, height?: number, quality?: number  }): Promise<ArrayBuffer>;
+     * @returns {Promise<ArrayBuffer>}
+     * @deprecated Use the object parameter style method for a better developer experience.
      */
     getBrowser(code: Browser, width?: number, height?: number, quality?: number): Promise<ArrayBuffer>;
     getBrowser(
@@ -127,15 +120,8 @@ export class Avatars extends Service {
      * @param {number} height - Image height. Pass an integer between 0 to 2000. Defaults to 100.
      * @param {number} quality - Image quality. Pass an integer between 0 to 100. Defaults to keep existing image quality.
      * @throws {AppwriteException}
-     * @returns {ArrayBuffer}     * @deprecated Flat parameter style methods will be removed in a future version.
-     * Please use the object parameter style method instead for a better developer experience.
-     *
-     * @example
-     * // Old (deprecated)
-     * getCreditCard(code: CreditCard, width?: number, height?: number, quality?: number): Promise<ArrayBuffer>;
-     *
-     * // New (object based)
-     * getCreditCard(params: { code: CreditCard, width?: number, height?: number, quality?: number  }): Promise<ArrayBuffer>;
+     * @returns {Promise<ArrayBuffer>}
+     * @deprecated Use the object parameter style method for a better developer experience.
      */
     getCreditCard(code: CreditCard, width?: number, height?: number, quality?: number): Promise<ArrayBuffer>;
     getCreditCard(
@@ -207,15 +193,8 @@ export class Avatars extends Service {
      *
      * @param {string} url - Website URL which you want to fetch the favicon from.
      * @throws {AppwriteException}
-     * @returns {ArrayBuffer}     * @deprecated Flat parameter style methods will be removed in a future version.
-     * Please use the object parameter style method instead for a better developer experience.
-     *
-     * @example
-     * // Old (deprecated)
-     * getFavicon(url: string): Promise<ArrayBuffer>;
-     *
-     * // New (object based)
-     * getFavicon(params: { url: string  }): Promise<ArrayBuffer>;
+     * @returns {Promise<ArrayBuffer>}
+     * @deprecated Use the object parameter style method for a better developer experience.
      */
     getFavicon(url: string): Promise<ArrayBuffer>;
     getFavicon(
@@ -280,15 +259,8 @@ export class Avatars extends Service {
      * @param {number} height - Image height. Pass an integer between 0 to 2000. Defaults to 100.
      * @param {number} quality - Image quality. Pass an integer between 0 to 100. Defaults to keep existing image quality.
      * @throws {AppwriteException}
-     * @returns {ArrayBuffer}     * @deprecated Flat parameter style methods will be removed in a future version.
-     * Please use the object parameter style method instead for a better developer experience.
-     *
-     * @example
-     * // Old (deprecated)
-     * getFlag(code: Flag, width?: number, height?: number, quality?: number): Promise<ArrayBuffer>;
-     *
-     * // New (object based)
-     * getFlag(params: { code: Flag, width?: number, height?: number, quality?: number  }): Promise<ArrayBuffer>;
+     * @returns {Promise<ArrayBuffer>}
+     * @deprecated Use the object parameter style method for a better developer experience.
      */
     getFlag(code: Flag, width?: number, height?: number, quality?: number): Promise<ArrayBuffer>;
     getFlag(
@@ -368,15 +340,8 @@ export class Avatars extends Service {
      * @param {number} width - Resize preview image width, Pass an integer between 0 to 2000. Defaults to 400.
      * @param {number} height - Resize preview image height, Pass an integer between 0 to 2000. Defaults to 400.
      * @throws {AppwriteException}
-     * @returns {ArrayBuffer}     * @deprecated Flat parameter style methods will be removed in a future version.
-     * Please use the object parameter style method instead for a better developer experience.
-     *
-     * @example
-     * // Old (deprecated)
-     * getImage(url: string, width?: number, height?: number): Promise<ArrayBuffer>;
-     *
-     * // New (object based)
-     * getImage(params: { url: string, width?: number, height?: number  }): Promise<ArrayBuffer>;
+     * @returns {Promise<ArrayBuffer>}
+     * @deprecated Use the object parameter style method for a better developer experience.
      */
     getImage(url: string, width?: number, height?: number): Promise<ArrayBuffer>;
     getImage(
@@ -458,15 +423,8 @@ export class Avatars extends Service {
      * @param {number} height - Image height. Pass an integer between 0 to 2000. Defaults to 100.
      * @param {string} background - Changes background color. By default a random color will be picked and stay will persistent to the given name.
      * @throws {AppwriteException}
-     * @returns {ArrayBuffer}     * @deprecated Flat parameter style methods will be removed in a future version.
-     * Please use the object parameter style method instead for a better developer experience.
-     *
-     * @example
-     * // Old (deprecated)
-     * getInitials(name?: string, width?: number, height?: number, background?: string): Promise<ArrayBuffer>;
-     *
-     * // New (object based)
-     * getInitials(params: { name?: string, width?: number, height?: number, background?: string  }): Promise<ArrayBuffer>;
+     * @returns {Promise<ArrayBuffer>}
+     * @deprecated Use the object parameter style method for a better developer experience.
      */
     getInitials(name?: string, width?: number, height?: number, background?: string): Promise<ArrayBuffer>;
     getInitials(
@@ -542,15 +500,8 @@ export class Avatars extends Service {
      * @param {number} margin - Margin from edge. Pass an integer between 0 to 10. Defaults to 1.
      * @param {boolean} download - Return resulting image with 'Content-Disposition: attachment ' headers for the browser to start downloading it. Pass 0 for no header, or 1 for otherwise. Default value is set to 0.
      * @throws {AppwriteException}
-     * @returns {ArrayBuffer}     * @deprecated Flat parameter style methods will be removed in a future version.
-     * Please use the object parameter style method instead for a better developer experience.
-     *
-     * @example
-     * // Old (deprecated)
-     * getQR(text: string, size?: number, margin?: number, download?: boolean): Promise<ArrayBuffer>;
-     *
-     * // New (object based)
-     * getQR(params: { text: string, size?: number, margin?: number, download?: boolean  }): Promise<ArrayBuffer>;
+     * @returns {Promise<ArrayBuffer>}
+     * @deprecated Use the object parameter style method for a better developer experience.
      */
     getQR(text: string, size?: number, margin?: number, download?: boolean): Promise<ArrayBuffer>;
     getQR(

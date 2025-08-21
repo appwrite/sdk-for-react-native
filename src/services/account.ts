@@ -50,15 +50,8 @@ export class Account extends Service {
      * @param {string} password - New user password. Must be between 8 and 256 chars.
      * @param {string} name - User name. Max length: 128 chars.
      * @throws {AppwriteException}
-     * @returns {Promise}     * @deprecated Flat parameter style methods will be removed in a future version.
-     * Please use the object parameter style method instead for a better developer experience.
-     *
-     * @example
-     * // Old (deprecated)
-     * create<Preferences extends Models.Preferences = Models.DefaultPreferences>(userId: string, email: string, password: string, name?: string): Promise<Models.User<Preferences>>;
-     *
-     * // New (object based)
-     * create<Preferences extends Models.Preferences = Models.DefaultPreferences>(params: { userId: string, email: string, password: string, name?: string  }): Promise<Models.User<Preferences>>;
+     * @returns {Promise<Models.User<Preferences>>}
+     * @deprecated Use the object parameter style method for a better developer experience.
      */
     create<Preferences extends Models.Preferences = Models.DefaultPreferences>(userId: string, email: string, password: string, name?: string): Promise<Models.User<Preferences>>;
     create<Preferences extends Models.Preferences = Models.DefaultPreferences>(
@@ -139,15 +132,8 @@ export class Account extends Service {
      * @param {string} email - User email.
      * @param {string} password - User password. Must be at least 8 chars.
      * @throws {AppwriteException}
-     * @returns {Promise}     * @deprecated Flat parameter style methods will be removed in a future version.
-     * Please use the object parameter style method instead for a better developer experience.
-     *
-     * @example
-     * // Old (deprecated)
-     * updateEmail<Preferences extends Models.Preferences = Models.DefaultPreferences>(email: string, password: string): Promise<Models.User<Preferences>>;
-     *
-     * // New (object based)
-     * updateEmail<Preferences extends Models.Preferences = Models.DefaultPreferences>(params: { email: string, password: string  }): Promise<Models.User<Preferences>>;
+     * @returns {Promise<Models.User<Preferences>>}
+     * @deprecated Use the object parameter style method for a better developer experience.
      */
     updateEmail<Preferences extends Models.Preferences = Models.DefaultPreferences>(email: string, password: string): Promise<Models.User<Preferences>>;
     updateEmail<Preferences extends Models.Preferences = Models.DefaultPreferences>(
@@ -206,15 +192,8 @@ export class Account extends Service {
      *
      * @param {string[]} queries - Array of query strings generated using the Query class provided by the SDK. [Learn more about queries](https://appwrite.io/docs/queries). Maximum of 100 queries are allowed, each 4096 characters long. You may filter on the following attributes: userId, provider, providerUid, providerEmail, providerAccessTokenExpiry
      * @throws {AppwriteException}
-     * @returns {Promise}     * @deprecated Flat parameter style methods will be removed in a future version.
-     * Please use the object parameter style method instead for a better developer experience.
-     *
-     * @example
-     * // Old (deprecated)
-     * listIdentities(queries?: string[]): Promise<Models.IdentityList>;
-     *
-     * // New (object based)
-     * listIdentities(params: { queries?: string[]  }): Promise<Models.IdentityList>;
+     * @returns {Promise<Models.IdentityList>}
+     * @deprecated Use the object parameter style method for a better developer experience.
      */
     listIdentities(queries?: string[]): Promise<Models.IdentityList>;
     listIdentities(
@@ -257,15 +236,8 @@ export class Account extends Service {
      *
      * @param {string} identityId - Identity ID.
      * @throws {AppwriteException}
-     * @returns {Promise}     * @deprecated Flat parameter style methods will be removed in a future version.
-     * Please use the object parameter style method instead for a better developer experience.
-     *
-     * @example
-     * // Old (deprecated)
-     * deleteIdentity(identityId: string): Promise<{}>;
-     *
-     * // New (object based)
-     * deleteIdentity(params: { identityId: string  }): Promise<{}>;
+     * @returns {Promise<{}>}
+     * @deprecated Use the object parameter style method for a better developer experience.
      */
     deleteIdentity(identityId: string): Promise<{}>;
     deleteIdentity(
@@ -325,15 +297,8 @@ export class Account extends Service {
      *
      * @param {string[]} queries - Array of query strings generated using the Query class provided by the SDK. [Learn more about queries](https://appwrite.io/docs/queries). Only supported methods are limit and offset
      * @throws {AppwriteException}
-     * @returns {Promise}     * @deprecated Flat parameter style methods will be removed in a future version.
-     * Please use the object parameter style method instead for a better developer experience.
-     *
-     * @example
-     * // Old (deprecated)
-     * listLogs(queries?: string[]): Promise<Models.LogList>;
-     *
-     * // New (object based)
-     * listLogs(params: { queries?: string[]  }): Promise<Models.LogList>;
+     * @returns {Promise<Models.LogList>}
+     * @deprecated Use the object parameter style method for a better developer experience.
      */
     listLogs(queries?: string[]): Promise<Models.LogList>;
     listLogs(
@@ -376,15 +341,8 @@ export class Account extends Service {
      *
      * @param {boolean} mfa - Enable or disable MFA.
      * @throws {AppwriteException}
-     * @returns {Promise}     * @deprecated Flat parameter style methods will be removed in a future version.
-     * Please use the object parameter style method instead for a better developer experience.
-     *
-     * @example
-     * // Old (deprecated)
-     * updateMFA<Preferences extends Models.Preferences = Models.DefaultPreferences>(mfa: boolean): Promise<Models.User<Preferences>>;
-     *
-     * // New (object based)
-     * updateMFA<Preferences extends Models.Preferences = Models.DefaultPreferences>(params: { mfa: boolean  }): Promise<Models.User<Preferences>>;
+     * @returns {Promise<Models.User<Preferences>>}
+     * @deprecated Use the object parameter style method for a better developer experience.
      */
     updateMFA<Preferences extends Models.Preferences = Models.DefaultPreferences>(mfa: boolean): Promise<Models.User<Preferences>>;
     updateMFA<Preferences extends Models.Preferences = Models.DefaultPreferences>(
@@ -425,6 +383,7 @@ export class Account extends Service {
      * @param {AuthenticatorType} params.type - Type of authenticator. Must be `totp`
      * @throws {AppwriteException}
      * @returns {Promise}
+     * @deprecated This API has been deprecated since 1.8.0. Please use `CreateMFAAuthenticator` instead.
      */
     createMfaAuthenticator(params: { type: AuthenticatorType  }): Promise<Models.MfaType>;
     /**
@@ -432,18 +391,56 @@ export class Account extends Service {
      *
      * @param {AuthenticatorType} type - Type of authenticator. Must be `totp`
      * @throws {AppwriteException}
-     * @returns {Promise}     * @deprecated Flat parameter style methods will be removed in a future version.
-     * Please use the object parameter style method instead for a better developer experience.
-     *
-     * @example
-     * // Old (deprecated)
-     * createMfaAuthenticator(type: AuthenticatorType): Promise<Models.MfaType>;
-     *
-     * // New (object based)
-     * createMfaAuthenticator(params: { type: AuthenticatorType  }): Promise<Models.MfaType>;
+     * @returns {Promise<Models.MfaType>}
+     * @deprecated Use the object parameter style method for a better developer experience.
      */
     createMfaAuthenticator(type: AuthenticatorType): Promise<Models.MfaType>;
     createMfaAuthenticator(
+        paramsOrFirst: { type: AuthenticatorType } | AuthenticatorType    
+    ): Promise<Models.MfaType> {
+        let params: { type: AuthenticatorType };
+
+        if ((paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst) && 'type' in paramsOrFirst)) {
+            params = (paramsOrFirst || {}) as { type: AuthenticatorType };
+        } else {
+            params = {
+                type: paramsOrFirst as AuthenticatorType            
+            };
+        }
+
+        const type = params.type;
+
+        if (typeof type === 'undefined') {
+            throw new AppwriteException('Missing required parameter: "type"');
+        }
+
+        const apiPath = '/account/mfa/authenticators/{type}'.replace('{type}', type);
+        const payload: Payload = {};
+
+        const uri = new URL(this.client.config.endpoint + apiPath);
+        return this.client.call('post', uri, {
+            'content-type': 'application/json',
+        }, payload);
+    }
+
+    /**
+     * Add an authenticator app to be used as an MFA factor. Verify the authenticator using the [verify authenticator](/docs/references/cloud/client-web/account#updateMfaAuthenticator) method.
+     *
+     * @param {AuthenticatorType} params.type - Type of authenticator. Must be `totp`
+     * @throws {AppwriteException}
+     * @returns {Promise}
+     */
+    createMFAAuthenticator(params: { type: AuthenticatorType  }): Promise<Models.MfaType>;
+    /**
+     * Add an authenticator app to be used as an MFA factor. Verify the authenticator using the [verify authenticator](/docs/references/cloud/client-web/account#updateMfaAuthenticator) method.
+     *
+     * @param {AuthenticatorType} type - Type of authenticator. Must be `totp`
+     * @throws {AppwriteException}
+     * @returns {Promise<Models.MfaType>}
+     * @deprecated Use the object parameter style method for a better developer experience.
+     */
+    createMFAAuthenticator(type: AuthenticatorType): Promise<Models.MfaType>;
+    createMFAAuthenticator(
         paramsOrFirst: { type: AuthenticatorType } | AuthenticatorType    
     ): Promise<Models.MfaType> {
         let params: { type: AuthenticatorType };
@@ -478,6 +475,7 @@ export class Account extends Service {
      * @param {string} params.otp - Valid verification token.
      * @throws {AppwriteException}
      * @returns {Promise}
+     * @deprecated This API has been deprecated since 1.8.0. Please use `UpdateMFAAuthenticator` instead.
      */
     updateMfaAuthenticator<Preferences extends Models.Preferences = Models.DefaultPreferences>(params: { type: AuthenticatorType, otp: string  }): Promise<Models.User<Preferences>>;
     /**
@@ -486,18 +484,69 @@ export class Account extends Service {
      * @param {AuthenticatorType} type - Type of authenticator.
      * @param {string} otp - Valid verification token.
      * @throws {AppwriteException}
-     * @returns {Promise}     * @deprecated Flat parameter style methods will be removed in a future version.
-     * Please use the object parameter style method instead for a better developer experience.
-     *
-     * @example
-     * // Old (deprecated)
-     * updateMfaAuthenticator<Preferences extends Models.Preferences = Models.DefaultPreferences>(type: AuthenticatorType, otp: string): Promise<Models.User<Preferences>>;
-     *
-     * // New (object based)
-     * updateMfaAuthenticator<Preferences extends Models.Preferences = Models.DefaultPreferences>(params: { type: AuthenticatorType, otp: string  }): Promise<Models.User<Preferences>>;
+     * @returns {Promise<Models.User<Preferences>>}
+     * @deprecated Use the object parameter style method for a better developer experience.
      */
     updateMfaAuthenticator<Preferences extends Models.Preferences = Models.DefaultPreferences>(type: AuthenticatorType, otp: string): Promise<Models.User<Preferences>>;
     updateMfaAuthenticator<Preferences extends Models.Preferences = Models.DefaultPreferences>(
+        paramsOrFirst: { type: AuthenticatorType, otp: string } | AuthenticatorType,
+        ...rest: [(string)?]    
+    ): Promise<Models.User<Preferences>> {
+        let params: { type: AuthenticatorType, otp: string };
+
+        if ((paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst) && 'type' in paramsOrFirst)) {
+            params = (paramsOrFirst || {}) as { type: AuthenticatorType, otp: string };
+        } else {
+            params = {
+                type: paramsOrFirst as AuthenticatorType,
+                otp: rest[0] as string            
+            };
+        }
+
+        const type = params.type;
+        const otp = params.otp;
+
+        if (typeof type === 'undefined') {
+            throw new AppwriteException('Missing required parameter: "type"');
+        }
+
+        if (typeof otp === 'undefined') {
+            throw new AppwriteException('Missing required parameter: "otp"');
+        }
+
+        const apiPath = '/account/mfa/authenticators/{type}'.replace('{type}', type);
+        const payload: Payload = {};
+
+        if (typeof otp !== 'undefined') {
+            payload['otp'] = otp;
+        }
+
+        const uri = new URL(this.client.config.endpoint + apiPath);
+        return this.client.call('put', uri, {
+            'content-type': 'application/json',
+        }, payload);
+    }
+
+    /**
+     * Verify an authenticator app after adding it using the [add authenticator](/docs/references/cloud/client-web/account#createMfaAuthenticator) method.
+     *
+     * @param {AuthenticatorType} params.type - Type of authenticator.
+     * @param {string} params.otp - Valid verification token.
+     * @throws {AppwriteException}
+     * @returns {Promise}
+     */
+    updateMFAAuthenticator<Preferences extends Models.Preferences = Models.DefaultPreferences>(params: { type: AuthenticatorType, otp: string  }): Promise<Models.User<Preferences>>;
+    /**
+     * Verify an authenticator app after adding it using the [add authenticator](/docs/references/cloud/client-web/account#createMfaAuthenticator) method.
+     *
+     * @param {AuthenticatorType} type - Type of authenticator.
+     * @param {string} otp - Valid verification token.
+     * @throws {AppwriteException}
+     * @returns {Promise<Models.User<Preferences>>}
+     * @deprecated Use the object parameter style method for a better developer experience.
+     */
+    updateMFAAuthenticator<Preferences extends Models.Preferences = Models.DefaultPreferences>(type: AuthenticatorType, otp: string): Promise<Models.User<Preferences>>;
+    updateMFAAuthenticator<Preferences extends Models.Preferences = Models.DefaultPreferences>(
         paramsOrFirst: { type: AuthenticatorType, otp: string } | AuthenticatorType,
         ...rest: [(string)?]    
     ): Promise<Models.User<Preferences>> {
@@ -542,6 +591,7 @@ export class Account extends Service {
      * @param {AuthenticatorType} params.type - Type of authenticator.
      * @throws {AppwriteException}
      * @returns {Promise}
+     * @deprecated This API has been deprecated since 1.8.0. Please use `DeleteMFAAuthenticator` instead.
      */
     deleteMfaAuthenticator(params: { type: AuthenticatorType  }): Promise<{}>;
     /**
@@ -549,18 +599,56 @@ export class Account extends Service {
      *
      * @param {AuthenticatorType} type - Type of authenticator.
      * @throws {AppwriteException}
-     * @returns {Promise}     * @deprecated Flat parameter style methods will be removed in a future version.
-     * Please use the object parameter style method instead for a better developer experience.
-     *
-     * @example
-     * // Old (deprecated)
-     * deleteMfaAuthenticator(type: AuthenticatorType): Promise<{}>;
-     *
-     * // New (object based)
-     * deleteMfaAuthenticator(params: { type: AuthenticatorType  }): Promise<{}>;
+     * @returns {Promise<{}>}
+     * @deprecated Use the object parameter style method for a better developer experience.
      */
     deleteMfaAuthenticator(type: AuthenticatorType): Promise<{}>;
     deleteMfaAuthenticator(
+        paramsOrFirst: { type: AuthenticatorType } | AuthenticatorType    
+    ): Promise<{}> {
+        let params: { type: AuthenticatorType };
+
+        if ((paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst) && 'type' in paramsOrFirst)) {
+            params = (paramsOrFirst || {}) as { type: AuthenticatorType };
+        } else {
+            params = {
+                type: paramsOrFirst as AuthenticatorType            
+            };
+        }
+
+        const type = params.type;
+
+        if (typeof type === 'undefined') {
+            throw new AppwriteException('Missing required parameter: "type"');
+        }
+
+        const apiPath = '/account/mfa/authenticators/{type}'.replace('{type}', type);
+        const payload: Payload = {};
+
+        const uri = new URL(this.client.config.endpoint + apiPath);
+        return this.client.call('delete', uri, {
+            'content-type': 'application/json',
+        }, payload);
+    }
+
+    /**
+     * Delete an authenticator for a user by ID.
+     *
+     * @param {AuthenticatorType} params.type - Type of authenticator.
+     * @throws {AppwriteException}
+     * @returns {Promise}
+     */
+    deleteMFAAuthenticator(params: { type: AuthenticatorType  }): Promise<{}>;
+    /**
+     * Delete an authenticator for a user by ID.
+     *
+     * @param {AuthenticatorType} type - Type of authenticator.
+     * @throws {AppwriteException}
+     * @returns {Promise<{}>}
+     * @deprecated Use the object parameter style method for a better developer experience.
+     */
+    deleteMFAAuthenticator(type: AuthenticatorType): Promise<{}>;
+    deleteMFAAuthenticator(
         paramsOrFirst: { type: AuthenticatorType } | AuthenticatorType    
     ): Promise<{}> {
         let params: { type: AuthenticatorType };
@@ -594,6 +682,7 @@ export class Account extends Service {
      * @param {AuthenticationFactor} params.factor - Factor used for verification. Must be one of following: `email`, `phone`, `totp`, `recoveryCode`.
      * @throws {AppwriteException}
      * @returns {Promise}
+     * @deprecated This API has been deprecated since 1.8.0. Please use `CreateMFAChallenge` instead.
      */
     createMfaChallenge(params: { factor: AuthenticationFactor  }): Promise<Models.MfaChallenge>;
     /**
@@ -601,18 +690,60 @@ export class Account extends Service {
      *
      * @param {AuthenticationFactor} factor - Factor used for verification. Must be one of following: `email`, `phone`, `totp`, `recoveryCode`.
      * @throws {AppwriteException}
-     * @returns {Promise}     * @deprecated Flat parameter style methods will be removed in a future version.
-     * Please use the object parameter style method instead for a better developer experience.
-     *
-     * @example
-     * // Old (deprecated)
-     * createMfaChallenge(factor: AuthenticationFactor): Promise<Models.MfaChallenge>;
-     *
-     * // New (object based)
-     * createMfaChallenge(params: { factor: AuthenticationFactor  }): Promise<Models.MfaChallenge>;
+     * @returns {Promise<Models.MfaChallenge>}
+     * @deprecated Use the object parameter style method for a better developer experience.
      */
     createMfaChallenge(factor: AuthenticationFactor): Promise<Models.MfaChallenge>;
     createMfaChallenge(
+        paramsOrFirst: { factor: AuthenticationFactor } | AuthenticationFactor    
+    ): Promise<Models.MfaChallenge> {
+        let params: { factor: AuthenticationFactor };
+
+        if ((paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst) && 'factor' in paramsOrFirst)) {
+            params = (paramsOrFirst || {}) as { factor: AuthenticationFactor };
+        } else {
+            params = {
+                factor: paramsOrFirst as AuthenticationFactor            
+            };
+        }
+
+        const factor = params.factor;
+
+        if (typeof factor === 'undefined') {
+            throw new AppwriteException('Missing required parameter: "factor"');
+        }
+
+        const apiPath = '/account/mfa/challenge';
+        const payload: Payload = {};
+
+        if (typeof factor !== 'undefined') {
+            payload['factor'] = factor;
+        }
+
+        const uri = new URL(this.client.config.endpoint + apiPath);
+        return this.client.call('post', uri, {
+            'content-type': 'application/json',
+        }, payload);
+    }
+
+    /**
+     * Begin the process of MFA verification after sign-in. Finish the flow with [updateMfaChallenge](/docs/references/cloud/client-web/account#updateMfaChallenge) method.
+     *
+     * @param {AuthenticationFactor} params.factor - Factor used for verification. Must be one of following: `email`, `phone`, `totp`, `recoveryCode`.
+     * @throws {AppwriteException}
+     * @returns {Promise}
+     */
+    createMFAChallenge(params: { factor: AuthenticationFactor  }): Promise<Models.MfaChallenge>;
+    /**
+     * Begin the process of MFA verification after sign-in. Finish the flow with [updateMfaChallenge](/docs/references/cloud/client-web/account#updateMfaChallenge) method.
+     *
+     * @param {AuthenticationFactor} factor - Factor used for verification. Must be one of following: `email`, `phone`, `totp`, `recoveryCode`.
+     * @throws {AppwriteException}
+     * @returns {Promise<Models.MfaChallenge>}
+     * @deprecated Use the object parameter style method for a better developer experience.
+     */
+    createMFAChallenge(factor: AuthenticationFactor): Promise<Models.MfaChallenge>;
+    createMFAChallenge(
         paramsOrFirst: { factor: AuthenticationFactor } | AuthenticationFactor    
     ): Promise<Models.MfaChallenge> {
         let params: { factor: AuthenticationFactor };
@@ -651,6 +782,7 @@ export class Account extends Service {
      * @param {string} params.otp - Valid verification token.
      * @throws {AppwriteException}
      * @returns {Promise}
+     * @deprecated This API has been deprecated since 1.8.0. Please use `UpdateMFAChallenge` instead.
      */
     updateMfaChallenge(params: { challengeId: string, otp: string  }): Promise<Models.Session>;
     /**
@@ -659,18 +791,73 @@ export class Account extends Service {
      * @param {string} challengeId - ID of the challenge.
      * @param {string} otp - Valid verification token.
      * @throws {AppwriteException}
-     * @returns {Promise}     * @deprecated Flat parameter style methods will be removed in a future version.
-     * Please use the object parameter style method instead for a better developer experience.
-     *
-     * @example
-     * // Old (deprecated)
-     * updateMfaChallenge(challengeId: string, otp: string): Promise<Models.Session>;
-     *
-     * // New (object based)
-     * updateMfaChallenge(params: { challengeId: string, otp: string  }): Promise<Models.Session>;
+     * @returns {Promise<Models.Session>}
+     * @deprecated Use the object parameter style method for a better developer experience.
      */
     updateMfaChallenge(challengeId: string, otp: string): Promise<Models.Session>;
     updateMfaChallenge(
+        paramsOrFirst: { challengeId: string, otp: string } | string,
+        ...rest: [(string)?]    
+    ): Promise<Models.Session> {
+        let params: { challengeId: string, otp: string };
+
+        if ((paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst))) {
+            params = (paramsOrFirst || {}) as { challengeId: string, otp: string };
+        } else {
+            params = {
+                challengeId: paramsOrFirst as string,
+                otp: rest[0] as string            
+            };
+        }
+
+        const challengeId = params.challengeId;
+        const otp = params.otp;
+
+        if (typeof challengeId === 'undefined') {
+            throw new AppwriteException('Missing required parameter: "challengeId"');
+        }
+
+        if (typeof otp === 'undefined') {
+            throw new AppwriteException('Missing required parameter: "otp"');
+        }
+
+        const apiPath = '/account/mfa/challenge';
+        const payload: Payload = {};
+
+        if (typeof challengeId !== 'undefined') {
+            payload['challengeId'] = challengeId;
+        }
+
+        if (typeof otp !== 'undefined') {
+            payload['otp'] = otp;
+        }
+
+        const uri = new URL(this.client.config.endpoint + apiPath);
+        return this.client.call('put', uri, {
+            'content-type': 'application/json',
+        }, payload);
+    }
+
+    /**
+     * Complete the MFA challenge by providing the one-time password. Finish the process of MFA verification by providing the one-time password. To begin the flow, use [createMfaChallenge](/docs/references/cloud/client-web/account#createMfaChallenge) method.
+     *
+     * @param {string} params.challengeId - ID of the challenge.
+     * @param {string} params.otp - Valid verification token.
+     * @throws {AppwriteException}
+     * @returns {Promise}
+     */
+    updateMFAChallenge(params: { challengeId: string, otp: string  }): Promise<Models.Session>;
+    /**
+     * Complete the MFA challenge by providing the one-time password. Finish the process of MFA verification by providing the one-time password. To begin the flow, use [createMfaChallenge](/docs/references/cloud/client-web/account#createMfaChallenge) method.
+     *
+     * @param {string} challengeId - ID of the challenge.
+     * @param {string} otp - Valid verification token.
+     * @throws {AppwriteException}
+     * @returns {Promise<Models.Session>}
+     * @deprecated Use the object parameter style method for a better developer experience.
+     */
+    updateMFAChallenge(challengeId: string, otp: string): Promise<Models.Session>;
+    updateMFAChallenge(
         paramsOrFirst: { challengeId: string, otp: string } | string,
         ...rest: [(string)?]    
     ): Promise<Models.Session> {
@@ -718,8 +905,24 @@ export class Account extends Service {
      *
      * @throws {AppwriteException}
      * @returns {Promise}
+     * @deprecated This API has been deprecated since 1.8.0. Please use `ListMFAFactors` instead.
      */
     listMfaFactors(): Promise<Models.MfaFactors> {
+        const apiPath = '/account/mfa/factors';
+        const payload: Payload = {};
+
+        const uri = new URL(this.client.config.endpoint + apiPath);
+        return this.client.call('get', uri, {
+        }, payload);
+    }
+
+    /**
+     * List the factors available on the account to be used as a MFA challange.
+     *
+     * @throws {AppwriteException}
+     * @returns {Promise}
+     */
+    listMFAFactors(): Promise<Models.MfaFactors> {
         const apiPath = '/account/mfa/factors';
         const payload: Payload = {};
 
@@ -733,8 +936,24 @@ export class Account extends Service {
      *
      * @throws {AppwriteException}
      * @returns {Promise}
+     * @deprecated This API has been deprecated since 1.8.0. Please use `GetMFARecoveryCodes` instead.
      */
     getMfaRecoveryCodes(): Promise<Models.MfaRecoveryCodes> {
+        const apiPath = '/account/mfa/recovery-codes';
+        const payload: Payload = {};
+
+        const uri = new URL(this.client.config.endpoint + apiPath);
+        return this.client.call('get', uri, {
+        }, payload);
+    }
+
+    /**
+     * Get recovery codes that can be used as backup for MFA flow. Before getting codes, they must be generated using [createMfaRecoveryCodes](/docs/references/cloud/client-web/account#createMfaRecoveryCodes) method. An OTP challenge is required to read recovery codes.
+     *
+     * @throws {AppwriteException}
+     * @returns {Promise}
+     */
+    getMFARecoveryCodes(): Promise<Models.MfaRecoveryCodes> {
         const apiPath = '/account/mfa/recovery-codes';
         const payload: Payload = {};
 
@@ -748,8 +967,25 @@ export class Account extends Service {
      *
      * @throws {AppwriteException}
      * @returns {Promise}
+     * @deprecated This API has been deprecated since 1.8.0. Please use `CreateMFARecoveryCodes` instead.
      */
     createMfaRecoveryCodes(): Promise<Models.MfaRecoveryCodes> {
+        const apiPath = '/account/mfa/recovery-codes';
+        const payload: Payload = {};
+
+        const uri = new URL(this.client.config.endpoint + apiPath);
+        return this.client.call('post', uri, {
+            'content-type': 'application/json',
+        }, payload);
+    }
+
+    /**
+     * Generate recovery codes as backup for MFA flow. It's recommended to generate and show then immediately after user successfully adds their authehticator. Recovery codes can be used as a MFA verification type in [createMfaChallenge](/docs/references/cloud/client-web/account#createMfaChallenge) method.
+     *
+     * @throws {AppwriteException}
+     * @returns {Promise}
+     */
+    createMFARecoveryCodes(): Promise<Models.MfaRecoveryCodes> {
         const apiPath = '/account/mfa/recovery-codes';
         const payload: Payload = {};
 
@@ -764,8 +1000,25 @@ export class Account extends Service {
      *
      * @throws {AppwriteException}
      * @returns {Promise}
+     * @deprecated This API has been deprecated since 1.8.0. Please use `UpdateMFARecoveryCodes` instead.
      */
     updateMfaRecoveryCodes(): Promise<Models.MfaRecoveryCodes> {
+        const apiPath = '/account/mfa/recovery-codes';
+        const payload: Payload = {};
+
+        const uri = new URL(this.client.config.endpoint + apiPath);
+        return this.client.call('patch', uri, {
+            'content-type': 'application/json',
+        }, payload);
+    }
+
+    /**
+     * Regenerate recovery codes that can be used as backup for MFA flow. Before regenerating codes, they must be first generated using [createMfaRecoveryCodes](/docs/references/cloud/client-web/account#createMfaRecoveryCodes) method. An OTP challenge is required to regenreate recovery codes.
+     *
+     * @throws {AppwriteException}
+     * @returns {Promise}
+     */
+    updateMFARecoveryCodes(): Promise<Models.MfaRecoveryCodes> {
         const apiPath = '/account/mfa/recovery-codes';
         const payload: Payload = {};
 
@@ -788,15 +1041,8 @@ export class Account extends Service {
      *
      * @param {string} name - User name. Max length: 128 chars.
      * @throws {AppwriteException}
-     * @returns {Promise}     * @deprecated Flat parameter style methods will be removed in a future version.
-     * Please use the object parameter style method instead for a better developer experience.
-     *
-     * @example
-     * // Old (deprecated)
-     * updateName<Preferences extends Models.Preferences = Models.DefaultPreferences>(name: string): Promise<Models.User<Preferences>>;
-     *
-     * // New (object based)
-     * updateName<Preferences extends Models.Preferences = Models.DefaultPreferences>(params: { name: string  }): Promise<Models.User<Preferences>>;
+     * @returns {Promise<Models.User<Preferences>>}
+     * @deprecated Use the object parameter style method for a better developer experience.
      */
     updateName<Preferences extends Models.Preferences = Models.DefaultPreferences>(name: string): Promise<Models.User<Preferences>>;
     updateName<Preferences extends Models.Preferences = Models.DefaultPreferences>(
@@ -846,15 +1092,8 @@ export class Account extends Service {
      * @param {string} password - New user password. Must be at least 8 chars.
      * @param {string} oldPassword - Current user password. Must be at least 8 chars.
      * @throws {AppwriteException}
-     * @returns {Promise}     * @deprecated Flat parameter style methods will be removed in a future version.
-     * Please use the object parameter style method instead for a better developer experience.
-     *
-     * @example
-     * // Old (deprecated)
-     * updatePassword<Preferences extends Models.Preferences = Models.DefaultPreferences>(password: string, oldPassword?: string): Promise<Models.User<Preferences>>;
-     *
-     * // New (object based)
-     * updatePassword<Preferences extends Models.Preferences = Models.DefaultPreferences>(params: { password: string, oldPassword?: string  }): Promise<Models.User<Preferences>>;
+     * @returns {Promise<Models.User<Preferences>>}
+     * @deprecated Use the object parameter style method for a better developer experience.
      */
     updatePassword<Preferences extends Models.Preferences = Models.DefaultPreferences>(password: string, oldPassword?: string): Promise<Models.User<Preferences>>;
     updatePassword<Preferences extends Models.Preferences = Models.DefaultPreferences>(
@@ -911,15 +1150,8 @@ export class Account extends Service {
      * @param {string} phone - Phone number. Format this number with a leading '+' and a country code, e.g., +16175551212.
      * @param {string} password - User password. Must be at least 8 chars.
      * @throws {AppwriteException}
-     * @returns {Promise}     * @deprecated Flat parameter style methods will be removed in a future version.
-     * Please use the object parameter style method instead for a better developer experience.
-     *
-     * @example
-     * // Old (deprecated)
-     * updatePhone<Preferences extends Models.Preferences = Models.DefaultPreferences>(phone: string, password: string): Promise<Models.User<Preferences>>;
-     *
-     * // New (object based)
-     * updatePhone<Preferences extends Models.Preferences = Models.DefaultPreferences>(params: { phone: string, password: string  }): Promise<Models.User<Preferences>>;
+     * @returns {Promise<Models.User<Preferences>>}
+     * @deprecated Use the object parameter style method for a better developer experience.
      */
     updatePhone<Preferences extends Models.Preferences = Models.DefaultPreferences>(phone: string, password: string): Promise<Models.User<Preferences>>;
     updatePhone<Preferences extends Models.Preferences = Models.DefaultPreferences>(
@@ -993,15 +1225,8 @@ export class Account extends Service {
      *
      * @param {Partial<Preferences>} prefs - Prefs key-value JSON object.
      * @throws {AppwriteException}
-     * @returns {Promise}     * @deprecated Flat parameter style methods will be removed in a future version.
-     * Please use the object parameter style method instead for a better developer experience.
-     *
-     * @example
-     * // Old (deprecated)
-     * updatePrefs<Preferences extends Models.Preferences = Models.DefaultPreferences>(prefs: Partial<Preferences>): Promise<Models.User<Preferences>>;
-     *
-     * // New (object based)
-     * updatePrefs<Preferences extends Models.Preferences = Models.DefaultPreferences>(params: { prefs: Partial<Preferences>  }): Promise<Models.User<Preferences>>;
+     * @returns {Promise<Models.User<Preferences>>}
+     * @deprecated Use the object parameter style method for a better developer experience.
      */
     updatePrefs<Preferences extends Models.Preferences = Models.DefaultPreferences>(prefs: Partial<Preferences>): Promise<Models.User<Preferences>>;
     updatePrefs<Preferences extends Models.Preferences = Models.DefaultPreferences>(
@@ -1051,15 +1276,8 @@ export class Account extends Service {
      * @param {string} email - User email.
      * @param {string} url - URL to redirect the user back to your app from the recovery email. Only URLs from hostnames in your project platform list are allowed. This requirement helps to prevent an [open redirect](https://cheatsheetseries.owasp.org/cheatsheets/Unvalidated_Redirects_and_Forwards_Cheat_Sheet.html) attack against your project API.
      * @throws {AppwriteException}
-     * @returns {Promise}     * @deprecated Flat parameter style methods will be removed in a future version.
-     * Please use the object parameter style method instead for a better developer experience.
-     *
-     * @example
-     * // Old (deprecated)
-     * createRecovery(email: string, url: string): Promise<Models.Token>;
-     *
-     * // New (object based)
-     * createRecovery(params: { email: string, url: string  }): Promise<Models.Token>;
+     * @returns {Promise<Models.Token>}
+     * @deprecated Use the object parameter style method for a better developer experience.
      */
     createRecovery(email: string, url: string): Promise<Models.Token>;
     createRecovery(
@@ -1126,15 +1344,8 @@ export class Account extends Service {
      * @param {string} secret - Valid reset token.
      * @param {string} password - New user password. Must be between 8 and 256 chars.
      * @throws {AppwriteException}
-     * @returns {Promise}     * @deprecated Flat parameter style methods will be removed in a future version.
-     * Please use the object parameter style method instead for a better developer experience.
-     *
-     * @example
-     * // Old (deprecated)
-     * updateRecovery(userId: string, secret: string, password: string): Promise<Models.Token>;
-     *
-     * // New (object based)
-     * updateRecovery(params: { userId: string, secret: string, password: string  }): Promise<Models.Token>;
+     * @returns {Promise<Models.Token>}
+     * @deprecated Use the object parameter style method for a better developer experience.
      */
     updateRecovery(userId: string, secret: string, password: string): Promise<Models.Token>;
     updateRecovery(
@@ -1256,15 +1467,8 @@ export class Account extends Service {
      * @param {string} email - User email.
      * @param {string} password - User password. Must be at least 8 chars.
      * @throws {AppwriteException}
-     * @returns {Promise}     * @deprecated Flat parameter style methods will be removed in a future version.
-     * Please use the object parameter style method instead for a better developer experience.
-     *
-     * @example
-     * // Old (deprecated)
-     * createEmailPasswordSession(email: string, password: string): Promise<Models.Session>;
-     *
-     * // New (object based)
-     * createEmailPasswordSession(params: { email: string, password: string  }): Promise<Models.Session>;
+     * @returns {Promise<Models.Session>}
+     * @deprecated Use the object parameter style method for a better developer experience.
      */
     createEmailPasswordSession(email: string, password: string): Promise<Models.Session>;
     createEmailPasswordSession(
@@ -1326,15 +1530,8 @@ export class Account extends Service {
      * @param {string} userId - User ID. Choose a custom ID or generate a random ID with `ID.unique()`. Valid chars are a-z, A-Z, 0-9, period, hyphen, and underscore. Can't start with a special char. Max length is 36 chars.
      * @param {string} secret - Valid verification token.
      * @throws {AppwriteException}
-     * @returns {Promise}     * @deprecated Flat parameter style methods will be removed in a future version.
-     * Please use the object parameter style method instead for a better developer experience.
-     *
-     * @example
-     * // Old (deprecated)
-     * updateMagicURLSession(userId: string, secret: string): Promise<Models.Session>;
-     *
-     * // New (object based)
-     * updateMagicURLSession(params: { userId: string, secret: string  }): Promise<Models.Session>;
+     * @returns {Promise<Models.Session>}
+     * @deprecated Use the object parameter style method for a better developer experience.
      */
     updateMagicURLSession(userId: string, secret: string): Promise<Models.Session>;
     updateMagicURLSession(
@@ -1409,15 +1606,8 @@ export class Account extends Service {
      * @param {string} failure - URL to redirect back to your app after a failed login attempt.  Only URLs from hostnames in your project's platform list are allowed. This requirement helps to prevent an [open redirect](https://cheatsheetseries.owasp.org/cheatsheets/Unvalidated_Redirects_and_Forwards_Cheat_Sheet.html) attack against your project API.
      * @param {string[]} scopes - A list of custom OAuth2 scopes. Check each provider internal docs for a list of supported scopes. Maximum of 100 scopes are allowed, each 4096 characters long.
      * @throws {AppwriteException}
-     * @returns {void|string}     * @deprecated Flat parameter style methods will be removed in a future version.
-     * Please use the object parameter style method instead for a better developer experience.
-     *
-     * @example
-     * // Old (deprecated)
-     * createOAuth2Session(provider: OAuthProvider, success?: string, failure?: string, scopes?: string[]): void | URL;
-     *
-     * // New (object based)
-     * createOAuth2Session(params: { provider: OAuthProvider, success?: string, failure?: string, scopes?: string[]  }): void | URL;
+     * @returns {void | URL}
+     * @deprecated Use the object parameter style method for a better developer experience.
      */
     createOAuth2Session(provider: OAuthProvider, success?: string, failure?: string, scopes?: string[]): void | URL;
     createOAuth2Session(
@@ -1487,15 +1677,8 @@ export class Account extends Service {
      * @param {string} userId - User ID. Choose a custom ID or generate a random ID with `ID.unique()`. Valid chars are a-z, A-Z, 0-9, period, hyphen, and underscore. Can't start with a special char. Max length is 36 chars.
      * @param {string} secret - Valid verification token.
      * @throws {AppwriteException}
-     * @returns {Promise}     * @deprecated Flat parameter style methods will be removed in a future version.
-     * Please use the object parameter style method instead for a better developer experience.
-     *
-     * @example
-     * // Old (deprecated)
-     * updatePhoneSession(userId: string, secret: string): Promise<Models.Session>;
-     *
-     * // New (object based)
-     * updatePhoneSession(params: { userId: string, secret: string  }): Promise<Models.Session>;
+     * @returns {Promise<Models.Session>}
+     * @deprecated Use the object parameter style method for a better developer experience.
      */
     updatePhoneSession(userId: string, secret: string): Promise<Models.Session>;
     updatePhoneSession(
@@ -1556,15 +1739,8 @@ export class Account extends Service {
      * @param {string} userId - User ID. Choose a custom ID or generate a random ID with `ID.unique()`. Valid chars are a-z, A-Z, 0-9, period, hyphen, and underscore. Can't start with a special char. Max length is 36 chars.
      * @param {string} secret - Secret of a token generated by login methods. For example, the `createMagicURLToken` or `createPhoneToken` methods.
      * @throws {AppwriteException}
-     * @returns {Promise}     * @deprecated Flat parameter style methods will be removed in a future version.
-     * Please use the object parameter style method instead for a better developer experience.
-     *
-     * @example
-     * // Old (deprecated)
-     * createSession(userId: string, secret: string): Promise<Models.Session>;
-     *
-     * // New (object based)
-     * createSession(params: { userId: string, secret: string  }): Promise<Models.Session>;
+     * @returns {Promise<Models.Session>}
+     * @deprecated Use the object parameter style method for a better developer experience.
      */
     createSession(userId: string, secret: string): Promise<Models.Session>;
     createSession(
@@ -1623,15 +1799,8 @@ export class Account extends Service {
      *
      * @param {string} sessionId - Session ID. Use the string 'current' to get the current device session.
      * @throws {AppwriteException}
-     * @returns {Promise}     * @deprecated Flat parameter style methods will be removed in a future version.
-     * Please use the object parameter style method instead for a better developer experience.
-     *
-     * @example
-     * // Old (deprecated)
-     * getSession(sessionId: string): Promise<Models.Session>;
-     *
-     * // New (object based)
-     * getSession(params: { sessionId: string  }): Promise<Models.Session>;
+     * @returns {Promise<Models.Session>}
+     * @deprecated Use the object parameter style method for a better developer experience.
      */
     getSession(sessionId: string): Promise<Models.Session>;
     getSession(
@@ -1674,15 +1843,8 @@ export class Account extends Service {
      *
      * @param {string} sessionId - Session ID. Use the string 'current' to update the current device session.
      * @throws {AppwriteException}
-     * @returns {Promise}     * @deprecated Flat parameter style methods will be removed in a future version.
-     * Please use the object parameter style method instead for a better developer experience.
-     *
-     * @example
-     * // Old (deprecated)
-     * updateSession(sessionId: string): Promise<Models.Session>;
-     *
-     * // New (object based)
-     * updateSession(params: { sessionId: string  }): Promise<Models.Session>;
+     * @returns {Promise<Models.Session>}
+     * @deprecated Use the object parameter style method for a better developer experience.
      */
     updateSession(sessionId: string): Promise<Models.Session>;
     updateSession(
@@ -1726,15 +1888,8 @@ export class Account extends Service {
      *
      * @param {string} sessionId - Session ID. Use the string 'current' to delete the current device session.
      * @throws {AppwriteException}
-     * @returns {Promise}     * @deprecated Flat parameter style methods will be removed in a future version.
-     * Please use the object parameter style method instead for a better developer experience.
-     *
-     * @example
-     * // Old (deprecated)
-     * deleteSession(sessionId: string): Promise<{}>;
-     *
-     * // New (object based)
-     * deleteSession(params: { sessionId: string  }): Promise<{}>;
+     * @returns {Promise<{}>}
+     * @deprecated Use the object parameter style method for a better developer experience.
      */
     deleteSession(sessionId: string): Promise<{}>;
     deleteSession(
@@ -1798,15 +1953,8 @@ export class Account extends Service {
      * @param {string} identifier - The target identifier (token, email, phone etc.)
      * @param {string} providerId - Provider ID. Message will be sent to this target from the specified provider ID. If no provider ID is set the first setup provider will be used.
      * @throws {AppwriteException}
-     * @returns {Promise}     * @deprecated Flat parameter style methods will be removed in a future version.
-     * Please use the object parameter style method instead for a better developer experience.
-     *
-     * @example
-     * // Old (deprecated)
-     * createPushTarget(targetId: string, identifier: string, providerId?: string): Promise<Models.Target>;
-     *
-     * // New (object based)
-     * createPushTarget(params: { targetId: string, identifier: string, providerId?: string  }): Promise<Models.Target>;
+     * @returns {Promise<Models.Target>}
+     * @deprecated Use the object parameter style method for a better developer experience.
      */
     createPushTarget(targetId: string, identifier: string, providerId?: string): Promise<Models.Target>;
     createPushTarget(
@@ -1873,15 +2021,8 @@ export class Account extends Service {
      * @param {string} targetId - Target ID.
      * @param {string} identifier - The target identifier (token, email, phone etc.)
      * @throws {AppwriteException}
-     * @returns {Promise}     * @deprecated Flat parameter style methods will be removed in a future version.
-     * Please use the object parameter style method instead for a better developer experience.
-     *
-     * @example
-     * // Old (deprecated)
-     * updatePushTarget(targetId: string, identifier: string): Promise<Models.Target>;
-     *
-     * // New (object based)
-     * updatePushTarget(params: { targetId: string, identifier: string  }): Promise<Models.Target>;
+     * @returns {Promise<Models.Target>}
+     * @deprecated Use the object parameter style method for a better developer experience.
      */
     updatePushTarget(targetId: string, identifier: string): Promise<Models.Target>;
     updatePushTarget(
@@ -1936,15 +2077,8 @@ export class Account extends Service {
      *
      * @param {string} targetId - Target ID.
      * @throws {AppwriteException}
-     * @returns {Promise}     * @deprecated Flat parameter style methods will be removed in a future version.
-     * Please use the object parameter style method instead for a better developer experience.
-     *
-     * @example
-     * // Old (deprecated)
-     * deletePushTarget(targetId: string): Promise<{}>;
-     *
-     * // New (object based)
-     * deletePushTarget(params: { targetId: string  }): Promise<{}>;
+     * @returns {Promise<{}>}
+     * @deprecated Use the object parameter style method for a better developer experience.
      */
     deletePushTarget(targetId: string): Promise<{}>;
     deletePushTarget(
@@ -1996,15 +2130,8 @@ export class Account extends Service {
      * @param {string} email - User email.
      * @param {boolean} phrase - Toggle for security phrase. If enabled, email will be send with a randomly generated phrase and the phrase will also be included in the response. Confirming phrases match increases the security of your authentication flow.
      * @throws {AppwriteException}
-     * @returns {Promise}     * @deprecated Flat parameter style methods will be removed in a future version.
-     * Please use the object parameter style method instead for a better developer experience.
-     *
-     * @example
-     * // Old (deprecated)
-     * createEmailToken(userId: string, email: string, phrase?: boolean): Promise<Models.Token>;
-     *
-     * // New (object based)
-     * createEmailToken(params: { userId: string, email: string, phrase?: boolean  }): Promise<Models.Token>;
+     * @returns {Promise<Models.Token>}
+     * @deprecated Use the object parameter style method for a better developer experience.
      */
     createEmailToken(userId: string, email: string, phrase?: boolean): Promise<Models.Token>;
     createEmailToken(
@@ -2081,15 +2208,8 @@ export class Account extends Service {
      * @param {string} url - URL to redirect the user back to your app from the magic URL login. Only URLs from hostnames in your project platform list are allowed. This requirement helps to prevent an [open redirect](https://cheatsheetseries.owasp.org/cheatsheets/Unvalidated_Redirects_and_Forwards_Cheat_Sheet.html) attack against your project API.
      * @param {boolean} phrase - Toggle for security phrase. If enabled, email will be send with a randomly generated phrase and the phrase will also be included in the response. Confirming phrases match increases the security of your authentication flow.
      * @throws {AppwriteException}
-     * @returns {Promise}     * @deprecated Flat parameter style methods will be removed in a future version.
-     * Please use the object parameter style method instead for a better developer experience.
-     *
-     * @example
-     * // Old (deprecated)
-     * createMagicURLToken(userId: string, email: string, url?: string, phrase?: boolean): Promise<Models.Token>;
-     *
-     * // New (object based)
-     * createMagicURLToken(params: { userId: string, email: string, url?: string, phrase?: boolean  }): Promise<Models.Token>;
+     * @returns {Promise<Models.Token>}
+     * @deprecated Use the object parameter style method for a better developer experience.
      */
     createMagicURLToken(userId: string, email: string, url?: string, phrase?: boolean): Promise<Models.Token>;
     createMagicURLToken(
@@ -2174,15 +2294,8 @@ export class Account extends Service {
      * @param {string} failure - URL to redirect back to your app after a failed login attempt.  Only URLs from hostnames in your project's platform list are allowed. This requirement helps to prevent an [open redirect](https://cheatsheetseries.owasp.org/cheatsheets/Unvalidated_Redirects_and_Forwards_Cheat_Sheet.html) attack against your project API.
      * @param {string[]} scopes - A list of custom OAuth2 scopes. Check each provider internal docs for a list of supported scopes. Maximum of 100 scopes are allowed, each 4096 characters long.
      * @throws {AppwriteException}
-     * @returns {void|string}     * @deprecated Flat parameter style methods will be removed in a future version.
-     * Please use the object parameter style method instead for a better developer experience.
-     *
-     * @example
-     * // Old (deprecated)
-     * createOAuth2Token(provider: OAuthProvider, success?: string, failure?: string, scopes?: string[]): void | URL;
-     *
-     * // New (object based)
-     * createOAuth2Token(params: { provider: OAuthProvider, success?: string, failure?: string, scopes?: string[]  }): void | URL;
+     * @returns {void | URL}
+     * @deprecated Use the object parameter style method for a better developer experience.
      */
     createOAuth2Token(provider: OAuthProvider, success?: string, failure?: string, scopes?: string[]): void | URL;
     createOAuth2Token(
@@ -2255,15 +2368,8 @@ export class Account extends Service {
      * @param {string} userId - Unique Id. Choose a custom ID or generate a random ID with `ID.unique()`. Valid chars are a-z, A-Z, 0-9, period, hyphen, and underscore. Can't start with a special char. Max length is 36 chars.
      * @param {string} phone - Phone number. Format this number with a leading '+' and a country code, e.g., +16175551212.
      * @throws {AppwriteException}
-     * @returns {Promise}     * @deprecated Flat parameter style methods will be removed in a future version.
-     * Please use the object parameter style method instead for a better developer experience.
-     *
-     * @example
-     * // Old (deprecated)
-     * createPhoneToken(userId: string, phone: string): Promise<Models.Token>;
-     *
-     * // New (object based)
-     * createPhoneToken(params: { userId: string, phone: string  }): Promise<Models.Token>;
+     * @returns {Promise<Models.Token>}
+     * @deprecated Use the object parameter style method for a better developer experience.
      */
     createPhoneToken(userId: string, phone: string): Promise<Models.Token>;
     createPhoneToken(
@@ -2328,15 +2434,8 @@ export class Account extends Service {
      *
      * @param {string} url - URL to redirect the user back to your app from the verification email. Only URLs from hostnames in your project platform list are allowed. This requirement helps to prevent an [open redirect](https://cheatsheetseries.owasp.org/cheatsheets/Unvalidated_Redirects_and_Forwards_Cheat_Sheet.html) attack against your project API.
      * @throws {AppwriteException}
-     * @returns {Promise}     * @deprecated Flat parameter style methods will be removed in a future version.
-     * Please use the object parameter style method instead for a better developer experience.
-     *
-     * @example
-     * // Old (deprecated)
-     * createVerification(url: string): Promise<Models.Token>;
-     *
-     * // New (object based)
-     * createVerification(params: { url: string  }): Promise<Models.Token>;
+     * @returns {Promise<Models.Token>}
+     * @deprecated Use the object parameter style method for a better developer experience.
      */
     createVerification(url: string): Promise<Models.Token>;
     createVerification(
@@ -2386,15 +2485,8 @@ export class Account extends Service {
      * @param {string} userId - User ID.
      * @param {string} secret - Valid verification token.
      * @throws {AppwriteException}
-     * @returns {Promise}     * @deprecated Flat parameter style methods will be removed in a future version.
-     * Please use the object parameter style method instead for a better developer experience.
-     *
-     * @example
-     * // Old (deprecated)
-     * updateVerification(userId: string, secret: string): Promise<Models.Token>;
-     *
-     * // New (object based)
-     * updateVerification(params: { userId: string, secret: string  }): Promise<Models.Token>;
+     * @returns {Promise<Models.Token>}
+     * @deprecated Use the object parameter style method for a better developer experience.
      */
     updateVerification(userId: string, secret: string): Promise<Models.Token>;
     updateVerification(
@@ -2471,15 +2563,8 @@ export class Account extends Service {
      * @param {string} userId - User ID.
      * @param {string} secret - Valid verification token.
      * @throws {AppwriteException}
-     * @returns {Promise}     * @deprecated Flat parameter style methods will be removed in a future version.
-     * Please use the object parameter style method instead for a better developer experience.
-     *
-     * @example
-     * // Old (deprecated)
-     * updatePhoneVerification(userId: string, secret: string): Promise<Models.Token>;
-     *
-     * // New (object based)
-     * updatePhoneVerification(params: { userId: string, secret: string  }): Promise<Models.Token>;
+     * @returns {Promise<Models.Token>}
+     * @deprecated Use the object parameter style method for a better developer experience.
      */
     updatePhoneVerification(userId: string, secret: string): Promise<Models.Token>;
     updatePhoneVerification(

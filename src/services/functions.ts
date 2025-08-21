@@ -29,15 +29,8 @@ export class Functions extends Service {
      * @param {string} functionId - Function ID.
      * @param {string[]} queries - Array of query strings generated using the Query class provided by the SDK. [Learn more about queries](https://appwrite.io/docs/queries). Maximum of 100 queries are allowed, each 4096 characters long. You may filter on the following attributes: trigger, status, responseStatusCode, duration, requestMethod, requestPath, deploymentId
      * @throws {AppwriteException}
-     * @returns {Promise}     * @deprecated Flat parameter style methods will be removed in a future version.
-     * Please use the object parameter style method instead for a better developer experience.
-     *
-     * @example
-     * // Old (deprecated)
-     * listExecutions(functionId: string, queries?: string[]): Promise<Models.ExecutionList>;
-     *
-     * // New (object based)
-     * listExecutions(params: { functionId: string, queries?: string[]  }): Promise<Models.ExecutionList>;
+     * @returns {Promise<Models.ExecutionList>}
+     * @deprecated Use the object parameter style method for a better developer experience.
      */
     listExecutions(functionId: string, queries?: string[]): Promise<Models.ExecutionList>;
     listExecutions(
@@ -99,15 +92,8 @@ export class Functions extends Service {
      * @param {object} headers - HTTP headers of execution. Defaults to empty.
      * @param {string} scheduledAt - Scheduled execution time in [ISO 8601](https://www.iso.org/iso-8601-date-and-time-format.html) format. DateTime value must be in future with precision in minutes.
      * @throws {AppwriteException}
-     * @returns {Promise}     * @deprecated Flat parameter style methods will be removed in a future version.
-     * Please use the object parameter style method instead for a better developer experience.
-     *
-     * @example
-     * // Old (deprecated)
-     * createExecution(functionId: string, body?: string, async?: boolean, xpath?: string, method?: ExecutionMethod, headers?: object, scheduledAt?: string): Promise<Models.Execution>;
-     *
-     * // New (object based)
-     * createExecution(params: { functionId: string, body?: string, async?: boolean, xpath?: string, method?: ExecutionMethod, headers?: object, scheduledAt?: string  }): Promise<Models.Execution>;
+     * @returns {Promise<Models.Execution>}
+     * @deprecated Use the object parameter style method for a better developer experience.
      */
     createExecution(functionId: string, body?: string, async?: boolean, xpath?: string, method?: ExecutionMethod, headers?: object, scheduledAt?: string): Promise<Models.Execution>;
     createExecution(
@@ -190,15 +176,8 @@ export class Functions extends Service {
      * @param {string} functionId - Function ID.
      * @param {string} executionId - Execution ID.
      * @throws {AppwriteException}
-     * @returns {Promise}     * @deprecated Flat parameter style methods will be removed in a future version.
-     * Please use the object parameter style method instead for a better developer experience.
-     *
-     * @example
-     * // Old (deprecated)
-     * getExecution(functionId: string, executionId: string): Promise<Models.Execution>;
-     *
-     * // New (object based)
-     * getExecution(params: { functionId: string, executionId: string  }): Promise<Models.Execution>;
+     * @returns {Promise<Models.Execution>}
+     * @deprecated Use the object parameter style method for a better developer experience.
      */
     getExecution(functionId: string, executionId: string): Promise<Models.Execution>;
     getExecution(

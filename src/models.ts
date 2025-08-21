@@ -7,7 +7,7 @@ export namespace Models {
      */
     export type RowList<Row extends Models.Row = Models.DefaultRow> = {
         /**
-         * Total number of rows rows that matched your query.
+         * Total number of rows that matched your query.
          */
         total: number;
         /**
@@ -21,7 +21,7 @@ export namespace Models {
      */
     export type DocumentList<Document extends Models.Document = Models.DefaultDocument> = {
         /**
-         * Total number of documents rows that matched your query.
+         * Total number of documents that matched your query.
          */
         total: number;
         /**
@@ -35,7 +35,7 @@ export namespace Models {
      */
     export type SessionList = {
         /**
-         * Total number of sessions rows that matched your query.
+         * Total number of sessions that matched your query.
          */
         total: number;
         /**
@@ -49,7 +49,7 @@ export namespace Models {
      */
     export type IdentityList = {
         /**
-         * Total number of identities rows that matched your query.
+         * Total number of identities that matched your query.
          */
         total: number;
         /**
@@ -63,7 +63,7 @@ export namespace Models {
      */
     export type LogList = {
         /**
-         * Total number of logs rows that matched your query.
+         * Total number of logs that matched your query.
          */
         total: number;
         /**
@@ -77,7 +77,7 @@ export namespace Models {
      */
     export type FileList = {
         /**
-         * Total number of files rows that matched your query.
+         * Total number of files that matched your query.
          */
         total: number;
         /**
@@ -91,7 +91,7 @@ export namespace Models {
      */
     export type TeamList<Preferences extends Models.Preferences = Models.DefaultPreferences> = {
         /**
-         * Total number of teams rows that matched your query.
+         * Total number of teams that matched your query.
          */
         total: number;
         /**
@@ -105,7 +105,7 @@ export namespace Models {
      */
     export type MembershipList = {
         /**
-         * Total number of memberships rows that matched your query.
+         * Total number of memberships that matched your query.
          */
         total: number;
         /**
@@ -119,7 +119,7 @@ export namespace Models {
      */
     export type ExecutionList = {
         /**
-         * Total number of executions rows that matched your query.
+         * Total number of executions that matched your query.
          */
         total: number;
         /**
@@ -133,7 +133,7 @@ export namespace Models {
      */
     export type CountryList = {
         /**
-         * Total number of countries rows that matched your query.
+         * Total number of countries that matched your query.
          */
         total: number;
         /**
@@ -147,7 +147,7 @@ export namespace Models {
      */
     export type ContinentList = {
         /**
-         * Total number of continents rows that matched your query.
+         * Total number of continents that matched your query.
          */
         total: number;
         /**
@@ -161,7 +161,7 @@ export namespace Models {
      */
     export type LanguageList = {
         /**
-         * Total number of languages rows that matched your query.
+         * Total number of languages that matched your query.
          */
         total: number;
         /**
@@ -175,7 +175,7 @@ export namespace Models {
      */
     export type CurrencyList = {
         /**
-         * Total number of currencies rows that matched your query.
+         * Total number of currencies that matched your query.
          */
         total: number;
         /**
@@ -189,7 +189,7 @@ export namespace Models {
      */
     export type PhoneList = {
         /**
-         * Total number of phones rows that matched your query.
+         * Total number of phones that matched your query.
          */
         total: number;
         /**
@@ -203,7 +203,7 @@ export namespace Models {
      */
     export type LocaleCodeList = {
         /**
-         * Total number of localeCodes rows that matched your query.
+         * Total number of localeCodes that matched your query.
          */
         total: number;
         /**

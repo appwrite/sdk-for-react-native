@@ -21,7 +21,7 @@ export class Databases extends Service {
      * @param {string[]} params.queries - Array of query strings generated using the Query class provided by the SDK. [Learn more about queries](https://appwrite.io/docs/queries). Maximum of 100 queries are allowed, each 4096 characters long.
      * @throws {AppwriteException}
      * @returns {Promise}
-     * @deprecated This API has been deprecated since 1.8.0. Please use `TablesDb.listRows` instead.
+     * @deprecated This API has been deprecated since 1.8.0. Please use `TablesDB.listRows` instead.
      */
     listDocuments<Document extends Models.Document = Models.DefaultDocument>(params: { databaseId: string, collectionId: string, queries?: string[]  }): Promise<Models.DocumentList<Document>>;
     /**
@@ -31,15 +31,8 @@ export class Databases extends Service {
      * @param {string} collectionId - Collection ID. You can create a new collection using the Database service [server integration](https://appwrite.io/docs/server/databases#databasesCreateCollection).
      * @param {string[]} queries - Array of query strings generated using the Query class provided by the SDK. [Learn more about queries](https://appwrite.io/docs/queries). Maximum of 100 queries are allowed, each 4096 characters long.
      * @throws {AppwriteException}
-     * @returns {Promise}     * @deprecated Flat parameter style methods will be removed in a future version.
-     * Please use the object parameter style method instead for a better developer experience.
-     *
-     * @example
-     * // Old (deprecated)
-     * listDocuments<Document extends Models.Document = Models.DefaultDocument>(databaseId: string, collectionId: string, queries?: string[]): Promise<Models.DocumentList<Document>>;
-     *
-     * // New (object based)
-     * listDocuments<Document extends Models.Document = Models.DefaultDocument>(params: { databaseId: string, collectionId: string, queries?: string[]  }): Promise<Models.DocumentList<Document>>;
+     * @returns {Promise<Models.DocumentList<Document>>}
+     * @deprecated Use the object parameter style method for a better developer experience.
      */
     listDocuments<Document extends Models.Document = Models.DefaultDocument>(databaseId: string, collectionId: string, queries?: string[]): Promise<Models.DocumentList<Document>>;
     listDocuments<Document extends Models.Document = Models.DefaultDocument>(
@@ -92,7 +85,7 @@ export class Databases extends Service {
      * @param {string[]} params.permissions - An array of permissions strings. By default, only the current user is granted all permissions. [Learn more about permissions](https://appwrite.io/docs/permissions).
      * @throws {AppwriteException}
      * @returns {Promise}
-     * @deprecated This API has been deprecated since 1.8.0. Please use `TablesDb.createRow` instead.
+     * @deprecated This API has been deprecated since 1.8.0. Please use `TablesDB.createRow` instead.
      */
     createDocument<Document extends Models.Document = Models.DefaultDocument>(params: { databaseId: string, collectionId: string, documentId: string, data: Document extends Models.DefaultDocument ? Partial<Models.Document> & Record<string, any> : Partial<Models.Document> & Omit<Document, keyof Models.Document>, permissions?: string[]  }): Promise<Document>;
     /**
@@ -104,15 +97,8 @@ export class Databases extends Service {
      * @param {Document extends Models.DefaultDocument ? Partial<Models.Document> & Record<string, any> : Partial<Models.Document> & Omit<Document, keyof Models.Document>} data - Document data as JSON object.
      * @param {string[]} permissions - An array of permissions strings. By default, only the current user is granted all permissions. [Learn more about permissions](https://appwrite.io/docs/permissions).
      * @throws {AppwriteException}
-     * @returns {Promise}     * @deprecated Flat parameter style methods will be removed in a future version.
-     * Please use the object parameter style method instead for a better developer experience.
-     *
-     * @example
-     * // Old (deprecated)
-     * createDocument<Document extends Models.Document = Models.DefaultDocument>(databaseId: string, collectionId: string, documentId: string, data: Document extends Models.DefaultDocument ? Partial<Models.Document> & Record<string, any> : Partial<Models.Document> & Omit<Document, keyof Models.Document>, permissions?: string[]): Promise<Document>;
-     *
-     * // New (object based)
-     * createDocument<Document extends Models.Document = Models.DefaultDocument>(params: { databaseId: string, collectionId: string, documentId: string, data: Document extends Models.DefaultDocument ? Partial<Models.Document> & Record<string, any> : Partial<Models.Document> & Omit<Document, keyof Models.Document>, permissions?: string[]  }): Promise<Document>;
+     * @returns {Promise<Document>}
+     * @deprecated Use the object parameter style method for a better developer experience.
      */
     createDocument<Document extends Models.Document = Models.DefaultDocument>(databaseId: string, collectionId: string, documentId: string, data: Document extends Models.DefaultDocument ? Partial<Models.Document> & Record<string, any> : Partial<Models.Document> & Omit<Document, keyof Models.Document>, permissions?: string[]): Promise<Document>;
     createDocument<Document extends Models.Document = Models.DefaultDocument>(
@@ -188,7 +174,7 @@ export class Databases extends Service {
      * @param {string[]} params.queries - Array of query strings generated using the Query class provided by the SDK. [Learn more about queries](https://appwrite.io/docs/queries). Maximum of 100 queries are allowed, each 4096 characters long.
      * @throws {AppwriteException}
      * @returns {Promise}
-     * @deprecated This API has been deprecated since 1.8.0. Please use `TablesDb.getRow` instead.
+     * @deprecated This API has been deprecated since 1.8.0. Please use `TablesDB.getRow` instead.
      */
     getDocument<Document extends Models.Document = Models.DefaultDocument>(params: { databaseId: string, collectionId: string, documentId: string, queries?: string[]  }): Promise<Document>;
     /**
@@ -199,15 +185,8 @@ export class Databases extends Service {
      * @param {string} documentId - Document ID.
      * @param {string[]} queries - Array of query strings generated using the Query class provided by the SDK. [Learn more about queries](https://appwrite.io/docs/queries). Maximum of 100 queries are allowed, each 4096 characters long.
      * @throws {AppwriteException}
-     * @returns {Promise}     * @deprecated Flat parameter style methods will be removed in a future version.
-     * Please use the object parameter style method instead for a better developer experience.
-     *
-     * @example
-     * // Old (deprecated)
-     * getDocument<Document extends Models.Document = Models.DefaultDocument>(databaseId: string, collectionId: string, documentId: string, queries?: string[]): Promise<Document>;
-     *
-     * // New (object based)
-     * getDocument<Document extends Models.Document = Models.DefaultDocument>(params: { databaseId: string, collectionId: string, documentId: string, queries?: string[]  }): Promise<Document>;
+     * @returns {Promise<Document>}
+     * @deprecated Use the object parameter style method for a better developer experience.
      */
     getDocument<Document extends Models.Document = Models.DefaultDocument>(databaseId: string, collectionId: string, documentId: string, queries?: string[]): Promise<Document>;
     getDocument<Document extends Models.Document = Models.DefaultDocument>(
@@ -266,7 +245,7 @@ export class Databases extends Service {
      * @param {string[]} params.permissions - An array of permissions strings. By default, the current permissions are inherited. [Learn more about permissions](https://appwrite.io/docs/permissions).
      * @throws {AppwriteException}
      * @returns {Promise}
-     * @deprecated This API has been deprecated since 1.8.0. Please use `TablesDb.upsertRow` instead.
+     * @deprecated This API has been deprecated since 1.8.0. Please use `TablesDB.upsertRow` instead.
      */
     upsertDocument<Document extends Models.Document = Models.DefaultDocument>(params: { databaseId: string, collectionId: string, documentId: string, data: Document extends Models.DefaultDocument ? Partial<Models.Document> & Record<string, any> : Partial<Models.Document> & Partial<Omit<Document, keyof Models.Document>>, permissions?: string[]  }): Promise<Document>;
     /**
@@ -278,15 +257,8 @@ export class Databases extends Service {
      * @param {Document extends Models.DefaultDocument ? Partial<Models.Document> & Record<string, any> : Partial<Models.Document> & Partial<Omit<Document, keyof Models.Document>>} data - Document data as JSON object. Include all required attributes of the document to be created or updated.
      * @param {string[]} permissions - An array of permissions strings. By default, the current permissions are inherited. [Learn more about permissions](https://appwrite.io/docs/permissions).
      * @throws {AppwriteException}
-     * @returns {Promise}     * @deprecated Flat parameter style methods will be removed in a future version.
-     * Please use the object parameter style method instead for a better developer experience.
-     *
-     * @example
-     * // Old (deprecated)
-     * upsertDocument<Document extends Models.Document = Models.DefaultDocument>(databaseId: string, collectionId: string, documentId: string, data: Document extends Models.DefaultDocument ? Partial<Models.Document> & Record<string, any> : Partial<Models.Document> & Partial<Omit<Document, keyof Models.Document>>, permissions?: string[]): Promise<Document>;
-     *
-     * // New (object based)
-     * upsertDocument<Document extends Models.Document = Models.DefaultDocument>(params: { databaseId: string, collectionId: string, documentId: string, data: Document extends Models.DefaultDocument ? Partial<Models.Document> & Record<string, any> : Partial<Models.Document> & Partial<Omit<Document, keyof Models.Document>>, permissions?: string[]  }): Promise<Document>;
+     * @returns {Promise<Document>}
+     * @deprecated Use the object parameter style method for a better developer experience.
      */
     upsertDocument<Document extends Models.Document = Models.DefaultDocument>(databaseId: string, collectionId: string, documentId: string, data: Document extends Models.DefaultDocument ? Partial<Models.Document> & Record<string, any> : Partial<Models.Document> & Partial<Omit<Document, keyof Models.Document>>, permissions?: string[]): Promise<Document>;
     upsertDocument<Document extends Models.Document = Models.DefaultDocument>(
@@ -359,7 +331,7 @@ export class Databases extends Service {
      * @param {string[]} params.permissions - An array of permissions strings. By default, the current permissions are inherited. [Learn more about permissions](https://appwrite.io/docs/permissions).
      * @throws {AppwriteException}
      * @returns {Promise}
-     * @deprecated This API has been deprecated since 1.8.0. Please use `TablesDb.updateRow` instead.
+     * @deprecated This API has been deprecated since 1.8.0. Please use `TablesDB.updateRow` instead.
      */
     updateDocument<Document extends Models.Document = Models.DefaultDocument>(params: { databaseId: string, collectionId: string, documentId: string, data?: Document extends Models.DefaultDocument ? Partial<Models.Document> & Record<string, any> : Partial<Models.Document> & Partial<Omit<Document, keyof Models.Document>>, permissions?: string[]  }): Promise<Document>;
     /**
@@ -371,15 +343,8 @@ export class Databases extends Service {
      * @param {Document extends Models.DefaultDocument ? Partial<Models.Document> & Record<string, any> : Partial<Models.Document> & Partial<Omit<Document, keyof Models.Document>>} data - Document data as JSON object. Include only attribute and value pairs to be updated.
      * @param {string[]} permissions - An array of permissions strings. By default, the current permissions are inherited. [Learn more about permissions](https://appwrite.io/docs/permissions).
      * @throws {AppwriteException}
-     * @returns {Promise}     * @deprecated Flat parameter style methods will be removed in a future version.
-     * Please use the object parameter style method instead for a better developer experience.
-     *
-     * @example
-     * // Old (deprecated)
-     * updateDocument<Document extends Models.Document = Models.DefaultDocument>(databaseId: string, collectionId: string, documentId: string, data?: Document extends Models.DefaultDocument ? Partial<Models.Document> & Record<string, any> : Partial<Models.Document> & Partial<Omit<Document, keyof Models.Document>>, permissions?: string[]): Promise<Document>;
-     *
-     * // New (object based)
-     * updateDocument<Document extends Models.Document = Models.DefaultDocument>(params: { databaseId: string, collectionId: string, documentId: string, data?: Document extends Models.DefaultDocument ? Partial<Models.Document> & Record<string, any> : Partial<Models.Document> & Partial<Omit<Document, keyof Models.Document>>, permissions?: string[]  }): Promise<Document>;
+     * @returns {Promise<Document>}
+     * @deprecated Use the object parameter style method for a better developer experience.
      */
     updateDocument<Document extends Models.Document = Models.DefaultDocument>(databaseId: string, collectionId: string, documentId: string, data?: Document extends Models.DefaultDocument ? Partial<Models.Document> & Record<string, any> : Partial<Models.Document> & Partial<Omit<Document, keyof Models.Document>>, permissions?: string[]): Promise<Document>;
     updateDocument<Document extends Models.Document = Models.DefaultDocument>(
@@ -446,7 +411,7 @@ export class Databases extends Service {
      * @param {string} params.documentId - Document ID.
      * @throws {AppwriteException}
      * @returns {Promise}
-     * @deprecated This API has been deprecated since 1.8.0. Please use `TablesDb.deleteRow` instead.
+     * @deprecated This API has been deprecated since 1.8.0. Please use `TablesDB.deleteRow` instead.
      */
     deleteDocument(params: { databaseId: string, collectionId: string, documentId: string  }): Promise<{}>;
     /**
@@ -456,15 +421,8 @@ export class Databases extends Service {
      * @param {string} collectionId - Collection ID. You can create a new collection using the Database service [server integration](https://appwrite.io/docs/server/databases#databasesCreateCollection).
      * @param {string} documentId - Document ID.
      * @throws {AppwriteException}
-     * @returns {Promise}     * @deprecated Flat parameter style methods will be removed in a future version.
-     * Please use the object parameter style method instead for a better developer experience.
-     *
-     * @example
-     * // Old (deprecated)
-     * deleteDocument(databaseId: string, collectionId: string, documentId: string): Promise<{}>;
-     *
-     * // New (object based)
-     * deleteDocument(params: { databaseId: string, collectionId: string, documentId: string  }): Promise<{}>;
+     * @returns {Promise<{}>}
+     * @deprecated Use the object parameter style method for a better developer experience.
      */
     deleteDocument(databaseId: string, collectionId: string, documentId: string): Promise<{}>;
     deleteDocument(
@@ -519,7 +477,7 @@ export class Databases extends Service {
      * @param {number} params.min - Minimum value for the attribute. If the current value is lesser than this value, an exception will be thrown.
      * @throws {AppwriteException}
      * @returns {Promise}
-     * @deprecated This API has been deprecated since 1.8.0. Please use `TablesDb.decrementRowColumn` instead.
+     * @deprecated This API has been deprecated since 1.8.0. Please use `TablesDB.decrementRowColumn` instead.
      */
     decrementDocumentAttribute<Document extends Models.Document = Models.DefaultDocument>(params: { databaseId: string, collectionId: string, documentId: string, attribute: string, value?: number, min?: number  }): Promise<Document>;
     /**
@@ -532,15 +490,8 @@ export class Databases extends Service {
      * @param {number} value - Value to increment the attribute by. The value must be a number.
      * @param {number} min - Minimum value for the attribute. If the current value is lesser than this value, an exception will be thrown.
      * @throws {AppwriteException}
-     * @returns {Promise}     * @deprecated Flat parameter style methods will be removed in a future version.
-     * Please use the object parameter style method instead for a better developer experience.
-     *
-     * @example
-     * // Old (deprecated)
-     * decrementDocumentAttribute<Document extends Models.Document = Models.DefaultDocument>(databaseId: string, collectionId: string, documentId: string, attribute: string, value?: number, min?: number): Promise<Document>;
-     *
-     * // New (object based)
-     * decrementDocumentAttribute<Document extends Models.Document = Models.DefaultDocument>(params: { databaseId: string, collectionId: string, documentId: string, attribute: string, value?: number, min?: number  }): Promise<Document>;
+     * @returns {Promise<Document>}
+     * @deprecated Use the object parameter style method for a better developer experience.
      */
     decrementDocumentAttribute<Document extends Models.Document = Models.DefaultDocument>(databaseId: string, collectionId: string, documentId: string, attribute: string, value?: number, min?: number): Promise<Document>;
     decrementDocumentAttribute<Document extends Models.Document = Models.DefaultDocument>(
@@ -613,7 +564,7 @@ export class Databases extends Service {
      * @param {number} params.max - Maximum value for the attribute. If the current value is greater than this value, an error will be thrown.
      * @throws {AppwriteException}
      * @returns {Promise}
-     * @deprecated This API has been deprecated since 1.8.0. Please use `TablesDb.incrementRowColumn` instead.
+     * @deprecated This API has been deprecated since 1.8.0. Please use `TablesDB.incrementRowColumn` instead.
      */
     incrementDocumentAttribute<Document extends Models.Document = Models.DefaultDocument>(params: { databaseId: string, collectionId: string, documentId: string, attribute: string, value?: number, max?: number  }): Promise<Document>;
     /**
@@ -626,15 +577,8 @@ export class Databases extends Service {
      * @param {number} value - Value to increment the attribute by. The value must be a number.
      * @param {number} max - Maximum value for the attribute. If the current value is greater than this value, an error will be thrown.
      * @throws {AppwriteException}
-     * @returns {Promise}     * @deprecated Flat parameter style methods will be removed in a future version.
-     * Please use the object parameter style method instead for a better developer experience.
-     *
-     * @example
-     * // Old (deprecated)
-     * incrementDocumentAttribute<Document extends Models.Document = Models.DefaultDocument>(databaseId: string, collectionId: string, documentId: string, attribute: string, value?: number, max?: number): Promise<Document>;
-     *
-     * // New (object based)
-     * incrementDocumentAttribute<Document extends Models.Document = Models.DefaultDocument>(params: { databaseId: string, collectionId: string, documentId: string, attribute: string, value?: number, max?: number  }): Promise<Document>;
+     * @returns {Promise<Document>}
+     * @deprecated Use the object parameter style method for a better developer experience.
      */
     incrementDocumentAttribute<Document extends Models.Document = Models.DefaultDocument>(databaseId: string, collectionId: string, documentId: string, attribute: string, value?: number, max?: number): Promise<Document>;
     incrementDocumentAttribute<Document extends Models.Document = Models.DefaultDocument>(

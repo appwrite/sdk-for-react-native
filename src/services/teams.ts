@@ -28,15 +28,8 @@ export class Teams extends Service {
      * @param {string[]} queries - Array of query strings generated using the Query class provided by the SDK. [Learn more about queries](https://appwrite.io/docs/queries). Maximum of 100 queries are allowed, each 4096 characters long. You may filter on the following attributes: name, total, billingPlan
      * @param {string} search - Search term to filter your list results. Max length: 256 chars.
      * @throws {AppwriteException}
-     * @returns {Promise}     * @deprecated Flat parameter style methods will be removed in a future version.
-     * Please use the object parameter style method instead for a better developer experience.
-     *
-     * @example
-     * // Old (deprecated)
-     * list<Preferences extends Models.Preferences = Models.DefaultPreferences>(queries?: string[], search?: string): Promise<Models.TeamList<Preferences>>;
-     *
-     * // New (object based)
-     * list<Preferences extends Models.Preferences = Models.DefaultPreferences>(params: { queries?: string[], search?: string  }): Promise<Models.TeamList<Preferences>>;
+     * @returns {Promise<Models.TeamList<Preferences>>}
+     * @deprecated Use the object parameter style method for a better developer experience.
      */
     list<Preferences extends Models.Preferences = Models.DefaultPreferences>(queries?: string[], search?: string): Promise<Models.TeamList<Preferences>>;
     list<Preferences extends Models.Preferences = Models.DefaultPreferences>(
@@ -90,15 +83,8 @@ export class Teams extends Service {
      * @param {string} name - Team name. Max length: 128 chars.
      * @param {string[]} roles - Array of strings. Use this param to set the roles in the team for the user who created it. The default role is **owner**. A role can be any string. Learn more about [roles and permissions](https://appwrite.io/docs/permissions). Maximum of 100 roles are allowed, each 32 characters long.
      * @throws {AppwriteException}
-     * @returns {Promise}     * @deprecated Flat parameter style methods will be removed in a future version.
-     * Please use the object parameter style method instead for a better developer experience.
-     *
-     * @example
-     * // Old (deprecated)
-     * create<Preferences extends Models.Preferences = Models.DefaultPreferences>(teamId: string, name: string, roles?: string[]): Promise<Models.Team<Preferences>>;
-     *
-     * // New (object based)
-     * create<Preferences extends Models.Preferences = Models.DefaultPreferences>(params: { teamId: string, name: string, roles?: string[]  }): Promise<Models.Team<Preferences>>;
+     * @returns {Promise<Models.Team<Preferences>>}
+     * @deprecated Use the object parameter style method for a better developer experience.
      */
     create<Preferences extends Models.Preferences = Models.DefaultPreferences>(teamId: string, name: string, roles?: string[]): Promise<Models.Team<Preferences>>;
     create<Preferences extends Models.Preferences = Models.DefaultPreferences>(
@@ -163,15 +149,8 @@ export class Teams extends Service {
      *
      * @param {string} teamId - Team ID.
      * @throws {AppwriteException}
-     * @returns {Promise}     * @deprecated Flat parameter style methods will be removed in a future version.
-     * Please use the object parameter style method instead for a better developer experience.
-     *
-     * @example
-     * // Old (deprecated)
-     * get<Preferences extends Models.Preferences = Models.DefaultPreferences>(teamId: string): Promise<Models.Team<Preferences>>;
-     *
-     * // New (object based)
-     * get<Preferences extends Models.Preferences = Models.DefaultPreferences>(params: { teamId: string  }): Promise<Models.Team<Preferences>>;
+     * @returns {Promise<Models.Team<Preferences>>}
+     * @deprecated Use the object parameter style method for a better developer experience.
      */
     get<Preferences extends Models.Preferences = Models.DefaultPreferences>(teamId: string): Promise<Models.Team<Preferences>>;
     get<Preferences extends Models.Preferences = Models.DefaultPreferences>(
@@ -216,15 +195,8 @@ export class Teams extends Service {
      * @param {string} teamId - Team ID.
      * @param {string} name - New team name. Max length: 128 chars.
      * @throws {AppwriteException}
-     * @returns {Promise}     * @deprecated Flat parameter style methods will be removed in a future version.
-     * Please use the object parameter style method instead for a better developer experience.
-     *
-     * @example
-     * // Old (deprecated)
-     * updateName<Preferences extends Models.Preferences = Models.DefaultPreferences>(teamId: string, name: string): Promise<Models.Team<Preferences>>;
-     *
-     * // New (object based)
-     * updateName<Preferences extends Models.Preferences = Models.DefaultPreferences>(params: { teamId: string, name: string  }): Promise<Models.Team<Preferences>>;
+     * @returns {Promise<Models.Team<Preferences>>}
+     * @deprecated Use the object parameter style method for a better developer experience.
      */
     updateName<Preferences extends Models.Preferences = Models.DefaultPreferences>(teamId: string, name: string): Promise<Models.Team<Preferences>>;
     updateName<Preferences extends Models.Preferences = Models.DefaultPreferences>(
@@ -279,15 +251,8 @@ export class Teams extends Service {
      *
      * @param {string} teamId - Team ID.
      * @throws {AppwriteException}
-     * @returns {Promise}     * @deprecated Flat parameter style methods will be removed in a future version.
-     * Please use the object parameter style method instead for a better developer experience.
-     *
-     * @example
-     * // Old (deprecated)
-     * delete(teamId: string): Promise<{}>;
-     *
-     * // New (object based)
-     * delete(params: { teamId: string  }): Promise<{}>;
+     * @returns {Promise<{}>}
+     * @deprecated Use the object parameter style method for a better developer experience.
      */
     delete(teamId: string): Promise<{}>;
     delete(
@@ -335,15 +300,8 @@ export class Teams extends Service {
      * @param {string[]} queries - Array of query strings generated using the Query class provided by the SDK. [Learn more about queries](https://appwrite.io/docs/queries). Maximum of 100 queries are allowed, each 4096 characters long. You may filter on the following attributes: userId, teamId, invited, joined, confirm, roles
      * @param {string} search - Search term to filter your list results. Max length: 256 chars.
      * @throws {AppwriteException}
-     * @returns {Promise}     * @deprecated Flat parameter style methods will be removed in a future version.
-     * Please use the object parameter style method instead for a better developer experience.
-     *
-     * @example
-     * // Old (deprecated)
-     * listMemberships(teamId: string, queries?: string[], search?: string): Promise<Models.MembershipList>;
-     *
-     * // New (object based)
-     * listMemberships(params: { teamId: string, queries?: string[], search?: string  }): Promise<Models.MembershipList>;
+     * @returns {Promise<Models.MembershipList>}
+     * @deprecated Use the object parameter style method for a better developer experience.
      */
     listMemberships(teamId: string, queries?: string[], search?: string): Promise<Models.MembershipList>;
     listMemberships(
@@ -425,15 +383,8 @@ export class Teams extends Service {
      * @param {string} url - URL to redirect the user back to your app from the invitation email. This parameter is not required when an API key is supplied. Only URLs from hostnames in your project platform list are allowed. This requirement helps to prevent an [open redirect](https://cheatsheetseries.owasp.org/cheatsheets/Unvalidated_Redirects_and_Forwards_Cheat_Sheet.html) attack against your project API.
      * @param {string} name - Name of the new team member. Max length: 128 chars.
      * @throws {AppwriteException}
-     * @returns {Promise}     * @deprecated Flat parameter style methods will be removed in a future version.
-     * Please use the object parameter style method instead for a better developer experience.
-     *
-     * @example
-     * // Old (deprecated)
-     * createMembership(teamId: string, roles: string[], email?: string, userId?: string, phone?: string, url?: string, name?: string): Promise<Models.Membership>;
-     *
-     * // New (object based)
-     * createMembership(params: { teamId: string, roles: string[], email?: string, userId?: string, phone?: string, url?: string, name?: string  }): Promise<Models.Membership>;
+     * @returns {Promise<Models.Membership>}
+     * @deprecated Use the object parameter style method for a better developer experience.
      */
     createMembership(teamId: string, roles: string[], email?: string, userId?: string, phone?: string, url?: string, name?: string): Promise<Models.Membership>;
     createMembership(
@@ -520,15 +471,8 @@ export class Teams extends Service {
      * @param {string} teamId - Team ID.
      * @param {string} membershipId - Membership ID.
      * @throws {AppwriteException}
-     * @returns {Promise}     * @deprecated Flat parameter style methods will be removed in a future version.
-     * Please use the object parameter style method instead for a better developer experience.
-     *
-     * @example
-     * // Old (deprecated)
-     * getMembership(teamId: string, membershipId: string): Promise<Models.Membership>;
-     *
-     * // New (object based)
-     * getMembership(params: { teamId: string, membershipId: string  }): Promise<Models.Membership>;
+     * @returns {Promise<Models.Membership>}
+     * @deprecated Use the object parameter style method for a better developer experience.
      */
     getMembership(teamId: string, membershipId: string): Promise<Models.Membership>;
     getMembership(
@@ -584,15 +528,8 @@ export class Teams extends Service {
      * @param {string} membershipId - Membership ID.
      * @param {string[]} roles - An array of strings. Use this param to set the user's roles in the team. A role can be any string. Learn more about [roles and permissions](https://appwrite.io/docs/permissions). Maximum of 100 roles are allowed, each 32 characters long.
      * @throws {AppwriteException}
-     * @returns {Promise}     * @deprecated Flat parameter style methods will be removed in a future version.
-     * Please use the object parameter style method instead for a better developer experience.
-     *
-     * @example
-     * // Old (deprecated)
-     * updateMembership(teamId: string, membershipId: string, roles: string[]): Promise<Models.Membership>;
-     *
-     * // New (object based)
-     * updateMembership(params: { teamId: string, membershipId: string, roles: string[]  }): Promise<Models.Membership>;
+     * @returns {Promise<Models.Membership>}
+     * @deprecated Use the object parameter style method for a better developer experience.
      */
     updateMembership(teamId: string, membershipId: string, roles: string[]): Promise<Models.Membership>;
     updateMembership(
@@ -655,15 +592,8 @@ export class Teams extends Service {
      * @param {string} teamId - Team ID.
      * @param {string} membershipId - Membership ID.
      * @throws {AppwriteException}
-     * @returns {Promise}     * @deprecated Flat parameter style methods will be removed in a future version.
-     * Please use the object parameter style method instead for a better developer experience.
-     *
-     * @example
-     * // Old (deprecated)
-     * deleteMembership(teamId: string, membershipId: string): Promise<{}>;
-     *
-     * // New (object based)
-     * deleteMembership(params: { teamId: string, membershipId: string  }): Promise<{}>;
+     * @returns {Promise<{}>}
+     * @deprecated Use the object parameter style method for a better developer experience.
      */
     deleteMembership(teamId: string, membershipId: string): Promise<{}>;
     deleteMembership(
@@ -726,15 +656,8 @@ export class Teams extends Service {
      * @param {string} userId - User ID.
      * @param {string} secret - Secret key.
      * @throws {AppwriteException}
-     * @returns {Promise}     * @deprecated Flat parameter style methods will be removed in a future version.
-     * Please use the object parameter style method instead for a better developer experience.
-     *
-     * @example
-     * // Old (deprecated)
-     * updateMembershipStatus(teamId: string, membershipId: string, userId: string, secret: string): Promise<Models.Membership>;
-     *
-     * // New (object based)
-     * updateMembershipStatus(params: { teamId: string, membershipId: string, userId: string, secret: string  }): Promise<Models.Membership>;
+     * @returns {Promise<Models.Membership>}
+     * @deprecated Use the object parameter style method for a better developer experience.
      */
     updateMembershipStatus(teamId: string, membershipId: string, userId: string, secret: string): Promise<Models.Membership>;
     updateMembershipStatus(
@@ -805,15 +728,8 @@ export class Teams extends Service {
      *
      * @param {string} teamId - Team ID.
      * @throws {AppwriteException}
-     * @returns {Promise}     * @deprecated Flat parameter style methods will be removed in a future version.
-     * Please use the object parameter style method instead for a better developer experience.
-     *
-     * @example
-     * // Old (deprecated)
-     * getPrefs<Preferences extends Models.Preferences = Models.DefaultPreferences>(teamId: string): Promise<Preferences>;
-     *
-     * // New (object based)
-     * getPrefs<Preferences extends Models.Preferences = Models.DefaultPreferences>(params: { teamId: string  }): Promise<Preferences>;
+     * @returns {Promise<Preferences>}
+     * @deprecated Use the object parameter style method for a better developer experience.
      */
     getPrefs<Preferences extends Models.Preferences = Models.DefaultPreferences>(teamId: string): Promise<Preferences>;
     getPrefs<Preferences extends Models.Preferences = Models.DefaultPreferences>(
@@ -858,15 +774,8 @@ export class Teams extends Service {
      * @param {string} teamId - Team ID.
      * @param {object} prefs - Prefs key-value JSON object.
      * @throws {AppwriteException}
-     * @returns {Promise}     * @deprecated Flat parameter style methods will be removed in a future version.
-     * Please use the object parameter style method instead for a better developer experience.
-     *
-     * @example
-     * // Old (deprecated)
-     * updatePrefs<Preferences extends Models.Preferences = Models.DefaultPreferences>(teamId: string, prefs: object): Promise<Preferences>;
-     *
-     * // New (object based)
-     * updatePrefs<Preferences extends Models.Preferences = Models.DefaultPreferences>(params: { teamId: string, prefs: object  }): Promise<Preferences>;
+     * @returns {Promise<Preferences>}
+     * @deprecated Use the object parameter style method for a better developer experience.
      */
     updatePrefs<Preferences extends Models.Preferences = Models.DefaultPreferences>(teamId: string, prefs: object): Promise<Preferences>;
     updatePrefs<Preferences extends Models.Preferences = Models.DefaultPreferences>(

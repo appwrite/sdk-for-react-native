@@ -26,15 +26,8 @@ export class Graphql extends Service {
      *
      * @param {object} query - The query or queries to execute.
      * @throws {AppwriteException}
-     * @returns {Promise}     * @deprecated Flat parameter style methods will be removed in a future version.
-     * Please use the object parameter style method instead for a better developer experience.
-     *
-     * @example
-     * // Old (deprecated)
-     * query(query: object): Promise<{}>;
-     *
-     * // New (object based)
-     * query(params: { query: object  }): Promise<{}>;
+     * @returns {Promise<{}>}
+     * @deprecated Use the object parameter style method for a better developer experience.
      */
     query(query: object): Promise<{}>;
     query(
@@ -83,15 +76,8 @@ export class Graphql extends Service {
      *
      * @param {object} query - The query or queries to execute.
      * @throws {AppwriteException}
-     * @returns {Promise}     * @deprecated Flat parameter style methods will be removed in a future version.
-     * Please use the object parameter style method instead for a better developer experience.
-     *
-     * @example
-     * // Old (deprecated)
-     * mutation(query: object): Promise<{}>;
-     *
-     * // New (object based)
-     * mutation(params: { query: object  }): Promise<{}>;
+     * @returns {Promise<{}>}
+     * @deprecated Use the object parameter style method for a better developer experience.
      */
     mutation(query: object): Promise<{}>;
     mutation(
