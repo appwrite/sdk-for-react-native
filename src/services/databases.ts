@@ -23,7 +23,7 @@ export class Databases extends Service {
      * @returns {Promise}
      * @deprecated This API has been deprecated since 1.8.0. Please use `TablesDB.listRows` instead.
      */
-    listDocuments<Document extends Models.Document = Models.DefaultDocument>(params: { databaseId: string, collectionId: string, queries?: string[]  }): Promise<Models.DocumentList<Document>>;
+    listDocuments<Document extends Models.Document = Models.DefaultDocument>(params?: { databaseId: string, collectionId: string, queries?: string[]  }): Promise<Models.DocumentList<Document>>;
     /**
      * Get a list of all the user's documents in a given collection. You can use the query params to filter your results.
      *
@@ -87,7 +87,7 @@ export class Databases extends Service {
      * @returns {Promise}
      * @deprecated This API has been deprecated since 1.8.0. Please use `TablesDB.createRow` instead.
      */
-    createDocument<Document extends Models.Document = Models.DefaultDocument>(params: { databaseId: string, collectionId: string, documentId: string, data: Document extends Models.DefaultDocument ? Partial<Models.Document> & Record<string, any> : Partial<Models.Document> & Omit<Document, keyof Models.Document>, permissions?: string[]  }): Promise<Document>;
+    createDocument<Document extends Models.Document = Models.DefaultDocument>(params?: { databaseId: string, collectionId: string, documentId: string, data: Document extends Models.DefaultDocument ? Partial<Models.Document> & Record<string, any> : Partial<Models.Document> & Omit<Document, keyof Models.Document>, permissions?: string[]  }): Promise<Document>;
     /**
      * Create a new Document. Before using this route, you should create a new collection resource using either a [server integration](https://appwrite.io/docs/server/databases#databasesCreateCollection) API or directly from your database console.
      *
@@ -176,7 +176,7 @@ export class Databases extends Service {
      * @returns {Promise}
      * @deprecated This API has been deprecated since 1.8.0. Please use `TablesDB.getRow` instead.
      */
-    getDocument<Document extends Models.Document = Models.DefaultDocument>(params: { databaseId: string, collectionId: string, documentId: string, queries?: string[]  }): Promise<Document>;
+    getDocument<Document extends Models.Document = Models.DefaultDocument>(params?: { databaseId: string, collectionId: string, documentId: string, queries?: string[]  }): Promise<Document>;
     /**
      * Get a document by its unique ID. This endpoint response returns a JSON object with the document data.
      *
@@ -247,7 +247,7 @@ export class Databases extends Service {
      * @returns {Promise}
      * @deprecated This API has been deprecated since 1.8.0. Please use `TablesDB.upsertRow` instead.
      */
-    upsertDocument<Document extends Models.Document = Models.DefaultDocument>(params: { databaseId: string, collectionId: string, documentId: string, data: Document extends Models.DefaultDocument ? Partial<Models.Document> & Record<string, any> : Partial<Models.Document> & Partial<Omit<Document, keyof Models.Document>>, permissions?: string[]  }): Promise<Document>;
+    upsertDocument<Document extends Models.Document = Models.DefaultDocument>(params?: { databaseId: string, collectionId: string, documentId: string, data: Document extends Models.DefaultDocument ? Partial<Models.Document> & Record<string, any> : Partial<Models.Document> & Partial<Omit<Document, keyof Models.Document>>, permissions?: string[]  }): Promise<Document>;
     /**
      * Create or update a Document. Before using this route, you should create a new collection resource using either a [server integration](https://appwrite.io/docs/server/databases#databasesCreateCollection) API or directly from your database console.
      *
@@ -333,7 +333,7 @@ export class Databases extends Service {
      * @returns {Promise}
      * @deprecated This API has been deprecated since 1.8.0. Please use `TablesDB.updateRow` instead.
      */
-    updateDocument<Document extends Models.Document = Models.DefaultDocument>(params: { databaseId: string, collectionId: string, documentId: string, data?: Document extends Models.DefaultDocument ? Partial<Models.Document> & Record<string, any> : Partial<Models.Document> & Partial<Omit<Document, keyof Models.Document>>, permissions?: string[]  }): Promise<Document>;
+    updateDocument<Document extends Models.Document = Models.DefaultDocument>(params?: { databaseId: string, collectionId: string, documentId: string, data?: Document extends Models.DefaultDocument ? Partial<Models.Document> & Record<string, any> : Partial<Models.Document> & Partial<Omit<Document, keyof Models.Document>>, permissions?: string[]  }): Promise<Document>;
     /**
      * Update a document by its unique ID. Using the patch method you can pass only specific fields that will get updated.
      *
@@ -413,7 +413,7 @@ export class Databases extends Service {
      * @returns {Promise}
      * @deprecated This API has been deprecated since 1.8.0. Please use `TablesDB.deleteRow` instead.
      */
-    deleteDocument(params: { databaseId: string, collectionId: string, documentId: string  }): Promise<{}>;
+    deleteDocument(params?: { databaseId: string, collectionId: string, documentId: string  }): Promise<{}>;
     /**
      * Delete a document by its unique ID.
      *
@@ -479,7 +479,7 @@ export class Databases extends Service {
      * @returns {Promise}
      * @deprecated This API has been deprecated since 1.8.0. Please use `TablesDB.decrementRowColumn` instead.
      */
-    decrementDocumentAttribute<Document extends Models.Document = Models.DefaultDocument>(params: { databaseId: string, collectionId: string, documentId: string, attribute: string, value?: number, min?: number  }): Promise<Document>;
+    decrementDocumentAttribute<Document extends Models.Document = Models.DefaultDocument>(params?: { databaseId: string, collectionId: string, documentId: string, attribute: string, value?: number, min?: number  }): Promise<Document>;
     /**
      * Decrement a specific attribute of a document by a given value.
      *
@@ -566,7 +566,7 @@ export class Databases extends Service {
      * @returns {Promise}
      * @deprecated This API has been deprecated since 1.8.0. Please use `TablesDB.incrementRowColumn` instead.
      */
-    incrementDocumentAttribute<Document extends Models.Document = Models.DefaultDocument>(params: { databaseId: string, collectionId: string, documentId: string, attribute: string, value?: number, max?: number  }): Promise<Document>;
+    incrementDocumentAttribute<Document extends Models.Document = Models.DefaultDocument>(params?: { databaseId: string, collectionId: string, documentId: string, attribute: string, value?: number, max?: number  }): Promise<Document>;
     /**
      * Increment a specific attribute of a document by a given value.
      *

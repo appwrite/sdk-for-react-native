@@ -24,7 +24,7 @@ export class Storage extends Service {
      * @throws {AppwriteException}
      * @returns {Promise}
      */
-    listFiles(params: { bucketId: string, queries?: string[], search?: string  }): Promise<Models.FileList>;
+    listFiles(params?: { bucketId: string, queries?: string[], search?: string  }): Promise<Models.FileList>;
     /**
      * Get a list of all the user files. You can use the query params to filter your results.
      *
@@ -93,7 +93,7 @@ export class Storage extends Service {
      * @throws {AppwriteException}
      * @returns {Promise}
      */
-    async createFile(params: { bucketId: string, fileId: string, file: {name: string, type: string, size: number, uri: string}, permissions?: string[] , onProgress?: (progress: UploadProgress) => {} }): Promise<Models.File>;
+    async createFile(params?: { bucketId: string, fileId: string, file: {name: string, type: string, size: number, uri: string}, permissions?: string[] , onProgress?: (progress: UploadProgress) => void }): Promise<Models.File>;
     /**
      * Create a new file. Before using this route, you should create a new bucket resource using either a [server integration](https://appwrite.io/docs/server/storage#storageCreateBucket) API or directly from your Appwrite console.
      * 
@@ -112,17 +112,17 @@ export class Storage extends Service {
      * @returns {Promise<Models.File>}
      * @deprecated Use the object parameter style method for a better developer experience.
      */
-    async createFile(bucketId: string, fileId: string, file: {name: string, type: string, size: number, uri: string}, permissions?: string[], onProgress?: (progress: UploadProgress) => {}): Promise<Models.File>;
+    async createFile(bucketId: string, fileId: string, file: {name: string, type: string, size: number, uri: string}, permissions?: string[], onProgress?: (progress: UploadProgress) => void): Promise<Models.File>;
     async createFile(
-        paramsOrFirst: { bucketId: string, fileId: string, file: {name: string, type: string, size: number, uri: string}, permissions?: string[], onProgress?: (progress: UploadProgress) => {}  } | string,
-        ...rest: [(string)?, ({name: string, type: string, size: number, uri: string})?, (string[])?,((progress: UploadProgress) => {})?]    
+        paramsOrFirst: { bucketId: string, fileId: string, file: {name: string, type: string, size: number, uri: string}, permissions?: string[], onProgress?: (progress: UploadProgress) => void  } | string,
+        ...rest: [(string)?, ({name: string, type: string, size: number, uri: string})?, (string[])?,((progress: UploadProgress) => void)?]    
     ): Promise<Models.File> {
         let params: { bucketId: string, fileId: string, file: {name: string, type: string, size: number, uri: string}, permissions?: string[] };
-        let onProgress: ((progress: UploadProgress) => {});
+        let onProgress: ((progress: UploadProgress) => void);
 
         if ((paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst))) {
             params = (paramsOrFirst || {}) as { bucketId: string, fileId: string, file: {name: string, type: string, size: number, uri: string}, permissions?: string[] };
-            onProgress = paramsOrFirst?.onProgress as ((progress: UploadProgress) => {});
+            onProgress = paramsOrFirst?.onProgress as ((progress: UploadProgress) => void);
         } else {
             params = {
                 bucketId: paramsOrFirst as string,
@@ -130,7 +130,7 @@ export class Storage extends Service {
                 file: rest[1] as {name: string, type: string, size: number, uri: string},
                 permissions: rest[2] as string[]            
             };
-            onProgress = rest[3] as ((progress: UploadProgress) => {});
+            onProgress = rest[3] as ((progress: UploadProgress) => void);
         }
 
         const bucketId = params.bucketId;
@@ -233,7 +233,7 @@ export class Storage extends Service {
      * @throws {AppwriteException}
      * @returns {Promise}
      */
-    getFile(params: { bucketId: string, fileId: string  }): Promise<Models.File>;
+    getFile(params?: { bucketId: string, fileId: string  }): Promise<Models.File>;
     /**
      * Get a file by its unique ID. This endpoint response returns a JSON object with the file metadata.
      *
@@ -288,7 +288,7 @@ export class Storage extends Service {
      * @throws {AppwriteException}
      * @returns {Promise}
      */
-    updateFile(params: { bucketId: string, fileId: string, name?: string, permissions?: string[]  }): Promise<Models.File>;
+    updateFile(params?: { bucketId: string, fileId: string, name?: string, permissions?: string[]  }): Promise<Models.File>;
     /**
      * Update a file by its unique ID. Only users with write permissions have access to update this resource.
      *
@@ -356,7 +356,7 @@ export class Storage extends Service {
      * @throws {AppwriteException}
      * @returns {Promise}
      */
-    deleteFile(params: { bucketId: string, fileId: string  }): Promise<{}>;
+    deleteFile(params?: { bucketId: string, fileId: string  }): Promise<{}>;
     /**
      * Delete a file by its unique ID. Only users with write permissions have access to delete this resource.
      *
@@ -411,7 +411,7 @@ export class Storage extends Service {
      * @throws {AppwriteException}
      * @returns {ArrayBuffer}
      */
-    getFileDownload(params: { bucketId: string, fileId: string, token?: string  }): Promise<ArrayBuffer>;
+    getFileDownload(params?: { bucketId: string, fileId: string, token?: string  }): Promise<ArrayBuffer>;
     /**
      * Get a file content by its unique ID. The endpoint response return with a 'Content-Disposition: attachment' header that tells the browser to start downloading the file to user downloads directory.
      *
@@ -489,7 +489,7 @@ export class Storage extends Service {
      * @throws {AppwriteException}
      * @returns {ArrayBuffer}
      */
-    getFilePreview(params: { bucketId: string, fileId: string, width?: number, height?: number, gravity?: ImageGravity, quality?: number, borderWidth?: number, borderColor?: string, borderRadius?: number, opacity?: number, rotation?: number, background?: string, output?: ImageFormat, token?: string  }): Promise<ArrayBuffer>;
+    getFilePreview(params?: { bucketId: string, fileId: string, width?: number, height?: number, gravity?: ImageGravity, quality?: number, borderWidth?: number, borderColor?: string, borderRadius?: number, opacity?: number, rotation?: number, background?: string, output?: ImageFormat, token?: string  }): Promise<ArrayBuffer>;
     /**
      * Get a file preview image. Currently, this method supports preview for image files (jpg, png, and gif), other supported formats, like pdf, docs, slides, and spreadsheets, will return the file icon image. You can also pass query string arguments for cutting and resizing your preview image. Preview is supported only for image files smaller than 10MB.
      *
@@ -633,7 +633,7 @@ export class Storage extends Service {
      * @throws {AppwriteException}
      * @returns {ArrayBuffer}
      */
-    getFileView(params: { bucketId: string, fileId: string, token?: string  }): Promise<ArrayBuffer>;
+    getFileView(params?: { bucketId: string, fileId: string, token?: string  }): Promise<ArrayBuffer>;
     /**
      * Get a file content by its unique ID. This endpoint is similar to the download method but returns with no  'Content-Disposition: attachment' header.
      *

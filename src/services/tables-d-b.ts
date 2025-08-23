@@ -22,7 +22,7 @@ export class TablesDB extends Service {
      * @throws {AppwriteException}
      * @returns {Promise}
      */
-    listRows<Row extends Models.Row = Models.DefaultRow>(params: { databaseId: string, tableId: string, queries?: string[]  }): Promise<Models.RowList<Row>>;
+    listRows<Row extends Models.Row = Models.DefaultRow>(params?: { databaseId: string, tableId: string, queries?: string[]  }): Promise<Models.RowList<Row>>;
     /**
      * Get a list of all the user's rows in a given table. You can use the query params to filter your results.
      *
@@ -85,7 +85,7 @@ export class TablesDB extends Service {
      * @throws {AppwriteException}
      * @returns {Promise}
      */
-    createRow<Row extends Models.Row = Models.DefaultRow>(params: { databaseId: string, tableId: string, rowId: string, data: Row extends Models.DefaultRow ? Partial<Models.Row> & Record<string, any> : Partial<Models.Row> & Omit<Row, keyof Models.Row>, permissions?: string[]  }): Promise<Row>;
+    createRow<Row extends Models.Row = Models.DefaultRow>(params?: { databaseId: string, tableId: string, rowId: string, data: Row extends Models.DefaultRow ? Partial<Models.Row> & Record<string, any> : Partial<Models.Row> & Omit<Row, keyof Models.Row>, permissions?: string[]  }): Promise<Row>;
     /**
      * Create a new Row. Before using this route, you should create a new table resource using either a [server integration](https://appwrite.io/docs/server/tablesdb#tablesDBCreateTable) API or directly from your database console.
      *
@@ -170,7 +170,7 @@ export class TablesDB extends Service {
      * @throws {AppwriteException}
      * @returns {Promise}
      */
-    getRow<Row extends Models.Row = Models.DefaultRow>(params: { databaseId: string, tableId: string, rowId: string, queries?: string[]  }): Promise<Row>;
+    getRow<Row extends Models.Row = Models.DefaultRow>(params?: { databaseId: string, tableId: string, rowId: string, queries?: string[]  }): Promise<Row>;
     /**
      * Get a row by its unique ID. This endpoint response returns a JSON object with the row data.
      *
@@ -240,7 +240,7 @@ export class TablesDB extends Service {
      * @throws {AppwriteException}
      * @returns {Promise}
      */
-    upsertRow<Row extends Models.Row = Models.DefaultRow>(params: { databaseId: string, tableId: string, rowId: string, data?: Row extends Models.DefaultRow ? Partial<Models.Row> & Record<string, any> : Partial<Models.Row> & Partial<Omit<Row, keyof Models.Row>>, permissions?: string[]  }): Promise<Row>;
+    upsertRow<Row extends Models.Row = Models.DefaultRow>(params?: { databaseId: string, tableId: string, rowId: string, data?: Row extends Models.DefaultRow ? Partial<Models.Row> & Record<string, any> : Partial<Models.Row> & Partial<Omit<Row, keyof Models.Row>>, permissions?: string[]  }): Promise<Row>;
     /**
      * Create or update a Row. Before using this route, you should create a new table resource using either a [server integration](https://appwrite.io/docs/server/tablesdb#tablesDBCreateTable) API or directly from your database console.
      *
@@ -318,7 +318,7 @@ export class TablesDB extends Service {
      * @throws {AppwriteException}
      * @returns {Promise}
      */
-    updateRow<Row extends Models.Row = Models.DefaultRow>(params: { databaseId: string, tableId: string, rowId: string, data?: Row extends Models.DefaultRow ? Partial<Models.Row> & Record<string, any> : Partial<Models.Row> & Partial<Omit<Row, keyof Models.Row>>, permissions?: string[]  }): Promise<Row>;
+    updateRow<Row extends Models.Row = Models.DefaultRow>(params?: { databaseId: string, tableId: string, rowId: string, data?: Row extends Models.DefaultRow ? Partial<Models.Row> & Record<string, any> : Partial<Models.Row> & Partial<Omit<Row, keyof Models.Row>>, permissions?: string[]  }): Promise<Row>;
     /**
      * Update a row by its unique ID. Using the patch method you can pass only specific fields that will get updated.
      *
@@ -394,7 +394,7 @@ export class TablesDB extends Service {
      * @throws {AppwriteException}
      * @returns {Promise}
      */
-    deleteRow(params: { databaseId: string, tableId: string, rowId: string  }): Promise<{}>;
+    deleteRow(params?: { databaseId: string, tableId: string, rowId: string  }): Promise<{}>;
     /**
      * Delete a row by its unique ID.
      *
@@ -459,7 +459,7 @@ export class TablesDB extends Service {
      * @throws {AppwriteException}
      * @returns {Promise}
      */
-    decrementRowColumn<Row extends Models.Row = Models.DefaultRow>(params: { databaseId: string, tableId: string, rowId: string, column: string, value?: number, min?: number  }): Promise<Row>;
+    decrementRowColumn<Row extends Models.Row = Models.DefaultRow>(params?: { databaseId: string, tableId: string, rowId: string, column: string, value?: number, min?: number  }): Promise<Row>;
     /**
      * Decrement a specific column of a row by a given value.
      *
@@ -545,7 +545,7 @@ export class TablesDB extends Service {
      * @throws {AppwriteException}
      * @returns {Promise}
      */
-    incrementRowColumn<Row extends Models.Row = Models.DefaultRow>(params: { databaseId: string, tableId: string, rowId: string, column: string, value?: number, max?: number  }): Promise<Row>;
+    incrementRowColumn<Row extends Models.Row = Models.DefaultRow>(params?: { databaseId: string, tableId: string, rowId: string, column: string, value?: number, max?: number  }): Promise<Row>;
     /**
      * Increment a specific column of a row by a given value.
      *

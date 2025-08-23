@@ -1002,6 +1002,10 @@ export namespace Models {
          */
         functionId: string;
         /**
+         * Function&#039;s deployment ID used to create the execution.
+         */
+        deploymentId: string;
+        /**
          * The trigger that caused the function to execute. Possible values can be: `http`, `schedule`, or `event`.
          */
         trigger: string;
