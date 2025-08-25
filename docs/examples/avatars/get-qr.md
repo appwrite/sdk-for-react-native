@@ -8,9 +8,9 @@ const avatars = new Avatars(client);
 
 const result = avatars.getQR({
     text: '<TEXT>',
-    size: 1,
-    margin: 0,
-    download: false
+    size: 1, // optional
+    margin: 0, // optional
+    download: false // optional
 });
 
 console.log(result);
