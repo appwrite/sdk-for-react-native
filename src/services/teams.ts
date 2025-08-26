@@ -75,7 +75,7 @@ export class Teams extends Service {
      * @throws {AppwriteException}
      * @returns {Promise}
      */
-    create<Preferences extends Models.Preferences = Models.DefaultPreferences>(params?: { teamId: string, name: string, roles?: string[]  }): Promise<Models.Team<Preferences>>;
+    create<Preferences extends Models.Preferences = Models.DefaultPreferences>(params: { teamId: string, name: string, roles?: string[]  }): Promise<Models.Team<Preferences>>;
     /**
      * Create a new team. The user who creates the team will automatically be assigned as the owner of the team. Only the users with the owner role can invite new members, add new owners and delete or update the team.
      *
@@ -143,7 +143,7 @@ export class Teams extends Service {
      * @throws {AppwriteException}
      * @returns {Promise}
      */
-    get<Preferences extends Models.Preferences = Models.DefaultPreferences>(params?: { teamId: string  }): Promise<Models.Team<Preferences>>;
+    get<Preferences extends Models.Preferences = Models.DefaultPreferences>(params: { teamId: string  }): Promise<Models.Team<Preferences>>;
     /**
      * Get a team by its ID. All team members have read access for this resource.
      *
@@ -188,7 +188,7 @@ export class Teams extends Service {
      * @throws {AppwriteException}
      * @returns {Promise}
      */
-    updateName<Preferences extends Models.Preferences = Models.DefaultPreferences>(params?: { teamId: string, name: string  }): Promise<Models.Team<Preferences>>;
+    updateName<Preferences extends Models.Preferences = Models.DefaultPreferences>(params: { teamId: string, name: string  }): Promise<Models.Team<Preferences>>;
     /**
      * Update the team's name by its unique ID.
      *
@@ -245,7 +245,7 @@ export class Teams extends Service {
      * @throws {AppwriteException}
      * @returns {Promise}
      */
-    delete(params?: { teamId: string  }): Promise<{}>;
+    delete(params: { teamId: string  }): Promise<{}>;
     /**
      * Delete a team using its ID. Only team members with the owner role can delete the team.
      *
@@ -292,7 +292,7 @@ export class Teams extends Service {
      * @throws {AppwriteException}
      * @returns {Promise}
      */
-    listMemberships(params?: { teamId: string, queries?: string[], search?: string  }): Promise<Models.MembershipList>;
+    listMemberships(params: { teamId: string, queries?: string[], search?: string  }): Promise<Models.MembershipList>;
     /**
      * Use this endpoint to list a team's members using the team's ID. All team members have read access to this endpoint. Hide sensitive attributes from the response by toggling membership privacy in the Console.
      *
@@ -364,7 +364,7 @@ export class Teams extends Service {
      * @throws {AppwriteException}
      * @returns {Promise}
      */
-    createMembership(params?: { teamId: string, roles: string[], email?: string, userId?: string, phone?: string, url?: string, name?: string  }): Promise<Models.Membership>;
+    createMembership(params: { teamId: string, roles: string[], email?: string, userId?: string, phone?: string, url?: string, name?: string  }): Promise<Models.Membership>;
     /**
      * Invite a new member to join your team. Provide an ID for existing users, or invite unregistered users using an email or phone number. If initiated from a Client SDK, Appwrite will send an email or sms with a link to join the team to the invited user, and an account will be created for them if one doesn't exist. If initiated from a Server SDK, the new member will be added automatically to the team.
      * 
@@ -464,7 +464,7 @@ export class Teams extends Service {
      * @throws {AppwriteException}
      * @returns {Promise}
      */
-    getMembership(params?: { teamId: string, membershipId: string  }): Promise<Models.Membership>;
+    getMembership(params: { teamId: string, membershipId: string  }): Promise<Models.Membership>;
     /**
      * Get a team member by the membership unique id. All team members have read access for this resource. Hide sensitive attributes from the response by toggling membership privacy in the Console.
      *
@@ -519,7 +519,7 @@ export class Teams extends Service {
      * @throws {AppwriteException}
      * @returns {Promise}
      */
-    updateMembership(params?: { teamId: string, membershipId: string, roles: string[]  }): Promise<Models.Membership>;
+    updateMembership(params: { teamId: string, membershipId: string, roles: string[]  }): Promise<Models.Membership>;
     /**
      * Modify the roles of a team member. Only team members with the owner role have access to this endpoint. Learn more about [roles and permissions](https://appwrite.io/docs/permissions).
      * 
@@ -585,7 +585,7 @@ export class Teams extends Service {
      * @throws {AppwriteException}
      * @returns {Promise}
      */
-    deleteMembership(params?: { teamId: string, membershipId: string  }): Promise<{}>;
+    deleteMembership(params: { teamId: string, membershipId: string  }): Promise<{}>;
     /**
      * This endpoint allows a user to leave a team or for a team owner to delete the membership of any other team member. You can also use this endpoint to delete a user membership even if it is not accepted.
      *
@@ -644,7 +644,7 @@ export class Teams extends Service {
      * @throws {AppwriteException}
      * @returns {Promise}
      */
-    updateMembershipStatus(params?: { teamId: string, membershipId: string, userId: string, secret: string  }): Promise<Models.Membership>;
+    updateMembershipStatus(params: { teamId: string, membershipId: string, userId: string, secret: string  }): Promise<Models.Membership>;
     /**
      * Use this endpoint to allow a user to accept an invitation to join a team after being redirected back to your app from the invitation email received by the user.
      * 
@@ -722,7 +722,7 @@ export class Teams extends Service {
      * @throws {AppwriteException}
      * @returns {Promise}
      */
-    getPrefs<Preferences extends Models.Preferences = Models.DefaultPreferences>(params?: { teamId: string  }): Promise<Preferences>;
+    getPrefs<Preferences extends Models.Preferences = Models.DefaultPreferences>(params: { teamId: string  }): Promise<Preferences>;
     /**
      * Get the team's shared preferences by its unique ID. If a preference doesn't need to be shared by all team members, prefer storing them in [user preferences](https://appwrite.io/docs/references/cloud/client-web/account#getPrefs).
      *
@@ -767,7 +767,7 @@ export class Teams extends Service {
      * @throws {AppwriteException}
      * @returns {Promise}
      */
-    updatePrefs<Preferences extends Models.Preferences = Models.DefaultPreferences>(params?: { teamId: string, prefs: object  }): Promise<Preferences>;
+    updatePrefs<Preferences extends Models.Preferences = Models.DefaultPreferences>(params: { teamId: string, prefs: object  }): Promise<Preferences>;
     /**
      * Update the team's preferences by its unique ID. The object you pass is stored as is and replaces any previous value. The maximum allowed prefs size is 64kB and throws an error if exceeded.
      *

@@ -28,7 +28,7 @@ export class Avatars extends Service {
      * @throws {AppwriteException}
      * @returns {ArrayBuffer}
      */
-    getBrowser(params?: { code: Browser, width?: number, height?: number, quality?: number  }): Promise<ArrayBuffer>;
+    getBrowser(params: { code: Browser, width?: number, height?: number, quality?: number  }): Promise<ArrayBuffer>;
     /**
      * You can use this endpoint to show different browser icons to your users. The code argument receives the browser code as it appears in your user [GET /account/sessions](https://appwrite.io/docs/references/cloud/client-web/account#getSessions) endpoint. Use width, height and quality arguments to change the output settings.
      * 
@@ -108,7 +108,7 @@ export class Avatars extends Service {
      * @throws {AppwriteException}
      * @returns {ArrayBuffer}
      */
-    getCreditCard(params?: { code: CreditCard, width?: number, height?: number, quality?: number  }): Promise<ArrayBuffer>;
+    getCreditCard(params: { code: CreditCard, width?: number, height?: number, quality?: number  }): Promise<ArrayBuffer>;
     /**
      * The credit card endpoint will return you the icon of the credit card provider you need. Use width, height and quality arguments to change the output settings.
      * 
@@ -185,7 +185,7 @@ export class Avatars extends Service {
      * @throws {AppwriteException}
      * @returns {ArrayBuffer}
      */
-    getFavicon(params?: { url: string  }): Promise<ArrayBuffer>;
+    getFavicon(params: { url: string  }): Promise<ArrayBuffer>;
     /**
      * Use this endpoint to fetch the favorite icon (AKA favicon) of any remote website URL.
      * 
@@ -247,7 +247,7 @@ export class Avatars extends Service {
      * @throws {AppwriteException}
      * @returns {ArrayBuffer}
      */
-    getFlag(params?: { code: Flag, width?: number, height?: number, quality?: number  }): Promise<ArrayBuffer>;
+    getFlag(params: { code: Flag, width?: number, height?: number, quality?: number  }): Promise<ArrayBuffer>;
     /**
      * You can use this endpoint to show different country flags icons to your users. The code argument receives the 2 letter country code. Use width, height and quality arguments to change the output settings. Country codes follow the [ISO 3166-1](https://en.wikipedia.org/wiki/ISO_3166-1) standard.
      * 
@@ -328,7 +328,7 @@ export class Avatars extends Service {
      * @throws {AppwriteException}
      * @returns {ArrayBuffer}
      */
-    getImage(params?: { url: string, width?: number, height?: number  }): Promise<ArrayBuffer>;
+    getImage(params: { url: string, width?: number, height?: number  }): Promise<ArrayBuffer>;
     /**
      * Use this endpoint to fetch a remote image URL and crop it to any image size you want. This endpoint is very useful if you need to crop and display remote images in your app or in case you want to make sure a 3rd party image is properly served using a TLS protocol.
      * 
@@ -490,7 +490,7 @@ export class Avatars extends Service {
      * @throws {AppwriteException}
      * @returns {ArrayBuffer}
      */
-    getQR(params?: { text: string, size?: number, margin?: number, download?: boolean  }): Promise<ArrayBuffer>;
+    getQR(params: { text: string, size?: number, margin?: number, download?: boolean  }): Promise<ArrayBuffer>;
     /**
      * Converts a given plain text to a QR code image. You can use the query parameters to change the size and style of the resulting image.
      * 

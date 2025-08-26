@@ -20,7 +20,7 @@ export class Graphql extends Service {
      * @throws {AppwriteException}
      * @returns {Promise}
      */
-    query(params?: { query: object  }): Promise<{}>;
+    query(params: { query: object  }): Promise<{}>;
     /**
      * Execute a GraphQL mutation.
      *
@@ -70,7 +70,7 @@ export class Graphql extends Service {
      * @throws {AppwriteException}
      * @returns {Promise}
      */
-    mutation(params?: { query: object  }): Promise<{}>;
+    mutation(params: { query: object  }): Promise<{}>;
     /**
      * Execute a GraphQL mutation.
      *
