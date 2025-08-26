@@ -6,11 +6,11 @@ const client = new Client()
 
 const avatars = new Avatars(client);
 
-const result = avatars.getQR(
-    '<TEXT>', // text
-    1, // size (optional)
-    0, // margin (optional)
-    false // download (optional)
-);
+const result = avatars.getQR({
+    text: '<TEXT>',
+    size: 1, // optional
+    margin: 0, // optional
+    download: false // optional
+});
 
 console.log(result);

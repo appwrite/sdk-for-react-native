@@ -1,16 +1,16 @@
-import { Client, Databases } from "react-native-appwrite";
+import { Client, TablesDB } from "react-native-appwrite";
 
 const client = new Client()
     .setEndpoint('https://<REGION>.cloud.appwrite.io/v1') // Your API Endpoint
     .setProject('<YOUR_PROJECT_ID>'); // Your project ID
 
-const databases = new Databases(client);
+const tablesDB = new TablesDB(client);
 
-const result = await databases.decrementDocumentAttribute({
+const result = await tablesDB.decrementRowColumn({
     databaseId: '<DATABASE_ID>',
-    collectionId: '<COLLECTION_ID>',
-    documentId: '<DOCUMENT_ID>',
-    attribute: '',
+    tableId: '<TABLE_ID>',
+    rowId: '<ROW_ID>',
+    column: '',
     value: null, // optional
     min: null // optional
 });

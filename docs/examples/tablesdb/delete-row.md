@@ -1,15 +1,15 @@
-import { Client, Databases } from "react-native-appwrite";
+import { Client, TablesDB } from "react-native-appwrite";
 
 const client = new Client()
     .setEndpoint('https://<REGION>.cloud.appwrite.io/v1') // Your API Endpoint
     .setProject('<YOUR_PROJECT_ID>'); // Your project ID
 
-const databases = new Databases(client);
+const tablesDB = new TablesDB(client);
 
-const result = await databases.deleteDocument({
+const result = await tablesDB.deleteRow({
     databaseId: '<DATABASE_ID>',
-    collectionId: '<COLLECTION_ID>',
-    documentId: '<DOCUMENT_ID>'
+    tableId: '<TABLE_ID>',
+    rowId: '<ROW_ID>'
 });
 
 console.log(result);

@@ -1,12 +1,14 @@
-import { Client, Account } from "react-native-appwrite";
+import { Client, TablesDB } from "react-native-appwrite";
 
 const client = new Client()
     .setEndpoint('https://<REGION>.cloud.appwrite.io/v1') // Your API Endpoint
     .setProject('<YOUR_PROJECT_ID>'); // Your project ID
 
-const account = new Account(client);
+const tablesDB = new TablesDB(client);
 
-const result = await account.listIdentities({
+const result = await tablesDB.listRows({
+    databaseId: '<DATABASE_ID>',
+    tableId: '<TABLE_ID>',
     queries: [] // optional
 });
 

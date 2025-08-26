@@ -1,15 +1,16 @@
-import { Client, Storage } from "react-native-appwrite";
+import { Client, TablesDB } from "react-native-appwrite";
 
 const client = new Client()
     .setEndpoint('https://<REGION>.cloud.appwrite.io/v1') // Your API Endpoint
     .setProject('<YOUR_PROJECT_ID>'); // Your project ID
 
-const storage = new Storage(client);
+const tablesDB = new TablesDB(client);
 
-const result = await storage.updateFile({
-    bucketId: '<BUCKET_ID>',
-    fileId: '<FILE_ID>',
-    name: '<NAME>', // optional
+const result = await tablesDB.createRow({
+    databaseId: '<DATABASE_ID>',
+    tableId: '<TABLE_ID>',
+    rowId: '<ROW_ID>',
+    data: {},
     permissions: ["read("any")"] // optional
 });
 
