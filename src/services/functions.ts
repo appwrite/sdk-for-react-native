@@ -74,7 +74,7 @@ export class Functions extends Service {
      * @param {string} params.body - HTTP body of execution. Default value is empty string.
      * @param {boolean} params.async - Execute code in the background. Default value is false.
      * @param {string} params.xpath - HTTP path of execution. Path can include query params. Default value is /
-     * @param {ExecutionMethod} params.method - HTTP method of execution. Default value is GET.
+     * @param {ExecutionMethod} params.method - HTTP method of execution. Default value is POST.
      * @param {object} params.headers - HTTP headers of execution. Defaults to empty.
      * @param {string} params.scheduledAt - Scheduled execution time in [ISO 8601](https://www.iso.org/iso-8601-date-and-time-format.html) format. DateTime value must be in future with precision in minutes.
      * @throws {AppwriteException}
@@ -88,7 +88,7 @@ export class Functions extends Service {
      * @param {string} body - HTTP body of execution. Default value is empty string.
      * @param {boolean} async - Execute code in the background. Default value is false.
      * @param {string} xpath - HTTP path of execution. Path can include query params. Default value is /
-     * @param {ExecutionMethod} method - HTTP method of execution. Default value is GET.
+     * @param {ExecutionMethod} method - HTTP method of execution. Default value is POST.
      * @param {object} headers - HTTP headers of execution. Defaults to empty.
      * @param {string} scheduledAt - Scheduled execution time in [ISO 8601](https://www.iso.org/iso-8601-date-and-time-format.html) format. DateTime value must be in future with precision in minutes.
      * @throws {AppwriteException}

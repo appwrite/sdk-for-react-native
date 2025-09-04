@@ -171,6 +171,16 @@ export class Query {
     new Query("createdAfter", undefined, value).toString();
 
   /**
+   * Filter resources where document was created between dates.
+   *
+   * @param {string} start
+   * @param {string} end
+   * @returns {string}
+   */
+  static createdBetween = (start: string, end: string): string =>
+    new Query("createdBetween", undefined, [start, end] as QueryTypesList).toString();
+
+  /**
    * Filter resources where document was updated before date.
    *
    * @param {string} value
@@ -187,6 +197,16 @@ export class Query {
    */
   static updatedAfter = (value: string): string =>
     new Query("updatedAfter", undefined, value).toString();
+
+  /**
+   * Filter resources where document was updated between dates.
+   *
+   * @param {string} start
+   * @param {string} end
+   * @returns {string}
+   */
+  static updatedBetween = (start: string, end: string): string =>
+    new Query("updatedBetween", undefined, [start, end] as QueryTypesList).toString();
 
   static or = (queries: string[]) =>
     new Query("or", undefined, queries.map((query) => JSON.parse(query))).toString();

@@ -223,15 +223,15 @@ export namespace Models {
         /**
          * Row automatically incrementing ID.
          */
-        $sequence: number;
+        readonly $sequence: number;
         /**
          * Table ID.
          */
-        $tableId: string;
+        readonly $tableId: string;
         /**
          * Database ID.
          */
-        $databaseId: string;
+        readonly $databaseId: string;
         /**
          * Row creation date in ISO 8601 format.
          */
@@ -262,15 +262,15 @@ export namespace Models {
         /**
          * Document automatically incrementing ID.
          */
-        $sequence: number;
+        readonly $sequence: number;
         /**
          * Collection ID.
          */
-        $collectionId: string;
+        readonly $collectionId: string;
         /**
          * Database ID.
          */
-        $databaseId: string;
+        readonly $databaseId: string;
         /**
          * Document creation date in ISO 8601 format.
          */

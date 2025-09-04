@@ -11,7 +11,7 @@ export enum CreditCard {
     Mastercard = 'mastercard',
     Naranja = 'naranja',
     TarjetaShopping = 'targeta-shopping',
-    UnionChinaPay = 'union-china-pay',
+    UnionPay = 'unionpay',
     Visa = 'visa',
     MIR = 'mir',
     Maestro = 'maestro',

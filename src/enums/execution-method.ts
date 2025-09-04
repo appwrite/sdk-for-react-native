@@ -5,4 +5,5 @@ export enum ExecutionMethod {
     PATCH = 'PATCH',
     DELETE = 'DELETE',
     OPTIONS = 'OPTIONS',
+    HEAD = 'HEAD',
 }
