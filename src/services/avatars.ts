@@ -101,7 +101,7 @@ export class Avatars extends Service {
      * When one dimension is specified and the other is 0, the image is scaled with preserved aspect ratio. If both dimensions are 0, the API provides an image at source quality. If dimensions are not specified, the default size of image returned is 100x100px.
      * 
      *
-     * @param {CreditCard} params.code - Credit Card Code. Possible values: amex, argencard, cabal, cencosud, diners, discover, elo, hipercard, jcb, mastercard, naranja, targeta-shopping, union-china-pay, visa, mir, maestro, rupay.
+     * @param {CreditCard} params.code - Credit Card Code. Possible values: amex, argencard, cabal, cencosud, diners, discover, elo, hipercard, jcb, mastercard, naranja, targeta-shopping, unionpay, visa, mir, maestro, rupay.
      * @param {number} params.width - Image width. Pass an integer between 0 to 2000. Defaults to 100.
      * @param {number} params.height - Image height. Pass an integer between 0 to 2000. Defaults to 100.
      * @param {number} params.quality - Image quality. Pass an integer between 0 to 100. Defaults to keep existing image quality.
@@ -115,7 +115,7 @@ export class Avatars extends Service {
      * When one dimension is specified and the other is 0, the image is scaled with preserved aspect ratio. If both dimensions are 0, the API provides an image at source quality. If dimensions are not specified, the default size of image returned is 100x100px.
      * 
      *
-     * @param {CreditCard} code - Credit Card Code. Possible values: amex, argencard, cabal, cencosud, diners, discover, elo, hipercard, jcb, mastercard, naranja, targeta-shopping, union-china-pay, visa, mir, maestro, rupay.
+     * @param {CreditCard} code - Credit Card Code. Possible values: amex, argencard, cabal, cencosud, diners, discover, elo, hipercard, jcb, mastercard, naranja, targeta-shopping, unionpay, visa, mir, maestro, rupay.
      * @param {number} width - Image width. Pass an integer between 0 to 2000. Defaults to 100.
      * @param {number} height - Image height. Pass an integer between 0 to 2000. Defaults to 100.
      * @param {number} quality - Image quality. Pass an integer between 0 to 100. Defaults to keep existing image quality.
