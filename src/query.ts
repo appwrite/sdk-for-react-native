@@ -33,10 +33,10 @@ export class Query {
     });
   }
 
-  static equal = (attribute: string, value: QueryTypes | any[]): string =>
+  static equal = (attribute: string, value: QueryTypes): string =>
     new Query("equal", attribute, value).toString();
 
-  static notEqual = (attribute: string, value: QueryTypes | any[]): string =>
+  static notEqual = (attribute: string, value: QueryTypes): string =>
     new Query("notEqual", attribute, value).toString();
 
   static lessThan = (attribute: string, value: QueryTypes): string =>
@@ -77,6 +77,9 @@ export class Query {
 
   static orderAsc = (attribute: string): string =>
     new Query("orderAsc", attribute).toString();
+
+  static orderRandom = (): string =>
+    new Query("orderRandom").toString();
 
   static cursorAfter = (documentId: string): string =>
     new Query("cursorAfter", undefined, documentId).toString();
