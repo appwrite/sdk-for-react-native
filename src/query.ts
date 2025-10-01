@@ -78,6 +78,9 @@ export class Query {
   static orderAsc = (attribute: string): string =>
     new Query("orderAsc", attribute).toString();
 
+  static orderRandom = (): string =>
+    new Query("orderRandom").toString();
+
   static cursorAfter = (documentId: string): string =>
     new Query("cursorAfter", undefined, documentId).toString();
 
