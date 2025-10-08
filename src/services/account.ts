@@ -2427,6 +2427,62 @@ export class Account extends Service {
      * @throws {AppwriteException}
      * @returns {Promise}
      */
+    createEmailVerification(params: { url: string  }): Promise<Models.Token>;
+    /**
+     * Use this endpoint to send a verification message to your user email address to confirm they are the valid owners of that address. Both the **userId** and **secret** arguments will be passed as query parameters to the URL you have provided to be attached to the verification email. The provided URL should redirect the user back to your app and allow you to complete the verification process by verifying both the **userId** and **secret** parameters. Learn more about how to [complete the verification process](https://appwrite.io/docs/references/cloud/client-web/account#updateVerification). The verification link sent to the user's email address is valid for 7 days.
+     * 
+     * Please note that in order to avoid a [Redirect Attack](https://github.com/OWASP/CheatSheetSeries/blob/master/cheatsheets/Unvalidated_Redirects_and_Forwards_Cheat_Sheet.md), the only valid redirect URLs are the ones from domains you have set when adding your platforms in the console interface.
+     * 
+     *
+     * @param {string} url - URL to redirect the user back to your app from the verification email. Only URLs from hostnames in your project platform list are allowed. This requirement helps to prevent an [open redirect](https://cheatsheetseries.owasp.org/cheatsheets/Unvalidated_Redirects_and_Forwards_Cheat_Sheet.html) attack against your project API.
+     * @throws {AppwriteException}
+     * @returns {Promise<Models.Token>}
+     * @deprecated Use the object parameter style method for a better developer experience.
+     */
+    createEmailVerification(url: string): Promise<Models.Token>;
+    createEmailVerification(
+        paramsOrFirst: { url: string } | string    
+    ): Promise<Models.Token> {
+        let params: { url: string };
+
+        if ((paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst))) {
+            params = (paramsOrFirst || {}) as { url: string };
+        } else {
+            params = {
+                url: paramsOrFirst as string            
+            };
+        }
+
+        const url = params.url;
+
+        if (typeof url === 'undefined') {
+            throw new AppwriteException('Missing required parameter: "url"');
+        }
+
+        const apiPath = '/account/verifications/email';
+        const payload: Payload = {};
+
+        if (typeof url !== 'undefined') {
+            payload['url'] = url;
+        }
+
+        const uri = new URL(this.client.config.endpoint + apiPath);
+        return this.client.call('post', uri, {
+            'content-type': 'application/json',
+        }, payload);
+    }
+
+    /**
+     * Use this endpoint to send a verification message to your user email address to confirm they are the valid owners of that address. Both the **userId** and **secret** arguments will be passed as query parameters to the URL you have provided to be attached to the verification email. The provided URL should redirect the user back to your app and allow you to complete the verification process by verifying both the **userId** and **secret** parameters. Learn more about how to [complete the verification process](https://appwrite.io/docs/references/cloud/client-web/account#updateVerification). The verification link sent to the user's email address is valid for 7 days.
+     * 
+     * Please note that in order to avoid a [Redirect Attack](https://github.com/OWASP/CheatSheetSeries/blob/master/cheatsheets/Unvalidated_Redirects_and_Forwards_Cheat_Sheet.md), the only valid redirect URLs are the ones from domains you have set when adding your platforms in the console interface.
+     * 
+     *
+     * @param {string} params.url - URL to redirect the user back to your app from the verification email. Only URLs from hostnames in your project platform list are allowed. This requirement helps to prevent an [open redirect](https://cheatsheetseries.owasp.org/cheatsheets/Unvalidated_Redirects_and_Forwards_Cheat_Sheet.html) attack against your project API.
+     * @throws {AppwriteException}
+     * @returns {Promise}
+     * @deprecated This API has been deprecated since 1.8.0. Please use `Account.createEmailVerification` instead.
+     */
     createVerification(params: { url: string  }): Promise<Models.Token>;
     /**
      * Use this endpoint to send a verification message to your user email address to confirm they are the valid owners of that address. Both the **userId** and **secret** arguments will be passed as query parameters to the URL you have provided to be attached to the verification email. The provided URL should redirect the user back to your app and allow you to complete the verification process by verifying both the **userId** and **secret** parameters. Learn more about how to [complete the verification process](https://appwrite.io/docs/references/cloud/client-web/account#updateVerification). The verification link sent to the user's email address is valid for 7 days.
@@ -2459,7 +2515,7 @@ export class Account extends Service {
             throw new AppwriteException('Missing required parameter: "url"');
         }
 
-        const apiPath = '/account/verification';
+        const apiPath = '/account/verifications/email';
         const payload: Payload = {};
 
         if (typeof url !== 'undefined') {
@@ -2479,6 +2535,69 @@ export class Account extends Service {
      * @param {string} params.secret - Valid verification token.
      * @throws {AppwriteException}
      * @returns {Promise}
+     */
+    updateEmailVerification(params: { userId: string, secret: string  }): Promise<Models.Token>;
+    /**
+     * Use this endpoint to complete the user email verification process. Use both the **userId** and **secret** parameters that were attached to your app URL to verify the user email ownership. If confirmed this route will return a 200 status code.
+     *
+     * @param {string} userId - User ID.
+     * @param {string} secret - Valid verification token.
+     * @throws {AppwriteException}
+     * @returns {Promise<Models.Token>}
+     * @deprecated Use the object parameter style method for a better developer experience.
+     */
+    updateEmailVerification(userId: string, secret: string): Promise<Models.Token>;
+    updateEmailVerification(
+        paramsOrFirst: { userId: string, secret: string } | string,
+        ...rest: [(string)?]    
+    ): Promise<Models.Token> {
+        let params: { userId: string, secret: string };
+
+        if ((paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst))) {
+            params = (paramsOrFirst || {}) as { userId: string, secret: string };
+        } else {
+            params = {
+                userId: paramsOrFirst as string,
+                secret: rest[0] as string            
+            };
+        }
+
+        const userId = params.userId;
+        const secret = params.secret;
+
+        if (typeof userId === 'undefined') {
+            throw new AppwriteException('Missing required parameter: "userId"');
+        }
+
+        if (typeof secret === 'undefined') {
+            throw new AppwriteException('Missing required parameter: "secret"');
+        }
+
+        const apiPath = '/account/verifications/email';
+        const payload: Payload = {};
+
+        if (typeof userId !== 'undefined') {
+            payload['userId'] = userId;
+        }
+
+        if (typeof secret !== 'undefined') {
+            payload['secret'] = secret;
+        }
+
+        const uri = new URL(this.client.config.endpoint + apiPath);
+        return this.client.call('put', uri, {
+            'content-type': 'application/json',
+        }, payload);
+    }
+
+    /**
+     * Use this endpoint to complete the user email verification process. Use both the **userId** and **secret** parameters that were attached to your app URL to verify the user email ownership. If confirmed this route will return a 200 status code.
+     *
+     * @param {string} params.userId - User ID.
+     * @param {string} params.secret - Valid verification token.
+     * @throws {AppwriteException}
+     * @returns {Promise}
+     * @deprecated This API has been deprecated since 1.8.0. Please use `Account.updateEmailVerification` instead.
      */
     updateVerification(params: { userId: string, secret: string  }): Promise<Models.Token>;
     /**
@@ -2517,7 +2636,7 @@ export class Account extends Service {
             throw new AppwriteException('Missing required parameter: "secret"');
         }
 
-        const apiPath = '/account/verification';
+        const apiPath = '/account/verifications/email';
         const payload: Payload = {};
 
         if (typeof userId !== 'undefined') {
@@ -2541,7 +2660,7 @@ export class Account extends Service {
      * @returns {Promise}
      */
     createPhoneVerification(): Promise<Models.Token> {
-        const apiPath = '/account/verification/phone';
+        const apiPath = '/account/verifications/phone';
         const payload: Payload = {};
 
         const uri = new URL(this.client.config.endpoint + apiPath);
@@ -2595,7 +2714,7 @@ export class Account extends Service {
             throw new AppwriteException('Missing required parameter: "secret"');
         }
 
-        const apiPath = '/account/verification/phone';
+        const apiPath = '/account/verifications/phone';
         const payload: Payload = {};
 
         if (typeof userId !== 'undefined') {
