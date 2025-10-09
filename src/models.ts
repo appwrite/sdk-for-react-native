@@ -216,6 +216,20 @@ export namespace Models {
     }
 
     /**
+     * Transaction List
+     */
+    export type TransactionList = {
+        /**
+         * Total number of transactions that matched your query.
+         */
+        total: number;
+        /**
+         * List of transactions.
+         */
+        transactions: Transaction[];
+    }
+
+    /**
      * Row
      */
     export type Row = {
@@ -1236,6 +1250,36 @@ export namespace Models {
          * Can recovery code be used for MFA challenge for this account.
          */
         recoveryCode: boolean;
+    }
+
+    /**
+     * Transaction
+     */
+    export type Transaction = {
+        /**
+         * Transaction ID.
+         */
+        $id: string;
+        /**
+         * Transaction creation time in ISO 8601 format.
+         */
+        $createdAt: string;
+        /**
+         * Transaction update date in ISO 8601 format.
+         */
+        $updatedAt: string;
+        /**
+         * Current status of the transaction. One of: pending, committing, committed, rolled_back, failed.
+         */
+        status: string;
+        /**
+         * Number of operations in the transaction.
+         */
+        operations: number;
+        /**
+         * Expiration time in ISO 8601 format.
+         */
+        expiresAt: string;
     }
 
     /**
