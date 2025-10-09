@@ -6,14 +6,10 @@ const client = new Client()
 
 const databases = new Databases(client);
 
-const result = await databases.incrementDocumentAttribute({
-    databaseId: '<DATABASE_ID>',
-    collectionId: '<COLLECTION_ID>',
-    documentId: '<DOCUMENT_ID>',
-    attribute: '',
-    value: 0, // optional
-    max: 0, // optional
-    transactionId: '<TRANSACTION_ID>' // optional
+const result = await databases.updateTransaction({
+    transactionId: '<TRANSACTION_ID>',
+    commit: false, // optional
+    rollback: false // optional
 });
 
 console.log(result);
