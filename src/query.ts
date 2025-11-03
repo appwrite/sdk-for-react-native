@@ -162,7 +162,7 @@ export class Query {
    * @returns {string}
    */
   static createdBefore = (value: string): string =>
-    new Query("createdBefore", undefined, value).toString();
+    Query.lessThan("$createdAt", value);
 
   /**
    * Filter resources where document was created after date.
@@ -171,7 +171,7 @@ export class Query {
    * @returns {string}
    */
   static createdAfter = (value: string): string =>
-    new Query("createdAfter", undefined, value).toString();
+    Query.greaterThan("$createdAt", value);
 
   /**
    * Filter resources where document was created between dates.
@@ -181,7 +181,7 @@ export class Query {
    * @returns {string}
    */
   static createdBetween = (start: string, end: string): string =>
-    new Query("createdBetween", undefined, [start, end] as QueryTypesList).toString();
+    Query.between("$createdAt", start, end);
 
   /**
    * Filter resources where document was updated before date.
@@ -190,7 +190,7 @@ export class Query {
    * @returns {string}
    */
   static updatedBefore = (value: string): string =>
-    new Query("updatedBefore", undefined, value).toString();
+    Query.lessThan("$updatedAt", value);
 
   /**
    * Filter resources where document was updated after date.
@@ -199,7 +199,7 @@ export class Query {
    * @returns {string}
    */
   static updatedAfter = (value: string): string =>
-    new Query("updatedAfter", undefined, value).toString();
+    Query.greaterThan("$updatedAt", value);
 
   /**
    * Filter resources where document was updated between dates.
@@ -209,7 +209,7 @@ export class Query {
    * @returns {string}
    */
   static updatedBetween = (start: string, end: string): string =>
-    new Query("updatedBetween", undefined, [start, end] as QueryTypesList).toString();
+    Query.between("$updatedAt", start, end);
 
   static or = (queries: string[]) =>
     new Query("or", undefined, queries.map((query) => JSON.parse(query))).toString();

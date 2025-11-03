@@ -314,11 +314,12 @@ export class Databases extends Service {
      * @param {string} params.collectionId - Collection ID. You can create a new collection using the Database service [server integration](https://appwrite.io/docs/server/databases#databasesCreateCollection).
      * @param {string[]} params.queries - Array of query strings generated using the Query class provided by the SDK. [Learn more about queries](https://appwrite.io/docs/queries). Maximum of 100 queries are allowed, each 4096 characters long.
      * @param {string} params.transactionId - Transaction ID to read uncommitted changes within the transaction.
+     * @param {boolean} params.total - When set to false, the total count returned will be 0 and will not be calculated.
      * @throws {AppwriteException}
      * @returns {Promise}
      * @deprecated This API has been deprecated since 1.8.0. Please use `TablesDB.listRows` instead.
      */
-    listDocuments<Document extends Models.Document = Models.DefaultDocument>(params: { databaseId: string, collectionId: string, queries?: string[], transactionId?: string  }): Promise<Models.DocumentList<Document>>;
+    listDocuments<Document extends Models.Document = Models.DefaultDocument>(params: { databaseId: string, collectionId: string, queries?: string[], transactionId?: string, total?: boolean  }): Promise<Models.DocumentList<Document>>;
     /**
      * Get a list of all the user's documents in a given collection. You can use the query params to filter your results.
      *
@@ -326,25 +327,27 @@ export class Databases extends Service {
      * @param {string} collectionId - Collection ID. You can create a new collection using the Database service [server integration](https://appwrite.io/docs/server/databases#databasesCreateCollection).
      * @param {string[]} queries - Array of query strings generated using the Query class provided by the SDK. [Learn more about queries](https://appwrite.io/docs/queries). Maximum of 100 queries are allowed, each 4096 characters long.
      * @param {string} transactionId - Transaction ID to read uncommitted changes within the transaction.
+     * @param {boolean} total - When set to false, the total count returned will be 0 and will not be calculated.
      * @throws {AppwriteException}
      * @returns {Promise<Models.DocumentList<Document>>}
      * @deprecated Use the object parameter style method for a better developer experience.
      */
-    listDocuments<Document extends Models.Document = Models.DefaultDocument>(databaseId: string, collectionId: string, queries?: string[], transactionId?: string): Promise<Models.DocumentList<Document>>;
+    listDocuments<Document extends Models.Document = Models.DefaultDocument>(databaseId: string, collectionId: string, queries?: string[], transactionId?: string, total?: boolean): Promise<Models.DocumentList<Document>>;
     listDocuments<Document extends Models.Document = Models.DefaultDocument>(
-        paramsOrFirst: { databaseId: string, collectionId: string, queries?: string[], transactionId?: string } | string,
-        ...rest: [(string)?, (string[])?, (string)?]    
+        paramsOrFirst: { databaseId: string, collectionId: string, queries?: string[], transactionId?: string, total?: boolean } | string,
+        ...rest: [(string)?, (string[])?, (string)?, (boolean)?]    
     ): Promise<Models.DocumentList<Document>> {
-        let params: { databaseId: string, collectionId: string, queries?: string[], transactionId?: string };
+        let params: { databaseId: string, collectionId: string, queries?: string[], transactionId?: string, total?: boolean };
 
         if ((paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst))) {
-            params = (paramsOrFirst || {}) as { databaseId: string, collectionId: string, queries?: string[], transactionId?: string };
+            params = (paramsOrFirst || {}) as { databaseId: string, collectionId: string, queries?: string[], transactionId?: string, total?: boolean };
         } else {
             params = {
                 databaseId: paramsOrFirst as string,
                 collectionId: rest[0] as string,
                 queries: rest[1] as string[],
-                transactionId: rest[2] as string            
+                transactionId: rest[2] as string,
+                total: rest[3] as boolean            
             };
         }
 
@@ -352,6 +355,7 @@ export class Databases extends Service {
         const collectionId = params.collectionId;
         const queries = params.queries;
         const transactionId = params.transactionId;
+        const total = params.total;
 
         if (typeof databaseId === 'undefined') {
             throw new AppwriteException('Missing required parameter: "databaseId"');
@@ -370,6 +374,10 @@ export class Databases extends Service {
 
         if (typeof transactionId !== 'undefined') {
             payload['transactionId'] = transactionId;
+        }
+
+        if (typeof total !== 'undefined') {
+            payload['total'] = total;
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);

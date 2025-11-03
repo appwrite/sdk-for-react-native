@@ -183,39 +183,48 @@ export class Account extends Service {
      * Get the list of identities for the currently logged in user.
      *
      * @param {string[]} params.queries - Array of query strings generated using the Query class provided by the SDK. [Learn more about queries](https://appwrite.io/docs/queries). Maximum of 100 queries are allowed, each 4096 characters long. You may filter on the following attributes: userId, provider, providerUid, providerEmail, providerAccessTokenExpiry
+     * @param {boolean} params.total - When set to false, the total count returned will be 0 and will not be calculated.
      * @throws {AppwriteException}
      * @returns {Promise}
      */
-    listIdentities(params?: { queries?: string[]  }): Promise<Models.IdentityList>;
+    listIdentities(params?: { queries?: string[], total?: boolean  }): Promise<Models.IdentityList>;
     /**
      * Get the list of identities for the currently logged in user.
      *
      * @param {string[]} queries - Array of query strings generated using the Query class provided by the SDK. [Learn more about queries](https://appwrite.io/docs/queries). Maximum of 100 queries are allowed, each 4096 characters long. You may filter on the following attributes: userId, provider, providerUid, providerEmail, providerAccessTokenExpiry
+     * @param {boolean} total - When set to false, the total count returned will be 0 and will not be calculated.
      * @throws {AppwriteException}
      * @returns {Promise<Models.IdentityList>}
      * @deprecated Use the object parameter style method for a better developer experience.
      */
-    listIdentities(queries?: string[]): Promise<Models.IdentityList>;
+    listIdentities(queries?: string[], total?: boolean): Promise<Models.IdentityList>;
     listIdentities(
-        paramsOrFirst?: { queries?: string[] } | string[]    
+        paramsOrFirst?: { queries?: string[], total?: boolean } | string[],
+        ...rest: [(boolean)?]    
     ): Promise<Models.IdentityList> {
-        let params: { queries?: string[] };
+        let params: { queries?: string[], total?: boolean };
 
         if (!paramsOrFirst || (paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst))) {
-            params = (paramsOrFirst || {}) as { queries?: string[] };
+            params = (paramsOrFirst || {}) as { queries?: string[], total?: boolean };
         } else {
             params = {
-                queries: paramsOrFirst as string[]            
+                queries: paramsOrFirst as string[],
+                total: rest[0] as boolean            
             };
         }
 
         const queries = params.queries;
+        const total = params.total;
 
         const apiPath = '/account/identities';
         const payload: Payload = {};
 
         if (typeof queries !== 'undefined') {
             payload['queries'] = queries;
+        }
+
+        if (typeof total !== 'undefined') {
+            payload['total'] = total;
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
@@ -288,39 +297,48 @@ export class Account extends Service {
      * Get the list of latest security activity logs for the currently logged in user. Each log returns user IP address, location and date and time of log.
      *
      * @param {string[]} params.queries - Array of query strings generated using the Query class provided by the SDK. [Learn more about queries](https://appwrite.io/docs/queries). Only supported methods are limit and offset
+     * @param {boolean} params.total - When set to false, the total count returned will be 0 and will not be calculated.
      * @throws {AppwriteException}
      * @returns {Promise}
      */
-    listLogs(params?: { queries?: string[]  }): Promise<Models.LogList>;
+    listLogs(params?: { queries?: string[], total?: boolean  }): Promise<Models.LogList>;
     /**
      * Get the list of latest security activity logs for the currently logged in user. Each log returns user IP address, location and date and time of log.
      *
      * @param {string[]} queries - Array of query strings generated using the Query class provided by the SDK. [Learn more about queries](https://appwrite.io/docs/queries). Only supported methods are limit and offset
+     * @param {boolean} total - When set to false, the total count returned will be 0 and will not be calculated.
      * @throws {AppwriteException}
      * @returns {Promise<Models.LogList>}
      * @deprecated Use the object parameter style method for a better developer experience.
      */
-    listLogs(queries?: string[]): Promise<Models.LogList>;
+    listLogs(queries?: string[], total?: boolean): Promise<Models.LogList>;
     listLogs(
-        paramsOrFirst?: { queries?: string[] } | string[]    
+        paramsOrFirst?: { queries?: string[], total?: boolean } | string[],
+        ...rest: [(boolean)?]    
     ): Promise<Models.LogList> {
-        let params: { queries?: string[] };
+        let params: { queries?: string[], total?: boolean };
 
         if (!paramsOrFirst || (paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst))) {
-            params = (paramsOrFirst || {}) as { queries?: string[] };
+            params = (paramsOrFirst || {}) as { queries?: string[], total?: boolean };
         } else {
             params = {
-                queries: paramsOrFirst as string[]            
+                queries: paramsOrFirst as string[],
+                total: rest[0] as boolean            
             };
         }
 
         const queries = params.queries;
+        const total = params.total;
 
         const apiPath = '/account/logs';
         const payload: Payload = {};
 
         if (typeof queries !== 'undefined') {
             payload['queries'] = queries;
+        }
+
+        if (typeof total !== 'undefined') {
+            payload['total'] = total;
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
