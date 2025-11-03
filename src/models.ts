@@ -1027,7 +1027,7 @@ export namespace Models {
          */
         trigger: ExecutionTrigger;
         /**
-         * The status of the function execution. Possible values can be: `waiting`, `processing`, `completed`, or `failed`.
+         * The status of the function execution. Possible values can be: `waiting`, `processing`, `completed`, `failed`, or `scheduled`.
          */
         status: ExecutionStatus;
         /**

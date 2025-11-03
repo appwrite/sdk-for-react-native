@@ -19,37 +19,41 @@ export class Functions extends Service {
      *
      * @param {string} params.functionId - Function ID.
      * @param {string[]} params.queries - Array of query strings generated using the Query class provided by the SDK. [Learn more about queries](https://appwrite.io/docs/queries). Maximum of 100 queries are allowed, each 4096 characters long. You may filter on the following attributes: trigger, status, responseStatusCode, duration, requestMethod, requestPath, deploymentId
+     * @param {boolean} params.total - When set to false, the total count returned will be 0 and will not be calculated.
      * @throws {AppwriteException}
      * @returns {Promise}
      */
-    listExecutions(params: { functionId: string, queries?: string[]  }): Promise<Models.ExecutionList>;
+    listExecutions(params: { functionId: string, queries?: string[], total?: boolean  }): Promise<Models.ExecutionList>;
     /**
      * Get a list of all the current user function execution logs. You can use the query params to filter your results.
      *
      * @param {string} functionId - Function ID.
      * @param {string[]} queries - Array of query strings generated using the Query class provided by the SDK. [Learn more about queries](https://appwrite.io/docs/queries). Maximum of 100 queries are allowed, each 4096 characters long. You may filter on the following attributes: trigger, status, responseStatusCode, duration, requestMethod, requestPath, deploymentId
+     * @param {boolean} total - When set to false, the total count returned will be 0 and will not be calculated.
      * @throws {AppwriteException}
      * @returns {Promise<Models.ExecutionList>}
      * @deprecated Use the object parameter style method for a better developer experience.
      */
-    listExecutions(functionId: string, queries?: string[]): Promise<Models.ExecutionList>;
+    listExecutions(functionId: string, queries?: string[], total?: boolean): Promise<Models.ExecutionList>;
     listExecutions(
-        paramsOrFirst: { functionId: string, queries?: string[] } | string,
-        ...rest: [(string[])?]    
+        paramsOrFirst: { functionId: string, queries?: string[], total?: boolean } | string,
+        ...rest: [(string[])?, (boolean)?]    
     ): Promise<Models.ExecutionList> {
-        let params: { functionId: string, queries?: string[] };
+        let params: { functionId: string, queries?: string[], total?: boolean };
 
         if ((paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst))) {
-            params = (paramsOrFirst || {}) as { functionId: string, queries?: string[] };
+            params = (paramsOrFirst || {}) as { functionId: string, queries?: string[], total?: boolean };
         } else {
             params = {
                 functionId: paramsOrFirst as string,
-                queries: rest[0] as string[]            
+                queries: rest[0] as string[],
+                total: rest[1] as boolean            
             };
         }
 
         const functionId = params.functionId;
         const queries = params.queries;
+        const total = params.total;
 
         if (typeof functionId === 'undefined') {
             throw new AppwriteException('Missing required parameter: "functionId"');
@@ -60,6 +64,10 @@ export class Functions extends Service {
 
         if (typeof queries !== 'undefined') {
             payload['queries'] = queries;
+        }
+
+        if (typeof total !== 'undefined') {
+            payload['total'] = total;
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);

@@ -3,4 +3,5 @@ export enum ExecutionStatus {
     Processing = 'processing',
     Completed = 'completed',
     Failed = 'failed',
+    Scheduled = 'scheduled',
 }
