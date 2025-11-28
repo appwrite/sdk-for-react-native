@@ -3,6 +3,7 @@
 ## 0.19.0
 
 * Add `getScreenshot` method to `Avatars` service
+* Add `Theme`, `Timezone` and `Output` enums
 
 ## 0.18.0
 
