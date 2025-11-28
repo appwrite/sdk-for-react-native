@@ -2,7 +2,7 @@
   "name": "react-native-appwrite",
   "homepage": "https://appwrite.io/support",
   "description": "Appwrite is an open-source self-hosted backend server that abstract and simplify complex and repetitive development tasks behind a very simple REST API",
-  "version": "0.18.0",
+  "version": "0.19.0",
   "license": "BSD-3-Clause",
   "main": "dist/cjs/sdk.js",
   "exports": {
@@ -26,7 +26,7 @@
   },
   "devDependencies": {
     "@rollup/plugin-typescript": "8.3.2",
-    "playwright": "1.15.0",
+    "playwright": "1.56.1",
     "rollup": "2.75.4",
     "serve-handler": "6.1.0",
     "tslib": "2.4.0",
