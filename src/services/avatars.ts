@@ -8,6 +8,9 @@ import { Platform } from 'react-native';
 import { Browser } from '../enums/browser';
 import { CreditCard } from '../enums/credit-card';
 import { Flag } from '../enums/flag';
+import { Theme } from '../enums/theme';
+import { Timezone } from '../enums/timezone';
+import { Output } from '../enums/output';
 
 export class Avatars extends Service {
 
@@ -561,6 +564,221 @@ export class Avatars extends Service {
     }
 
     /**
+     * Use this endpoint to capture a screenshot of any website URL. This endpoint uses a headless browser to render the webpage and capture it as an image.
+     * 
+     * You can configure the browser viewport size, theme, user agent, geolocation, permissions, and more. Capture either just the viewport or the full page scroll.
+     * 
+     * When width and height are specified, the image is resized accordingly. If both dimensions are 0, the API provides an image at original size. If dimensions are not specified, the default viewport size is 1280x720px.
+     *
+     * @param {string} params.url - Website URL which you want to capture.
+     * @param {object} params.headers - HTTP headers to send with the browser request. Defaults to empty.
+     * @param {number} params.viewportWidth - Browser viewport width. Pass an integer between 1 to 1920. Defaults to 1280.
+     * @param {number} params.viewportHeight - Browser viewport height. Pass an integer between 1 to 1080. Defaults to 720.
+     * @param {number} params.scale - Browser scale factor. Pass a number between 0.1 to 3. Defaults to 1.
+     * @param {Theme} params.theme - Browser theme. Pass "light" or "dark". Defaults to "light".
+     * @param {string} params.userAgent - Custom user agent string. Defaults to browser default.
+     * @param {boolean} params.fullpage - Capture full page scroll. Pass 0 for viewport only, or 1 for full page. Defaults to 0.
+     * @param {string} params.locale - Browser locale (e.g., "en-US", "fr-FR"). Defaults to browser default.
+     * @param {Timezone} params.timezone - IANA timezone identifier (e.g., "America/New_York", "Europe/London"). Defaults to browser default.
+     * @param {number} params.latitude - Geolocation latitude. Pass a number between -90 to 90. Defaults to 0.
+     * @param {number} params.longitude - Geolocation longitude. Pass a number between -180 to 180. Defaults to 0.
+     * @param {number} params.accuracy - Geolocation accuracy in meters. Pass a number between 0 to 100000. Defaults to 0.
+     * @param {boolean} params.touch - Enable touch support. Pass 0 for no touch, or 1 for touch enabled. Defaults to 0.
+     * @param {string[]} params.permissions - Browser permissions to grant. Pass an array of permission names like ["geolocation", "camera", "microphone"]. Defaults to empty.
+     * @param {number} params.sleep - Wait time in seconds before taking the screenshot. Pass an integer between 0 to 10. Defaults to 0.
+     * @param {number} params.width - Output image width. Pass 0 to use original width, or an integer between 1 to 2000. Defaults to 0 (original width).
+     * @param {number} params.height - Output image height. Pass 0 to use original height, or an integer between 1 to 2000. Defaults to 0 (original height).
+     * @param {number} params.quality - Screenshot quality. Pass an integer between 0 to 100. Defaults to keep existing image quality.
+     * @param {Output} params.output - Output format type (jpeg, jpg, png, gif and webp).
+     * @throws {AppwriteException}
+     * @returns {ArrayBuffer}
+     */
+    getScreenshot(params: { url: string, headers?: object, viewportWidth?: number, viewportHeight?: number, scale?: number, theme?: Theme, userAgent?: string, fullpage?: boolean, locale?: string, timezone?: Timezone, latitude?: number, longitude?: number, accuracy?: number, touch?: boolean, permissions?: string[], sleep?: number, width?: number, height?: number, quality?: number, output?: Output  }): Promise<ArrayBuffer>;
+    /**
+     * Use this endpoint to capture a screenshot of any website URL. This endpoint uses a headless browser to render the webpage and capture it as an image.
+     * 
+     * You can configure the browser viewport size, theme, user agent, geolocation, permissions, and more. Capture either just the viewport or the full page scroll.
+     * 
+     * When width and height are specified, the image is resized accordingly. If both dimensions are 0, the API provides an image at original size. If dimensions are not specified, the default viewport size is 1280x720px.
+     *
+     * @param {string} url - Website URL which you want to capture.
+     * @param {object} headers - HTTP headers to send with the browser request. Defaults to empty.
+     * @param {number} viewportWidth - Browser viewport width. Pass an integer between 1 to 1920. Defaults to 1280.
+     * @param {number} viewportHeight - Browser viewport height. Pass an integer between 1 to 1080. Defaults to 720.
+     * @param {number} scale - Browser scale factor. Pass a number between 0.1 to 3. Defaults to 1.
+     * @param {Theme} theme - Browser theme. Pass "light" or "dark". Defaults to "light".
+     * @param {string} userAgent - Custom user agent string. Defaults to browser default.
+     * @param {boolean} fullpage - Capture full page scroll. Pass 0 for viewport only, or 1 for full page. Defaults to 0.
+     * @param {string} locale - Browser locale (e.g., "en-US", "fr-FR"). Defaults to browser default.
+     * @param {Timezone} timezone - IANA timezone identifier (e.g., "America/New_York", "Europe/London"). Defaults to browser default.
+     * @param {number} latitude - Geolocation latitude. Pass a number between -90 to 90. Defaults to 0.
+     * @param {number} longitude - Geolocation longitude. Pass a number between -180 to 180. Defaults to 0.
+     * @param {number} accuracy - Geolocation accuracy in meters. Pass a number between 0 to 100000. Defaults to 0.
+     * @param {boolean} touch - Enable touch support. Pass 0 for no touch, or 1 for touch enabled. Defaults to 0.
+     * @param {string[]} permissions - Browser permissions to grant. Pass an array of permission names like ["geolocation", "camera", "microphone"]. Defaults to empty.
+     * @param {number} sleep - Wait time in seconds before taking the screenshot. Pass an integer between 0 to 10. Defaults to 0.
+     * @param {number} width - Output image width. Pass 0 to use original width, or an integer between 1 to 2000. Defaults to 0 (original width).
+     * @param {number} height - Output image height. Pass 0 to use original height, or an integer between 1 to 2000. Defaults to 0 (original height).
+     * @param {number} quality - Screenshot quality. Pass an integer between 0 to 100. Defaults to keep existing image quality.
+     * @param {Output} output - Output format type (jpeg, jpg, png, gif and webp).
+     * @throws {AppwriteException}
+     * @returns {Promise<ArrayBuffer>}
+     * @deprecated Use the object parameter style method for a better developer experience.
+     */
+    getScreenshot(url: string, headers?: object, viewportWidth?: number, viewportHeight?: number, scale?: number, theme?: Theme, userAgent?: string, fullpage?: boolean, locale?: string, timezone?: Timezone, latitude?: number, longitude?: number, accuracy?: number, touch?: boolean, permissions?: string[], sleep?: number, width?: number, height?: number, quality?: number, output?: Output): Promise<ArrayBuffer>;
+    getScreenshot(
+        paramsOrFirst: { url: string, headers?: object, viewportWidth?: number, viewportHeight?: number, scale?: number, theme?: Theme, userAgent?: string, fullpage?: boolean, locale?: string, timezone?: Timezone, latitude?: number, longitude?: number, accuracy?: number, touch?: boolean, permissions?: string[], sleep?: number, width?: number, height?: number, quality?: number, output?: Output } | string,
+        ...rest: [(object)?, (number)?, (number)?, (number)?, (Theme)?, (string)?, (boolean)?, (string)?, (Timezone)?, (number)?, (number)?, (number)?, (boolean)?, (string[])?, (number)?, (number)?, (number)?, (number)?, (Output)?]    
+    ): Promise<ArrayBuffer> {
+        let params: { url: string, headers?: object, viewportWidth?: number, viewportHeight?: number, scale?: number, theme?: Theme, userAgent?: string, fullpage?: boolean, locale?: string, timezone?: Timezone, latitude?: number, longitude?: number, accuracy?: number, touch?: boolean, permissions?: string[], sleep?: number, width?: number, height?: number, quality?: number, output?: Output };
+
+        if ((paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst))) {
+            params = (paramsOrFirst || {}) as { url: string, headers?: object, viewportWidth?: number, viewportHeight?: number, scale?: number, theme?: Theme, userAgent?: string, fullpage?: boolean, locale?: string, timezone?: Timezone, latitude?: number, longitude?: number, accuracy?: number, touch?: boolean, permissions?: string[], sleep?: number, width?: number, height?: number, quality?: number, output?: Output };
+        } else {
+            params = {
+                url: paramsOrFirst as string,
+                headers: rest[0] as object,
+                viewportWidth: rest[1] as number,
+                viewportHeight: rest[2] as number,
+                scale: rest[3] as number,
+                theme: rest[4] as Theme,
+                userAgent: rest[5] as string,
+                fullpage: rest[6] as boolean,
+                locale: rest[7] as string,
+                timezone: rest[8] as Timezone,
+                latitude: rest[9] as number,
+                longitude: rest[10] as number,
+                accuracy: rest[11] as number,
+                touch: rest[12] as boolean,
+                permissions: rest[13] as string[],
+                sleep: rest[14] as number,
+                width: rest[15] as number,
+                height: rest[16] as number,
+                quality: rest[17] as number,
+                output: rest[18] as Output            
+            };
+        }
+
+        const url = params.url;
+        const headers = params.headers;
+        const viewportWidth = params.viewportWidth;
+        const viewportHeight = params.viewportHeight;
+        const scale = params.scale;
+        const theme = params.theme;
+        const userAgent = params.userAgent;
+        const fullpage = params.fullpage;
+        const locale = params.locale;
+        const timezone = params.timezone;
+        const latitude = params.latitude;
+        const longitude = params.longitude;
+        const accuracy = params.accuracy;
+        const touch = params.touch;
+        const permissions = params.permissions;
+        const sleep = params.sleep;
+        const width = params.width;
+        const height = params.height;
+        const quality = params.quality;
+        const output = params.output;
+
+        if (typeof url === 'undefined') {
+            throw new AppwriteException('Missing required parameter: "url"');
+        }
+
+        const apiPath = '/avatars/screenshots';
+        const payload: Payload = {};
+
+        if (typeof url !== 'undefined') {
+            payload['url'] = url;
+        }
+
+        if (typeof headers !== 'undefined') {
+            payload['headers'] = headers;
+        }
+
+        if (typeof viewportWidth !== 'undefined') {
+            payload['viewportWidth'] = viewportWidth;
+        }
+
+        if (typeof viewportHeight !== 'undefined') {
+            payload['viewportHeight'] = viewportHeight;
+        }
+
+        if (typeof scale !== 'undefined') {
+            payload['scale'] = scale;
+        }
+
+        if (typeof theme !== 'undefined') {
+            payload['theme'] = theme;
+        }
+
+        if (typeof userAgent !== 'undefined') {
+            payload['userAgent'] = userAgent;
+        }
+
+        if (typeof fullpage !== 'undefined') {
+            payload['fullpage'] = fullpage;
+        }
+
+        if (typeof locale !== 'undefined') {
+            payload['locale'] = locale;
+        }
+
+        if (typeof timezone !== 'undefined') {
+            payload['timezone'] = timezone;
+        }
+
+        if (typeof latitude !== 'undefined') {
+            payload['latitude'] = latitude;
+        }
+
+        if (typeof longitude !== 'undefined') {
+            payload['longitude'] = longitude;
+        }
+
+        if (typeof accuracy !== 'undefined') {
+            payload['accuracy'] = accuracy;
+        }
+
+        if (typeof touch !== 'undefined') {
+            payload['touch'] = touch;
+        }
+
+        if (typeof permissions !== 'undefined') {
+            payload['permissions'] = permissions;
+        }
+
+        if (typeof sleep !== 'undefined') {
+            payload['sleep'] = sleep;
+        }
+
+        if (typeof width !== 'undefined') {
+            payload['width'] = width;
+        }
+
+        if (typeof height !== 'undefined') {
+            payload['height'] = height;
+        }
+
+        if (typeof quality !== 'undefined') {
+            payload['quality'] = quality;
+        }
+
+        if (typeof output !== 'undefined') {
+            payload['output'] = output;
+        }
+
+        const uri = new URL(this.client.config.endpoint + apiPath);
+        payload['project'] = this.client.config.project;
+
+
+        for (const [key, value] of Object.entries(Service.flatten(payload))) {
+            uri.searchParams.append(key, value);
+        }
+        return this.client.call('get', uri, {
+        }, payload, 'arrayBuffer');
+    }
+
+    /**
      * You can use this endpoint to show different browser icons to your users.
      * The code argument receives the browser code as it appears in your user [GET
      * /account/sessions](https://appwrite.io/docs/references/cloud/client-web/account#getSessions)
@@ -852,6 +1070,135 @@ export class Avatars extends Service {
 
         if (typeof download !== 'undefined') {
             payload['download'] = download;
+        }
+
+        const uri = new URL(this.client.config.endpoint + apiPath);
+        payload['project'] = this.client.config.project;
+
+        for (const [key, value] of Object.entries(Service.flatten(payload))) {
+            uri.searchParams.append(key, value);
+        }
+
+        return uri;
+    }
+
+    /**
+     * Use this endpoint to capture a screenshot of any website URL. This endpoint
+     * uses a headless browser to render the webpage and capture it as an image.
+     * 
+     * You can configure the browser viewport size, theme, user agent,
+     * geolocation, permissions, and more. Capture either just the viewport or the
+     * full page scroll.
+     * 
+     * When width and height are specified, the image is resized accordingly. If
+     * both dimensions are 0, the API provides an image at original size. If
+     * dimensions are not specified, the default viewport size is 1280x720px.
+     *
+     * @param {string} url
+     * @param {object} headers
+     * @param {number} viewportWidth
+     * @param {number} viewportHeight
+     * @param {number} scale
+     * @param {Theme} theme
+     * @param {string} userAgent
+     * @param {boolean} fullpage
+     * @param {string} locale
+     * @param {Timezone} timezone
+     * @param {number} latitude
+     * @param {number} longitude
+     * @param {number} accuracy
+     * @param {boolean} touch
+     * @param {string[]} permissions
+     * @param {number} sleep
+     * @param {number} width
+     * @param {number} height
+     * @param {number} quality
+     * @param {Output} output
+     * @throws {AppwriteException}
+     * @returns {URL}
+    */
+    getScreenshotURL(url: string, headers?: object, viewportWidth?: number, viewportHeight?: number, scale?: number, theme?: Theme, userAgent?: string, fullpage?: boolean, locale?: string, timezone?: Timezone, latitude?: number, longitude?: number, accuracy?: number, touch?: boolean, permissions?: string[], sleep?: number, width?: number, height?: number, quality?: number, output?: Output): URL {
+        const apiPath = '/avatars/screenshots';
+        const payload: Payload = {};
+
+        if (typeof url !== 'undefined') {
+            payload['url'] = url;
+        }
+
+        if (typeof headers !== 'undefined') {
+            payload['headers'] = headers;
+        }
+
+        if (typeof viewportWidth !== 'undefined') {
+            payload['viewportWidth'] = viewportWidth;
+        }
+
+        if (typeof viewportHeight !== 'undefined') {
+            payload['viewportHeight'] = viewportHeight;
+        }
+
+        if (typeof scale !== 'undefined') {
+            payload['scale'] = scale;
+        }
+
+        if (typeof theme !== 'undefined') {
+            payload['theme'] = theme;
+        }
+
+        if (typeof userAgent !== 'undefined') {
+            payload['userAgent'] = userAgent;
+        }
+
+        if (typeof fullpage !== 'undefined') {
+            payload['fullpage'] = fullpage;
+        }
+
+        if (typeof locale !== 'undefined') {
+            payload['locale'] = locale;
+        }
+
+        if (typeof timezone !== 'undefined') {
+            payload['timezone'] = timezone;
+        }
+
+        if (typeof latitude !== 'undefined') {
+            payload['latitude'] = latitude;
+        }
+
+        if (typeof longitude !== 'undefined') {
+            payload['longitude'] = longitude;
+        }
+
+        if (typeof accuracy !== 'undefined') {
+            payload['accuracy'] = accuracy;
+        }
+
+        if (typeof touch !== 'undefined') {
+            payload['touch'] = touch;
+        }
+
+        if (typeof permissions !== 'undefined') {
+            payload['permissions'] = permissions;
+        }
+
+        if (typeof sleep !== 'undefined') {
+            payload['sleep'] = sleep;
+        }
+
+        if (typeof width !== 'undefined') {
+            payload['width'] = width;
+        }
+
+        if (typeof height !== 'undefined') {
+            payload['height'] = height;
+        }
+
+        if (typeof quality !== 'undefined') {
+            payload['quality'] = quality;
+        }
+
+        if (typeof output !== 'undefined') {
+            payload['output'] = output;
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
