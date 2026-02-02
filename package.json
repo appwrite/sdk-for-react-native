@@ -1,8 +1,8 @@
 {
   "name": "react-native-appwrite",
   "homepage": "https://appwrite.io/support",
-  "description": "Appwrite is an open-source self-hosted backend server that abstract and simplify complex and repetitive development tasks behind a very simple REST API",
-  "version": "0.19.0",
+  "description": "Appwrite is an open-source self-hosted backend server that abstracts and simplifies complex and repetitive development tasks behind a very simple REST API",
+  "version": "0.20.0",
   "license": "BSD-3-Clause",
   "main": "dist/cjs/sdk.js",
   "exports": {
@@ -26,6 +26,7 @@
   },
   "devDependencies": {
     "@rollup/plugin-typescript": "8.3.2",
+    "@types/json-bigint": "1.0.4",
     "playwright": "1.56.1",
     "rollup": "2.75.4",
     "serve-handler": "6.1.0",
@@ -34,7 +35,9 @@
   },
   "dependencies": {
     "expo-file-system": "18.*.*",
-    "react-native": ">=0.76.7 <1.0.0"
+    "json-bigint": "1.0.0",
+    "react-native": ">=0.76.7 <1.0.0",
+    "bignumber.js": "^9.0.0"
   },
   "peerDependencies": {
     "expo": "*"

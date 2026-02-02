@@ -1,9 +1,11 @@
 import pkg from "./package.json";
 import typescript from "@rollup/plugin-typescript";
 
+const external = Object.keys(pkg.dependencies ?? {});
+
 export default {
-    external: Object.keys(pkg.dependencies),
     input: "src/index.ts",
+    external,
     plugins: [typescript()],
     output: [
         {
@@ -16,6 +18,16 @@ export default {
             format: "es",
             file: pkg.module,
             sourcemap: true,
+        },
+        {
+            format: "iife",
+            file: pkg.jsdelivr,
+            name: "Appwrite",
+            extend: true,
+            globals: {
+                "json-bigint": "JSONbig",
+                "bignumber.js": "BigNumber",
+            },
         },
     ],
 };

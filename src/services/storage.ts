@@ -289,10 +289,10 @@ export class Storage extends Service {
     /**
      * Update a file by its unique ID. Only users with write permissions have access to update this resource.
      *
-     * @param {string} params.bucketId - Storage bucket unique ID. You can create a new storage bucket using the Storage service [server integration](https://appwrite.io/docs/server/storage#createBucket).
-     * @param {string} params.fileId - File unique ID.
-     * @param {string} params.name - Name of the file
-     * @param {string[]} params.permissions - An array of permission string. By default, the current permissions are inherited. [Learn more about permissions](https://appwrite.io/docs/permissions).
+     * @param {string} params.bucketId - Bucket unique ID.
+     * @param {string} params.fileId - File ID.
+     * @param {string} params.name - File name.
+     * @param {string[]} params.permissions - An array of permission strings. By default, the current permissions are inherited. [Learn more about permissions](https://appwrite.io/docs/permissions).
      * @throws {AppwriteException}
      * @returns {Promise}
      */
@@ -300,10 +300,10 @@ export class Storage extends Service {
     /**
      * Update a file by its unique ID. Only users with write permissions have access to update this resource.
      *
-     * @param {string} bucketId - Storage bucket unique ID. You can create a new storage bucket using the Storage service [server integration](https://appwrite.io/docs/server/storage#createBucket).
-     * @param {string} fileId - File unique ID.
-     * @param {string} name - Name of the file
-     * @param {string[]} permissions - An array of permission string. By default, the current permissions are inherited. [Learn more about permissions](https://appwrite.io/docs/permissions).
+     * @param {string} bucketId - Bucket unique ID.
+     * @param {string} fileId - File ID.
+     * @param {string} name - File name.
+     * @param {string[]} permissions - An array of permission strings. By default, the current permissions are inherited. [Learn more about permissions](https://appwrite.io/docs/permissions).
      * @throws {AppwriteException}
      * @returns {Promise<Models.File>}
      * @deprecated Use the object parameter style method for a better developer experience.

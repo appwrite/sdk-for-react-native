@@ -1,5 +1,8 @@
-type QueryTypesSingle = string | number | boolean;
-export type QueryTypesList = string[] | number[] | boolean[] | Query[] | any[];
+import JSONbigModule from 'json-bigint';
+const JSONbig = JSONbigModule({ useNativeBigInt: true });
+
+type QueryTypesSingle = string | number | bigint | boolean;
+export type QueryTypesList = string[] | number[] | bigint[] | boolean[] | Query[] | any[];
 export type QueryTypes = QueryTypesSingle | QueryTypesList;
 type AttributesTypes = string | string[];
 
@@ -26,7 +29,7 @@ export class Query {
   }
 
   toString(): string {
-    return JSON.stringify({
+    return JSONbig.stringify({
       method: this.method,
       attribute: this.attribute,
       values: this.values,
@@ -38,6 +41,16 @@ export class Query {
 
   static notEqual = (attribute: string, value: QueryTypes): string =>
     new Query("notEqual", attribute, value).toString();
+
+  /**
+   * Filter resources where attribute matches a regular expression pattern.
+   *
+   * @param {string} attribute The attribute to filter on.
+   * @param {string} pattern The regular expression pattern to match.
+   * @returns {string}
+   */
+  static regex = (attribute: string, pattern: string): string =>
+    new Query("regex", attribute, pattern).toString();
 
   static lessThan = (attribute: string, value: QueryTypes): string =>
     new Query("lessThan", attribute, value).toString();
@@ -57,7 +70,25 @@ export class Query {
   static isNotNull = (attribute: string): string =>
     new Query("isNotNull", attribute).toString();
 
-  static between = (attribute: string, start: string | number, end: string | number) =>
+  /**
+   * Filter resources where the specified attributes exist.
+   *
+   * @param {string[]} attributes The list of attributes that must exist.
+   * @returns {string}
+   */
+  static exists = (attributes: string[]): string =>
+    new Query("exists", undefined, attributes).toString();
+
+  /**
+   * Filter resources where the specified attributes do not exist.
+   *
+   * @param {string[]} attributes The list of attributes that must not exist.
+   * @returns {string}
+   */
+  static notExists = (attributes: string[]): string =>
+    new Query("notExists", undefined, attributes).toString();
+
+  static between = (attribute: string, start: string | number | bigint, end: string | number | bigint) =>
     new Query("between", attribute, [start, end] as QueryTypesList).toString();
 
   static startsWith = (attribute: string, value: string): string =>
@@ -128,11 +159,11 @@ export class Query {
    * Filter resources where attribute is not between start and end (exclusive).
    *
    * @param {string} attribute
-   * @param {string | number} start
-   * @param {string | number} end
+   * @param {string | number | bigint} start
+   * @param {string | number | bigint} end
    * @returns {string}
    */
-  static notBetween = (attribute: string, start: string | number, end: string | number): string =>
+  static notBetween = (attribute: string, start: string | number | bigint, end: string | number | bigint): string =>
     new Query("notBetween", attribute, [start, end] as QueryTypesList).toString();
 
   /**
@@ -212,10 +243,24 @@ export class Query {
     Query.between("$updatedAt", start, end);
 
   static or = (queries: string[]) =>
-    new Query("or", undefined, queries.map((query) => JSON.parse(query))).toString();
+    new Query("or", undefined, queries.map((query) => JSONbig.parse(query))).toString();
 
   static and = (queries: string[]) =>
-    new Query("and", undefined, queries.map((query) => JSON.parse(query))).toString();
+    new Query("and", undefined, queries.map((query) => JSONbig.parse(query))).toString();
+
+  /**
+   * Filter array elements where at least one element matches all the specified queries.
+   *
+   * @param {string} attribute The attribute containing the array to filter on.
+   * @param {string[]} queries The list of query strings to match against array elements.
+   * @returns {string}
+   */
+  static elemMatch = (attribute: string, queries: string[]): string =>
+    new Query(
+      "elemMatch",
+      attribute,
+      queries.map((query) => JSONbig.parse(query))
+    ).toString();
 
   /**
    * Filter resources where attribute is at a specific distance from the given coordinates.

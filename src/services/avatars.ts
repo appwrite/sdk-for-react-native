@@ -10,7 +10,8 @@ import { CreditCard } from '../enums/credit-card';
 import { Flag } from '../enums/flag';
 import { Theme } from '../enums/theme';
 import { Timezone } from '../enums/timezone';
-import { Output } from '../enums/output';
+import { BrowserPermission } from '../enums/browser-permission';
+import { ImageFormat } from '../enums/image-format';
 
 export class Avatars extends Service {
 
@@ -584,16 +585,16 @@ export class Avatars extends Service {
      * @param {number} params.longitude - Geolocation longitude. Pass a number between -180 to 180. Defaults to 0.
      * @param {number} params.accuracy - Geolocation accuracy in meters. Pass a number between 0 to 100000. Defaults to 0.
      * @param {boolean} params.touch - Enable touch support. Pass 0 for no touch, or 1 for touch enabled. Defaults to 0.
-     * @param {string[]} params.permissions - Browser permissions to grant. Pass an array of permission names like ["geolocation", "camera", "microphone"]. Defaults to empty.
+     * @param {BrowserPermission[]} params.permissions - Browser permissions to grant. Pass an array of permission names like ["geolocation", "camera", "microphone"]. Defaults to empty.
      * @param {number} params.sleep - Wait time in seconds before taking the screenshot. Pass an integer between 0 to 10. Defaults to 0.
      * @param {number} params.width - Output image width. Pass 0 to use original width, or an integer between 1 to 2000. Defaults to 0 (original width).
      * @param {number} params.height - Output image height. Pass 0 to use original height, or an integer between 1 to 2000. Defaults to 0 (original height).
      * @param {number} params.quality - Screenshot quality. Pass an integer between 0 to 100. Defaults to keep existing image quality.
-     * @param {Output} params.output - Output format type (jpeg, jpg, png, gif and webp).
+     * @param {ImageFormat} params.output - Output format type (jpeg, jpg, png, gif and webp).
      * @throws {AppwriteException}
      * @returns {ArrayBuffer}
      */
-    getScreenshot(params: { url: string, headers?: object, viewportWidth?: number, viewportHeight?: number, scale?: number, theme?: Theme, userAgent?: string, fullpage?: boolean, locale?: string, timezone?: Timezone, latitude?: number, longitude?: number, accuracy?: number, touch?: boolean, permissions?: string[], sleep?: number, width?: number, height?: number, quality?: number, output?: Output  }): Promise<ArrayBuffer>;
+    getScreenshot(params: { url: string, headers?: object, viewportWidth?: number, viewportHeight?: number, scale?: number, theme?: Theme, userAgent?: string, fullpage?: boolean, locale?: string, timezone?: Timezone, latitude?: number, longitude?: number, accuracy?: number, touch?: boolean, permissions?: BrowserPermission[], sleep?: number, width?: number, height?: number, quality?: number, output?: ImageFormat  }): Promise<ArrayBuffer>;
     /**
      * Use this endpoint to capture a screenshot of any website URL. This endpoint uses a headless browser to render the webpage and capture it as an image.
      * 
@@ -615,25 +616,25 @@ export class Avatars extends Service {
      * @param {number} longitude - Geolocation longitude. Pass a number between -180 to 180. Defaults to 0.
      * @param {number} accuracy - Geolocation accuracy in meters. Pass a number between 0 to 100000. Defaults to 0.
      * @param {boolean} touch - Enable touch support. Pass 0 for no touch, or 1 for touch enabled. Defaults to 0.
-     * @param {string[]} permissions - Browser permissions to grant. Pass an array of permission names like ["geolocation", "camera", "microphone"]. Defaults to empty.
+     * @param {BrowserPermission[]} permissions - Browser permissions to grant. Pass an array of permission names like ["geolocation", "camera", "microphone"]. Defaults to empty.
      * @param {number} sleep - Wait time in seconds before taking the screenshot. Pass an integer between 0 to 10. Defaults to 0.
      * @param {number} width - Output image width. Pass 0 to use original width, or an integer between 1 to 2000. Defaults to 0 (original width).
      * @param {number} height - Output image height. Pass 0 to use original height, or an integer between 1 to 2000. Defaults to 0 (original height).
      * @param {number} quality - Screenshot quality. Pass an integer between 0 to 100. Defaults to keep existing image quality.
-     * @param {Output} output - Output format type (jpeg, jpg, png, gif and webp).
+     * @param {ImageFormat} output - Output format type (jpeg, jpg, png, gif and webp).
      * @throws {AppwriteException}
      * @returns {Promise<ArrayBuffer>}
      * @deprecated Use the object parameter style method for a better developer experience.
      */
-    getScreenshot(url: string, headers?: object, viewportWidth?: number, viewportHeight?: number, scale?: number, theme?: Theme, userAgent?: string, fullpage?: boolean, locale?: string, timezone?: Timezone, latitude?: number, longitude?: number, accuracy?: number, touch?: boolean, permissions?: string[], sleep?: number, width?: number, height?: number, quality?: number, output?: Output): Promise<ArrayBuffer>;
+    getScreenshot(url: string, headers?: object, viewportWidth?: number, viewportHeight?: number, scale?: number, theme?: Theme, userAgent?: string, fullpage?: boolean, locale?: string, timezone?: Timezone, latitude?: number, longitude?: number, accuracy?: number, touch?: boolean, permissions?: BrowserPermission[], sleep?: number, width?: number, height?: number, quality?: number, output?: ImageFormat): Promise<ArrayBuffer>;
     getScreenshot(
-        paramsOrFirst: { url: string, headers?: object, viewportWidth?: number, viewportHeight?: number, scale?: number, theme?: Theme, userAgent?: string, fullpage?: boolean, locale?: string, timezone?: Timezone, latitude?: number, longitude?: number, accuracy?: number, touch?: boolean, permissions?: string[], sleep?: number, width?: number, height?: number, quality?: number, output?: Output } | string,
-        ...rest: [(object)?, (number)?, (number)?, (number)?, (Theme)?, (string)?, (boolean)?, (string)?, (Timezone)?, (number)?, (number)?, (number)?, (boolean)?, (string[])?, (number)?, (number)?, (number)?, (number)?, (Output)?]    
+        paramsOrFirst: { url: string, headers?: object, viewportWidth?: number, viewportHeight?: number, scale?: number, theme?: Theme, userAgent?: string, fullpage?: boolean, locale?: string, timezone?: Timezone, latitude?: number, longitude?: number, accuracy?: number, touch?: boolean, permissions?: BrowserPermission[], sleep?: number, width?: number, height?: number, quality?: number, output?: ImageFormat } | string,
+        ...rest: [(object)?, (number)?, (number)?, (number)?, (Theme)?, (string)?, (boolean)?, (string)?, (Timezone)?, (number)?, (number)?, (number)?, (boolean)?, (BrowserPermission[])?, (number)?, (number)?, (number)?, (number)?, (ImageFormat)?]    
     ): Promise<ArrayBuffer> {
-        let params: { url: string, headers?: object, viewportWidth?: number, viewportHeight?: number, scale?: number, theme?: Theme, userAgent?: string, fullpage?: boolean, locale?: string, timezone?: Timezone, latitude?: number, longitude?: number, accuracy?: number, touch?: boolean, permissions?: string[], sleep?: number, width?: number, height?: number, quality?: number, output?: Output };
+        let params: { url: string, headers?: object, viewportWidth?: number, viewportHeight?: number, scale?: number, theme?: Theme, userAgent?: string, fullpage?: boolean, locale?: string, timezone?: Timezone, latitude?: number, longitude?: number, accuracy?: number, touch?: boolean, permissions?: BrowserPermission[], sleep?: number, width?: number, height?: number, quality?: number, output?: ImageFormat };
 
         if ((paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst))) {
-            params = (paramsOrFirst || {}) as { url: string, headers?: object, viewportWidth?: number, viewportHeight?: number, scale?: number, theme?: Theme, userAgent?: string, fullpage?: boolean, locale?: string, timezone?: Timezone, latitude?: number, longitude?: number, accuracy?: number, touch?: boolean, permissions?: string[], sleep?: number, width?: number, height?: number, quality?: number, output?: Output };
+            params = (paramsOrFirst || {}) as { url: string, headers?: object, viewportWidth?: number, viewportHeight?: number, scale?: number, theme?: Theme, userAgent?: string, fullpage?: boolean, locale?: string, timezone?: Timezone, latitude?: number, longitude?: number, accuracy?: number, touch?: boolean, permissions?: BrowserPermission[], sleep?: number, width?: number, height?: number, quality?: number, output?: ImageFormat };
         } else {
             params = {
                 url: paramsOrFirst as string,
@@ -650,12 +651,12 @@ export class Avatars extends Service {
                 longitude: rest[10] as number,
                 accuracy: rest[11] as number,
                 touch: rest[12] as boolean,
-                permissions: rest[13] as string[],
+                permissions: rest[13] as BrowserPermission[],
                 sleep: rest[14] as number,
                 width: rest[15] as number,
                 height: rest[16] as number,
                 quality: rest[17] as number,
-                output: rest[18] as Output            
+                output: rest[18] as ImageFormat            
             };
         }
 
@@ -1108,16 +1109,16 @@ export class Avatars extends Service {
      * @param {number} longitude
      * @param {number} accuracy
      * @param {boolean} touch
-     * @param {string[]} permissions
+     * @param {BrowserPermission[]} permissions
      * @param {number} sleep
      * @param {number} width
      * @param {number} height
      * @param {number} quality
-     * @param {Output} output
+     * @param {ImageFormat} output
      * @throws {AppwriteException}
      * @returns {URL}
     */
-    getScreenshotURL(url: string, headers?: object, viewportWidth?: number, viewportHeight?: number, scale?: number, theme?: Theme, userAgent?: string, fullpage?: boolean, locale?: string, timezone?: Timezone, latitude?: number, longitude?: number, accuracy?: number, touch?: boolean, permissions?: string[], sleep?: number, width?: number, height?: number, quality?: number, output?: Output): URL {
+    getScreenshotURL(url: string, headers?: object, viewportWidth?: number, viewportHeight?: number, scale?: number, theme?: Theme, userAgent?: string, fullpage?: boolean, locale?: string, timezone?: Timezone, latitude?: number, longitude?: number, accuracy?: number, touch?: boolean, permissions?: BrowserPermission[], sleep?: number, width?: number, height?: number, quality?: number, output?: ImageFormat): URL {
         const apiPath = '/avatars/screenshots';
         const payload: Payload = {};
 

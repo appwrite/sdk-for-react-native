@@ -904,6 +904,14 @@ export namespace Models {
          * Total number of chunks uploaded
          */
         chunksUploaded: number;
+        /**
+         * Whether file contents are encrypted at rest.
+         */
+        encryption: boolean;
+        /**
+         * Compression algorithm used for the file. Will be one of none, [gzip](https://en.wikipedia.org/wiki/Gzip), or [zstd](https://en.wikipedia.org/wiki/Zstd).
+         */
+        compression: string;
     }
 
     /**

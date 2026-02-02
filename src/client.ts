@@ -1,6 +1,33 @@
 import { Models } from './models';
 import { Service } from './service';
 import { Platform } from 'react-native';
+import JSONbigModule from 'json-bigint';
+import BigNumber from 'bignumber.js';
+const JSONbigParser = JSONbigModule({ storeAsString: false });
+const JSONbigSerializer = JSONbigModule({ useNativeBigInt: true });
+
+const MAX_SAFE = BigInt(Number.MAX_SAFE_INTEGER);
+const MIN_SAFE = BigInt(Number.MIN_SAFE_INTEGER);
+
+function reviver(_key: string, value: any): any {
+    if (BigNumber.isBigNumber(value)) {
+        if (value.isInteger()) {
+            const str = value.toFixed();
+            const bi = BigInt(str);
+            if (bi >= MIN_SAFE && bi <= MAX_SAFE) {
+                return Number(str);
+            }
+            return bi;
+        }
+        return value.toNumber();
+    }
+    return value;
+}
+
+const JSONbig = {
+    parse: (text: string) => JSONbigParser.parse(text, reviver),
+    stringify: JSONbigSerializer.stringify
+};
 
 type Payload = {
     [key: string]: any;
@@ -115,7 +142,7 @@ class Client {
         'x-sdk-name': 'React Native',
         'x-sdk-platform': 'client',
         'x-sdk-language': 'reactnative',
-        'x-sdk-version': '0.19.0',
+        'x-sdk-version': '0.20.0',
         'X-Appwrite-Response-Format': '1.8.0',
     };
 
@@ -129,6 +156,10 @@ class Client {
      * @returns {this}
      */
     setEndpoint(endpoint: string): this {
+        if (!endpoint || typeof endpoint !== 'string') {
+            throw new AppwriteException('Endpoint must be a valid string');
+        }
+
         if (!endpoint.startsWith('http://') && !endpoint.startsWith('https://')) {
             throw new AppwriteException('Invalid endpoint URL: ' + endpoint);
         }
@@ -147,6 +178,10 @@ class Client {
      * @returns {this}
      */
     setEndpointRealtime(endpointRealtime: string): this {
+        if (!endpointRealtime || typeof endpointRealtime !== 'string') {
+            throw new AppwriteException('Endpoint must be a valid string');
+        }
+
         if (!endpointRealtime.startsWith('ws://') && !endpointRealtime.startsWith('wss://')) {
             throw new AppwriteException('Invalid realtime endpoint URL: ' + endpointRealtime);
         }
@@ -278,7 +313,7 @@ class Client {
             }
 
             this.realtime.heartbeat = window?.setInterval(() => {
-                this.realtime.socket?.send(JSON.stringify({
+                this.realtime.socket?.send(JSONbig.stringify({
                     type: 'ping'
                 }));
             }, 20_000);
@@ -347,7 +382,7 @@ class Client {
         },
         onMessage: (event) => {
             try {
-                const message: RealtimeResponse = JSON.parse(event.data);
+                const message: RealtimeResponse = JSONbig.parse(event.data);
                 this.realtime.lastMessage = message;
                 switch (message.type) {
                     case 'event':
@@ -454,7 +489,7 @@ class Client {
         } else {
             switch (headers['content-type']) {
                 case 'application/json':
-                    options.body = JSON.stringify(params);
+                    options.body = JSONbig.stringify(params);
                     break;
 
                 case 'multipart/form-data':
@@ -487,7 +522,7 @@ class Client {
             }
 
             if (response.headers.get('content-type')?.includes('application/json')) {
-                data = await response.json();
+                data = JSONbig.parse(await response.text());
             } else if (responseType === 'arrayBuffer') {
                 data = await response.arrayBuffer();
             } else {
@@ -499,7 +534,7 @@ class Client {
             if (400 <= response.status) {
                 let responseText = '';
                 if (response.headers.get('content-type')?.includes('application/json')) {
-                    responseText = JSON.stringify(data);
+                    responseText = JSONbig.stringify(data);
                 } else {
                     responseText = data?.message;
                 }
