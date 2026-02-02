@@ -5,6 +5,10 @@ on:
     types: [published]
   workflow_dispatch:
 
+permissions:
+  id-token: write
+  contents: read
+
 jobs:
   publish:
     runs-on: ubuntu-latest
@@ -12,14 +16,15 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    # Setup Node.js environment
     - name: Use Node.js
       uses: actions/setup-node@v4
       with:
-        node-version: '20.x'
+        node-version: '22'
         registry-url: 'https://registry.npmjs.org'
 
-    # Determine release tag based on the tag name
+    - name: Update npm to latest version for OIDC support
+      run: npm install -g npm@latest
+
     - name: Determine release tag
       id: release_tag
       run: |
@@ -29,14 +34,10 @@ jobs:
           echo "tag=latest" >> "$GITHUB_OUTPUT"
         fi
 
-    # Install dependencies (if any) and build your project (if necessary)
     - name: Install dependencies and build
       run: |
         npm install
         npm run build
 
-    # Publish to NPM with the appropriate tag
     - name: Publish
-      run: npm publish --tag ${{ steps.release_tag.outputs.tag }}
-      env:
-        NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN_NO_ORG }}
+      run: npm publish --provenance --access public --tag ${{ steps.release_tag.outputs.tag }}
