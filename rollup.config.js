@@ -19,15 +19,5 @@ export default {
             file: pkg.module,
             sourcemap: true,
         },
-        {
-            format: "iife",
-            file: pkg.jsdelivr,
-            name: "Appwrite",
-            extend: true,
-            globals: {
-                "json-bigint": "JSONbig",
-                "bignumber.js": "BigNumber",
-            },
-        },
     ],
 };
