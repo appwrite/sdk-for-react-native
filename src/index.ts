@@ -29,6 +29,5 @@ export { BrowserPermission } from './enums/browser-permission';
 export { ImageFormat } from './enums/image-format';
 export { ExecutionMethod } from './enums/execution-method';
 export { ImageGravity } from './enums/image-gravity';
-export { Roles } from './enums/roles';
 export { ExecutionTrigger } from './enums/execution-trigger';
 export { ExecutionStatus } from './enums/execution-status';

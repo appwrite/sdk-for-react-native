@@ -38,4 +38,6 @@ export enum OAuthProvider {
     Yandex = 'yandex',
     Zoho = 'zoho',
     Zoom = 'zoom',
+    GithubImagine = 'githubImagine',
+    GoogleImagine = 'googleImagine',
 }

@@ -447,7 +447,7 @@ export class Account extends Service {
     ): Promise<Models.MfaType> {
         let params: { type: AuthenticatorType };
 
-        if ((paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst) && 'type' in paramsOrFirst)) {
+        if ((paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst) && ('type' in paramsOrFirst))) {
             params = (paramsOrFirst || {}) as { type: AuthenticatorType };
         } else {
             params = {
@@ -492,7 +492,7 @@ export class Account extends Service {
     ): Promise<Models.MfaType> {
         let params: { type: AuthenticatorType };
 
-        if ((paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst) && 'type' in paramsOrFirst)) {
+        if ((paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst) && ('type' in paramsOrFirst))) {
             params = (paramsOrFirst || {}) as { type: AuthenticatorType };
         } else {
             params = {
@@ -541,7 +541,7 @@ export class Account extends Service {
     ): Promise<Models.User<Preferences>> {
         let params: { type: AuthenticatorType, otp: string };
 
-        if ((paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst) && 'type' in paramsOrFirst)) {
+        if ((paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst) && ('type' in paramsOrFirst || 'otp' in paramsOrFirst))) {
             params = (paramsOrFirst || {}) as { type: AuthenticatorType, otp: string };
         } else {
             params = {
@@ -599,7 +599,7 @@ export class Account extends Service {
     ): Promise<Models.User<Preferences>> {
         let params: { type: AuthenticatorType, otp: string };
 
-        if ((paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst) && 'type' in paramsOrFirst)) {
+        if ((paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst) && ('type' in paramsOrFirst || 'otp' in paramsOrFirst))) {
             params = (paramsOrFirst || {}) as { type: AuthenticatorType, otp: string };
         } else {
             params = {
@@ -655,7 +655,7 @@ export class Account extends Service {
     ): Promise<{}> {
         let params: { type: AuthenticatorType };
 
-        if ((paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst) && 'type' in paramsOrFirst)) {
+        if ((paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst) && ('type' in paramsOrFirst))) {
             params = (paramsOrFirst || {}) as { type: AuthenticatorType };
         } else {
             params = {
@@ -700,7 +700,7 @@ export class Account extends Service {
     ): Promise<{}> {
         let params: { type: AuthenticatorType };
 
-        if ((paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst) && 'type' in paramsOrFirst)) {
+        if ((paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst) && ('type' in paramsOrFirst))) {
             params = (paramsOrFirst || {}) as { type: AuthenticatorType };
         } else {
             params = {
@@ -746,7 +746,7 @@ export class Account extends Service {
     ): Promise<Models.MfaChallenge> {
         let params: { factor: AuthenticationFactor };
 
-        if ((paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst) && 'factor' in paramsOrFirst)) {
+        if ((paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst) && ('factor' in paramsOrFirst))) {
             params = (paramsOrFirst || {}) as { factor: AuthenticationFactor };
         } else {
             params = {
@@ -795,7 +795,7 @@ export class Account extends Service {
     ): Promise<Models.MfaChallenge> {
         let params: { factor: AuthenticationFactor };
 
-        if ((paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst) && 'factor' in paramsOrFirst)) {
+        if ((paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst) && ('factor' in paramsOrFirst))) {
             params = (paramsOrFirst || {}) as { factor: AuthenticationFactor };
         } else {
             params = {
@@ -1281,7 +1281,7 @@ export class Account extends Service {
     ): Promise<Models.User<Preferences>> {
         let params: { prefs: Partial<Preferences> };
 
-        if ((paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst) && 'prefs' in paramsOrFirst)) {
+        if ((paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst) && ('prefs' in paramsOrFirst))) {
             params = (paramsOrFirst || {}) as { prefs: Partial<Preferences> };
         } else {
             params = {
@@ -1632,7 +1632,7 @@ export class Account extends Service {
      * A user is limited to 10 active sessions at a time by default. [Learn more about session limits](https://appwrite.io/docs/authentication-security#limits).
      * 
      *
-     * @param {OAuthProvider} params.provider - OAuth2 Provider. Currently, supported providers are: amazon, apple, auth0, authentik, autodesk, bitbucket, bitly, box, dailymotion, discord, disqus, dropbox, etsy, facebook, figma, github, gitlab, google, linkedin, microsoft, notion, oidc, okta, paypal, paypalSandbox, podio, salesforce, slack, spotify, stripe, tradeshift, tradeshiftBox, twitch, wordpress, yahoo, yammer, yandex, zoho, zoom.
+     * @param {OAuthProvider} params.provider - OAuth2 Provider. Currently, supported providers are: amazon, apple, auth0, authentik, autodesk, bitbucket, bitly, box, dailymotion, discord, disqus, dropbox, etsy, facebook, figma, github, gitlab, google, linkedin, microsoft, notion, oidc, okta, paypal, paypalSandbox, podio, salesforce, slack, spotify, stripe, tradeshift, tradeshiftBox, twitch, wordpress, yahoo, yammer, yandex, zoho, zoom, githubImagine, googleImagine.
      * @param {string} params.success - URL to redirect back to your app after a successful login attempt.  Only URLs from hostnames in your project's platform list are allowed. This requirement helps to prevent an [open redirect](https://cheatsheetseries.owasp.org/cheatsheets/Unvalidated_Redirects_and_Forwards_Cheat_Sheet.html) attack against your project API.
      * @param {string} params.failure - URL to redirect back to your app after a failed login attempt.  Only URLs from hostnames in your project's platform list are allowed. This requirement helps to prevent an [open redirect](https://cheatsheetseries.owasp.org/cheatsheets/Unvalidated_Redirects_and_Forwards_Cheat_Sheet.html) attack against your project API.
      * @param {string[]} params.scopes - A list of custom OAuth2 scopes. Check each provider internal docs for a list of supported scopes. Maximum of 100 scopes are allowed, each 4096 characters long.
@@ -1648,7 +1648,7 @@ export class Account extends Service {
      * A user is limited to 10 active sessions at a time by default. [Learn more about session limits](https://appwrite.io/docs/authentication-security#limits).
      * 
      *
-     * @param {OAuthProvider} provider - OAuth2 Provider. Currently, supported providers are: amazon, apple, auth0, authentik, autodesk, bitbucket, bitly, box, dailymotion, discord, disqus, dropbox, etsy, facebook, figma, github, gitlab, google, linkedin, microsoft, notion, oidc, okta, paypal, paypalSandbox, podio, salesforce, slack, spotify, stripe, tradeshift, tradeshiftBox, twitch, wordpress, yahoo, yammer, yandex, zoho, zoom.
+     * @param {OAuthProvider} provider - OAuth2 Provider. Currently, supported providers are: amazon, apple, auth0, authentik, autodesk, bitbucket, bitly, box, dailymotion, discord, disqus, dropbox, etsy, facebook, figma, github, gitlab, google, linkedin, microsoft, notion, oidc, okta, paypal, paypalSandbox, podio, salesforce, slack, spotify, stripe, tradeshift, tradeshiftBox, twitch, wordpress, yahoo, yammer, yandex, zoho, zoom, githubImagine, googleImagine.
      * @param {string} success - URL to redirect back to your app after a successful login attempt.  Only URLs from hostnames in your project's platform list are allowed. This requirement helps to prevent an [open redirect](https://cheatsheetseries.owasp.org/cheatsheets/Unvalidated_Redirects_and_Forwards_Cheat_Sheet.html) attack against your project API.
      * @param {string} failure - URL to redirect back to your app after a failed login attempt.  Only URLs from hostnames in your project's platform list are allowed. This requirement helps to prevent an [open redirect](https://cheatsheetseries.owasp.org/cheatsheets/Unvalidated_Redirects_and_Forwards_Cheat_Sheet.html) attack against your project API.
      * @param {string[]} scopes - A list of custom OAuth2 scopes. Check each provider internal docs for a list of supported scopes. Maximum of 100 scopes are allowed, each 4096 characters long.
@@ -1663,7 +1663,7 @@ export class Account extends Service {
     ): void | URL {
         let params: { provider: OAuthProvider, success?: string, failure?: string, scopes?: string[] };
 
-        if ((paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst) && 'provider' in paramsOrFirst)) {
+        if ((paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst) && ('provider' in paramsOrFirst || 'success' in paramsOrFirst || 'failure' in paramsOrFirst || 'scopes' in paramsOrFirst))) {
             params = (paramsOrFirst || {}) as { provider: OAuthProvider, success?: string, failure?: string, scopes?: string[] };
         } else {
             params = {
@@ -2323,7 +2323,7 @@ export class Account extends Service {
      * 
      * A user is limited to 10 active sessions at a time by default. [Learn more about session limits](https://appwrite.io/docs/authentication-security#limits).
      *
-     * @param {OAuthProvider} params.provider - OAuth2 Provider. Currently, supported providers are: amazon, apple, auth0, authentik, autodesk, bitbucket, bitly, box, dailymotion, discord, disqus, dropbox, etsy, facebook, figma, github, gitlab, google, linkedin, microsoft, notion, oidc, okta, paypal, paypalSandbox, podio, salesforce, slack, spotify, stripe, tradeshift, tradeshiftBox, twitch, wordpress, yahoo, yammer, yandex, zoho, zoom.
+     * @param {OAuthProvider} params.provider - OAuth2 Provider. Currently, supported providers are: amazon, apple, auth0, authentik, autodesk, bitbucket, bitly, box, dailymotion, discord, disqus, dropbox, etsy, facebook, figma, github, gitlab, google, linkedin, microsoft, notion, oidc, okta, paypal, paypalSandbox, podio, salesforce, slack, spotify, stripe, tradeshift, tradeshiftBox, twitch, wordpress, yahoo, yammer, yandex, zoho, zoom, githubImagine, googleImagine.
      * @param {string} params.success - URL to redirect back to your app after a successful login attempt.  Only URLs from hostnames in your project's platform list are allowed. This requirement helps to prevent an [open redirect](https://cheatsheetseries.owasp.org/cheatsheets/Unvalidated_Redirects_and_Forwards_Cheat_Sheet.html) attack against your project API.
      * @param {string} params.failure - URL to redirect back to your app after a failed login attempt.  Only URLs from hostnames in your project's platform list are allowed. This requirement helps to prevent an [open redirect](https://cheatsheetseries.owasp.org/cheatsheets/Unvalidated_Redirects_and_Forwards_Cheat_Sheet.html) attack against your project API.
      * @param {string[]} params.scopes - A list of custom OAuth2 scopes. Check each provider internal docs for a list of supported scopes. Maximum of 100 scopes are allowed, each 4096 characters long.
@@ -2338,7 +2338,7 @@ export class Account extends Service {
      * 
      * A user is limited to 10 active sessions at a time by default. [Learn more about session limits](https://appwrite.io/docs/authentication-security#limits).
      *
-     * @param {OAuthProvider} provider - OAuth2 Provider. Currently, supported providers are: amazon, apple, auth0, authentik, autodesk, bitbucket, bitly, box, dailymotion, discord, disqus, dropbox, etsy, facebook, figma, github, gitlab, google, linkedin, microsoft, notion, oidc, okta, paypal, paypalSandbox, podio, salesforce, slack, spotify, stripe, tradeshift, tradeshiftBox, twitch, wordpress, yahoo, yammer, yandex, zoho, zoom.
+     * @param {OAuthProvider} provider - OAuth2 Provider. Currently, supported providers are: amazon, apple, auth0, authentik, autodesk, bitbucket, bitly, box, dailymotion, discord, disqus, dropbox, etsy, facebook, figma, github, gitlab, google, linkedin, microsoft, notion, oidc, okta, paypal, paypalSandbox, podio, salesforce, slack, spotify, stripe, tradeshift, tradeshiftBox, twitch, wordpress, yahoo, yammer, yandex, zoho, zoom, githubImagine, googleImagine.
      * @param {string} success - URL to redirect back to your app after a successful login attempt.  Only URLs from hostnames in your project's platform list are allowed. This requirement helps to prevent an [open redirect](https://cheatsheetseries.owasp.org/cheatsheets/Unvalidated_Redirects_and_Forwards_Cheat_Sheet.html) attack against your project API.
      * @param {string} failure - URL to redirect back to your app after a failed login attempt.  Only URLs from hostnames in your project's platform list are allowed. This requirement helps to prevent an [open redirect](https://cheatsheetseries.owasp.org/cheatsheets/Unvalidated_Redirects_and_Forwards_Cheat_Sheet.html) attack against your project API.
      * @param {string[]} scopes - A list of custom OAuth2 scopes. Check each provider internal docs for a list of supported scopes. Maximum of 100 scopes are allowed, each 4096 characters long.
@@ -2353,7 +2353,7 @@ export class Account extends Service {
     ): void | URL {
         let params: { provider: OAuthProvider, success?: string, failure?: string, scopes?: string[] };
 
-        if ((paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst) && 'provider' in paramsOrFirst)) {
+        if ((paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst) && ('provider' in paramsOrFirst || 'success' in paramsOrFirst || 'failure' in paramsOrFirst || 'scopes' in paramsOrFirst))) {
             params = (paramsOrFirst || {}) as { provider: OAuthProvider, success?: string, failure?: string, scopes?: string[] };
         } else {
             params = {

@@ -13,7 +13,7 @@ interface Team { _team: any }
 interface Membership { _mem: any }
 interface Resolved { _res: any }
 
-type Actionable = Document | Row | File | Execution | Team | Membership;
+type Actionable = Document | Row | File | Team | Membership;
 
 function normalize(id: string): string {
   const trimmed = id.trim();
@@ -62,11 +62,6 @@ export class Channel<T> {
     return this.next<File>("files", id);
   }
 
-  // --- FUNCTION ROUTE ---
-  execution(this: Channel<Func>, id: string = "*"): Channel<Execution> {
-    return this.next<Execution>("executions", id);
-  }
-
   // --- TERMINAL ACTIONS ---
   // Restricted to the Actionable union
   create(this: Channel<Actionable>): Channel<Resolved> {
@@ -98,6 +93,10 @@ export class Channel<T> {
     return new Channel<Func>(["functions", normalize(id)]);
   }
 
+  static execution(id: string = "*") {
+    return new Channel<Execution>(["executions", normalize(id)]);
+  }
+
   static team(id: string = "*") {
     return new Channel<Team>(["teams", normalize(id)]);
   }
@@ -106,9 +105,8 @@ export class Channel<T> {
     return new Channel<Membership>(["memberships", normalize(id)]);
   }
 
-  static account(userId: string = ""): string {
-    const id = normalize(userId);
-    return id === "*" ? "account" : `account.${id}`;
+  static account(): string {
+    return "account";
   }
 
   // Global events
