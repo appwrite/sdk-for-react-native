@@ -17,7 +17,6 @@ export { Role } from './role';
 export { ID } from './id';
 export { Channel } from './channel';
 export { Operator, Condition } from './operator';
-export { Scopes } from './enums/scopes';
 export { AuthenticatorType } from './enums/authenticator-type';
 export { AuthenticationFactor } from './enums/authentication-factor';
 export { OAuthProvider } from './enums/o-auth-provider';

@@ -132,20 +132,6 @@ export namespace Models {
     }
 
     /**
-     * API Keys List
-     */
-    export type KeyList = {
-        /**
-         * Total number of keys that matched your query.
-         */
-        total: number;
-        /**
-         * List of keys.
-         */
-        keys: Key[];
-    }
-
-    /**
      * Countries List
      */
     export type CountryList = {
@@ -1095,48 +1081,6 @@ export namespace Models {
     }
 
     /**
-     * Key
-     */
-    export type Key = {
-        /**
-         * Key ID.
-         */
-        $id: string;
-        /**
-         * Key creation date in ISO 8601 format.
-         */
-        $createdAt: string;
-        /**
-         * Key update date in ISO 8601 format.
-         */
-        $updatedAt: string;
-        /**
-         * Key name.
-         */
-        name: string;
-        /**
-         * Key expiration date in ISO 8601 format.
-         */
-        expire: string;
-        /**
-         * Allowed permission scopes.
-         */
-        scopes: string[];
-        /**
-         * Secret key.
-         */
-        secret: string;
-        /**
-         * Most recent access date in ISO 8601 format. This attribute is only updated again after 24 hours.
-         */
-        accessedAt: string;
-        /**
-         * List of SDK user agents that used this key.
-         */
-        sdks: string[];
-    }
-
-    /**
      * Country
      */
     export type Country = {
@@ -1428,105 +1372,5 @@ export namespace Models {
          * Is the target expired.
          */
         expired: boolean;
-    }
-
-    /**
-     * paymentMethod
-     */
-    export type PaymentMethod = {
-        /**
-         * Payment Method ID.
-         */
-        $id: string;
-        /**
-         * Payment method creation time in ISO 8601 format.
-         */
-        $createdAt: string;
-        /**
-         * Payment method update date in ISO 8601 format.
-         */
-        $updatedAt: string;
-        /**
-         * Payment method permissions. [Learn more about permissions](/docs/permissions).
-         */
-        $permissions: string[];
-        /**
-         * Payment method ID from the payment provider
-         */
-        providerMethodId: string;
-        /**
-         * Client secret hash for payment setup
-         */
-        clientSecret: string;
-        /**
-         * User ID from the payment provider.
-         */
-        providerUserId: string;
-        /**
-         * ID of the Team.
-         */
-        userId: string;
-        /**
-         * Expiry month of the payment method.
-         */
-        expiryMonth: number;
-        /**
-         * Expiry year of the payment method.
-         */
-        expiryYear: number;
-        /**
-         * Last 4 digit of the payment method
-         */
-        last4: string;
-        /**
-         * Payment method brand
-         */
-        brand: string;
-        /**
-         * Name of the owner
-         */
-        name: string;
-        /**
-         * Mandate ID of the payment method
-         */
-        mandateId: string;
-        /**
-         * Country of the payment method
-         */
-        country: string;
-        /**
-         * State of the payment method
-         */
-        state: string;
-        /**
-         * Last payment error associated with the payment method.
-         */
-        lastError: string;
-        /**
-         * True when it&#039;s the default payment method.
-         */
-        default: boolean;
-        /**
-         * True when payment method has expired.
-         */
-        expired: boolean;
-        /**
-         * True when payment method has failed to process multiple times.
-         */
-        failed: boolean;
-    }
-
-    /**
-     * Payment methods list
-     */
-    export type PaymentMethodList = {
-        /**
-         * Total number of paymentMethods that matched your query.
-         */
-        total: number;
-        /**
-         * List of paymentMethods.
-         */
-        paymentMethods: PaymentMethod[];
     }
 }
