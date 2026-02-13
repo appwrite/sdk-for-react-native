@@ -5,6 +5,7 @@ import type { UploadProgress, Payload } from '../client';
 import * as FileSystem from 'expo-file-system';
 import { Platform } from 'react-native';
 
+import { Scopes } from '../enums/scopes';
 import { AuthenticatorType } from '../enums/authenticator-type';
 import { AuthenticationFactor } from '../enums/authentication-factor';
 import { OAuthProvider } from '../enums/o-auth-provider';
@@ -109,6 +110,343 @@ export class Account extends Service {
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call('post', uri, {
+            'content-type': 'application/json',
+        }, payload);
+    }
+
+    /**
+     * List all billing addresses for a user.
+     *
+     * @param {string[]} params.queries - Array of query strings generated using the Query class provided by the SDK. [Learn more about queries](https://appwrite.io/docs/databases#querying-documents). Maximum of 100 queries are allowed, each 4096 characters long. You may filter on the following attributes: userId, expired, failed
+     * @throws {AppwriteException}
+     * @returns {Promise}
+     */
+    listBillingAddresses(params?: { queries?: string[]  }): Promise<Models.BillingAddressList>;
+    /**
+     * List all billing addresses for a user.
+     *
+     * @param {string[]} queries - Array of query strings generated using the Query class provided by the SDK. [Learn more about queries](https://appwrite.io/docs/databases#querying-documents). Maximum of 100 queries are allowed, each 4096 characters long. You may filter on the following attributes: userId, expired, failed
+     * @throws {AppwriteException}
+     * @returns {Promise<Models.BillingAddressList>}
+     * @deprecated Use the object parameter style method for a better developer experience.
+     */
+    listBillingAddresses(queries?: string[]): Promise<Models.BillingAddressList>;
+    listBillingAddresses(
+        paramsOrFirst?: { queries?: string[] } | string[]    
+    ): Promise<Models.BillingAddressList> {
+        let params: { queries?: string[] };
+
+        if (!paramsOrFirst || (paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst))) {
+            params = (paramsOrFirst || {}) as { queries?: string[] };
+        } else {
+            params = {
+                queries: paramsOrFirst as string[]            
+            };
+        }
+
+        const queries = params.queries;
+
+        const apiPath = '/account/billing-addresses';
+        const payload: Payload = {};
+
+        if (typeof queries !== 'undefined') {
+            payload['queries'] = queries;
+        }
+
+        const uri = new URL(this.client.config.endpoint + apiPath);
+        return this.client.call('get', uri, {
+        }, payload);
+    }
+
+    /**
+     * Add a new billing address to a user's account.
+     *
+     * @param {string} params.country - Country
+     * @param {string} params.city - City
+     * @param {string} params.streetAddress - Street address
+     * @param {string} params.addressLine2 - Address line 2
+     * @param {string} params.state - State or province
+     * @param {string} params.postalCode - Postal code
+     * @throws {AppwriteException}
+     * @returns {Promise}
+     */
+    createBillingAddress(params: { country: string, city: string, streetAddress: string, addressLine2?: string, state?: string, postalCode?: string  }): Promise<Models.BillingAddress>;
+    /**
+     * Add a new billing address to a user's account.
+     *
+     * @param {string} country - Country
+     * @param {string} city - City
+     * @param {string} streetAddress - Street address
+     * @param {string} addressLine2 - Address line 2
+     * @param {string} state - State or province
+     * @param {string} postalCode - Postal code
+     * @throws {AppwriteException}
+     * @returns {Promise<Models.BillingAddress>}
+     * @deprecated Use the object parameter style method for a better developer experience.
+     */
+    createBillingAddress(country: string, city: string, streetAddress: string, addressLine2?: string, state?: string, postalCode?: string): Promise<Models.BillingAddress>;
+    createBillingAddress(
+        paramsOrFirst: { country: string, city: string, streetAddress: string, addressLine2?: string, state?: string, postalCode?: string } | string,
+        ...rest: [(string)?, (string)?, (string)?, (string)?, (string)?]    
+    ): Promise<Models.BillingAddress> {
+        let params: { country: string, city: string, streetAddress: string, addressLine2?: string, state?: string, postalCode?: string };
+
+        if ((paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst))) {
+            params = (paramsOrFirst || {}) as { country: string, city: string, streetAddress: string, addressLine2?: string, state?: string, postalCode?: string };
+        } else {
+            params = {
+                country: paramsOrFirst as string,
+                city: rest[0] as string,
+                streetAddress: rest[1] as string,
+                addressLine2: rest[2] as string,
+                state: rest[3] as string,
+                postalCode: rest[4] as string            
+            };
+        }
+
+        const country = params.country;
+        const city = params.city;
+        const streetAddress = params.streetAddress;
+        const addressLine2 = params.addressLine2;
+        const state = params.state;
+        const postalCode = params.postalCode;
+
+        if (typeof country === 'undefined') {
+            throw new AppwriteException('Missing required parameter: "country"');
+        }
+
+        if (typeof city === 'undefined') {
+            throw new AppwriteException('Missing required parameter: "city"');
+        }
+
+        if (typeof streetAddress === 'undefined') {
+            throw new AppwriteException('Missing required parameter: "streetAddress"');
+        }
+
+        const apiPath = '/account/billing-addresses';
+        const payload: Payload = {};
+
+        if (typeof country !== 'undefined') {
+            payload['country'] = country;
+        }
+
+        if (typeof city !== 'undefined') {
+            payload['city'] = city;
+        }
+
+        if (typeof streetAddress !== 'undefined') {
+            payload['streetAddress'] = streetAddress;
+        }
+
+        if (typeof addressLine2 !== 'undefined') {
+            payload['addressLine2'] = addressLine2;
+        }
+
+        if (typeof state !== 'undefined') {
+            payload['state'] = state;
+        }
+
+        if (typeof postalCode !== 'undefined') {
+            payload['postalCode'] = postalCode;
+        }
+
+        const uri = new URL(this.client.config.endpoint + apiPath);
+        return this.client.call('post', uri, {
+            'content-type': 'application/json',
+        }, payload);
+    }
+
+    /**
+     * Get a specific billing address for a user using it's ID.
+     *
+     * @param {string} params.billingAddressId - Unique ID of billing address
+     * @throws {AppwriteException}
+     * @returns {Promise}
+     */
+    getBillingAddress(params: { billingAddressId: string  }): Promise<Models.BillingAddress>;
+    /**
+     * Get a specific billing address for a user using it's ID.
+     *
+     * @param {string} billingAddressId - Unique ID of billing address
+     * @throws {AppwriteException}
+     * @returns {Promise<Models.BillingAddress>}
+     * @deprecated Use the object parameter style method for a better developer experience.
+     */
+    getBillingAddress(billingAddressId: string): Promise<Models.BillingAddress>;
+    getBillingAddress(
+        paramsOrFirst: { billingAddressId: string } | string    
+    ): Promise<Models.BillingAddress> {
+        let params: { billingAddressId: string };
+
+        if ((paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst))) {
+            params = (paramsOrFirst || {}) as { billingAddressId: string };
+        } else {
+            params = {
+                billingAddressId: paramsOrFirst as string            
+            };
+        }
+
+        const billingAddressId = params.billingAddressId;
+
+        if (typeof billingAddressId === 'undefined') {
+            throw new AppwriteException('Missing required parameter: "billingAddressId"');
+        }
+
+        const apiPath = '/account/billing-addresses/{billingAddressId}'.replace('{billingAddressId}', billingAddressId);
+        const payload: Payload = {};
+
+        const uri = new URL(this.client.config.endpoint + apiPath);
+        return this.client.call('get', uri, {
+        }, payload);
+    }
+
+    /**
+     * Update a specific billing address using it's ID.
+     *
+     * @param {string} params.billingAddressId - Unique ID of billing address
+     * @param {string} params.country - Country
+     * @param {string} params.city - City
+     * @param {string} params.streetAddress - Street address
+     * @param {string} params.addressLine2 - Address line 2
+     * @param {string} params.state - State or province
+     * @param {string} params.postalCode - Postal code
+     * @throws {AppwriteException}
+     * @returns {Promise}
+     */
+    updateBillingAddress(params: { billingAddressId: string, country: string, city: string, streetAddress: string, addressLine2?: string, state?: string, postalCode?: string  }): Promise<Models.BillingAddress>;
+    /**
+     * Update a specific billing address using it's ID.
+     *
+     * @param {string} billingAddressId - Unique ID of billing address
+     * @param {string} country - Country
+     * @param {string} city - City
+     * @param {string} streetAddress - Street address
+     * @param {string} addressLine2 - Address line 2
+     * @param {string} state - State or province
+     * @param {string} postalCode - Postal code
+     * @throws {AppwriteException}
+     * @returns {Promise<Models.BillingAddress>}
+     * @deprecated Use the object parameter style method for a better developer experience.
+     */
+    updateBillingAddress(billingAddressId: string, country: string, city: string, streetAddress: string, addressLine2?: string, state?: string, postalCode?: string): Promise<Models.BillingAddress>;
+    updateBillingAddress(
+        paramsOrFirst: { billingAddressId: string, country: string, city: string, streetAddress: string, addressLine2?: string, state?: string, postalCode?: string } | string,
+        ...rest: [(string)?, (string)?, (string)?, (string)?, (string)?, (string)?]    
+    ): Promise<Models.BillingAddress> {
+        let params: { billingAddressId: string, country: string, city: string, streetAddress: string, addressLine2?: string, state?: string, postalCode?: string };
+
+        if ((paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst))) {
+            params = (paramsOrFirst || {}) as { billingAddressId: string, country: string, city: string, streetAddress: string, addressLine2?: string, state?: string, postalCode?: string };
+        } else {
+            params = {
+                billingAddressId: paramsOrFirst as string,
+                country: rest[0] as string,
+                city: rest[1] as string,
+                streetAddress: rest[2] as string,
+                addressLine2: rest[3] as string,
+                state: rest[4] as string,
+                postalCode: rest[5] as string            
+            };
+        }
+
+        const billingAddressId = params.billingAddressId;
+        const country = params.country;
+        const city = params.city;
+        const streetAddress = params.streetAddress;
+        const addressLine2 = params.addressLine2;
+        const state = params.state;
+        const postalCode = params.postalCode;
+
+        if (typeof billingAddressId === 'undefined') {
+            throw new AppwriteException('Missing required parameter: "billingAddressId"');
+        }
+
+        if (typeof country === 'undefined') {
+            throw new AppwriteException('Missing required parameter: "country"');
+        }
+
+        if (typeof city === 'undefined') {
+            throw new AppwriteException('Missing required parameter: "city"');
+        }
+
+        if (typeof streetAddress === 'undefined') {
+            throw new AppwriteException('Missing required parameter: "streetAddress"');
+        }
+
+        const apiPath = '/account/billing-addresses/{billingAddressId}'.replace('{billingAddressId}', billingAddressId);
+        const payload: Payload = {};
+
+        if (typeof country !== 'undefined') {
+            payload['country'] = country;
+        }
+
+        if (typeof city !== 'undefined') {
+            payload['city'] = city;
+        }
+
+        if (typeof streetAddress !== 'undefined') {
+            payload['streetAddress'] = streetAddress;
+        }
+
+        if (typeof addressLine2 !== 'undefined') {
+            payload['addressLine2'] = addressLine2;
+        }
+
+        if (typeof state !== 'undefined') {
+            payload['state'] = state;
+        }
+
+        if (typeof postalCode !== 'undefined') {
+            payload['postalCode'] = postalCode;
+        }
+
+        const uri = new URL(this.client.config.endpoint + apiPath);
+        return this.client.call('put', uri, {
+            'content-type': 'application/json',
+        }, payload);
+    }
+
+    /**
+     * Delete a specific billing address using it's ID.
+     *
+     * @param {string} params.billingAddressId - Billing address unique ID
+     * @throws {AppwriteException}
+     * @returns {Promise}
+     */
+    deleteBillingAddress(params: { billingAddressId: string  }): Promise<{}>;
+    /**
+     * Delete a specific billing address using it's ID.
+     *
+     * @param {string} billingAddressId - Billing address unique ID
+     * @throws {AppwriteException}
+     * @returns {Promise<{}>}
+     * @deprecated Use the object parameter style method for a better developer experience.
+     */
+    deleteBillingAddress(billingAddressId: string): Promise<{}>;
+    deleteBillingAddress(
+        paramsOrFirst: { billingAddressId: string } | string    
+    ): Promise<{}> {
+        let params: { billingAddressId: string };
+
+        if ((paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst))) {
+            params = (paramsOrFirst || {}) as { billingAddressId: string };
+        } else {
+            params = {
+                billingAddressId: paramsOrFirst as string            
+            };
+        }
+
+        const billingAddressId = params.billingAddressId;
+
+        if (typeof billingAddressId === 'undefined') {
+            throw new AppwriteException('Missing required parameter: "billingAddressId"');
+        }
+
+        const apiPath = '/account/billing-addresses/{billingAddressId}'.replace('{billingAddressId}', billingAddressId);
+        const payload: Payload = {};
+
+        const uri = new URL(this.client.config.endpoint + apiPath);
+        return this.client.call('delete', uri, {
             'content-type': 'application/json',
         }, payload);
     }
@@ -318,6 +656,287 @@ export class Account extends Service {
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call('post', uri, {
+            'content-type': 'application/json',
+        }, payload);
+    }
+
+    /**
+     * Get a list of all API keys from the current account. 
+     *
+     * @param {boolean} params.total - When set to false, the total count returned will be 0 and will not be calculated.
+     * @throws {AppwriteException}
+     * @returns {Promise}
+     */
+    listKeys(params?: { total?: boolean  }): Promise<Models.KeyList>;
+    /**
+     * Get a list of all API keys from the current account. 
+     *
+     * @param {boolean} total - When set to false, the total count returned will be 0 and will not be calculated.
+     * @throws {AppwriteException}
+     * @returns {Promise<Models.KeyList>}
+     * @deprecated Use the object parameter style method for a better developer experience.
+     */
+    listKeys(total?: boolean): Promise<Models.KeyList>;
+    listKeys(
+        paramsOrFirst?: { total?: boolean } | boolean    
+    ): Promise<Models.KeyList> {
+        let params: { total?: boolean };
+
+        if (!paramsOrFirst || (paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst))) {
+            params = (paramsOrFirst || {}) as { total?: boolean };
+        } else {
+            params = {
+                total: paramsOrFirst as boolean            
+            };
+        }
+
+        const total = params.total;
+
+        const apiPath = '/account/keys';
+        const payload: Payload = {};
+
+        if (typeof total !== 'undefined') {
+            payload['total'] = total;
+        }
+
+        const uri = new URL(this.client.config.endpoint + apiPath);
+        return this.client.call('get', uri, {
+        }, payload);
+    }
+
+    /**
+     * Create a new account API key.
+     *
+     * @param {string} params.name - Key name. Max length: 128 chars.
+     * @param {Scopes[]} params.scopes - Key scopes list. Maximum of 100 scopes are allowed.
+     * @param {string} params.expire - Expiration time in [ISO 8601](https://www.iso.org/iso-8601-date-and-time-format.html) format. Use null for unlimited expiration.
+     * @throws {AppwriteException}
+     * @returns {Promise}
+     */
+    createKey(params: { name: string, scopes: Scopes[], expire?: string  }): Promise<Models.Key>;
+    /**
+     * Create a new account API key.
+     *
+     * @param {string} name - Key name. Max length: 128 chars.
+     * @param {Scopes[]} scopes - Key scopes list. Maximum of 100 scopes are allowed.
+     * @param {string} expire - Expiration time in [ISO 8601](https://www.iso.org/iso-8601-date-and-time-format.html) format. Use null for unlimited expiration.
+     * @throws {AppwriteException}
+     * @returns {Promise<Models.Key>}
+     * @deprecated Use the object parameter style method for a better developer experience.
+     */
+    createKey(name: string, scopes: Scopes[], expire?: string): Promise<Models.Key>;
+    createKey(
+        paramsOrFirst: { name: string, scopes: Scopes[], expire?: string } | string,
+        ...rest: [(Scopes[])?, (string)?]    
+    ): Promise<Models.Key> {
+        let params: { name: string, scopes: Scopes[], expire?: string };
+
+        if ((paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst))) {
+            params = (paramsOrFirst || {}) as { name: string, scopes: Scopes[], expire?: string };
+        } else {
+            params = {
+                name: paramsOrFirst as string,
+                scopes: rest[0] as Scopes[],
+                expire: rest[1] as string            
+            };
+        }
+
+        const name = params.name;
+        const scopes = params.scopes;
+        const expire = params.expire;
+
+        if (typeof name === 'undefined') {
+            throw new AppwriteException('Missing required parameter: "name"');
+        }
+
+        if (typeof scopes === 'undefined') {
+            throw new AppwriteException('Missing required parameter: "scopes"');
+        }
+
+        const apiPath = '/account/keys';
+        const payload: Payload = {};
+
+        if (typeof name !== 'undefined') {
+            payload['name'] = name;
+        }
+
+        if (typeof scopes !== 'undefined') {
+            payload['scopes'] = scopes;
+        }
+
+        if (typeof expire !== 'undefined') {
+            payload['expire'] = expire;
+        }
+
+        const uri = new URL(this.client.config.endpoint + apiPath);
+        return this.client.call('post', uri, {
+            'content-type': 'application/json',
+        }, payload);
+    }
+
+    /**
+     * Get a key by its unique ID. This endpoint returns details about a specific API key in your account including it's scopes.
+     *
+     * @param {string} params.keyId - Key unique ID.
+     * @throws {AppwriteException}
+     * @returns {Promise}
+     */
+    getKey(params: { keyId: string  }): Promise<Models.Key>;
+    /**
+     * Get a key by its unique ID. This endpoint returns details about a specific API key in your account including it's scopes.
+     *
+     * @param {string} keyId - Key unique ID.
+     * @throws {AppwriteException}
+     * @returns {Promise<Models.Key>}
+     * @deprecated Use the object parameter style method for a better developer experience.
+     */
+    getKey(keyId: string): Promise<Models.Key>;
+    getKey(
+        paramsOrFirst: { keyId: string } | string    
+    ): Promise<Models.Key> {
+        let params: { keyId: string };
+
+        if ((paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst))) {
+            params = (paramsOrFirst || {}) as { keyId: string };
+        } else {
+            params = {
+                keyId: paramsOrFirst as string            
+            };
+        }
+
+        const keyId = params.keyId;
+
+        if (typeof keyId === 'undefined') {
+            throw new AppwriteException('Missing required parameter: "keyId"');
+        }
+
+        const apiPath = '/account/keys/{keyId}'.replace('{keyId}', keyId);
+        const payload: Payload = {};
+
+        const uri = new URL(this.client.config.endpoint + apiPath);
+        return this.client.call('get', uri, {
+        }, payload);
+    }
+
+    /**
+     * Update a key by its unique ID. Use this endpoint to update the name, scopes, or expiration time of an API key.
+     *
+     * @param {string} params.keyId - Key unique ID.
+     * @param {string} params.name - Key name. Max length: 128 chars.
+     * @param {Scopes[]} params.scopes - Key scopes list. Maximum of 100 scopes are allowed.
+     * @param {string} params.expire - Expiration time in [ISO 8601](https://www.iso.org/iso-8601-date-and-time-format.html) format. Use null for unlimited expiration.
+     * @throws {AppwriteException}
+     * @returns {Promise}
+     */
+    updateKey(params: { keyId: string, name: string, scopes: Scopes[], expire?: string  }): Promise<Models.Key>;
+    /**
+     * Update a key by its unique ID. Use this endpoint to update the name, scopes, or expiration time of an API key.
+     *
+     * @param {string} keyId - Key unique ID.
+     * @param {string} name - Key name. Max length: 128 chars.
+     * @param {Scopes[]} scopes - Key scopes list. Maximum of 100 scopes are allowed.
+     * @param {string} expire - Expiration time in [ISO 8601](https://www.iso.org/iso-8601-date-and-time-format.html) format. Use null for unlimited expiration.
+     * @throws {AppwriteException}
+     * @returns {Promise<Models.Key>}
+     * @deprecated Use the object parameter style method for a better developer experience.
+     */
+    updateKey(keyId: string, name: string, scopes: Scopes[], expire?: string): Promise<Models.Key>;
+    updateKey(
+        paramsOrFirst: { keyId: string, name: string, scopes: Scopes[], expire?: string } | string,
+        ...rest: [(string)?, (Scopes[])?, (string)?]    
+    ): Promise<Models.Key> {
+        let params: { keyId: string, name: string, scopes: Scopes[], expire?: string };
+
+        if ((paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst))) {
+            params = (paramsOrFirst || {}) as { keyId: string, name: string, scopes: Scopes[], expire?: string };
+        } else {
+            params = {
+                keyId: paramsOrFirst as string,
+                name: rest[0] as string,
+                scopes: rest[1] as Scopes[],
+                expire: rest[2] as string            
+            };
+        }
+
+        const keyId = params.keyId;
+        const name = params.name;
+        const scopes = params.scopes;
+        const expire = params.expire;
+
+        if (typeof keyId === 'undefined') {
+            throw new AppwriteException('Missing required parameter: "keyId"');
+        }
+
+        if (typeof name === 'undefined') {
+            throw new AppwriteException('Missing required parameter: "name"');
+        }
+
+        if (typeof scopes === 'undefined') {
+            throw new AppwriteException('Missing required parameter: "scopes"');
+        }
+
+        const apiPath = '/account/keys/{keyId}'.replace('{keyId}', keyId);
+        const payload: Payload = {};
+
+        if (typeof name !== 'undefined') {
+            payload['name'] = name;
+        }
+
+        if (typeof scopes !== 'undefined') {
+            payload['scopes'] = scopes;
+        }
+
+        if (typeof expire !== 'undefined') {
+            payload['expire'] = expire;
+        }
+
+        const uri = new URL(this.client.config.endpoint + apiPath);
+        return this.client.call('put', uri, {
+            'content-type': 'application/json',
+        }, payload);
+    }
+
+    /**
+     * Delete a key by its unique ID. Once deleted, the key can no longer be used to authenticate API calls.
+     *
+     * @param {string} params.keyId - Key unique ID.
+     * @throws {AppwriteException}
+     * @returns {Promise}
+     */
+    deleteKey(params: { keyId: string  }): Promise<{}>;
+    /**
+     * Delete a key by its unique ID. Once deleted, the key can no longer be used to authenticate API calls.
+     *
+     * @param {string} keyId - Key unique ID.
+     * @throws {AppwriteException}
+     * @returns {Promise<{}>}
+     * @deprecated Use the object parameter style method for a better developer experience.
+     */
+    deleteKey(keyId: string): Promise<{}>;
+    deleteKey(
+        paramsOrFirst: { keyId: string } | string    
+    ): Promise<{}> {
+        let params: { keyId: string };
+
+        if ((paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst))) {
+            params = (paramsOrFirst || {}) as { keyId: string };
+        } else {
+            params = {
+                keyId: paramsOrFirst as string            
+            };
+        }
+
+        const keyId = params.keyId;
+
+        if (typeof keyId === 'undefined') {
+            throw new AppwriteException('Missing required parameter: "keyId"');
+        }
+
+        const apiPath = '/account/keys/{keyId}'.replace('{keyId}', keyId);
+        const payload: Payload = {};
+
+        const uri = new URL(this.client.config.endpoint + apiPath);
+        return this.client.call('delete', uri, {
             'content-type': 'application/json',
         }, payload);
     }
@@ -1183,6 +1802,356 @@ export class Account extends Service {
     }
 
     /**
+     * List payment methods for this account.
+     *
+     * @param {string[]} params.queries - Array of query strings generated using the Query class provided by the SDK. [Learn more about queries](https://appwrite.io/docs/databases#querying-documents). Maximum of 100 queries are allowed, each 4096 characters long. You may filter on the following attributes: userId, expired, failed
+     * @throws {AppwriteException}
+     * @returns {Promise}
+     */
+    listPaymentMethods(params?: { queries?: string[]  }): Promise<Models.PaymentMethodList>;
+    /**
+     * List payment methods for this account.
+     *
+     * @param {string[]} queries - Array of query strings generated using the Query class provided by the SDK. [Learn more about queries](https://appwrite.io/docs/databases#querying-documents). Maximum of 100 queries are allowed, each 4096 characters long. You may filter on the following attributes: userId, expired, failed
+     * @throws {AppwriteException}
+     * @returns {Promise<Models.PaymentMethodList>}
+     * @deprecated Use the object parameter style method for a better developer experience.
+     */
+    listPaymentMethods(queries?: string[]): Promise<Models.PaymentMethodList>;
+    listPaymentMethods(
+        paramsOrFirst?: { queries?: string[] } | string[]    
+    ): Promise<Models.PaymentMethodList> {
+        let params: { queries?: string[] };
+
+        if (!paramsOrFirst || (paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst))) {
+            params = (paramsOrFirst || {}) as { queries?: string[] };
+        } else {
+            params = {
+                queries: paramsOrFirst as string[]            
+            };
+        }
+
+        const queries = params.queries;
+
+        const apiPath = '/account/payment-methods';
+        const payload: Payload = {};
+
+        if (typeof queries !== 'undefined') {
+            payload['queries'] = queries;
+        }
+
+        const uri = new URL(this.client.config.endpoint + apiPath);
+        return this.client.call('get', uri, {
+        }, payload);
+    }
+
+    /**
+     * Create a new payment method for the current user account.
+     *
+     * @throws {AppwriteException}
+     * @returns {Promise}
+     */
+    createPaymentMethod(): Promise<Models.PaymentMethod> {
+        const apiPath = '/account/payment-methods';
+        const payload: Payload = {};
+
+        const uri = new URL(this.client.config.endpoint + apiPath);
+        return this.client.call('post', uri, {
+            'content-type': 'application/json',
+        }, payload);
+    }
+
+    /**
+     * Get a specific payment method for the user.
+     *
+     * @param {string} params.paymentMethodId - Unique ID of payment method
+     * @throws {AppwriteException}
+     * @returns {Promise}
+     */
+    getPaymentMethod(params: { paymentMethodId: string  }): Promise<Models.PaymentMethod>;
+    /**
+     * Get a specific payment method for the user.
+     *
+     * @param {string} paymentMethodId - Unique ID of payment method
+     * @throws {AppwriteException}
+     * @returns {Promise<Models.PaymentMethod>}
+     * @deprecated Use the object parameter style method for a better developer experience.
+     */
+    getPaymentMethod(paymentMethodId: string): Promise<Models.PaymentMethod>;
+    getPaymentMethod(
+        paramsOrFirst: { paymentMethodId: string } | string    
+    ): Promise<Models.PaymentMethod> {
+        let params: { paymentMethodId: string };
+
+        if ((paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst))) {
+            params = (paramsOrFirst || {}) as { paymentMethodId: string };
+        } else {
+            params = {
+                paymentMethodId: paramsOrFirst as string            
+            };
+        }
+
+        const paymentMethodId = params.paymentMethodId;
+
+        if (typeof paymentMethodId === 'undefined') {
+            throw new AppwriteException('Missing required parameter: "paymentMethodId"');
+        }
+
+        const apiPath = '/account/payment-methods/{paymentMethodId}'.replace('{paymentMethodId}', paymentMethodId);
+        const payload: Payload = {};
+
+        const uri = new URL(this.client.config.endpoint + apiPath);
+        return this.client.call('get', uri, {
+        }, payload);
+    }
+
+    /**
+     * Update a new payment method for the current user account.
+     *
+     * @param {string} params.paymentMethodId - Unique ID of payment method
+     * @param {number} params.expiryMonth - Payment expiry month
+     * @param {number} params.expiryYear - Expiry year
+     * @param {string} params.state - State of the payment method country
+     * @throws {AppwriteException}
+     * @returns {Promise}
+     */
+    updatePaymentMethod(params: { paymentMethodId: string, expiryMonth: number, expiryYear: number, state?: string  }): Promise<Models.PaymentMethod>;
+    /**
+     * Update a new payment method for the current user account.
+     *
+     * @param {string} paymentMethodId - Unique ID of payment method
+     * @param {number} expiryMonth - Payment expiry month
+     * @param {number} expiryYear - Expiry year
+     * @param {string} state - State of the payment method country
+     * @throws {AppwriteException}
+     * @returns {Promise<Models.PaymentMethod>}
+     * @deprecated Use the object parameter style method for a better developer experience.
+     */
+    updatePaymentMethod(paymentMethodId: string, expiryMonth: number, expiryYear: number, state?: string): Promise<Models.PaymentMethod>;
+    updatePaymentMethod(
+        paramsOrFirst: { paymentMethodId: string, expiryMonth: number, expiryYear: number, state?: string } | string,
+        ...rest: [(number)?, (number)?, (string)?]    
+    ): Promise<Models.PaymentMethod> {
+        let params: { paymentMethodId: string, expiryMonth: number, expiryYear: number, state?: string };
+
+        if ((paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst))) {
+            params = (paramsOrFirst || {}) as { paymentMethodId: string, expiryMonth: number, expiryYear: number, state?: string };
+        } else {
+            params = {
+                paymentMethodId: paramsOrFirst as string,
+                expiryMonth: rest[0] as number,
+                expiryYear: rest[1] as number,
+                state: rest[2] as string            
+            };
+        }
+
+        const paymentMethodId = params.paymentMethodId;
+        const expiryMonth = params.expiryMonth;
+        const expiryYear = params.expiryYear;
+        const state = params.state;
+
+        if (typeof paymentMethodId === 'undefined') {
+            throw new AppwriteException('Missing required parameter: "paymentMethodId"');
+        }
+
+        if (typeof expiryMonth === 'undefined') {
+            throw new AppwriteException('Missing required parameter: "expiryMonth"');
+        }
+
+        if (typeof expiryYear === 'undefined') {
+            throw new AppwriteException('Missing required parameter: "expiryYear"');
+        }
+
+        const apiPath = '/account/payment-methods/{paymentMethodId}'.replace('{paymentMethodId}', paymentMethodId);
+        const payload: Payload = {};
+
+        if (typeof expiryMonth !== 'undefined') {
+            payload['expiryMonth'] = expiryMonth;
+        }
+
+        if (typeof expiryYear !== 'undefined') {
+            payload['expiryYear'] = expiryYear;
+        }
+
+        if (typeof state !== 'undefined') {
+            payload['state'] = state;
+        }
+
+        const uri = new URL(this.client.config.endpoint + apiPath);
+        return this.client.call('patch', uri, {
+            'content-type': 'application/json',
+        }, payload);
+    }
+
+    /**
+     * Delete a specific payment method from a user's account.
+     *
+     * @param {string} params.paymentMethodId - Unique ID of payment method
+     * @throws {AppwriteException}
+     * @returns {Promise}
+     */
+    deletePaymentMethod(params: { paymentMethodId: string  }): Promise<{}>;
+    /**
+     * Delete a specific payment method from a user's account.
+     *
+     * @param {string} paymentMethodId - Unique ID of payment method
+     * @throws {AppwriteException}
+     * @returns {Promise<{}>}
+     * @deprecated Use the object parameter style method for a better developer experience.
+     */
+    deletePaymentMethod(paymentMethodId: string): Promise<{}>;
+    deletePaymentMethod(
+        paramsOrFirst: { paymentMethodId: string } | string    
+    ): Promise<{}> {
+        let params: { paymentMethodId: string };
+
+        if ((paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst))) {
+            params = (paramsOrFirst || {}) as { paymentMethodId: string };
+        } else {
+            params = {
+                paymentMethodId: paramsOrFirst as string            
+            };
+        }
+
+        const paymentMethodId = params.paymentMethodId;
+
+        if (typeof paymentMethodId === 'undefined') {
+            throw new AppwriteException('Missing required parameter: "paymentMethodId"');
+        }
+
+        const apiPath = '/account/payment-methods/{paymentMethodId}'.replace('{paymentMethodId}', paymentMethodId);
+        const payload: Payload = {};
+
+        const uri = new URL(this.client.config.endpoint + apiPath);
+        return this.client.call('delete', uri, {
+            'content-type': 'application/json',
+        }, payload);
+    }
+
+    /**
+     * Update payment method provider.
+     *
+     * @param {string} params.paymentMethodId - Unique ID of payment method
+     * @param {string} params.providerMethodId - Payment method ID from the payment provider
+     * @param {string} params.name - Name in the payment method
+     * @param {string} params.state - State of the payment method country
+     * @throws {AppwriteException}
+     * @returns {Promise}
+     */
+    updatePaymentMethodProvider(params: { paymentMethodId: string, providerMethodId: string, name: string, state?: string  }): Promise<Models.PaymentMethod>;
+    /**
+     * Update payment method provider.
+     *
+     * @param {string} paymentMethodId - Unique ID of payment method
+     * @param {string} providerMethodId - Payment method ID from the payment provider
+     * @param {string} name - Name in the payment method
+     * @param {string} state - State of the payment method country
+     * @throws {AppwriteException}
+     * @returns {Promise<Models.PaymentMethod>}
+     * @deprecated Use the object parameter style method for a better developer experience.
+     */
+    updatePaymentMethodProvider(paymentMethodId: string, providerMethodId: string, name: string, state?: string): Promise<Models.PaymentMethod>;
+    updatePaymentMethodProvider(
+        paramsOrFirst: { paymentMethodId: string, providerMethodId: string, name: string, state?: string } | string,
+        ...rest: [(string)?, (string)?, (string)?]    
+    ): Promise<Models.PaymentMethod> {
+        let params: { paymentMethodId: string, providerMethodId: string, name: string, state?: string };
+
+        if ((paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst))) {
+            params = (paramsOrFirst || {}) as { paymentMethodId: string, providerMethodId: string, name: string, state?: string };
+        } else {
+            params = {
+                paymentMethodId: paramsOrFirst as string,
+                providerMethodId: rest[0] as string,
+                name: rest[1] as string,
+                state: rest[2] as string            
+            };
+        }
+
+        const paymentMethodId = params.paymentMethodId;
+        const providerMethodId = params.providerMethodId;
+        const name = params.name;
+        const state = params.state;
+
+        if (typeof paymentMethodId === 'undefined') {
+            throw new AppwriteException('Missing required parameter: "paymentMethodId"');
+        }
+
+        if (typeof providerMethodId === 'undefined') {
+            throw new AppwriteException('Missing required parameter: "providerMethodId"');
+        }
+
+        if (typeof name === 'undefined') {
+            throw new AppwriteException('Missing required parameter: "name"');
+        }
+
+        const apiPath = '/account/payment-methods/{paymentMethodId}/provider'.replace('{paymentMethodId}', paymentMethodId);
+        const payload: Payload = {};
+
+        if (typeof providerMethodId !== 'undefined') {
+            payload['providerMethodId'] = providerMethodId;
+        }
+
+        if (typeof name !== 'undefined') {
+            payload['name'] = name;
+        }
+
+        if (typeof state !== 'undefined') {
+            payload['state'] = state;
+        }
+
+        const uri = new URL(this.client.config.endpoint + apiPath);
+        return this.client.call('patch', uri, {
+            'content-type': 'application/json',
+        }, payload);
+    }
+
+    /**
+     * Update payment method mandate options.
+     *
+     * @param {string} params.paymentMethodId - Unique ID of payment method
+     * @throws {AppwriteException}
+     * @returns {Promise}
+     */
+    updatePaymentMethodMandateOptions(params: { paymentMethodId: string  }): Promise<Models.PaymentMethod>;
+    /**
+     * Update payment method mandate options.
+     *
+     * @param {string} paymentMethodId - Unique ID of payment method
+     * @throws {AppwriteException}
+     * @returns {Promise<Models.PaymentMethod>}
+     * @deprecated Use the object parameter style method for a better developer experience.
+     */
+    updatePaymentMethodMandateOptions(paymentMethodId: string): Promise<Models.PaymentMethod>;
+    updatePaymentMethodMandateOptions(
+        paramsOrFirst: { paymentMethodId: string } | string    
+    ): Promise<Models.PaymentMethod> {
+        let params: { paymentMethodId: string };
+
+        if ((paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst))) {
+            params = (paramsOrFirst || {}) as { paymentMethodId: string };
+        } else {
+            params = {
+                paymentMethodId: paramsOrFirst as string            
+            };
+        }
+
+        const paymentMethodId = params.paymentMethodId;
+
+        if (typeof paymentMethodId === 'undefined') {
+            throw new AppwriteException('Missing required parameter: "paymentMethodId"');
+        }
+
+        const apiPath = '/account/payment-methods/{paymentMethodId}/setup'.replace('{paymentMethodId}', paymentMethodId);
+        const payload: Payload = {};
+
+        const uri = new URL(this.client.config.endpoint + apiPath);
+        return this.client.call('patch', uri, {
+            'content-type': 'application/json',
+        }, payload);
+    }
+
+    /**
      * Update the currently logged in user's phone number. After updating the phone number, the phone verification status will be reset. A confirmation SMS is not sent automatically, however you can use the [POST /account/verification/phone](https://appwrite.io/docs/references/cloud/client-web/account#createPhoneVerification) endpoint to send a confirmation SMS.
      *
      * @param {string} params.phone - Phone number. Format this number with a leading '+' and a country code, e.g., +16175551212.
@@ -1632,7 +2601,7 @@ export class Account extends Service {
      * A user is limited to 10 active sessions at a time by default. [Learn more about session limits](https://appwrite.io/docs/authentication-security#limits).
      * 
      *
-     * @param {OAuthProvider} params.provider - OAuth2 Provider. Currently, supported providers are: amazon, apple, auth0, authentik, autodesk, bitbucket, bitly, box, dailymotion, discord, disqus, dropbox, etsy, facebook, figma, github, gitlab, google, linkedin, microsoft, notion, oidc, okta, paypal, paypalSandbox, podio, salesforce, slack, spotify, stripe, tradeshift, tradeshiftBox, twitch, wordpress, yahoo, yammer, yandex, zoho, zoom.
+     * @param {OAuthProvider} params.provider - OAuth2 Provider. Currently, supported providers are: amazon, apple, auth0, authentik, autodesk, bitbucket, bitly, box, dailymotion, discord, disqus, dropbox, etsy, facebook, figma, github, gitlab, google, linkedin, microsoft, notion, oidc, okta, paypal, paypalSandbox, podio, salesforce, slack, spotify, stripe, tradeshift, tradeshiftBox, twitch, wordpress, yahoo, yammer, yandex, zoho, zoom, githubImagine, googleImagine.
      * @param {string} params.success - URL to redirect back to your app after a successful login attempt.  Only URLs from hostnames in your project's platform list are allowed. This requirement helps to prevent an [open redirect](https://cheatsheetseries.owasp.org/cheatsheets/Unvalidated_Redirects_and_Forwards_Cheat_Sheet.html) attack against your project API.
      * @param {string} params.failure - URL to redirect back to your app after a failed login attempt.  Only URLs from hostnames in your project's platform list are allowed. This requirement helps to prevent an [open redirect](https://cheatsheetseries.owasp.org/cheatsheets/Unvalidated_Redirects_and_Forwards_Cheat_Sheet.html) attack against your project API.
      * @param {string[]} params.scopes - A list of custom OAuth2 scopes. Check each provider internal docs for a list of supported scopes. Maximum of 100 scopes are allowed, each 4096 characters long.
@@ -1648,7 +2617,7 @@ export class Account extends Service {
      * A user is limited to 10 active sessions at a time by default. [Learn more about session limits](https://appwrite.io/docs/authentication-security#limits).
      * 
      *
-     * @param {OAuthProvider} provider - OAuth2 Provider. Currently, supported providers are: amazon, apple, auth0, authentik, autodesk, bitbucket, bitly, box, dailymotion, discord, disqus, dropbox, etsy, facebook, figma, github, gitlab, google, linkedin, microsoft, notion, oidc, okta, paypal, paypalSandbox, podio, salesforce, slack, spotify, stripe, tradeshift, tradeshiftBox, twitch, wordpress, yahoo, yammer, yandex, zoho, zoom.
+     * @param {OAuthProvider} provider - OAuth2 Provider. Currently, supported providers are: amazon, apple, auth0, authentik, autodesk, bitbucket, bitly, box, dailymotion, discord, disqus, dropbox, etsy, facebook, figma, github, gitlab, google, linkedin, microsoft, notion, oidc, okta, paypal, paypalSandbox, podio, salesforce, slack, spotify, stripe, tradeshift, tradeshiftBox, twitch, wordpress, yahoo, yammer, yandex, zoho, zoom, githubImagine, googleImagine.
      * @param {string} success - URL to redirect back to your app after a successful login attempt.  Only URLs from hostnames in your project's platform list are allowed. This requirement helps to prevent an [open redirect](https://cheatsheetseries.owasp.org/cheatsheets/Unvalidated_Redirects_and_Forwards_Cheat_Sheet.html) attack against your project API.
      * @param {string} failure - URL to redirect back to your app after a failed login attempt.  Only URLs from hostnames in your project's platform list are allowed. This requirement helps to prevent an [open redirect](https://cheatsheetseries.owasp.org/cheatsheets/Unvalidated_Redirects_and_Forwards_Cheat_Sheet.html) attack against your project API.
      * @param {string[]} scopes - A list of custom OAuth2 scopes. Check each provider internal docs for a list of supported scopes. Maximum of 100 scopes are allowed, each 4096 characters long.
@@ -2323,7 +3292,7 @@ export class Account extends Service {
      * 
      * A user is limited to 10 active sessions at a time by default. [Learn more about session limits](https://appwrite.io/docs/authentication-security#limits).
      *
-     * @param {OAuthProvider} params.provider - OAuth2 Provider. Currently, supported providers are: amazon, apple, auth0, authentik, autodesk, bitbucket, bitly, box, dailymotion, discord, disqus, dropbox, etsy, facebook, figma, github, gitlab, google, linkedin, microsoft, notion, oidc, okta, paypal, paypalSandbox, podio, salesforce, slack, spotify, stripe, tradeshift, tradeshiftBox, twitch, wordpress, yahoo, yammer, yandex, zoho, zoom.
+     * @param {OAuthProvider} params.provider - OAuth2 Provider. Currently, supported providers are: amazon, apple, auth0, authentik, autodesk, bitbucket, bitly, box, dailymotion, discord, disqus, dropbox, etsy, facebook, figma, github, gitlab, google, linkedin, microsoft, notion, oidc, okta, paypal, paypalSandbox, podio, salesforce, slack, spotify, stripe, tradeshift, tradeshiftBox, twitch, wordpress, yahoo, yammer, yandex, zoho, zoom, githubImagine, googleImagine.
      * @param {string} params.success - URL to redirect back to your app after a successful login attempt.  Only URLs from hostnames in your project's platform list are allowed. This requirement helps to prevent an [open redirect](https://cheatsheetseries.owasp.org/cheatsheets/Unvalidated_Redirects_and_Forwards_Cheat_Sheet.html) attack against your project API.
      * @param {string} params.failure - URL to redirect back to your app after a failed login attempt.  Only URLs from hostnames in your project's platform list are allowed. This requirement helps to prevent an [open redirect](https://cheatsheetseries.owasp.org/cheatsheets/Unvalidated_Redirects_and_Forwards_Cheat_Sheet.html) attack against your project API.
      * @param {string[]} params.scopes - A list of custom OAuth2 scopes. Check each provider internal docs for a list of supported scopes. Maximum of 100 scopes are allowed, each 4096 characters long.
@@ -2338,7 +3307,7 @@ export class Account extends Service {
      * 
      * A user is limited to 10 active sessions at a time by default. [Learn more about session limits](https://appwrite.io/docs/authentication-security#limits).
      *
-     * @param {OAuthProvider} provider - OAuth2 Provider. Currently, supported providers are: amazon, apple, auth0, authentik, autodesk, bitbucket, bitly, box, dailymotion, discord, disqus, dropbox, etsy, facebook, figma, github, gitlab, google, linkedin, microsoft, notion, oidc, okta, paypal, paypalSandbox, podio, salesforce, slack, spotify, stripe, tradeshift, tradeshiftBox, twitch, wordpress, yahoo, yammer, yandex, zoho, zoom.
+     * @param {OAuthProvider} provider - OAuth2 Provider. Currently, supported providers are: amazon, apple, auth0, authentik, autodesk, bitbucket, bitly, box, dailymotion, discord, disqus, dropbox, etsy, facebook, figma, github, gitlab, google, linkedin, microsoft, notion, oidc, okta, paypal, paypalSandbox, podio, salesforce, slack, spotify, stripe, tradeshift, tradeshiftBox, twitch, wordpress, yahoo, yammer, yandex, zoho, zoom, githubImagine, googleImagine.
      * @param {string} success - URL to redirect back to your app after a successful login attempt.  Only URLs from hostnames in your project's platform list are allowed. This requirement helps to prevent an [open redirect](https://cheatsheetseries.owasp.org/cheatsheets/Unvalidated_Redirects_and_Forwards_Cheat_Sheet.html) attack against your project API.
      * @param {string} failure - URL to redirect back to your app after a failed login attempt.  Only URLs from hostnames in your project's platform list are allowed. This requirement helps to prevent an [open redirect](https://cheatsheetseries.owasp.org/cheatsheets/Unvalidated_Redirects_and_Forwards_Cheat_Sheet.html) attack against your project API.
      * @param {string[]} scopes - A list of custom OAuth2 scopes. Check each provider internal docs for a list of supported scopes. Maximum of 100 scopes are allowed, each 4096 characters long.

@@ -132,6 +132,20 @@ export namespace Models {
     }
 
     /**
+     * API Keys List
+     */
+    export type KeyList = {
+        /**
+         * Total number of keys that matched your query.
+         */
+        total: number;
+        /**
+         * List of keys.
+         */
+        keys: Key[];
+    }
+
+    /**
      * Countries List
      */
     export type CountryList = {
@@ -1081,6 +1095,48 @@ export namespace Models {
     }
 
     /**
+     * Key
+     */
+    export type Key = {
+        /**
+         * Key ID.
+         */
+        $id: string;
+        /**
+         * Key creation date in ISO 8601 format.
+         */
+        $createdAt: string;
+        /**
+         * Key update date in ISO 8601 format.
+         */
+        $updatedAt: string;
+        /**
+         * Key name.
+         */
+        name: string;
+        /**
+         * Key expiration date in ISO 8601 format.
+         */
+        expire: string;
+        /**
+         * Allowed permission scopes.
+         */
+        scopes: string[];
+        /**
+         * Secret key.
+         */
+        secret: string;
+        /**
+         * Most recent access date in ISO 8601 format. This attribute is only updated again after 24 hours.
+         */
+        accessedAt: string;
+        /**
+         * List of SDK user agents that used this key.
+         */
+        sdks: string[];
+    }
+
+    /**
      * Country
      */
     export type Country = {
@@ -1372,5 +1428,337 @@ export namespace Models {
          * Is the target expired.
          */
         expired: boolean;
+    }
+
+    /**
+     * BillingAddress
+     */
+    export type BillingAddress = {
+        /**
+         * Region ID
+         */
+        $id: string;
+        /**
+         * User ID
+         */
+        userId: string;
+        /**
+         * Street address
+         */
+        streetAddress: string;
+        /**
+         * Address line 2
+         */
+        addressLine2: string;
+        /**
+         * Address country
+         */
+        country: string;
+        /**
+         * city
+         */
+        city: string;
+        /**
+         * state
+         */
+        state: string;
+        /**
+         * postal code
+         */
+        postalCode: string;
+    }
+
+    /**
+     * Downgrade Feedback
+     */
+    export type DowngradeFeedback = {
+        /**
+         * Feedback ID.
+         */
+        $id: string;
+        /**
+         * Feedback creation date in ISO 8601 format.
+         */
+        $createdAt: string;
+        /**
+         * Feedback update date in ISO 8601 format.
+         */
+        $updatedAt: string;
+        /**
+         * Feedback reason
+         */
+        title: string;
+        /**
+         * Feedback message
+         */
+        message: string;
+        /**
+         * Plan ID downgrading from
+         */
+        fromPlanId: string;
+        /**
+         * Plan ID downgrading to
+         */
+        toPlanId: string;
+        /**
+         * Organization ID
+         */
+        teamId: string;
+        /**
+         * User ID who submitted feedback
+         */
+        userId: string;
+        /**
+         * Console version
+         */
+        version: string;
+    }
+
+    /**
+     * Invoice
+     */
+    export type Invoice = {
+        /**
+         * Invoice ID.
+         */
+        $id: string;
+        /**
+         * Invoice creation time in ISO 8601 format.
+         */
+        $createdAt: string;
+        /**
+         * Invoice update date in ISO 8601 format.
+         */
+        $updatedAt: string;
+        /**
+         * Invoice permissions. [Learn more about permissions](/docs/permissions).
+         */
+        $permissions: string[];
+        /**
+         * Project ID
+         */
+        teamId: string;
+        /**
+         * Aggregation ID
+         */
+        aggregationId: string;
+        /**
+         * Billing plan selected. Can be one of `tier-0`, `tier-1` or `tier-2`.
+         */
+        plan: string;
+        /**
+         * Usage breakdown per resource
+         */
+        usage: UsageResources[];
+        /**
+         * Invoice Amount
+         */
+        amount: number;
+        /**
+         * Tax percentage
+         */
+        tax: number;
+        /**
+         * Tax amount
+         */
+        taxAmount: number;
+        /**
+         * VAT percentage
+         */
+        vat: number;
+        /**
+         * VAT amount
+         */
+        vatAmount: number;
+        /**
+         * Gross amount after vat, tax, and discounts applied.
+         */
+        grossAmount: number;
+        /**
+         * Credits used.
+         */
+        creditsUsed: number;
+        /**
+         * Currency the invoice is in
+         */
+        currency: string;
+        /**
+         * Client secret for processing failed payments in front-end
+         */
+        clientSecret: string;
+        /**
+         * Invoice status
+         */
+        status: string;
+        /**
+         * Last payment error associated with the invoice
+         */
+        lastError: string;
+        /**
+         * Invoice due date.
+         */
+        dueAt: string;
+        /**
+         * Beginning date of the invoice
+         */
+        from: string;
+        /**
+         * End date of the invoice
+         */
+        to: string;
+    }
+
+    /**
+     * paymentMethod
+     */
+    export type PaymentMethod = {
+        /**
+         * Payment Method ID.
+         */
+        $id: string;
+        /**
+         * Payment method creation time in ISO 8601 format.
+         */
+        $createdAt: string;
+        /**
+         * Payment method update date in ISO 8601 format.
+         */
+        $updatedAt: string;
+        /**
+         * Payment method permissions. [Learn more about permissions](/docs/permissions).
+         */
+        $permissions: string[];
+        /**
+         * Payment method ID from the payment provider
+         */
+        providerMethodId: string;
+        /**
+         * Client secret hash for payment setup
+         */
+        clientSecret: string;
+        /**
+         * User ID from the payment provider.
+         */
+        providerUserId: string;
+        /**
+         * ID of the Team.
+         */
+        userId: string;
+        /**
+         * Expiry month of the payment method.
+         */
+        expiryMonth: number;
+        /**
+         * Expiry year of the payment method.
+         */
+        expiryYear: number;
+        /**
+         * Last 4 digit of the payment method
+         */
+        last4: string;
+        /**
+         * Payment method brand
+         */
+        brand: string;
+        /**
+         * Name of the owner
+         */
+        name: string;
+        /**
+         * Mandate ID of the payment method
+         */
+        mandateId: string;
+        /**
+         * Country of the payment method
+         */
+        country: string;
+        /**
+         * State of the payment method
+         */
+        state: string;
+        /**
+         * Last payment error associated with the payment method.
+         */
+        lastError: string;
+        /**
+         * True when it&#039;s the default payment method.
+         */
+        default: boolean;
+        /**
+         * True when payment method has expired.
+         */
+        expired: boolean;
+        /**
+         * True when payment method has failed to process multiple times.
+         */
+        failed: boolean;
+    }
+
+    /**
+     * UsageResource
+     */
+    export type UsageResources = {
+        /**
+         * Invoice name
+         */
+        name: string;
+        /**
+         * Invoice value
+         */
+        value: number;
+        /**
+         * Invoice amount
+         */
+        amount: number;
+        /**
+         * Invoice rate
+         */
+        rate: number;
+        /**
+         * Invoice description
+         */
+        desc: string;
+        /**
+         * Resource ID
+         */
+        resourceId: string;
+    }
+
+    /**
+     * EstimationDeleteOrganization
+     */
+    export type EstimationDeleteOrganization = {
+        /**
+         * List of unpaid invoices
+         */
+        unpaidInvoices: Invoice[];
+    }
+
+    /**
+     * Billing address list
+     */
+    export type BillingAddressList = {
+        /**
+         * Total number of billingAddresses that matched your query.
+         */
+        total: number;
+        /**
+         * List of billingAddresses.
+         */
+        billingAddresses: BillingAddress[];
+    }
+
+    /**
+     * Payment methods list
+     */
+    export type PaymentMethodList = {
+        /**
+         * Total number of paymentMethods that matched your query.
+         */
+        total: number;
+        /**
+         * List of paymentMethods.
+         */
+        paymentMethods: PaymentMethod[];
     }
 }
