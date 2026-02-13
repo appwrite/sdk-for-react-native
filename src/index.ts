@@ -6,7 +6,6 @@ export { Functions } from './services/functions';
 export { Graphql } from './services/graphql';
 export { Locale } from './services/locale';
 export { Messaging } from './services/messaging';
-export { Organizations } from './services/organizations';
 export { Storage } from './services/storage';
 export { TablesDB } from './services/tables-db';
 export { Teams } from './services/teams';
