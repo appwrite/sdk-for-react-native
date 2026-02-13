@@ -110,20 +110,28 @@ export class Channel<T> {
   }
 
   // Global events
-  static get documents(): string {
+  static documents(): string {
     return "documents";
   }
 
-  static get rows(): string {
+  static rows(): string {
     return "rows";
   }
 
-  static get files(): string {
+  static files(): string {
     return "files";
   }
 
-  static get executions(): string {
+  static executions(): string {
     return "executions";
+  }
+
+  static teams(): string {
+    return "teams";
+  }
+
+  static memberships(): string {
+    return "memberships";
   }
 }
 
