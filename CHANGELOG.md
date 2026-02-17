@@ -1,5 +1,9 @@
 # Change log
 
+## 0.21.1
+
+* Fix `bignumber.js` bundler conflict by removing direct dependency in favor of transitive dependency from `json-bigint`
+
 ## 0.21.0
 
 * Add `queries` parameter to `client.subscribe()` for filtering Realtime events
