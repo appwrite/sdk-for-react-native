@@ -1,6 +1,6 @@
 # Change log
 
-## 0.21.1
+## 0.23.1
 
 * Fix `bignumber.js` bundler conflict by removing direct dependency in favor of transitive dependency from `json-bigint`
 

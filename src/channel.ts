@@ -68,6 +68,10 @@ export class Channel<T> {
     return this.resolve("create");
   }
 
+  upsert(this: Channel<Document | Row>): Channel<Resolved> {
+    return this.resolve("upsert");
+  }
+
   update(this: Channel<Actionable>): Channel<Resolved> {
     return this.resolve("update");
   }
