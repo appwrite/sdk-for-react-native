@@ -126,13 +126,39 @@ export class Query {
 
   /**
    * Filter resources where attribute contains the specified value.
+   * For string attributes, checks if the string contains the substring.
    *
+   * Note: For array attributes, use {@link containsAny} or {@link containsAll} instead.
    * @param {string} attribute
    * @param {string | string[]} value
    * @returns {string}
    */
   static contains = (attribute: string, value: string | any[]): string =>
     new Query("contains", attribute, value).toString();
+
+  /**
+   * Filter resources where attribute contains ANY of the specified values.
+   * For array and relationship attributes, matches documents where the attribute
+   * contains at least one of the given values.
+   *
+   * @param {string} attribute
+   * @param {any[]} value
+   * @returns {string}
+   */
+  static containsAny = (attribute: string, value: any[]): string =>
+    new Query("containsAny", attribute, value).toString();
+
+  /**
+   * Filter resources where attribute contains ALL of the specified values.
+   * For array and relationship attributes, matches documents where the attribute
+   * contains every one of the given values.
+   *
+   * @param {string} attribute
+   * @param {any[]} value
+   * @returns {string}
+   */
+  static containsAll = (attribute: string, value: any[]): string =>
+    new Query("containsAll", attribute, value).toString();
 
   /**
    * Filter resources where attribute does not contain the specified value.
