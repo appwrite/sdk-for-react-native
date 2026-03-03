@@ -315,10 +315,11 @@ export class TablesDB extends Service {
      * @param {string[]} params.queries - Array of query strings generated using the Query class provided by the SDK. [Learn more about queries](https://appwrite.io/docs/queries). Maximum of 100 queries are allowed, each 4096 characters long.
      * @param {string} params.transactionId - Transaction ID to read uncommitted changes within the transaction.
      * @param {boolean} params.total - When set to false, the total count returned will be 0 and will not be calculated.
+     * @param {number} params.ttl - TTL (seconds) for cached responses when caching is enabled for select queries. Must be between 0 and 86400 (24 hours).
      * @throws {AppwriteException}
      * @returns {Promise}
      */
-    listRows<Row extends Models.Row = Models.DefaultRow>(params: { databaseId: string, tableId: string, queries?: string[], transactionId?: string, total?: boolean  }): Promise<Models.RowList<Row>>;
+    listRows<Row extends Models.Row = Models.DefaultRow>(params: { databaseId: string, tableId: string, queries?: string[], transactionId?: string, total?: boolean, ttl?: number  }): Promise<Models.RowList<Row>>;
     /**
      * Get a list of all the user's rows in a given table. You can use the query params to filter your results.
      *
@@ -327,26 +328,28 @@ export class TablesDB extends Service {
      * @param {string[]} queries - Array of query strings generated using the Query class provided by the SDK. [Learn more about queries](https://appwrite.io/docs/queries). Maximum of 100 queries are allowed, each 4096 characters long.
      * @param {string} transactionId - Transaction ID to read uncommitted changes within the transaction.
      * @param {boolean} total - When set to false, the total count returned will be 0 and will not be calculated.
+     * @param {number} ttl - TTL (seconds) for cached responses when caching is enabled for select queries. Must be between 0 and 86400 (24 hours).
      * @throws {AppwriteException}
      * @returns {Promise<Models.RowList<Row>>}
      * @deprecated Use the object parameter style method for a better developer experience.
      */
-    listRows<Row extends Models.Row = Models.DefaultRow>(databaseId: string, tableId: string, queries?: string[], transactionId?: string, total?: boolean): Promise<Models.RowList<Row>>;
+    listRows<Row extends Models.Row = Models.DefaultRow>(databaseId: string, tableId: string, queries?: string[], transactionId?: string, total?: boolean, ttl?: number): Promise<Models.RowList<Row>>;
     listRows<Row extends Models.Row = Models.DefaultRow>(
-        paramsOrFirst: { databaseId: string, tableId: string, queries?: string[], transactionId?: string, total?: boolean } | string,
-        ...rest: [(string)?, (string[])?, (string)?, (boolean)?]    
+        paramsOrFirst: { databaseId: string, tableId: string, queries?: string[], transactionId?: string, total?: boolean, ttl?: number } | string,
+        ...rest: [(string)?, (string[])?, (string)?, (boolean)?, (number)?]    
     ): Promise<Models.RowList<Row>> {
-        let params: { databaseId: string, tableId: string, queries?: string[], transactionId?: string, total?: boolean };
+        let params: { databaseId: string, tableId: string, queries?: string[], transactionId?: string, total?: boolean, ttl?: number };
 
         if ((paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst))) {
-            params = (paramsOrFirst || {}) as { databaseId: string, tableId: string, queries?: string[], transactionId?: string, total?: boolean };
+            params = (paramsOrFirst || {}) as { databaseId: string, tableId: string, queries?: string[], transactionId?: string, total?: boolean, ttl?: number };
         } else {
             params = {
                 databaseId: paramsOrFirst as string,
                 tableId: rest[0] as string,
                 queries: rest[1] as string[],
                 transactionId: rest[2] as string,
-                total: rest[3] as boolean            
+                total: rest[3] as boolean,
+                ttl: rest[4] as number            
             };
         }
 
@@ -355,6 +358,7 @@ export class TablesDB extends Service {
         const queries = params.queries;
         const transactionId = params.transactionId;
         const total = params.total;
+        const ttl = params.ttl;
 
         if (typeof databaseId === 'undefined') {
             throw new AppwriteException('Missing required parameter: "databaseId"');
@@ -377,6 +381,10 @@ export class TablesDB extends Service {
 
         if (typeof total !== 'undefined') {
             payload['total'] = total;
+        }
+
+        if (typeof ttl !== 'undefined') {
+            payload['ttl'] = ttl;
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);

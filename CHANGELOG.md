@@ -1,9 +1,5 @@
 # Change log
 
-## 0.24.1
-
-* Fix very large double values (for example 1.7976931348623157e+308) from being expanded into giant integer literals.
-
 ## 0.24.0
 
 * Added Query.contains, Query.containsAny, and Query.containsAll for enhanced filtering capabilities.
