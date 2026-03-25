@@ -6,6 +6,398 @@ export namespace Models {
     declare const __default: unique symbol;
 
     /**
+     * Rows List
+     */
+    export type RowList<Row extends Models.Row = Models.DefaultRow> = {
+        /**
+         * Total number of rows that matched your query.
+         */
+        total: number;
+        /**
+         * List of rows.
+         */
+        rows: Row[];
+    }
+
+    /**
+     * Documents List
+     */
+    export type DocumentList<Document extends Models.Document = Models.DefaultDocument> = {
+        /**
+         * Total number of documents that matched your query.
+         */
+        total: number;
+        /**
+         * List of documents.
+         */
+        documents: Document[];
+    }
+
+    /**
+     * Sessions List
+     */
+    export type SessionList = {
+        /**
+         * Total number of sessions that matched your query.
+         */
+        total: number;
+        /**
+         * List of sessions.
+         */
+        sessions: Session[];
+    }
+
+    /**
+     * Identities List
+     */
+    export type IdentityList = {
+        /**
+         * Total number of identities that matched your query.
+         */
+        total: number;
+        /**
+         * List of identities.
+         */
+        identities: Identity[];
+    }
+
+    /**
+     * Logs List
+     */
+    export type LogList = {
+        /**
+         * Total number of logs that matched your query.
+         */
+        total: number;
+        /**
+         * List of logs.
+         */
+        logs: Log[];
+    }
+
+    /**
+     * Files List
+     */
+    export type FileList = {
+        /**
+         * Total number of files that matched your query.
+         */
+        total: number;
+        /**
+         * List of files.
+         */
+        files: File[];
+    }
+
+    /**
+     * Teams List
+     */
+    export type TeamList<Preferences extends Models.Preferences = Models.DefaultPreferences> = {
+        /**
+         * Total number of teams that matched your query.
+         */
+        total: number;
+        /**
+         * List of teams.
+         */
+        teams: Team<Preferences>[];
+    }
+
+    /**
+     * Memberships List
+     */
+    export type MembershipList = {
+        /**
+         * Total number of memberships that matched your query.
+         */
+        total: number;
+        /**
+         * List of memberships.
+         */
+        memberships: Membership[];
+    }
+
+    /**
+     * Executions List
+     */
+    export type ExecutionList = {
+        /**
+         * Total number of executions that matched your query.
+         */
+        total: number;
+        /**
+         * List of executions.
+         */
+        executions: Execution[];
+    }
+
+    /**
+     * Countries List
+     */
+    export type CountryList = {
+        /**
+         * Total number of countries that matched your query.
+         */
+        total: number;
+        /**
+         * List of countries.
+         */
+        countries: Country[];
+    }
+
+    /**
+     * Continents List
+     */
+    export type ContinentList = {
+        /**
+         * Total number of continents that matched your query.
+         */
+        total: number;
+        /**
+         * List of continents.
+         */
+        continents: Continent[];
+    }
+
+    /**
+     * Languages List
+     */
+    export type LanguageList = {
+        /**
+         * Total number of languages that matched your query.
+         */
+        total: number;
+        /**
+         * List of languages.
+         */
+        languages: Language[];
+    }
+
+    /**
+     * Currencies List
+     */
+    export type CurrencyList = {
+        /**
+         * Total number of currencies that matched your query.
+         */
+        total: number;
+        /**
+         * List of currencies.
+         */
+        currencies: Currency[];
+    }
+
+    /**
+     * Phones List
+     */
+    export type PhoneList = {
+        /**
+         * Total number of phones that matched your query.
+         */
+        total: number;
+        /**
+         * List of phones.
+         */
+        phones: Phone[];
+    }
+
+    /**
+     * Locale codes list
+     */
+    export type LocaleCodeList = {
+        /**
+         * Total number of localeCodes that matched your query.
+         */
+        total: number;
+        /**
+         * List of localeCodes.
+         */
+        localeCodes: LocaleCode[];
+    }
+
+    /**
+     * Transaction List
+     */
+    export type TransactionList = {
+        /**
+         * Total number of transactions that matched your query.
+         */
+        total: number;
+        /**
+         * List of transactions.
+         */
+        transactions: Transaction[];
+    }
+
+    /**
+     * Row
+     */
+    export type Row = {
+        /**
+         * Row ID.
+         */
+        $id: string;
+        /**
+         * Row sequence ID.
+         */
+        $sequence: string;
+        /**
+         * Table ID.
+         */
+        $tableId: string;
+        /**
+         * Database ID.
+         */
+        $databaseId: string;
+        /**
+         * Row creation date in ISO 8601 format.
+         */
+        $createdAt: string;
+        /**
+         * Row update date in ISO 8601 format.
+         */
+        $updatedAt: string;
+        /**
+         * Row permissions. [Learn more about permissions](https://appwrite.io/docs/permissions).
+         */
+        $permissions: string[];
+    }
+
+    export type DefaultRow = Row & {
+        [key: string]: any;
+        [__default]: true;
+    };
+
+    /**
+     * Document
+     */
+    export type Document = {
+        /**
+         * Document ID.
+         */
+        $id: string;
+        /**
+         * Document sequence ID.
+         */
+        $sequence: string;
+        /**
+         * Collection ID.
+         */
+        $collectionId: string;
+        /**
+         * Database ID.
+         */
+        $databaseId: string;
+        /**
+         * Document creation date in ISO 8601 format.
+         */
+        $createdAt: string;
+        /**
+         * Document update date in ISO 8601 format.
+         */
+        $updatedAt: string;
+        /**
+         * Document permissions. [Learn more about permissions](https://appwrite.io/docs/permissions).
+         */
+        $permissions: string[];
+    }
+
+    export type DefaultDocument = Document & {
+        [key: string]: any;
+        [__default]: true;
+    };
+
+    /**
+     * Log
+     */
+    export type Log = {
+        /**
+         * Event name.
+         */
+        event: string;
+        /**
+         * User ID of the actor recorded for this log. During impersonation, this is the original impersonator, not the impersonated target user.
+         */
+        userId: string;
+        /**
+         * User email of the actor recorded for this log. During impersonation, this is the original impersonator.
+         */
+        userEmail: string;
+        /**
+         * User name of the actor recorded for this log. During impersonation, this is the original impersonator.
+         */
+        userName: string;
+        /**
+         * API mode when event triggered.
+         */
+        mode: string;
+        /**
+         * IP session in use when the session was created.
+         */
+        ip: string;
+        /**
+         * Log creation date in ISO 8601 format.
+         */
+        time: string;
+        /**
+         * Operating system code name. View list of [available options](https://github.com/appwrite/appwrite/blob/master/docs/lists/os.json).
+         */
+        osCode: string;
+        /**
+         * Operating system name.
+         */
+        osName: string;
+        /**
+         * Operating system version.
+         */
+        osVersion: string;
+        /**
+         * Client type.
+         */
+        clientType: string;
+        /**
+         * Client code name. View list of [available options](https://github.com/appwrite/appwrite/blob/master/docs/lists/clients.json).
+         */
+        clientCode: string;
+        /**
+         * Client name.
+         */
+        clientName: string;
+        /**
+         * Client version.
+         */
+        clientVersion: string;
+        /**
+         * Client engine name.
+         */
+        clientEngine: string;
+        /**
+         * Client engine name.
+         */
+        clientEngineVersion: string;
+        /**
+         * Device name.
+         */
+        deviceName: string;
+        /**
+         * Device brand name.
+         */
+        deviceBrand: string;
+        /**
+         * Device model name.
+         */
+        deviceModel: string;
+        /**
+         * Country two-character ISO 3166-1 alpha code.
+         */
+        countryCode: string;
+        /**
+         * Country name.
+         */
+        countryName: string;
+    }
+
+    /**
      * User
      */
     export type User<Preferences extends Models.Preferences = Models.DefaultPreferences> = {
@@ -96,78 +488,125 @@ export namespace Models {
     }
 
     /**
-     * Identities List
+     * AlgoMD5
      */
-    export type IdentityList = {
+    export type AlgoMd5 = {
         /**
-         * Total number of identities that matched your query.
+         * Algo type.
          */
-        total: number;
-        /**
-         * List of identities.
-         */
-        identities: Identity[];
+        type: string;
     }
 
     /**
-     * JWT
+     * AlgoSHA
      */
-    export type Jwt = {
+    export type AlgoSha = {
         /**
-         * JWT encoded string.
+         * Algo type.
          */
-        jwt: string;
+        type: string;
     }
 
     /**
-     * Logs List
+     * AlgoPHPass
      */
-    export type LogList = {
+    export type AlgoPhpass = {
         /**
-         * Total number of logs that matched your query.
+         * Algo type.
          */
-        total: number;
-        /**
-         * List of logs.
-         */
-        logs: Log[];
+        type: string;
     }
 
     /**
-     * MFAType
+     * AlgoBcrypt
      */
-    export type MfaType = {
+    export type AlgoBcrypt = {
         /**
-         * Secret token used for TOTP factor.
+         * Algo type.
          */
-        secret: string;
-        /**
-         * URI for authenticator apps.
-         */
-        uri: string;
+        type: string;
     }
 
     /**
-     * MFA Challenge
+     * AlgoScrypt
      */
-    export type MfaChallenge = {
+    export type AlgoScrypt = {
         /**
-         * Token ID.
+         * Algo type.
          */
-        $id: string;
+        type: string;
         /**
-         * Token creation date in ISO 8601 format.
+         * CPU complexity of computed hash.
          */
-        $createdAt: string;
+        costCpu: number;
         /**
-         * User ID.
+         * Memory complexity of computed hash.
          */
-        userId: string;
+        costMemory: number;
         /**
-         * Token expiration date in ISO 8601 format.
+         * Parallelization of computed hash.
          */
-        expire: string;
+        costParallel: number;
+        /**
+         * Length used to compute hash.
+         */
+        length: number;
     }
+
+    /**
+     * AlgoScryptModified
+     */
+    export type AlgoScryptModified = {
+        /**
+         * Algo type.
+         */
+        type: string;
+        /**
+         * Salt used to compute hash.
+         */
+        salt: string;
+        /**
+         * Separator used to compute hash.
+         */
+        saltSeparator: string;
+        /**
+         * Key used to compute hash.
+         */
+        signerKey: string;
+    }
+
+    /**
+     * AlgoArgon2
+     */
+    export type AlgoArgon2 = {
+        /**
+         * Algo type.
+         */
+        type: string;
+        /**
+         * Memory used to compute hash.
+         */
+        memoryCost: number;
+        /**
+         * Amount of time consumed to compute hash
+         */
+        timeCost: number;
+        /**
+         * Number of threads used to compute hash.
+         */
+        threads: number;
+    }
+
+    /**
+     * Preferences
+     */
+    export type Preferences = {
+    }
+
+    export type DefaultPreferences = Preferences & {
+        [key: string]: any;
+        [__default]: true;
+    };
 
     /**
      * Session
@@ -292,47 +731,50 @@ export namespace Models {
     }
 
     /**
-     * MFAFactors
+     * Identity
      */
-    export type MfaFactors = {
+    export type Identity = {
         /**
-         * Can TOTP be used for MFA challenge for this account.
+         * Identity ID.
          */
-        totp: boolean;
+        $id: string;
         /**
-         * Can phone (SMS) be used for MFA challenge for this account.
+         * Identity creation date in ISO 8601 format.
          */
-        phone: boolean;
+        $createdAt: string;
         /**
-         * Can email be used for MFA challenge for this account.
+         * Identity update date in ISO 8601 format.
          */
-        email: boolean;
+        $updatedAt: string;
         /**
-         * Can recovery code be used for MFA challenge for this account.
+         * User ID.
          */
-        recoveryCode: boolean;
+        userId: string;
+        /**
+         * Identity Provider.
+         */
+        provider: string;
+        /**
+         * ID of the User in the Identity Provider.
+         */
+        providerUid: string;
+        /**
+         * Email of the User in the Identity Provider.
+         */
+        providerEmail: string;
+        /**
+         * Identity Provider Access Token.
+         */
+        providerAccessToken: string;
+        /**
+         * The date of when the access token expires in ISO 8601 format.
+         */
+        providerAccessTokenExpiry: string;
+        /**
+         * Identity Provider Refresh Token.
+         */
+        providerRefreshToken: string;
     }
-
-    /**
-     * MFA Recovery Codes
-     */
-    export type MfaRecoveryCodes = {
-        /**
-         * Recovery codes.
-         */
-        recoveryCodes: string[];
-    }
-
-    /**
-     * Preferences
-     */
-    export type Preferences = {
-    }
-
-    export type DefaultPreferences = Preferences & {
-        [key: string]: any;
-        [__default]: true;
-    };
 
     /**
      * Token
@@ -365,170 +807,207 @@ export namespace Models {
     }
 
     /**
-     * Sessions List
+     * JWT
      */
-    export type SessionList = {
+    export type Jwt = {
         /**
-         * Total number of sessions that matched your query.
+         * JWT encoded string.
          */
-        total: number;
-        /**
-         * List of sessions.
-         */
-        sessions: Session[];
+        jwt: string;
     }
 
     /**
-     * Target
+     * Locale
      */
-    export type Target = {
+    export type Locale = {
         /**
-         * Target ID.
+         * User IP address.
+         */
+        ip: string;
+        /**
+         * Country code in [ISO 3166-1](http://en.wikipedia.org/wiki/ISO_3166-1) two-character format
+         */
+        countryCode: string;
+        /**
+         * Country name. This field support localization.
+         */
+        country: string;
+        /**
+         * Continent code. A two character continent code &quot;AF&quot; for Africa, &quot;AN&quot; for Antarctica, &quot;AS&quot; for Asia, &quot;EU&quot; for Europe, &quot;NA&quot; for North America, &quot;OC&quot; for Oceania, and &quot;SA&quot; for South America.
+         */
+        continentCode: string;
+        /**
+         * Continent name. This field support localization.
+         */
+        continent: string;
+        /**
+         * True if country is part of the European Union.
+         */
+        eu: boolean;
+        /**
+         * Currency code in [ISO 4217-1](http://en.wikipedia.org/wiki/ISO_4217) three-character format
+         */
+        currency: string;
+    }
+
+    /**
+     * LocaleCode
+     */
+    export type LocaleCode = {
+        /**
+         * Locale codes in [ISO 639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes)
+         */
+        code: string;
+        /**
+         * Locale name
+         */
+        name: string;
+    }
+
+    /**
+     * File
+     */
+    export type File = {
+        /**
+         * File ID.
          */
         $id: string;
         /**
-         * Target creation time in ISO 8601 format.
+         * Bucket ID.
+         */
+        bucketId: string;
+        /**
+         * File creation date in ISO 8601 format.
          */
         $createdAt: string;
         /**
-         * Target update date in ISO 8601 format.
+         * File update date in ISO 8601 format.
          */
         $updatedAt: string;
         /**
-         * Target Name.
+         * File permissions. [Learn more about permissions](https://appwrite.io/docs/permissions).
+         */
+        $permissions: string[];
+        /**
+         * File name.
          */
         name: string;
+        /**
+         * File MD5 signature.
+         */
+        signature: string;
+        /**
+         * File mime type.
+         */
+        mimeType: string;
+        /**
+         * File original size in bytes.
+         */
+        sizeOriginal: number;
+        /**
+         * Total number of chunks available
+         */
+        chunksTotal: number;
+        /**
+         * Total number of chunks uploaded
+         */
+        chunksUploaded: number;
+        /**
+         * Whether file contents are encrypted at rest.
+         */
+        encryption: boolean;
+        /**
+         * Compression algorithm used for the file. Will be one of none, [gzip](https://en.wikipedia.org/wiki/Gzip), or [zstd](https://en.wikipedia.org/wiki/Zstd).
+         */
+        compression: string;
+    }
+
+    /**
+     * Team
+     */
+    export type Team<Preferences extends Models.Preferences = Models.DefaultPreferences> = {
+        /**
+         * Team ID.
+         */
+        $id: string;
+        /**
+         * Team creation date in ISO 8601 format.
+         */
+        $createdAt: string;
+        /**
+         * Team update date in ISO 8601 format.
+         */
+        $updatedAt: string;
+        /**
+         * Team name.
+         */
+        name: string;
+        /**
+         * Total number of team members.
+         */
+        total: number;
+        /**
+         * Team preferences as a key-value object
+         */
+        prefs: Preferences;
+    }
+
+    /**
+     * Membership
+     */
+    export type Membership = {
+        /**
+         * Membership ID.
+         */
+        $id: string;
+        /**
+         * Membership creation date in ISO 8601 format.
+         */
+        $createdAt: string;
+        /**
+         * Membership update date in ISO 8601 format.
+         */
+        $updatedAt: string;
         /**
          * User ID.
          */
         userId: string;
         /**
-         * Provider ID.
+         * User name. Hide this attribute by toggling membership privacy in the Console.
          */
-        providerId?: string;
+        userName: string;
         /**
-         * The target provider type. Can be one of the following: `email`, `sms` or `push`.
+         * User email address. Hide this attribute by toggling membership privacy in the Console.
          */
-        providerType: string;
+        userEmail: string;
         /**
-         * The target identifier.
+         * Team ID.
          */
-        identifier: string;
+        teamId: string;
         /**
-         * Is the target expired.
+         * Team name.
          */
-        expired: boolean;
-    }
-
-    /**
-     * Transaction List
-     */
-    export type TransactionList = {
+        teamName: string;
         /**
-         * Total number of transactions that matched your query.
+         * Date, the user has been invited to join the team in ISO 8601 format.
          */
-        total: number;
+        invited: string;
         /**
-         * List of transactions.
+         * Date, the user has accepted the invitation to join the team in ISO 8601 format.
          */
-        transactions: Transaction[];
-    }
-
-    /**
-     * Transaction
-     */
-    export type Transaction = {
+        joined: string;
         /**
-         * Transaction ID.
+         * User confirmation status, true if the user has joined the team or false otherwise.
          */
-        $id: string;
+        confirm: boolean;
         /**
-         * Transaction creation time in ISO 8601 format.
+         * Multi factor authentication status, true if the user has MFA enabled or false otherwise. Hide this attribute by toggling membership privacy in the Console.
          */
-        $createdAt: string;
+        mfa: boolean;
         /**
-         * Transaction update date in ISO 8601 format.
+         * User list of roles
          */
-        $updatedAt: string;
-        /**
-         * Current status of the transaction. One of: pending, committing, committed, rolled_back, failed.
-         */
-        status: string;
-        /**
-         * Number of operations in the transaction.
-         */
-        operations: number;
-        /**
-         * Expiration time in ISO 8601 format.
-         */
-        expiresAt: string;
-    }
-
-    /**
-     * Documents List
-     */
-    export type DocumentList<Document extends Models.Document = Models.DefaultDocument> = {
-        /**
-         * Total number of documents that matched your query.
-         */
-        total: number;
-        /**
-         * List of documents.
-         */
-        documents: Document[];
-    }
-
-    /**
-     * Document
-     */
-    export type Document = {
-        /**
-         * Document ID.
-         */
-        $id: string;
-        /**
-         * Document sequence ID.
-         */
-        $sequence: string;
-        /**
-         * Collection ID.
-         */
-        $collectionId: string;
-        /**
-         * Database ID.
-         */
-        $databaseId: string;
-        /**
-         * Document creation date in ISO 8601 format.
-         */
-        $createdAt: string;
-        /**
-         * Document update date in ISO 8601 format.
-         */
-        $updatedAt: string;
-        /**
-         * Document permissions. [Learn more about permissions](https://appwrite.io/docs/permissions).
-         */
-        $permissions: string[];
-    }
-
-    export type DefaultDocument = Document & {
-        [key: string]: any;
-        [__default]: true;
-    };
-
-    /**
-     * Executions List
-     */
-    export type ExecutionList = {
-        /**
-         * Total number of executions that matched your query.
-         */
-        total: number;
-        /**
-         * List of executions.
-         */
-        executions: Execution[];
+        roles: string[];
     }
 
     /**
@@ -610,121 +1089,213 @@ export namespace Models {
     }
 
     /**
-     * Locale
+     * Country
      */
-    export type Locale = {
+    export type Country = {
         /**
-         * User IP address.
+         * Country name.
          */
-        ip: string;
+        name: string;
         /**
-         * Country code in [ISO 3166-1](http://en.wikipedia.org/wiki/ISO_3166-1) two-character format
+         * Country two-character ISO 3166-1 alpha code.
+         */
+        code: string;
+    }
+
+    /**
+     * Continent
+     */
+    export type Continent = {
+        /**
+         * Continent name.
+         */
+        name: string;
+        /**
+         * Continent two letter code.
+         */
+        code: string;
+    }
+
+    /**
+     * Language
+     */
+    export type Language = {
+        /**
+         * Language name.
+         */
+        name: string;
+        /**
+         * Language two-character ISO 639-1 codes.
+         */
+        code: string;
+        /**
+         * Language native name.
+         */
+        nativeName: string;
+    }
+
+    /**
+     * Currency
+     */
+    export type Currency = {
+        /**
+         * Currency symbol.
+         */
+        symbol: string;
+        /**
+         * Currency name.
+         */
+        name: string;
+        /**
+         * Currency native symbol.
+         */
+        symbolNative: string;
+        /**
+         * Number of decimal digits.
+         */
+        decimalDigits: number;
+        /**
+         * Currency digit rounding.
+         */
+        rounding: number;
+        /**
+         * Currency code in [ISO 4217-1](http://en.wikipedia.org/wiki/ISO_4217) three-character format.
+         */
+        code: string;
+        /**
+         * Currency plural name
+         */
+        namePlural: string;
+    }
+
+    /**
+     * Phone
+     */
+    export type Phone = {
+        /**
+         * Phone code.
+         */
+        code: string;
+        /**
+         * Country two-character ISO 3166-1 alpha code.
          */
         countryCode: string;
         /**
-         * Country name. This field support localization.
+         * Country name.
          */
-        country: string;
-        /**
-         * Continent code. A two character continent code &quot;AF&quot; for Africa, &quot;AN&quot; for Antarctica, &quot;AS&quot; for Asia, &quot;EU&quot; for Europe, &quot;NA&quot; for North America, &quot;OC&quot; for Oceania, and &quot;SA&quot; for South America.
-         */
-        continentCode: string;
-        /**
-         * Continent name. This field support localization.
-         */
-        continent: string;
-        /**
-         * True if country is part of the European Union.
-         */
-        eu: boolean;
-        /**
-         * Currency code in [ISO 4217-1](http://en.wikipedia.org/wiki/ISO_4217) three-character format
-         */
-        currency: string;
+        countryName: string;
     }
 
     /**
-     * Locale codes list
+     * Headers
      */
-    export type LocaleCodeList = {
+    export type Headers = {
         /**
-         * Total number of localeCodes that matched your query.
+         * Header name.
          */
-        total: number;
+        name: string;
         /**
-         * List of localeCodes.
+         * Header value.
          */
-        localeCodes: LocaleCode[];
+        value: string;
     }
 
     /**
-     * Continents List
+     * MFA Challenge
      */
-    export type ContinentList = {
+    export type MfaChallenge = {
         /**
-         * Total number of continents that matched your query.
+         * Token ID.
          */
-        total: number;
+        $id: string;
         /**
-         * List of continents.
+         * Token creation date in ISO 8601 format.
          */
-        continents: Continent[];
+        $createdAt: string;
+        /**
+         * User ID.
+         */
+        userId: string;
+        /**
+         * Token expiration date in ISO 8601 format.
+         */
+        expire: string;
     }
 
     /**
-     * Countries List
+     * MFA Recovery Codes
      */
-    export type CountryList = {
+    export type MfaRecoveryCodes = {
         /**
-         * Total number of countries that matched your query.
+         * Recovery codes.
          */
-        total: number;
-        /**
-         * List of countries.
-         */
-        countries: Country[];
+        recoveryCodes: string[];
     }
 
     /**
-     * Phones List
+     * MFAType
      */
-    export type PhoneList = {
+    export type MfaType = {
         /**
-         * Total number of phones that matched your query.
+         * Secret token used for TOTP factor.
          */
-        total: number;
+        secret: string;
         /**
-         * List of phones.
+         * URI for authenticator apps.
          */
-        phones: Phone[];
+        uri: string;
     }
 
     /**
-     * Currencies List
+     * MFAFactors
      */
-    export type CurrencyList = {
+    export type MfaFactors = {
         /**
-         * Total number of currencies that matched your query.
+         * Can TOTP be used for MFA challenge for this account.
          */
-        total: number;
+        totp: boolean;
         /**
-         * List of currencies.
+         * Can phone (SMS) be used for MFA challenge for this account.
          */
-        currencies: Currency[];
+        phone: boolean;
+        /**
+         * Can email be used for MFA challenge for this account.
+         */
+        email: boolean;
+        /**
+         * Can recovery code be used for MFA challenge for this account.
+         */
+        recoveryCode: boolean;
     }
 
     /**
-     * Languages List
+     * Transaction
      */
-    export type LanguageList = {
+    export type Transaction = {
         /**
-         * Total number of languages that matched your query.
+         * Transaction ID.
          */
-        total: number;
+        $id: string;
         /**
-         * List of languages.
+         * Transaction creation time in ISO 8601 format.
          */
-        languages: Language[];
+        $createdAt: string;
+        /**
+         * Transaction update date in ISO 8601 format.
+         */
+        $updatedAt: string;
+        /**
+         * Current status of the transaction. One of: pending, committing, committed, rolled_back, failed.
+         */
+        status: string;
+        /**
+         * Number of operations in the transaction.
+         */
+        operations: number;
+        /**
+         * Expiration time in ISO 8601 format.
+         */
+        expiresAt: string;
     }
 
     /**
@@ -770,615 +1341,44 @@ export namespace Models {
     }
 
     /**
-     * Files List
+     * Target
      */
-    export type FileList = {
+    export type Target = {
         /**
-         * Total number of files that matched your query.
-         */
-        total: number;
-        /**
-         * List of files.
-         */
-        files: File[];
-    }
-
-    /**
-     * File
-     */
-    export type File = {
-        /**
-         * File ID.
+         * Target ID.
          */
         $id: string;
         /**
-         * Bucket ID.
-         */
-        bucketId: string;
-        /**
-         * File creation date in ISO 8601 format.
+         * Target creation time in ISO 8601 format.
          */
         $createdAt: string;
         /**
-         * File update date in ISO 8601 format.
+         * Target update date in ISO 8601 format.
          */
         $updatedAt: string;
         /**
-         * File permissions. [Learn more about permissions](https://appwrite.io/docs/permissions).
-         */
-        $permissions: string[];
-        /**
-         * File name.
+         * Target Name.
          */
         name: string;
-        /**
-         * File MD5 signature.
-         */
-        signature: string;
-        /**
-         * File mime type.
-         */
-        mimeType: string;
-        /**
-         * File original size in bytes.
-         */
-        sizeOriginal: number;
-        /**
-         * Total number of chunks available
-         */
-        chunksTotal: number;
-        /**
-         * Total number of chunks uploaded
-         */
-        chunksUploaded: number;
-        /**
-         * Whether file contents are encrypted at rest.
-         */
-        encryption: boolean;
-        /**
-         * Compression algorithm used for the file. Will be one of none, [gzip](https://en.wikipedia.org/wiki/Gzip), or [zstd](https://en.wikipedia.org/wiki/Zstd).
-         */
-        compression: string;
-    }
-
-    /**
-     * Rows List
-     */
-    export type RowList<Row extends Models.Row = Models.DefaultRow> = {
-        /**
-         * Total number of rows that matched your query.
-         */
-        total: number;
-        /**
-         * List of rows.
-         */
-        rows: Row[];
-    }
-
-    /**
-     * Row
-     */
-    export type Row = {
-        /**
-         * Row ID.
-         */
-        $id: string;
-        /**
-         * Row sequence ID.
-         */
-        $sequence: string;
-        /**
-         * Table ID.
-         */
-        $tableId: string;
-        /**
-         * Database ID.
-         */
-        $databaseId: string;
-        /**
-         * Row creation date in ISO 8601 format.
-         */
-        $createdAt: string;
-        /**
-         * Row update date in ISO 8601 format.
-         */
-        $updatedAt: string;
-        /**
-         * Row permissions. [Learn more about permissions](https://appwrite.io/docs/permissions).
-         */
-        $permissions: string[];
-    }
-
-    export type DefaultRow = Row & {
-        [key: string]: any;
-        [__default]: true;
-    };
-
-    /**
-     * Teams List
-     */
-    export type TeamList<Preferences extends Models.Preferences = Models.DefaultPreferences> = {
-        /**
-         * Total number of teams that matched your query.
-         */
-        total: number;
-        /**
-         * List of teams.
-         */
-        teams: Team<Preferences>[];
-    }
-
-    /**
-     * Team
-     */
-    export type Team<Preferences extends Models.Preferences = Models.DefaultPreferences> = {
-        /**
-         * Team ID.
-         */
-        $id: string;
-        /**
-         * Team creation date in ISO 8601 format.
-         */
-        $createdAt: string;
-        /**
-         * Team update date in ISO 8601 format.
-         */
-        $updatedAt: string;
-        /**
-         * Team name.
-         */
-        name: string;
-        /**
-         * Total number of team members.
-         */
-        total: number;
-        /**
-         * Team preferences as a key-value object
-         */
-        prefs: Preferences;
-    }
-
-    /**
-     * Memberships List
-     */
-    export type MembershipList = {
-        /**
-         * Total number of memberships that matched your query.
-         */
-        total: number;
-        /**
-         * List of memberships.
-         */
-        memberships: Membership[];
-    }
-
-    /**
-     * Membership
-     */
-    export type Membership = {
-        /**
-         * Membership ID.
-         */
-        $id: string;
-        /**
-         * Membership creation date in ISO 8601 format.
-         */
-        $createdAt: string;
-        /**
-         * Membership update date in ISO 8601 format.
-         */
-        $updatedAt: string;
         /**
          * User ID.
          */
         userId: string;
         /**
-         * User name. Hide this attribute by toggling membership privacy in the Console.
+         * Provider ID.
          */
-        userName: string;
+        providerId?: string;
         /**
-         * User email address. Hide this attribute by toggling membership privacy in the Console.
+         * The target provider type. Can be one of the following: `email`, `sms` or `push`.
          */
-        userEmail: string;
+        providerType: string;
         /**
-         * Team ID.
+         * The target identifier.
          */
-        teamId: string;
+        identifier: string;
         /**
-         * Team name.
+         * Is the target expired.
          */
-        teamName: string;
-        /**
-         * Date, the user has been invited to join the team in ISO 8601 format.
-         */
-        invited: string;
-        /**
-         * Date, the user has accepted the invitation to join the team in ISO 8601 format.
-         */
-        joined: string;
-        /**
-         * User confirmation status, true if the user has joined the team or false otherwise.
-         */
-        confirm: boolean;
-        /**
-         * Multi factor authentication status, true if the user has MFA enabled or false otherwise. Hide this attribute by toggling membership privacy in the Console.
-         */
-        mfa: boolean;
-        /**
-         * User list of roles
-         */
-        roles: string[];
-    }
-
-    /**
-     * AlgoArgon2
-     */
-    export type AlgoArgon2 = {
-        /**
-         * Algo type.
-         */
-        type: string;
-        /**
-         * Memory used to compute hash.
-         */
-        memoryCost: number;
-        /**
-         * Amount of time consumed to compute hash
-         */
-        timeCost: number;
-        /**
-         * Number of threads used to compute hash.
-         */
-        threads: number;
-    }
-
-    /**
-     * AlgoScrypt
-     */
-    export type AlgoScrypt = {
-        /**
-         * Algo type.
-         */
-        type: string;
-        /**
-         * CPU complexity of computed hash.
-         */
-        costCpu: number;
-        /**
-         * Memory complexity of computed hash.
-         */
-        costMemory: number;
-        /**
-         * Parallelization of computed hash.
-         */
-        costParallel: number;
-        /**
-         * Length used to compute hash.
-         */
-        length: number;
-    }
-
-    /**
-     * AlgoScryptModified
-     */
-    export type AlgoScryptModified = {
-        /**
-         * Algo type.
-         */
-        type: string;
-        /**
-         * Salt used to compute hash.
-         */
-        salt: string;
-        /**
-         * Separator used to compute hash.
-         */
-        saltSeparator: string;
-        /**
-         * Key used to compute hash.
-         */
-        signerKey: string;
-    }
-
-    /**
-     * AlgoBcrypt
-     */
-    export type AlgoBcrypt = {
-        /**
-         * Algo type.
-         */
-        type: string;
-    }
-
-    /**
-     * AlgoPHPass
-     */
-    export type AlgoPhpass = {
-        /**
-         * Algo type.
-         */
-        type: string;
-    }
-
-    /**
-     * AlgoSHA
-     */
-    export type AlgoSha = {
-        /**
-         * Algo type.
-         */
-        type: string;
-    }
-
-    /**
-     * AlgoMD5
-     */
-    export type AlgoMd5 = {
-        /**
-         * Algo type.
-         */
-        type: string;
-    }
-
-    /**
-     * Identity
-     */
-    export type Identity = {
-        /**
-         * Identity ID.
-         */
-        $id: string;
-        /**
-         * Identity creation date in ISO 8601 format.
-         */
-        $createdAt: string;
-        /**
-         * Identity update date in ISO 8601 format.
-         */
-        $updatedAt: string;
-        /**
-         * User ID.
-         */
-        userId: string;
-        /**
-         * Identity Provider.
-         */
-        provider: string;
-        /**
-         * ID of the User in the Identity Provider.
-         */
-        providerUid: string;
-        /**
-         * Email of the User in the Identity Provider.
-         */
-        providerEmail: string;
-        /**
-         * Identity Provider Access Token.
-         */
-        providerAccessToken: string;
-        /**
-         * The date of when the access token expires in ISO 8601 format.
-         */
-        providerAccessTokenExpiry: string;
-        /**
-         * Identity Provider Refresh Token.
-         */
-        providerRefreshToken: string;
-    }
-
-    /**
-     * Log
-     */
-    export type Log = {
-        /**
-         * Event name.
-         */
-        event: string;
-        /**
-         * User ID of the actor recorded for this log. During impersonation, this is the original impersonator, not the impersonated target user.
-         */
-        userId: string;
-        /**
-         * User email of the actor recorded for this log. During impersonation, this is the original impersonator.
-         */
-        userEmail: string;
-        /**
-         * User name of the actor recorded for this log. During impersonation, this is the original impersonator.
-         */
-        userName: string;
-        /**
-         * API mode when event triggered.
-         */
-        mode: string;
-        /**
-         * IP session in use when the session was created.
-         */
-        ip: string;
-        /**
-         * Log creation date in ISO 8601 format.
-         */
-        time: string;
-        /**
-         * Operating system code name. View list of [available options](https://github.com/appwrite/appwrite/blob/master/docs/lists/os.json).
-         */
-        osCode: string;
-        /**
-         * Operating system name.
-         */
-        osName: string;
-        /**
-         * Operating system version.
-         */
-        osVersion: string;
-        /**
-         * Client type.
-         */
-        clientType: string;
-        /**
-         * Client code name. View list of [available options](https://github.com/appwrite/appwrite/blob/master/docs/lists/clients.json).
-         */
-        clientCode: string;
-        /**
-         * Client name.
-         */
-        clientName: string;
-        /**
-         * Client version.
-         */
-        clientVersion: string;
-        /**
-         * Client engine name.
-         */
-        clientEngine: string;
-        /**
-         * Client engine name.
-         */
-        clientEngineVersion: string;
-        /**
-         * Device name.
-         */
-        deviceName: string;
-        /**
-         * Device brand name.
-         */
-        deviceBrand: string;
-        /**
-         * Device model name.
-         */
-        deviceModel: string;
-        /**
-         * Country two-character ISO 3166-1 alpha code.
-         */
-        countryCode: string;
-        /**
-         * Country name.
-         */
-        countryName: string;
-    }
-
-    /**
-     * Headers
-     */
-    export type Headers = {
-        /**
-         * Header name.
-         */
-        name: string;
-        /**
-         * Header value.
-         */
-        value: string;
-    }
-
-    /**
-     * LocaleCode
-     */
-    export type LocaleCode = {
-        /**
-         * Locale codes in [ISO 639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes)
-         */
-        code: string;
-        /**
-         * Locale name
-         */
-        name: string;
-    }
-
-    /**
-     * Continent
-     */
-    export type Continent = {
-        /**
-         * Continent name.
-         */
-        name: string;
-        /**
-         * Continent two letter code.
-         */
-        code: string;
-    }
-
-    /**
-     * Country
-     */
-    export type Country = {
-        /**
-         * Country name.
-         */
-        name: string;
-        /**
-         * Country two-character ISO 3166-1 alpha code.
-         */
-        code: string;
-    }
-
-    /**
-     * Phone
-     */
-    export type Phone = {
-        /**
-         * Phone code.
-         */
-        code: string;
-        /**
-         * Country two-character ISO 3166-1 alpha code.
-         */
-        countryCode: string;
-        /**
-         * Country name.
-         */
-        countryName: string;
-    }
-
-    /**
-     * Currency
-     */
-    export type Currency = {
-        /**
-         * Currency symbol.
-         */
-        symbol: string;
-        /**
-         * Currency name.
-         */
-        name: string;
-        /**
-         * Currency native symbol.
-         */
-        symbolNative: string;
-        /**
-         * Number of decimal digits.
-         */
-        decimalDigits: number;
-        /**
-         * Currency digit rounding.
-         */
-        rounding: number;
-        /**
-         * Currency code in [ISO 4217-1](http://en.wikipedia.org/wiki/ISO_4217) three-character format.
-         */
-        code: string;
-        /**
-         * Currency plural name
-         */
-        namePlural: string;
-    }
-
-    /**
-     * Language
-     */
-    export type Language = {
-        /**
-         * Language name.
-         */
-        name: string;
-        /**
-         * Language two-character ISO 639-1 codes.
-         */
-        code: string;
-        /**
-         * Language native name.
-         */
-        nativeName: string;
+        expired: boolean;
     }
 }
