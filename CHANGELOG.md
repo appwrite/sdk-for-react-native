@@ -1,5 +1,9 @@
 # Change log
 
+## 0.25.0
+
+* [BREAKING] Changed `$sequence` type from `int` to `string` for rows and documents
+
 ## 0.24.1
 
 * Fix very large double values (for example 1.7976931348623157e+308) from being expanded into giant integer literals.
