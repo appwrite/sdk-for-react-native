@@ -2,7 +2,13 @@
 
 ## 0.25.0
 
-* [BREAKING] Changed `$sequence` type from `int` to `string` for rows and documents
+* [BREAKING] Changed `$sequence` type from `number` to `string` for `Row` and `Document` models
+* Added impersonation support: `setImpersonateUserId()`, `setImpersonateUserEmail()`, `setImpersonateUserPhone()` on `Client`
+* Added `impersonator` and `impersonatorUserId` optional fields to `User` model
+* Added custom `toString()` on response data objects using `JSONbig.stringify` to fix BigInt serialization
+* Updated `Log` model field descriptions to clarify impersonation behavior for `userId`, `userEmail`, `userName`
+* Updated `X-Appwrite-Response-Format` header to `1.9.0`
+* Updated devDependencies: Rollup 2→3, TypeScript pinned to 5.7.3, and related plugin upgrades
 
 ## 0.24.1
 
