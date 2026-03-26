@@ -1,6 +1,6 @@
 # Change log
 
-## 0.25.0
+## 0.26.0
 
 * [BREAKING] Changed `$sequence` type from `number` to `string` for `Row` and `Document` models
 * Added impersonation support: `setImpersonateUserId()`, `setImpersonateUserEmail()`, `setImpersonateUserPhone()` on `Client`
