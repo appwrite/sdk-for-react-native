@@ -152,14 +152,17 @@ class Client {
         locale: '',
         session: '',
         devkey: '',
+        impersonateuserid: '',
+        impersonateuseremail: '',
+        impersonateuserphone: '',
         platform: '',
     };
     headers: Headers = {
         'x-sdk-name': 'React Native',
         'x-sdk-platform': 'client',
         'x-sdk-language': 'reactnative',
-        'x-sdk-version': '0.25.0',
-        'X-Appwrite-Response-Format': '1.8.0',
+        'x-sdk-version': '0.26.0',
+        'X-Appwrite-Response-Format': '1.9.0',
     };
 
     /**
@@ -290,6 +293,69 @@ class Client {
     setDevKey(value: string): this {
         this.headers['X-Appwrite-Dev-Key'] = value;
         this.config.devkey = value;
+        return this;
+    }
+
+    /**
+     * Set ImpersonateUserId
+     *
+     * Impersonate a user by ID on an already user-authenticated request. Requires
+     * the current request to be authenticated as a user with impersonator
+     * capability; X-Appwrite-Key alone is not sufficient. Impersonator users are
+     * intentionally granted users.read so they can discover a target before
+     * impersonation begins. Internal audit logs still attribute actions to the
+     * original impersonator and record the impersonated target only in internal
+     * audit payload data.
+     *
+     * @param value string
+     *
+     * @return {this}
+     */
+    setImpersonateUserId(value: string): this {
+        this.headers['X-Appwrite-Impersonate-User-Id'] = value;
+        this.config.impersonateuserid = value;
+        return this;
+    }
+
+    /**
+     * Set ImpersonateUserEmail
+     *
+     * Impersonate a user by email on an already user-authenticated request.
+     * Requires the current request to be authenticated as a user with
+     * impersonator capability; X-Appwrite-Key alone is not sufficient.
+     * Impersonator users are intentionally granted users.read so they can
+     * discover a target before impersonation begins. Internal audit logs still
+     * attribute actions to the original impersonator and record the impersonated
+     * target only in internal audit payload data.
+     *
+     * @param value string
+     *
+     * @return {this}
+     */
+    setImpersonateUserEmail(value: string): this {
+        this.headers['X-Appwrite-Impersonate-User-Email'] = value;
+        this.config.impersonateuseremail = value;
+        return this;
+    }
+
+    /**
+     * Set ImpersonateUserPhone
+     *
+     * Impersonate a user by phone on an already user-authenticated request.
+     * Requires the current request to be authenticated as a user with
+     * impersonator capability; X-Appwrite-Key alone is not sufficient.
+     * Impersonator users are intentionally granted users.read so they can
+     * discover a target before impersonation begins. Internal audit logs still
+     * attribute actions to the original impersonator and record the impersonated
+     * target only in internal audit payload data.
+     *
+     * @param value string
+     *
+     * @return {this}
+     */
+    setImpersonateUserPhone(value: string): this {
+        this.headers['X-Appwrite-Impersonate-User-Phone'] = value;
+        this.config.impersonateuserphone = value;
         return this;
     }
 
@@ -586,6 +652,10 @@ class Client {
             if (typeof window !== 'undefined' && window.localStorage && cookieFallback) {
                 window.console.warn('Appwrite is using localStorage for session management. Increase your security by adding a custom domain as your API endpoint.');
                 window.localStorage.setItem('cookieFallback', cookieFallback);
+            }
+
+            if (data && typeof data === 'object') {
+                data.toString = () => JSONbig.stringify(data);
             }
 
             return data;

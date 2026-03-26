@@ -1,4 +1,5 @@
-import pkg from "./package.json";
+import { readFileSync } from "fs";
+const pkg = JSON.parse(readFileSync("./package.json", "utf8"));
 import typescript from "@rollup/plugin-typescript";
 
 const external = Object.keys(pkg.dependencies ?? {});
