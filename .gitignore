@@ -1,8 +1,10 @@
 node_modules/
 dist/*
 !dist/cjs/
-!dist/cjs/package.json
 !dist/esm/
+dist/cjs/*
+dist/esm/*
+!dist/cjs/package.json
 !dist/esm/package.json
 types/
 .DS_Store
