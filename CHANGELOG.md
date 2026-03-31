@@ -1,5 +1,10 @@
 # Change log
 
+## 0.27.0
+
+* Added: Added `getHeaders()` method to `Client` to expose current request headers
+* Added: Added `package-lock.json` to track dependency lockfile in version control
+
 ## 0.26.0
 
 * [BREAKING] Changed `$sequence` type from `number` to `string` for `Row` and `Document` models

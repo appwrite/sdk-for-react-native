@@ -161,9 +161,21 @@ class Client {
         'x-sdk-name': 'React Native',
         'x-sdk-platform': 'client',
         'x-sdk-language': 'reactnative',
-        'x-sdk-version': '0.26.0',
+        'x-sdk-version': '0.27.0',
         'X-Appwrite-Response-Format': '1.9.0',
     };
+
+    /**
+     * Get Headers
+     *
+     * Returns a copy of the current request headers, including any
+     * authentication headers. Handle with care.
+     *
+     * @returns {Headers}
+     */
+    getHeaders(): Headers {
+        return { ...this.headers };
+    }
 
     /**
      * Set Endpoint
