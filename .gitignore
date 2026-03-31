@@ -1,0 +1,8 @@
+node_modules/
+dist/*
+!dist/cjs/
+!dist/cjs/package.json
+!dist/esm/
+!dist/esm/package.json
+types/
+.DS_Store
