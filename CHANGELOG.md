@@ -1,5 +1,9 @@
 # Change log
 
+## 0.27.1
+
+* Fixed: Added `files` field to `package.json` to publish only built artifacts to npm
+
 ## 0.27.0
 
 * Added: Added `getHeaders()` method to `Client` to expose current request headers
