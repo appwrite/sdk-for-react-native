@@ -2,7 +2,7 @@
   "name": "react-native-appwrite",
   "homepage": "https://appwrite.io/support",
   "description": "Appwrite is an open-source self-hosted backend server that abstracts and simplifies complex and repetitive development tasks behind a very simple REST API",
-  "version": "0.27.0",
+  "version": "0.27.1",
   "license": "BSD-3-Clause",
   "main": "dist/cjs/sdk.js",
   "exports": {
@@ -15,6 +15,10 @@
   },
   "module": "dist/esm/sdk.js",
   "types": "types/index.d.ts",
+  "files": [
+    "dist",
+    "types"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/appwrite/sdk-for-react-native"
