@@ -7,7 +7,7 @@ const external = Object.keys(pkg.dependencies ?? {});
 export default {
     input: "src/index.ts",
     external,
-    plugins: [typescript()],
+    plugins: [typescript({ outDir: "dist" })],
     output: [
         {
             format: "cjs",

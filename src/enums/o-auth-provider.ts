@@ -33,6 +33,7 @@ export enum OAuthProvider {
     TradeshiftBox = 'tradeshiftBox',
     Twitch = 'twitch',
     Wordpress = 'wordpress',
+    X = 'x',
     Yahoo = 'yahoo',
     Yammer = 'yammer',
     Yandex = 'yandex',
