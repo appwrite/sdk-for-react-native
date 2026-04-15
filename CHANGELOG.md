@@ -1,5 +1,13 @@
 # Change log
 
+## 0.28.0
+
+* Added `x` OAuth provider to `OAuthProvider` enum
+* Added `userType` field to `Log` model
+* Updated `X-Appwrite-Response-Format` header to `1.9.1`
+* Updated TTL description for list caching in Databases and TablesDB
+* Updated dev dependencies: Rollup 3→4, Playwright 1.56→1.59, related plugin upgrades
+
 ## 0.27.1
 
 * Fixed: Added `files` field to `package.json` to publish only built artifacts to npm
