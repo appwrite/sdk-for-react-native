@@ -2,9 +2,10 @@
 
 ## 0.29.0
 
-* Added: `Realtime` used explicit `subscribe` messages with per-subscription queries
-* Fixed: `Realtime` subscription IDs mapped reliably after reconnect and subscribe responses
-* Updated: README compatibility note now targets `latest` server version
+* Breaking: Added `subscribe` message flow for Realtime subscription updates.
+* Breaking: Added `close()` support for Realtime subscriptions.
+* Added: Added `subscriptions` metadata to Realtime events for targeted callbacks.
+* Updated: Updated `X-Appwrite-Response-Format` header to `1.9.2`.
 
 ## 0.28.0
 

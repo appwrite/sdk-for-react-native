@@ -93,7 +93,6 @@ type RealtimeResponseError = {
 type RealtimeResponseConnected = {
     channels: string[];
     user?: object;
-    subscriptions?: Record<string, string>;
 }
 
 type RealtimeResponseAuthenticated = {
@@ -181,7 +180,7 @@ class Client {
         'x-sdk-platform': 'client',
         'x-sdk-language': 'reactnative',
         'x-sdk-version': '0.29.0',
-        'X-Appwrite-Response-Format': '1.9.1',
+        'X-Appwrite-Response-Format': '1.9.2',
     };
 
     /**
@@ -535,21 +534,6 @@ class Client {
                 switch (message.type) {
                     case 'connected': {
                         const messageData = <RealtimeResponseConnected>message.data;
-                        if (messageData?.subscriptions) {
-                            for (const [slotStr, subscriptionId] of Object.entries(messageData.subscriptions)) {
-                                const slot = Number(slotStr);
-                                if (isNaN(slot) || typeof subscriptionId !== 'string') {
-                                    continue;
-                                }
-
-                                const directSlotExists = this.realtime.subscriptions.has(slot);
-                                const shiftedSlot = slot + 1;
-                                const shiftedSlotExists = this.realtime.subscriptions.has(shiftedSlot);
-                                const targetSlot = directSlotExists ? slot : shiftedSlotExists ? shiftedSlot : slot;
-                                this.realtime.slotToSubscriptionId.set(targetSlot, subscriptionId);
-                                this.realtime.subscriptionIdToSlot.set(subscriptionId, targetSlot);
-                            }
-                        }
 
                         let session = this.config.session;
                         if (!session) {

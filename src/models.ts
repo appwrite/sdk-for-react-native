@@ -985,6 +985,10 @@ export namespace Models {
          */
         userEmail: string;
         /**
+         * User phone number. Hide this attribute by toggling membership privacy in the Console.
+         */
+        userPhone: string;
+        /**
          * Team ID.
          */
         teamId: string;
