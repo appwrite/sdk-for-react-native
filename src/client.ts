@@ -38,7 +38,7 @@ function reviver(_key: string, value: any): any {
     return value;
 }
 
-const JSONbig = {
+export const JSONbig = {
     parse: (text: string) => JSONbigParser.parse(text, reviver),
     stringify: JSONbigSerializer.stringify
 };
@@ -162,9 +162,10 @@ class AppwriteException extends Error {
 }
 
 class Client {
-    config = {
+    config: { [key: string]: string } = {
         endpoint: 'https://cloud.appwrite.io/v1',
         endpointRealtime: '',
+        platform: '',
         project: '',
         jwt: '',
         locale: '',
@@ -173,7 +174,6 @@ class Client {
         impersonateuserid: '',
         impersonateuseremail: '',
         impersonateuserphone: '',
-        platform: '',
     };
     headers: Headers = {
         'x-sdk-name': 'React Native',
@@ -241,9 +241,9 @@ class Client {
 
     /**
      * Set platform
-     * 
+     *
      * Set platform. Will be used as origin for all requests.
-     * 
+     *
      * @param {string} platform
      * @returns {this}
      */

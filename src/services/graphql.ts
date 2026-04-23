@@ -3,7 +3,7 @@ import { AppwriteException, Client } from '../client';
 import type { Models } from '../models';
 import type { UploadProgress, Payload } from '../client';
 import * as FileSystem from 'expo-file-system';
-import { Platform } from 'react-native';
+import { Platform as RNPlatform } from 'react-native';
 
 
 export class Graphql extends Service {

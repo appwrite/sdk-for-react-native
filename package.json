@@ -50,6 +50,8 @@
   },
   "overrides": {
     "glob": "^13.0.0",
-    "rimraf": "^6.0.0"
+    "rimraf": "^6.0.0",
+    "@xmldom/xmldom": "^0.9.10",
+    "uuid": "^14.0.0"
   }
 }
