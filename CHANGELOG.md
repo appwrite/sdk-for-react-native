@@ -1,5 +1,12 @@
 # Change log
 
+## 0.29.0
+
+* Breaking: Added `subscribe` message flow for Realtime subscription updates.
+* Breaking: Added `close()` support for Realtime subscriptions.
+* Added: Added `subscriptions` metadata to Realtime events for targeted callbacks.
+* Updated: Updated `X-Appwrite-Response-Format` header to `1.9.2`.
+
 ## 0.28.0
 
 * Added `x` OAuth provider to `OAuthProvider` enum
