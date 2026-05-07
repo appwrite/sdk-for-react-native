@@ -1,11 +1,18 @@
 # Change log
 
+## 0.30.0
+
+* Added: Added `setCookie()` method to `Client` for forwarding incoming `Cookie` headers in server-side runtimes
+* Added: Added `Fusionauth`, `Keycloak`, and `Kick` OAuth providers to `OAuthProvider` enum
+* Updated: Updated `X-Appwrite-Response-Format` header to `1.9.4`
+* Updated: Added `postcss` to dev dependencies
+
 ## 0.29.0
 
-* Breaking: Added `subscribe` message flow for Realtime subscription updates.
-* Breaking: Added `close()` support for Realtime subscriptions.
-* Added: Added `subscriptions` metadata to Realtime events for targeted callbacks.
-* Updated: Updated `X-Appwrite-Response-Format` header to `1.9.2`.
+* Breaking: Added `subscribe` message flow for Realtime subscription updates
+* Breaking: Added `close()` support for Realtime subscriptions
+* Added: Added `subscriptions` metadata to Realtime events for targeted callbacks
+* Updated: Updated `X-Appwrite-Response-Format` header to `1.9.2`
 
 ## 0.28.0
 
