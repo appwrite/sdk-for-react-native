@@ -53,8 +53,29 @@ export type RealtimeResponseConnected = {
 }
 
 export type RealtimeRequest = {
-    type: 'authentication' | 'subscribe' | 'unsubscribe';
+    type: 'authentication' | 'subscribe' | 'unsubscribe' | 'presence';
     data: any;
+}
+
+export type RealtimePresence = {
+    $id: string;
+    $sequence?: string | number;
+    $createdAt: string;
+    $updatedAt: string;
+    $permissions: string[];
+    userInternalId: string;
+    userId: string;
+    status?: string;
+    source: string;
+    expiry?: string;
+    metadata?: Record<string, any>;
+}
+
+export type RealtimePresenceCreate = {
+    status: string;
+    presenceId: string;
+    permissions?: string[];
+    metadata?: Record<string, any>;
 }
 
 type RealtimeRequestSubscribeRow = {
@@ -74,7 +95,6 @@ export class Realtime {
     private readonly TYPE_EVENT = 'event';
     private readonly TYPE_PONG = 'pong';
     private readonly TYPE_CONNECTED = 'connected';
-    private readonly TYPE_RESPONSE = 'response';
     private readonly DEBOUNCE_MS = 1;
     private readonly HEARTBEAT_INTERVAL = 20000; // 20 seconds in milliseconds
 
@@ -82,7 +102,13 @@ export class Realtime {
     private socket?: WebSocket;
     private activeSubscriptions = new Map<string, RealtimeCallback<any>>();
     private pendingSubscribes = new Map<string, RealtimeRequestSubscribeRow>();
+    private pendingPresence?: Record<string, any>;
+    private appConnected = false;
     private heartbeatTimer?: number;
+    // Single-flight lock for createSocket(). When set, concurrent callers join
+    // this promise instead of issuing a second `new WebSocket(...)`. Cleared
+    // after the underlying connect resolves or rejects.
+    private socketCreationPromise?: Promise<void>;
 
     private subCallDepth = 0;
     private reconnectAttempts = 0;
@@ -143,8 +169,33 @@ export class Realtime {
         }
     }
 
+    /**
+     * Idempotent socket opener. Both `subscribe()` and `upsertPresence()` can
+     * call this; the single-flight lock (`socketCreationPromise`) guarantees
+     * only one `new WebSocket(...)` is ever in flight, so concurrent callers
+     * join the same connection attempt instead of opening duplicates.
+     *
+     * Returns early when a healthy socket is already present.
+     */
     private async createSocket(): Promise<void> {
-        if (this.activeSubscriptions.size === 0) {
+        // Fast path: a usable socket is already there. No need to open another.
+        if (this.socket && this.socket.readyState < WebSocket.CLOSING) {
+            return;
+        }
+        // Another caller is already opening one — join it.
+        if (this.socketCreationPromise) {
+            return this.socketCreationPromise;
+        }
+        this.socketCreationPromise = this.createSocketLocked().finally(() => {
+            this.socketCreationPromise = undefined;
+        });
+        return this.socketCreationPromise;
+    }
+
+    private async createSocketLocked(): Promise<void> {
+        // Nothing to do if there's neither a subscription nor a queued presence
+        // that needs the wire. (Reconnect cleanup path also flows through here.)
+        if (this.activeSubscriptions.size === 0 && !this.pendingPresence) {
             this.reconnect = false;
             await this.closeSocket();
             return;
@@ -177,6 +228,15 @@ export class Realtime {
         }
 
         return new Promise((resolve, reject) => {
+            // Re-check the entry guard synchronously. `disconnect()` may have
+            // run during the `await this.closeSocket()` above (or any other
+            // await between the original guard and here), clearing every
+            // subscription and the pending presence. In that case opening a
+            // fresh socket would leak a connection with nothing attached.
+            if (this.activeSubscriptions.size === 0 && !this.pendingPresence) {
+                resolve();
+                return;
+            }
             try {
                 const connectionId = ++this.connectionId;
                 const WebSocketCtor: any = WebSocket;
@@ -212,6 +272,7 @@ export class Realtime {
                     if (connectionId !== this.connectionId || socket !== this.socket) {
                         return;
                     }
+                    this.appConnected = false;
                     this.stopHeartbeat();
                     this.onCloseCallbacks.forEach(callback => callback());
 
@@ -332,12 +393,36 @@ export class Realtime {
     public async disconnect(): Promise<void> {
         this.activeSubscriptions.clear();
         this.pendingSubscribes.clear();
+        this.pendingPresence = undefined;
+        this.appConnected = false;
         this.reconnect = false;
+        // Drop the in-flight single-flight slot. Promises can't be cancelled,
+        // so the underlying createSocketLocked() promise may stay pending
+        // forever — e.g. when closeSocket() below tears down a CONNECTING
+        // socket, the `close` event fires but `open`/`error` never do, and
+        // the inner `new Promise(...)` only resolves on those. Without this
+        // line, the next subscribe()/upsertPresence() would join the orphan
+        // promise via the single-flight gate and hang, leaving its pending
+        // subscription queued with no socket ever opened. Mirrors the Swift
+        // template's socketCreationTask cancel in disconnect().
+        this.socketCreationPromise = undefined;
         await this.closeSocket();
     }
 
     private sendPendingSubscribes(): void {
         if (!this.socket || this.socket.readyState !== WebSocket.OPEN) {
+            return;
+        }
+        // The WebSocket 'open' event fires when the TCP/upgrade handshake
+        // completes — but the server only accepts `subscribe` frames after
+        // it has emitted its own application-level `connected` event (which
+        // flips `appConnected` to true in handleResponseConnected). Sending
+        // before then triggers a policy-violation close on real Appwrite,
+        // which reconnects, which sends early again — i.e. a duplicate-
+        // socket loop. handleResponseConnected re-enqueues every active
+        // subscription and calls this method again once it's safe, so the
+        // queued rows are guaranteed to be sent.
+        if (!this.appConnected) {
             return;
         }
 
@@ -538,6 +623,66 @@ export class Realtime {
         return { unsubscribe, update, close };
     }
 
+    /**
+     * Fire-and-forget presence upsert. Records the latest payload in state so
+     * that — if the WebSocket isn't open yet, or later reconnects — only the
+     * most recent presence is automatically (re)sent on the next `connected`
+     * event. Repeated calls while the socket is closed collapse to the latest
+     * payload (older ones are discarded).
+     *
+     * Returns a `Promise<void>` for API consistency; the promise resolves as
+     * soon as the payload has been stored and the opportunistic send attempted.
+     *
+     * @param {RealtimePresenceCreate} params - Presence payload (status and presenceId required, permissions/metadata optional)
+     */
+    public async upsertPresence(params: RealtimePresenceCreate): Promise<void> {
+        const data: Record<string, any> = {
+            status: params.status,
+            presenceId: params.presenceId,
+        };
+        if (params.permissions !== undefined) {
+            data.permissions = params.permissions;
+        }
+        if (params.metadata !== undefined) {
+            data.metadata = params.metadata;
+        }
+
+        this.pendingPresence = data;
+
+        // Both subscribe() and upsertPresence() may need to open the socket.
+        // createSocket() is single-flight (see `socketCreationPromise`), so
+        // calling it here is a no-op when a connection is already in flight or
+        // healthy. Fire-and-forget keeps the documented fire-and-forget shape
+        // of upsertPresence: the returned Promise resolves as soon as the
+        // payload is stored.
+        if (!this.socket || this.socket.readyState >= WebSocket.CLOSING) {
+            this.createSocket().catch((error) => {
+                console.error('Failed to open realtime socket for presence:', error);
+            });
+        }
+
+        // Opportunistic send for the case where the socket is already past the
+        // `connected` handshake. The gate inside flushPendingPresence keeps
+        // this a no-op until appConnected flips to true.
+        this.flushPendingPresence();
+    }
+
+    private flushPendingPresence(): void {
+        if (!this.pendingPresence) {
+            return;
+        }
+        if (!this.socket || this.socket.readyState !== WebSocket.OPEN) {
+            return;
+        }
+        if (!this.appConnected) {
+            return;
+        }
+        this.socket.send(JSONbig.stringify(<RealtimeRequest>{
+            type: 'presence',
+            data: this.pendingPresence
+        }));
+    }
+
     private handleMessage(message: RealtimeResponse): void {
         if (!message.type) {
             return;
@@ -555,9 +700,6 @@ export class Realtime {
                 break;
             case this.TYPE_PONG:
                 // Handle pong response if needed
-                break;
-            case this.TYPE_RESPONSE:
-                this.handleResponseAction(message);
                 break;
         }
     }
@@ -591,7 +733,9 @@ export class Realtime {
         for (const subscriptionId of this.activeSubscriptions.keys()) {
             this.enqueuePendingSubscribe(subscriptionId);
         }
+        this.appConnected = true;
         this.sendPendingSubscribes();
+        this.flushPendingPresence();
     }
 
     private handleResponseError(message: RealtimeResponse): void {
@@ -631,11 +775,5 @@ export class Realtime {
                 subscriptions
             });
         }
-    }
-
-    private handleResponseAction(_message: RealtimeResponse): void {
-        // The SDK generates subscriptionIds client-side and sends them on every
-        // subscribe/unsubscribe, so subscribe/unsubscribe acks carry no state
-        // the SDK needs to reconcile.
     }
 }
