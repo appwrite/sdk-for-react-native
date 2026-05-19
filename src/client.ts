@@ -171,6 +171,7 @@ class Client {
         locale: '',
         session: '',
         devkey: '',
+        cookie: '',
         impersonateuserid: '',
         impersonateuseremail: '',
         impersonateuserphone: '',
@@ -179,8 +180,8 @@ class Client {
         'x-sdk-name': 'React Native',
         'x-sdk-platform': 'client',
         'x-sdk-language': 'reactnative',
-        'x-sdk-version': '0.29.0',
-        'X-Appwrite-Response-Format': '1.9.2',
+        'x-sdk-version': '0.30.0',
+        'X-Appwrite-Response-Format': '1.9.5',
     };
 
     /**
@@ -323,6 +324,22 @@ class Client {
     setDevKey(value: string): this {
         this.headers['X-Appwrite-Dev-Key'] = value;
         this.config.devkey = value;
+        return this;
+    }
+
+    /**
+     * Set Cookie
+     *
+     * The user cookie to authenticate with. Used by SDKs that forward an incoming
+     * Cookie header in server-side runtimes.
+     *
+     * @param value string
+     *
+     * @return {this}
+     */
+    setCookie(value: string): this {
+        this.headers['Cookie'] = value;
+        this.config.cookie = value;
         return this;
     }
 

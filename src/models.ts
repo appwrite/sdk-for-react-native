@@ -34,6 +34,20 @@ export namespace Models {
     }
 
     /**
+     * Presences List
+     */
+    export type PresenceList<Presence extends Models.Presence = Models.DefaultPresence> = {
+        /**
+         * Total number of presences that matched your query.
+         */
+        total: number;
+        /**
+         * List of presences.
+         */
+        presences: Presence[];
+    }
+
+    /**
      * Sessions List
      */
     export type SessionList = {
@@ -230,6 +244,34 @@ export namespace Models {
     }
 
     /**
+     * Insights List
+     */
+    export type InsightList = {
+        /**
+         * Total number of insights that matched your query.
+         */
+        total: number;
+        /**
+         * List of insights.
+         */
+        insights: Insight[];
+    }
+
+    /**
+     * Reports List
+     */
+    export type ReportList = {
+        /**
+         * Total number of reports that matched your query.
+         */
+        total: number;
+        /**
+         * List of reports.
+         */
+        reports: Report[];
+    }
+
+    /**
      * Row
      */
     export type Row = {
@@ -303,6 +345,49 @@ export namespace Models {
     }
 
     export type DefaultDocument = Document & {
+        [key: string]: any;
+        [__default]: true;
+    };
+
+    /**
+     * Presence
+     */
+    export type Presence = {
+        /**
+         * Presence ID.
+         */
+        $id: string;
+        /**
+         * Presence creation date in ISO 8601 format.
+         */
+        $createdAt: string;
+        /**
+         * Presence update date in ISO 8601 format.
+         */
+        $updatedAt: string;
+        /**
+         * Presence permissions. [Learn more about permissions](https://appwrite.io/docs/permissions).
+         */
+        $permissions: string[];
+        /**
+         * User ID.
+         */
+        userId: string;
+        /**
+         * Presence status.
+         */
+        status?: string;
+        /**
+         * Presence source.
+         */
+        source: string;
+        /**
+         * Presence expiry date in ISO 8601 format.
+         */
+        expiresAt?: string;
+    }
+
+    export type DefaultPresence = Presence & {
         [key: string]: any;
         [__default]: true;
     };
@@ -1388,5 +1473,155 @@ export namespace Models {
          * Is the target expired.
          */
         expired: boolean;
+    }
+
+    /**
+     * Insight
+     */
+    export type Insight = {
+        /**
+         * Insight ID.
+         */
+        $id: string;
+        /**
+         * Insight creation date in ISO 8601 format.
+         */
+        $createdAt: string;
+        /**
+         * Insight update date in ISO 8601 format.
+         */
+        $updatedAt: string;
+        /**
+         * Parent report ID. Insights always belong to a report.
+         */
+        reportId: string;
+        /**
+         * Insight type. One of databaseIndex (legacy), tablesDBIndex, documentsDBIndex, vectorsDBIndex, databasePerformance, sitePerformance, siteAccessibility, siteSeo, functionPerformance. The index types are engine-specific so each CTA can pair the right service+method (databases.createIndex, tablesDB.createIndex, documentsDB.createIndex, or vectorsDB.createIndex).
+         */
+        type: string;
+        /**
+         * Insight severity. One of info, warning, critical.
+         */
+        severity: string;
+        /**
+         * Insight status. One of active, dismissed.
+         */
+        status: string;
+        /**
+         * Type of the resource the insight is about. Plural noun, e.g. databases, sites, functions.
+         */
+        resourceType: string;
+        /**
+         * ID of the resource the insight is about.
+         */
+        resourceId: string;
+        /**
+         * Plural noun for the parent resource that contains the insight&#039;s resource, e.g. an insight about a column index on a table → resourceType=indexes, parentResourceType=tables. Empty when the resource has no parent.
+         */
+        parentResourceType: string;
+        /**
+         * ID of the parent resource. Empty when the resource has no parent.
+         */
+        parentResourceId: string;
+        /**
+         * Insight title.
+         */
+        title: string;
+        /**
+         * Short markdown summary describing the insight.
+         */
+        summary: string;
+        /**
+         * List of call-to-action buttons attached to this insight.
+         */
+        ctas: InsightCTA[];
+        /**
+         * Time the insight was analyzed in ISO 8601 format.
+         */
+        analyzedAt?: string;
+        /**
+         * Time the insight was dismissed in ISO 8601 format. Empty when not dismissed.
+         */
+        dismissedAt?: string;
+        /**
+         * User ID that dismissed the insight. Empty when not dismissed.
+         */
+        dismissedBy?: string;
+    }
+
+    /**
+     * InsightCTA
+     */
+    export type InsightCTA = {
+        /**
+         * Human-readable label for the CTA, used in UI.
+         */
+        label: string;
+        /**
+         * Public API service (SDK namespace) the client should invoke. Must match the engine that owns the resource — for index suggestions: databases (legacy), tablesDB, documentsDB, or vectorsDB.
+         */
+        service: string;
+        /**
+         * Public API method on the chosen service the client should invoke when this CTA is triggered.
+         */
+        method: string;
+        /**
+         * Parameter map the client should pass to the service method when this CTA is triggered. Keys match the target API&#039;s parameter names (e.g. databaseId/tableId/columns for tablesDB, databaseId/collectionId/attributes for the legacy Databases API).
+         */
+        params: object;
+    }
+
+    /**
+     * Report
+     */
+    export type Report = {
+        /**
+         * Report ID.
+         */
+        $id: string;
+        /**
+         * Report creation date in ISO 8601 format.
+         */
+        $createdAt: string;
+        /**
+         * Report update date in ISO 8601 format.
+         */
+        $updatedAt: string;
+        /**
+         * ID of the third-party app that submitted the report.
+         */
+        appId: string;
+        /**
+         * Analyzer that produced this report. e.g. lighthouse, audit, databaseAnalyzer.
+         */
+        type: string;
+        /**
+         * Short, human-readable title for the report.
+         */
+        title: string;
+        /**
+         * Markdown summary describing the report.
+         */
+        summary: string;
+        /**
+         * Plural noun describing what the report analyzes, e.g. databases, sites, urls.
+         */
+        targetType: string;
+        /**
+         * Free-form target identifier (URL for lighthouse, resource ID for db).
+         */
+        target: string;
+        /**
+         * Categories covered by the report, e.g. performance, accessibility.
+         */
+        categories: string[];
+        /**
+         * Insights nested under this report.
+         */
+        insights: Insight[];
+        /**
+         * Time the report was analyzed in ISO 8601 format.
+         */
+        analyzedAt?: string;
     }
 }
