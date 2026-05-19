@@ -7,7 +7,6 @@ export { Graphql } from './services/graphql';
 export { Locale } from './services/locale';
 export { Messaging } from './services/messaging';
 export { Presences } from './services/presences';
-export { Advisor } from './services/advisor';
 export { Storage } from './services/storage';
 export { TablesDB } from './services/tables-db';
 export { Teams } from './services/teams';

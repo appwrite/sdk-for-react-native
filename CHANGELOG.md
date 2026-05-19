@@ -1,5 +1,10 @@
 # Change log
 
+## 0.30.1
+
+* Fixed: Removed `Advisor` service and `Insight`, `InsightCTA`, `InsightList`, `Report`, `ReportList` models (admin-only endpoints, not intended for client SDKs)
+* Added: `sizeActual` field to `File` model
+
 ## 0.30.0
 
 * Added: Realtime `presences` channel and `RealtimePresence` types for presence subscriptions
