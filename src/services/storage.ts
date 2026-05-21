@@ -195,41 +195,126 @@ export class Storage extends Service {
         } catch(e) {
         }
 
-        let timestamp = new Date().getTime();
-        while (offset < size) {
-            let end = Math.min(offset + Service.CHUNK_SIZE - 1, size - 1);
+        const totalChunks = Math.ceil(size / Service.CHUNK_SIZE);
 
-            apiHeaders['content-range'] = 'bytes ' + offset + '-' + end + '/' + size;
-            if (response && response.$id) {
-                apiHeaders['x-appwrite-id'] = response.$id;
-            }
+        // Upload first chunk alone to get the upload ID
+        if (offset === 0) {
+            const firstChunkEnd = Math.min(Service.CHUNK_SIZE, size);
+            const firstChunkHeaders = { ...apiHeaders, 'content-range': 'bytes 0-' + (firstChunkEnd - 1) + '/' + size };
 
-            let chunk = await FileSystem.readAsStringAsync(file.uri, {
+            let firstChunk = await FileSystem.readAsStringAsync(file.uri, {
                 encoding: FileSystem.EncodingType.Base64,
-                position: offset,
+                position: 0,
                 length: Service.CHUNK_SIZE
             });
-            var path = `data:${file.type};base64,${chunk}`;
+            var firstPath = `data:${file.type};base64,${firstChunk}`;
             if (RNPlatform.OS.toLowerCase() === 'android') {
-                path = FileSystem.cacheDirectory + '/tmp_chunk_' + timestamp;
-                await FileSystem.writeAsStringAsync(path, chunk, {encoding: FileSystem.EncodingType.Base64});
+                firstPath = FileSystem.cacheDirectory + '/tmp_chunk_' + new Date().getTime();
+                await FileSystem.writeAsStringAsync(firstPath, firstChunk, {encoding: FileSystem.EncodingType.Base64});
             }
 
-            payload['file'] = { uri: path, name: file.name, type: file.type };
+            payload['file'] = { uri: firstPath, name: file.name, type: file.type };
 
-            response = await this.client.call('post', uri, apiHeaders, payload);
+            response = await this.client.call('post', uri, firstChunkHeaders, payload);
+            offset = firstChunkEnd;
 
             if (onProgress) {
                 onProgress({
                     $id: response.$id,
                     progress: (offset / size) * 100,
                     sizeUploaded: offset,
-                    chunksTotal: response.chunksTotal,
-                    chunksUploaded: response.chunksUploaded
+                    chunksTotal: totalChunks,
+                    chunksUploaded: 1
                 });
             }
-            offset += Service.CHUNK_SIZE;
         }
+
+        if (offset >= size) {
+            return response;
+        }
+
+        const uploadId = response?.$id;
+        const chunks: { index: number; start: number; end: number }[] = [];
+        const startChunkIndex = Math.ceil(offset / Service.CHUNK_SIZE);
+        for (let i = startChunkIndex; i < totalChunks; i++) {
+            const start = i * Service.CHUNK_SIZE;
+            const end = Math.min(start + Service.CHUNK_SIZE, size);
+            chunks.push({ index: i, start, end });
+        }
+
+        // Upload remaining chunks with max concurrency of 8
+        const CONCURRENCY = 8;
+        let completedCount = startChunkIndex;
+        let uploadedBytes = offset;
+
+        const isUploadComplete = (chunkResponse: any) => {
+            const chunksUploaded = chunkResponse?.chunksUploaded;
+            const chunksTotal = chunkResponse?.chunksTotal ?? totalChunks;
+            return typeof chunksUploaded === 'number' && typeof chunksTotal === 'number' && chunksUploaded >= chunksTotal;
+        };
+
+        const uploadChunk = async (chunk: typeof chunks[0]) => {
+            const chunkHeaders = { ...apiHeaders };
+            if (uploadId) {
+                chunkHeaders['x-appwrite-id'] = uploadId;
+            }
+            chunkHeaders['content-range'] = 'bytes ' + chunk.start + '-' + (chunk.end - 1) + '/' + size;
+
+            const chunkData = await FileSystem.readAsStringAsync(file.uri, {
+                encoding: FileSystem.EncodingType.Base64,
+                position: chunk.start,
+                length: chunk.end - chunk.start
+            });
+
+            let chunkPath = `data:${file.type};base64,${chunkData}`;
+            if (RNPlatform.OS.toLowerCase() === 'android') {
+                chunkPath = FileSystem.cacheDirectory + '/tmp_chunk_' + new Date().getTime() + '_' + chunk.index;
+                await FileSystem.writeAsStringAsync(chunkPath, chunkData, {encoding: FileSystem.EncodingType.Base64});
+            }
+
+            const chunkPayload = { ...payload };
+            chunkPayload['file'] = { uri: chunkPath, name: file.name, type: file.type };
+
+            const chunkResponse = await this.client.call('post', uri, chunkHeaders, chunkPayload);
+
+            completedCount++;
+            uploadedBytes += (chunk.end - chunk.start);
+
+            if (isUploadComplete(chunkResponse)) {
+                response = chunkResponse;
+            }
+
+            if (onProgress) {
+                onProgress({
+                    $id: uploadId,
+                    progress: (uploadedBytes / size) * 100,
+                    sizeUploaded: uploadedBytes,
+                    chunksTotal: totalChunks,
+                    chunksUploaded: completedCount
+                });
+            }
+
+            return chunkResponse;
+        };
+
+        // Process with limited concurrency using a worker pool
+        const queue = [...chunks];
+        const workers: Promise<void>[] = [];
+        const workerCount = Math.min(CONCURRENCY, queue.length);
+
+        for (let i = 0; i < workerCount; i++) {
+            workers.push(
+                (async () => {
+                    while (queue.length > 0) {
+                        const chunk = queue.shift()!;
+                        await uploadChunk(chunk);
+                    }
+                })()
+            );
+        }
+
+        await Promise.all(workers);
+
         return response;
     }
 
