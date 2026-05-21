@@ -676,7 +676,7 @@ class Client {
         }
     }
 
-    async ping(): Promise<any> {
+    async ping(): Promise<unknown> {
         return this.call('GET', new URL(this.config.endpoint + '/ping'));
     }
 
