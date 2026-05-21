@@ -180,7 +180,7 @@ class Client {
         'x-sdk-name': 'React Native',
         'x-sdk-platform': 'client',
         'x-sdk-language': 'reactnative',
-        'x-sdk-version': '0.30.1',
+        'x-sdk-version': '0.31.0',
         'X-Appwrite-Response-Format': '1.9.5',
     };
 
@@ -674,6 +674,10 @@ class Client {
             }
             this.realtime.connect();
         }
+    }
+
+    async ping(): Promise<unknown> {
+        return this.call('GET', new URL(this.config.endpoint + '/ping'));
     }
 
     async call(method: string, url: URL, headers: Headers = {}, params: Payload = {}, responseType = 'json'): Promise<any> {
