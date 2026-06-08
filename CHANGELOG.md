@@ -5,6 +5,7 @@
 * Breaking: Renamed `Theme` enum to `BrowserTheme`.
 * Breaking: Removed `Models.DefaultPresence` and dropped the `Presence` generic from `presences` methods.
 * Added: Email metadata fields to `User`, plus `Membership.userAccessedAt` and `Presence.metadata`.
+* Updated: Requests now send an explicit `accept` header matching each endpoint's response type.
 
 ## 0.30.1
 
