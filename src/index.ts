@@ -26,7 +26,7 @@ export { OAuthProvider } from './enums/o-auth-provider';
 export { Browser } from './enums/browser';
 export { CreditCard } from './enums/credit-card';
 export { Flag } from './enums/flag';
-export { Theme } from './enums/theme';
+export { BrowserTheme } from './enums/browser-theme';
 export { Timezone } from './enums/timezone';
 export { BrowserPermission } from './enums/browser-permission';
 export { ImageFormat } from './enums/image-format';

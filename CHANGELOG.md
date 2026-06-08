@@ -1,5 +1,12 @@
 # Change log
 
+## 0.32.0
+
+* Breaking: Renamed `Theme` enum to `BrowserTheme`.
+* Breaking: Removed `Models.DefaultPresence` and dropped the `Presence` generic from `presences` methods.
+* Added: Email metadata fields to `User`, plus `Membership.userAccessedAt` and `Presence.metadata`.
+* Updated: Requests now send an explicit `accept` header matching each endpoint's response type.
+
 ## 0.30.1
 
 * Fixed: Removed `Advisor` service and `Insight`, `InsightCTA`, `InsightList`, `Report`, `ReportList` models (admin-only endpoints, not intended for client SDKs)

@@ -28,6 +28,8 @@ export class Account extends Service {
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call('get', uri, {
+            'X-Appwrite-Project': this.client.config.project,
+            'accept': 'application/json',
         }, payload);
     }
 
@@ -109,7 +111,9 @@ export class Account extends Service {
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call('post', uri, {
+            'X-Appwrite-Project': this.client.config.project,
             'content-type': 'application/json',
+            'accept': 'application/json',
         }, payload);
     }
 
@@ -175,7 +179,9 @@ export class Account extends Service {
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call('patch', uri, {
+            'X-Appwrite-Project': this.client.config.project,
             'content-type': 'application/json',
+            'accept': 'application/json',
         }, payload);
     }
 
@@ -229,6 +235,8 @@ export class Account extends Service {
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call('get', uri, {
+            'X-Appwrite-Project': this.client.config.project,
+            'accept': 'application/json',
         }, payload);
     }
 
@@ -273,6 +281,7 @@ export class Account extends Service {
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call('delete', uri, {
+            'X-Appwrite-Project': this.client.config.project,
             'content-type': 'application/json',
         }, payload);
     }
@@ -318,7 +327,9 @@ export class Account extends Service {
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call('post', uri, {
+            'X-Appwrite-Project': this.client.config.project,
             'content-type': 'application/json',
+            'accept': 'application/json',
         }, payload);
     }
 
@@ -372,6 +383,8 @@ export class Account extends Service {
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call('get', uri, {
+            'X-Appwrite-Project': this.client.config.project,
+            'accept': 'application/json',
         }, payload);
     }
 
@@ -420,7 +433,9 @@ export class Account extends Service {
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call('patch', uri, {
+            'X-Appwrite-Project': this.client.config.project,
             'content-type': 'application/json',
+            'accept': 'application/json',
         }, payload);
     }
 
@@ -466,7 +481,9 @@ export class Account extends Service {
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call('post', uri, {
+            'X-Appwrite-Project': this.client.config.project,
             'content-type': 'application/json',
+            'accept': 'application/json',
         }, payload);
     }
 
@@ -511,7 +528,9 @@ export class Account extends Service {
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call('post', uri, {
+            'X-Appwrite-Project': this.client.config.project,
             'content-type': 'application/json',
+            'accept': 'application/json',
         }, payload);
     }
 
@@ -570,7 +589,9 @@ export class Account extends Service {
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call('put', uri, {
+            'X-Appwrite-Project': this.client.config.project,
             'content-type': 'application/json',
+            'accept': 'application/json',
         }, payload);
     }
 
@@ -628,7 +649,9 @@ export class Account extends Service {
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call('put', uri, {
+            'X-Appwrite-Project': this.client.config.project,
             'content-type': 'application/json',
+            'accept': 'application/json',
         }, payload);
     }
 
@@ -674,6 +697,7 @@ export class Account extends Service {
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call('delete', uri, {
+            'X-Appwrite-Project': this.client.config.project,
             'content-type': 'application/json',
         }, payload);
     }
@@ -719,6 +743,7 @@ export class Account extends Service {
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call('delete', uri, {
+            'X-Appwrite-Project': this.client.config.project,
             'content-type': 'application/json',
         }, payload);
     }
@@ -769,7 +794,9 @@ export class Account extends Service {
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call('post', uri, {
+            'X-Appwrite-Project': this.client.config.project,
             'content-type': 'application/json',
+            'accept': 'application/json',
         }, payload);
     }
 
@@ -818,7 +845,9 @@ export class Account extends Service {
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call('post', uri, {
+            'X-Appwrite-Project': this.client.config.project,
             'content-type': 'application/json',
+            'accept': 'application/json',
         }, payload);
     }
 
@@ -881,7 +910,9 @@ export class Account extends Service {
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call('put', uri, {
+            'X-Appwrite-Project': this.client.config.project,
             'content-type': 'application/json',
+            'accept': 'application/json',
         }, payload);
     }
 
@@ -943,7 +974,9 @@ export class Account extends Service {
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call('put', uri, {
+            'X-Appwrite-Project': this.client.config.project,
             'content-type': 'application/json',
+            'accept': 'application/json',
         }, payload);
     }
 
@@ -960,6 +993,8 @@ export class Account extends Service {
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call('get', uri, {
+            'X-Appwrite-Project': this.client.config.project,
+            'accept': 'application/json',
         }, payload);
     }
 
@@ -975,6 +1010,8 @@ export class Account extends Service {
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call('get', uri, {
+            'X-Appwrite-Project': this.client.config.project,
+            'accept': 'application/json',
         }, payload);
     }
 
@@ -991,6 +1028,8 @@ export class Account extends Service {
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call('get', uri, {
+            'X-Appwrite-Project': this.client.config.project,
+            'accept': 'application/json',
         }, payload);
     }
 
@@ -1006,6 +1045,8 @@ export class Account extends Service {
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call('get', uri, {
+            'X-Appwrite-Project': this.client.config.project,
+            'accept': 'application/json',
         }, payload);
     }
 
@@ -1022,7 +1063,9 @@ export class Account extends Service {
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call('post', uri, {
+            'X-Appwrite-Project': this.client.config.project,
             'content-type': 'application/json',
+            'accept': 'application/json',
         }, payload);
     }
 
@@ -1038,7 +1081,9 @@ export class Account extends Service {
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call('post', uri, {
+            'X-Appwrite-Project': this.client.config.project,
             'content-type': 'application/json',
+            'accept': 'application/json',
         }, payload);
     }
 
@@ -1055,7 +1100,9 @@ export class Account extends Service {
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call('patch', uri, {
+            'X-Appwrite-Project': this.client.config.project,
             'content-type': 'application/json',
+            'accept': 'application/json',
         }, payload);
     }
 
@@ -1071,7 +1118,9 @@ export class Account extends Service {
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call('patch', uri, {
+            'X-Appwrite-Project': this.client.config.project,
             'content-type': 'application/json',
+            'accept': 'application/json',
         }, payload);
     }
 
@@ -1120,7 +1169,9 @@ export class Account extends Service {
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call('patch', uri, {
+            'X-Appwrite-Project': this.client.config.project,
             'content-type': 'application/json',
+            'accept': 'application/json',
         }, payload);
     }
 
@@ -1128,7 +1179,7 @@ export class Account extends Service {
      * Update currently logged in user password. For validation, user is required to pass in the new password, and the old password. For users created with OAuth, Team Invites and Magic URL, oldPassword is optional.
      *
      * @param {string} params.password - New user password. Must be at least 8 chars.
-     * @param {string} params.oldPassword - Current user password. Must be at least 8 chars.
+     * @param {string} params.oldPassword - Current user password. Max length: 256 chars.
      * @throws {AppwriteException}
      * @returns {Promise}
      */
@@ -1137,7 +1188,7 @@ export class Account extends Service {
      * Update currently logged in user password. For validation, user is required to pass in the new password, and the old password. For users created with OAuth, Team Invites and Magic URL, oldPassword is optional.
      *
      * @param {string} password - New user password. Must be at least 8 chars.
-     * @param {string} oldPassword - Current user password. Must be at least 8 chars.
+     * @param {string} oldPassword - Current user password. Max length: 256 chars.
      * @throws {AppwriteException}
      * @returns {Promise<Models.User<Preferences>>}
      * @deprecated Use the object parameter style method for a better developer experience.
@@ -1178,7 +1229,9 @@ export class Account extends Service {
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call('patch', uri, {
+            'X-Appwrite-Project': this.client.config.project,
             'content-type': 'application/json',
+            'accept': 'application/json',
         }, payload);
     }
 
@@ -1240,7 +1293,9 @@ export class Account extends Service {
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call('patch', uri, {
+            'X-Appwrite-Project': this.client.config.project,
             'content-type': 'application/json',
+            'accept': 'application/json',
         }, payload);
     }
 
@@ -1256,6 +1311,8 @@ export class Account extends Service {
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call('get', uri, {
+            'X-Appwrite-Project': this.client.config.project,
+            'accept': 'application/json',
         }, payload);
     }
 
@@ -1304,7 +1361,9 @@ export class Account extends Service {
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call('patch', uri, {
+            'X-Appwrite-Project': this.client.config.project,
             'content-type': 'application/json',
+            'accept': 'application/json',
         }, payload);
     }
 
@@ -1366,7 +1425,9 @@ export class Account extends Service {
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call('post', uri, {
+            'X-Appwrite-Project': this.client.config.project,
             'content-type': 'application/json',
+            'accept': 'application/json',
         }, payload);
     }
 
@@ -1444,7 +1505,9 @@ export class Account extends Service {
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call('put', uri, {
+            'X-Appwrite-Project': this.client.config.project,
             'content-type': 'application/json',
+            'accept': 'application/json',
         }, payload);
     }
 
@@ -1460,6 +1523,8 @@ export class Account extends Service {
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call('get', uri, {
+            'X-Appwrite-Project': this.client.config.project,
+            'accept': 'application/json',
         }, payload);
     }
 
@@ -1475,6 +1540,7 @@ export class Account extends Service {
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call('delete', uri, {
+            'X-Appwrite-Project': this.client.config.project,
             'content-type': 'application/json',
         }, payload);
     }
@@ -1491,7 +1557,9 @@ export class Account extends Service {
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call('post', uri, {
+            'X-Appwrite-Project': this.client.config.project,
             'content-type': 'application/json',
+            'accept': 'application/json',
         }, payload);
     }
 
@@ -1557,7 +1625,9 @@ export class Account extends Service {
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call('post', uri, {
+            'X-Appwrite-Project': this.client.config.project,
             'content-type': 'application/json',
+            'accept': 'application/json',
         }, payload);
     }
 
@@ -1620,7 +1690,9 @@ export class Account extends Service {
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call('put', uri, {
+            'X-Appwrite-Project': this.client.config.project,
             'content-type': 'application/json',
+            'accept': 'application/json',
         }, payload);
     }
 
@@ -1767,7 +1839,9 @@ export class Account extends Service {
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call('put', uri, {
+            'X-Appwrite-Project': this.client.config.project,
             'content-type': 'application/json',
+            'accept': 'application/json',
         }, payload);
     }
 
@@ -1829,7 +1903,9 @@ export class Account extends Service {
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call('post', uri, {
+            'X-Appwrite-Project': this.client.config.project,
             'content-type': 'application/json',
+            'accept': 'application/json',
         }, payload);
     }
 
@@ -1874,6 +1950,8 @@ export class Account extends Service {
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call('get', uri, {
+            'X-Appwrite-Project': this.client.config.project,
+            'accept': 'application/json',
         }, payload);
     }
 
@@ -1918,7 +1996,9 @@ export class Account extends Service {
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call('patch', uri, {
+            'X-Appwrite-Project': this.client.config.project,
             'content-type': 'application/json',
+            'accept': 'application/json',
         }, payload);
     }
 
@@ -1963,6 +2043,7 @@ export class Account extends Service {
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call('delete', uri, {
+            'X-Appwrite-Project': this.client.config.project,
             'content-type': 'application/json',
         }, payload);
     }
@@ -1979,7 +2060,9 @@ export class Account extends Service {
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call('patch', uri, {
+            'X-Appwrite-Project': this.client.config.project,
             'content-type': 'application/json',
+            'accept': 'application/json',
         }, payload);
     }
 
@@ -2049,7 +2132,9 @@ export class Account extends Service {
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call('post', uri, {
+            'X-Appwrite-Project': this.client.config.project,
             'content-type': 'application/json',
+            'accept': 'application/json',
         }, payload);
     }
 
@@ -2107,7 +2192,9 @@ export class Account extends Service {
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call('put', uri, {
+            'X-Appwrite-Project': this.client.config.project,
             'content-type': 'application/json',
+            'accept': 'application/json',
         }, payload);
     }
 
@@ -2152,6 +2239,7 @@ export class Account extends Service {
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call('delete', uri, {
+            'X-Appwrite-Project': this.client.config.project,
             'content-type': 'application/json',
         }, payload);
     }
@@ -2228,7 +2316,9 @@ export class Account extends Service {
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call('post', uri, {
+            'X-Appwrite-Project': this.client.config.project,
             'content-type': 'application/json',
+            'accept': 'application/json',
         }, payload);
     }
 
@@ -2312,7 +2402,9 @@ export class Account extends Service {
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call('post', uri, {
+            'X-Appwrite-Project': this.client.config.project,
             'content-type': 'application/json',
+            'accept': 'application/json',
         }, payload);
     }
 
@@ -2460,7 +2552,9 @@ export class Account extends Service {
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call('post', uri, {
+            'X-Appwrite-Project': this.client.config.project,
             'content-type': 'application/json',
+            'accept': 'application/json',
         }, payload);
     }
 
@@ -2515,7 +2609,9 @@ export class Account extends Service {
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call('post', uri, {
+            'X-Appwrite-Project': this.client.config.project,
             'content-type': 'application/json',
+            'accept': 'application/json',
         }, payload);
     }
 
@@ -2571,7 +2667,9 @@ export class Account extends Service {
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call('post', uri, {
+            'X-Appwrite-Project': this.client.config.project,
             'content-type': 'application/json',
+            'accept': 'application/json',
         }, payload);
     }
 
@@ -2633,7 +2731,9 @@ export class Account extends Service {
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call('put', uri, {
+            'X-Appwrite-Project': this.client.config.project,
             'content-type': 'application/json',
+            'accept': 'application/json',
         }, payload);
     }
 
@@ -2696,7 +2796,9 @@ export class Account extends Service {
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call('put', uri, {
+            'X-Appwrite-Project': this.client.config.project,
             'content-type': 'application/json',
+            'accept': 'application/json',
         }, payload);
     }
 
@@ -2712,7 +2814,9 @@ export class Account extends Service {
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call('post', uri, {
+            'X-Appwrite-Project': this.client.config.project,
             'content-type': 'application/json',
+            'accept': 'application/json',
         }, payload);
     }
 
@@ -2774,7 +2878,9 @@ export class Account extends Service {
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call('put', uri, {
+            'X-Appwrite-Project': this.client.config.project,
             'content-type': 'application/json',
+            'accept': 'application/json',
         }, payload);
     }
 };

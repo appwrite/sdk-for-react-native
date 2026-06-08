@@ -81,6 +81,8 @@ export class Storage extends Service {
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call('get', uri, {
+            'X-Appwrite-Project': this.client.config.project,
+            'accept': 'application/json',
         }, payload);
     }
 
@@ -179,12 +181,16 @@ export class Storage extends Service {
 
         if (size <= Service.CHUNK_SIZE) {
             return this.client.call('post', uri, {
+                'X-Appwrite-Project': this.client.config.project,
                 'content-type': 'multipart/form-data',
+                'accept': 'application/json',
             }, payload);
         }
 
         const apiHeaders: { [header: string]: string } = {
+            'X-Appwrite-Project': this.client.config.project,
             'content-type': 'multipart/form-data',
+            'accept': 'application/json',
         }
 
         let offset = 0;
@@ -380,6 +386,8 @@ export class Storage extends Service {
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call('get', uri, {
+            'X-Appwrite-Project': this.client.config.project,
+            'accept': 'application/json',
         }, payload);
     }
 
@@ -449,7 +457,9 @@ export class Storage extends Service {
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call('put', uri, {
+            'X-Appwrite-Project': this.client.config.project,
             'content-type': 'application/json',
+            'accept': 'application/json',
         }, payload);
     }
 
@@ -503,6 +513,7 @@ export class Storage extends Service {
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call('delete', uri, {
+            'X-Appwrite-Project': this.client.config.project,
             'content-type': 'application/json',
         }, payload);
     }
@@ -571,6 +582,8 @@ export class Storage extends Service {
             uri.searchParams.append(key, value);
         }
         return this.client.call('get', uri, {
+            'X-Appwrite-Project': this.client.config.project,
+            'accept': '*/*',
         }, payload, 'arrayBuffer');
     }
 
@@ -726,6 +739,8 @@ export class Storage extends Service {
             uri.searchParams.append(key, value);
         }
         return this.client.call('get', uri, {
+            'X-Appwrite-Project': this.client.config.project,
+            'accept': 'image/*',
         }, payload, 'arrayBuffer');
     }
 
@@ -793,6 +808,8 @@ export class Storage extends Service {
             uri.searchParams.append(key, value);
         }
         return this.client.call('get', uri, {
+            'X-Appwrite-Project': this.client.config.project,
+            'accept': '*/*',
         }, payload, 'arrayBuffer');
     }
 

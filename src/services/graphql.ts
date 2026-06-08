@@ -58,8 +58,10 @@ export class Graphql extends Service {
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call('post', uri, {
+            'X-Appwrite-Project': this.client.config.project,
             'x-sdk-graphql': 'true',
             'content-type': 'application/json',
+            'accept': 'application/json',
         }, payload);
     }
 
@@ -108,8 +110,10 @@ export class Graphql extends Service {
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call('post', uri, {
+            'X-Appwrite-Project': this.client.config.project,
             'x-sdk-graphql': 'true',
             'content-type': 'application/json',
+            'accept': 'application/json',
         }, payload);
     }
 };

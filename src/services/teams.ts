@@ -71,6 +71,8 @@ export class Teams extends Service {
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call('get', uri, {
+            'X-Appwrite-Project': this.client.config.project,
+            'accept': 'application/json',
         }, payload);
     }
 
@@ -140,7 +142,9 @@ export class Teams extends Service {
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call('post', uri, {
+            'X-Appwrite-Project': this.client.config.project,
             'content-type': 'application/json',
+            'accept': 'application/json',
         }, payload);
     }
 
@@ -185,6 +189,8 @@ export class Teams extends Service {
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call('get', uri, {
+            'X-Appwrite-Project': this.client.config.project,
+            'accept': 'application/json',
         }, payload);
     }
 
@@ -242,7 +248,9 @@ export class Teams extends Service {
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call('put', uri, {
+            'X-Appwrite-Project': this.client.config.project,
             'content-type': 'application/json',
+            'accept': 'application/json',
         }, payload);
     }
 
@@ -287,6 +295,7 @@ export class Teams extends Service {
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call('delete', uri, {
+            'X-Appwrite-Project': this.client.config.project,
             'content-type': 'application/json',
         }, payload);
     }
@@ -357,6 +366,8 @@ export class Teams extends Service {
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call('get', uri, {
+            'X-Appwrite-Project': this.client.config.project,
+            'accept': 'application/json',
         }, payload);
     }
 
@@ -468,7 +479,9 @@ export class Teams extends Service {
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call('post', uri, {
+            'X-Appwrite-Project': this.client.config.project,
             'content-type': 'application/json',
+            'accept': 'application/json',
         }, payload);
     }
 
@@ -522,6 +535,8 @@ export class Teams extends Service {
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call('get', uri, {
+            'X-Appwrite-Project': this.client.config.project,
+            'accept': 'application/json',
         }, payload);
     }
 
@@ -589,7 +604,9 @@ export class Teams extends Service {
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call('patch', uri, {
+            'X-Appwrite-Project': this.client.config.project,
             'content-type': 'application/json',
+            'accept': 'application/json',
         }, payload);
     }
 
@@ -643,6 +660,7 @@ export class Teams extends Service {
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call('delete', uri, {
+            'X-Appwrite-Project': this.client.config.project,
             'content-type': 'application/json',
         }, payload);
     }
@@ -727,7 +745,9 @@ export class Teams extends Service {
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call('patch', uri, {
+            'X-Appwrite-Project': this.client.config.project,
             'content-type': 'application/json',
+            'accept': 'application/json',
         }, payload);
     }
 
@@ -772,6 +792,8 @@ export class Teams extends Service {
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call('get', uri, {
+            'X-Appwrite-Project': this.client.config.project,
+            'accept': 'application/json',
         }, payload);
     }
 
@@ -829,7 +851,9 @@ export class Teams extends Service {
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call('put', uri, {
+            'X-Appwrite-Project': this.client.config.project,
             'content-type': 'application/json',
+            'accept': 'application/json',
         }, payload);
     }
 };

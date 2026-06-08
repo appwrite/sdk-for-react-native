@@ -8,7 +8,7 @@ import { Platform as RNPlatform } from 'react-native';
 import { Browser } from '../enums/browser';
 import { CreditCard } from '../enums/credit-card';
 import { Flag } from '../enums/flag';
-import { Theme } from '../enums/theme';
+import { BrowserTheme } from '../enums/browser-theme';
 import { Timezone } from '../enums/timezone';
 import { BrowserPermission } from '../enums/browser-permission';
 import { ImageFormat } from '../enums/image-format';
@@ -96,6 +96,8 @@ export class Avatars extends Service {
             uri.searchParams.append(key, value);
         }
         return this.client.call('get', uri, {
+            'X-Appwrite-Project': this.client.config.project,
+            'accept': 'image/png',
         }, payload, 'arrayBuffer');
     }
 
@@ -177,6 +179,8 @@ export class Avatars extends Service {
             uri.searchParams.append(key, value);
         }
         return this.client.call('get', uri, {
+            'X-Appwrite-Project': this.client.config.project,
+            'accept': 'image/png',
         }, payload, 'arrayBuffer');
     }
 
@@ -235,6 +239,8 @@ export class Avatars extends Service {
             uri.searchParams.append(key, value);
         }
         return this.client.call('get', uri, {
+            'X-Appwrite-Project': this.client.config.project,
+            'accept': 'image/*',
         }, payload, 'arrayBuffer');
     }
 
@@ -316,6 +322,8 @@ export class Avatars extends Service {
             uri.searchParams.append(key, value);
         }
         return this.client.call('get', uri, {
+            'X-Appwrite-Project': this.client.config.project,
+            'accept': 'image/png',
         }, payload, 'arrayBuffer');
     }
 
@@ -395,6 +403,8 @@ export class Avatars extends Service {
             uri.searchParams.append(key, value);
         }
         return this.client.call('get', uri, {
+            'X-Appwrite-Project': this.client.config.project,
+            'accept': 'image/*',
         }, payload, 'arrayBuffer');
     }
 
@@ -480,6 +490,8 @@ export class Avatars extends Service {
             uri.searchParams.append(key, value);
         }
         return this.client.call('get', uri, {
+            'X-Appwrite-Project': this.client.config.project,
+            'accept': 'image/png',
         }, payload, 'arrayBuffer');
     }
 
@@ -561,6 +573,8 @@ export class Avatars extends Service {
             uri.searchParams.append(key, value);
         }
         return this.client.call('get', uri, {
+            'X-Appwrite-Project': this.client.config.project,
+            'accept': 'image/png',
         }, payload, 'arrayBuffer');
     }
 
@@ -576,7 +590,7 @@ export class Avatars extends Service {
      * @param {number} params.viewportWidth - Browser viewport width. Pass an integer between 1 to 1920. Defaults to 1280.
      * @param {number} params.viewportHeight - Browser viewport height. Pass an integer between 1 to 1080. Defaults to 720.
      * @param {number} params.scale - Browser scale factor. Pass a number between 0.1 to 3. Defaults to 1.
-     * @param {Theme} params.theme - Browser theme. Pass "light" or "dark". Defaults to "light".
+     * @param {BrowserTheme} params.theme - Browser theme. Pass "light" or "dark". Defaults to "light".
      * @param {string} params.userAgent - Custom user agent string. Defaults to browser default.
      * @param {boolean} params.fullpage - Capture full page scroll. Pass 0 for viewport only, or 1 for full page. Defaults to 0.
      * @param {string} params.locale - Browser locale (e.g., "en-US", "fr-FR"). Defaults to browser default.
@@ -594,7 +608,7 @@ export class Avatars extends Service {
      * @throws {AppwriteException}
      * @returns {ArrayBuffer}
      */
-    getScreenshot(params: { url: string, headers?: object, viewportWidth?: number, viewportHeight?: number, scale?: number, theme?: Theme, userAgent?: string, fullpage?: boolean, locale?: string, timezone?: Timezone, latitude?: number, longitude?: number, accuracy?: number, touch?: boolean, permissions?: BrowserPermission[], sleep?: number, width?: number, height?: number, quality?: number, output?: ImageFormat  }): Promise<ArrayBuffer>;
+    getScreenshot(params: { url: string, headers?: object, viewportWidth?: number, viewportHeight?: number, scale?: number, theme?: BrowserTheme, userAgent?: string, fullpage?: boolean, locale?: string, timezone?: Timezone, latitude?: number, longitude?: number, accuracy?: number, touch?: boolean, permissions?: BrowserPermission[], sleep?: number, width?: number, height?: number, quality?: number, output?: ImageFormat  }): Promise<ArrayBuffer>;
     /**
      * Use this endpoint to capture a screenshot of any website URL. This endpoint uses a headless browser to render the webpage and capture it as an image.
      * 
@@ -607,7 +621,7 @@ export class Avatars extends Service {
      * @param {number} viewportWidth - Browser viewport width. Pass an integer between 1 to 1920. Defaults to 1280.
      * @param {number} viewportHeight - Browser viewport height. Pass an integer between 1 to 1080. Defaults to 720.
      * @param {number} scale - Browser scale factor. Pass a number between 0.1 to 3. Defaults to 1.
-     * @param {Theme} theme - Browser theme. Pass "light" or "dark". Defaults to "light".
+     * @param {BrowserTheme} theme - Browser theme. Pass "light" or "dark". Defaults to "light".
      * @param {string} userAgent - Custom user agent string. Defaults to browser default.
      * @param {boolean} fullpage - Capture full page scroll. Pass 0 for viewport only, or 1 for full page. Defaults to 0.
      * @param {string} locale - Browser locale (e.g., "en-US", "fr-FR"). Defaults to browser default.
@@ -626,15 +640,15 @@ export class Avatars extends Service {
      * @returns {Promise<ArrayBuffer>}
      * @deprecated Use the object parameter style method for a better developer experience.
      */
-    getScreenshot(url: string, headers?: object, viewportWidth?: number, viewportHeight?: number, scale?: number, theme?: Theme, userAgent?: string, fullpage?: boolean, locale?: string, timezone?: Timezone, latitude?: number, longitude?: number, accuracy?: number, touch?: boolean, permissions?: BrowserPermission[], sleep?: number, width?: number, height?: number, quality?: number, output?: ImageFormat): Promise<ArrayBuffer>;
+    getScreenshot(url: string, headers?: object, viewportWidth?: number, viewportHeight?: number, scale?: number, theme?: BrowserTheme, userAgent?: string, fullpage?: boolean, locale?: string, timezone?: Timezone, latitude?: number, longitude?: number, accuracy?: number, touch?: boolean, permissions?: BrowserPermission[], sleep?: number, width?: number, height?: number, quality?: number, output?: ImageFormat): Promise<ArrayBuffer>;
     getScreenshot(
-        paramsOrFirst: { url: string, headers?: object, viewportWidth?: number, viewportHeight?: number, scale?: number, theme?: Theme, userAgent?: string, fullpage?: boolean, locale?: string, timezone?: Timezone, latitude?: number, longitude?: number, accuracy?: number, touch?: boolean, permissions?: BrowserPermission[], sleep?: number, width?: number, height?: number, quality?: number, output?: ImageFormat } | string,
-        ...rest: [(object)?, (number)?, (number)?, (number)?, (Theme)?, (string)?, (boolean)?, (string)?, (Timezone)?, (number)?, (number)?, (number)?, (boolean)?, (BrowserPermission[])?, (number)?, (number)?, (number)?, (number)?, (ImageFormat)?]    
+        paramsOrFirst: { url: string, headers?: object, viewportWidth?: number, viewportHeight?: number, scale?: number, theme?: BrowserTheme, userAgent?: string, fullpage?: boolean, locale?: string, timezone?: Timezone, latitude?: number, longitude?: number, accuracy?: number, touch?: boolean, permissions?: BrowserPermission[], sleep?: number, width?: number, height?: number, quality?: number, output?: ImageFormat } | string,
+        ...rest: [(object)?, (number)?, (number)?, (number)?, (BrowserTheme)?, (string)?, (boolean)?, (string)?, (Timezone)?, (number)?, (number)?, (number)?, (boolean)?, (BrowserPermission[])?, (number)?, (number)?, (number)?, (number)?, (ImageFormat)?]    
     ): Promise<ArrayBuffer> {
-        let params: { url: string, headers?: object, viewportWidth?: number, viewportHeight?: number, scale?: number, theme?: Theme, userAgent?: string, fullpage?: boolean, locale?: string, timezone?: Timezone, latitude?: number, longitude?: number, accuracy?: number, touch?: boolean, permissions?: BrowserPermission[], sleep?: number, width?: number, height?: number, quality?: number, output?: ImageFormat };
+        let params: { url: string, headers?: object, viewportWidth?: number, viewportHeight?: number, scale?: number, theme?: BrowserTheme, userAgent?: string, fullpage?: boolean, locale?: string, timezone?: Timezone, latitude?: number, longitude?: number, accuracy?: number, touch?: boolean, permissions?: BrowserPermission[], sleep?: number, width?: number, height?: number, quality?: number, output?: ImageFormat };
 
         if ((paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst))) {
-            params = (paramsOrFirst || {}) as { url: string, headers?: object, viewportWidth?: number, viewportHeight?: number, scale?: number, theme?: Theme, userAgent?: string, fullpage?: boolean, locale?: string, timezone?: Timezone, latitude?: number, longitude?: number, accuracy?: number, touch?: boolean, permissions?: BrowserPermission[], sleep?: number, width?: number, height?: number, quality?: number, output?: ImageFormat };
+            params = (paramsOrFirst || {}) as { url: string, headers?: object, viewportWidth?: number, viewportHeight?: number, scale?: number, theme?: BrowserTheme, userAgent?: string, fullpage?: boolean, locale?: string, timezone?: Timezone, latitude?: number, longitude?: number, accuracy?: number, touch?: boolean, permissions?: BrowserPermission[], sleep?: number, width?: number, height?: number, quality?: number, output?: ImageFormat };
         } else {
             params = {
                 url: paramsOrFirst as string,
@@ -642,7 +656,7 @@ export class Avatars extends Service {
                 viewportWidth: rest[1] as number,
                 viewportHeight: rest[2] as number,
                 scale: rest[3] as number,
-                theme: rest[4] as Theme,
+                theme: rest[4] as BrowserTheme,
                 userAgent: rest[5] as string,
                 fullpage: rest[6] as boolean,
                 locale: rest[7] as string,
@@ -776,6 +790,8 @@ export class Avatars extends Service {
             uri.searchParams.append(key, value);
         }
         return this.client.call('get', uri, {
+            'X-Appwrite-Project': this.client.config.project,
+            'accept': 'image/png',
         }, payload, 'arrayBuffer');
     }
 
@@ -1100,7 +1116,7 @@ export class Avatars extends Service {
      * @param {number} viewportWidth
      * @param {number} viewportHeight
      * @param {number} scale
-     * @param {Theme} theme
+     * @param {BrowserTheme} theme
      * @param {string} userAgent
      * @param {boolean} fullpage
      * @param {string} locale
@@ -1118,7 +1134,7 @@ export class Avatars extends Service {
      * @throws {AppwriteException}
      * @returns {URL}
     */
-    getScreenshotURL(url: string, headers?: object, viewportWidth?: number, viewportHeight?: number, scale?: number, theme?: Theme, userAgent?: string, fullpage?: boolean, locale?: string, timezone?: Timezone, latitude?: number, longitude?: number, accuracy?: number, touch?: boolean, permissions?: BrowserPermission[], sleep?: number, width?: number, height?: number, quality?: number, output?: ImageFormat): URL {
+    getScreenshotURL(url: string, headers?: object, viewportWidth?: number, viewportHeight?: number, scale?: number, theme?: BrowserTheme, userAgent?: string, fullpage?: boolean, locale?: string, timezone?: Timezone, latitude?: number, longitude?: number, accuracy?: number, touch?: boolean, permissions?: BrowserPermission[], sleep?: number, width?: number, height?: number, quality?: number, output?: ImageFormat): URL {
         const apiPath = '/avatars/screenshots';
         const payload: Payload = {};
 

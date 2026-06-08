@@ -23,7 +23,7 @@ export class Presences extends Service {
      * @throws {AppwriteException}
      * @returns {Promise}
      */
-    list<Presence extends Models.Presence = Models.DefaultPresence>(params?: { queries?: string[], total?: boolean, ttl?: number  }): Promise<Models.PresenceList<Presence>>;
+    list(params?: { queries?: string[], total?: boolean, ttl?: number  }): Promise<Models.PresenceList>;
     /**
      * List presence logs. Expired entries are filtered out automatically.
      * 
@@ -32,14 +32,14 @@ export class Presences extends Service {
      * @param {boolean} total - When set to false, the total count returned will be 0 and will not be calculated.
      * @param {number} ttl - TTL (seconds) for caching list responses. Responses are stored in an in-memory key-value cache, keyed per project, collection, schema version (attributes and indexes), caller authorization roles, and the exact query — so users with different permissions never share cached entries. Schema changes invalidate cached entries automatically; document writes do not, so choose a TTL you are comfortable serving as stale data. Set to 0 to disable caching. Must be between 0 and 86400 (24 hours).
      * @throws {AppwriteException}
-     * @returns {Promise<Models.PresenceList<Presence>>}
+     * @returns {Promise<Models.PresenceList>}
      * @deprecated Use the object parameter style method for a better developer experience.
      */
-    list<Presence extends Models.Presence = Models.DefaultPresence>(queries?: string[], total?: boolean, ttl?: number): Promise<Models.PresenceList<Presence>>;
-    list<Presence extends Models.Presence = Models.DefaultPresence>(
+    list(queries?: string[], total?: boolean, ttl?: number): Promise<Models.PresenceList>;
+    list(
         paramsOrFirst?: { queries?: string[], total?: boolean, ttl?: number } | string[],
         ...rest: [(boolean)?, (number)?]    
-    ): Promise<Models.PresenceList<Presence>> {
+    ): Promise<Models.PresenceList> {
         let params: { queries?: string[], total?: boolean, ttl?: number };
 
         if (!paramsOrFirst || (paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst))) {
@@ -73,6 +73,8 @@ export class Presences extends Service {
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call('get', uri, {
+            'X-Appwrite-Project': this.client.config.project,
+            'accept': 'application/json',
         }, payload);
     }
 
@@ -84,20 +86,20 @@ export class Presences extends Service {
      * @throws {AppwriteException}
      * @returns {Promise}
      */
-    get<Presence extends Models.Presence = Models.DefaultPresence>(params: { presenceId: string  }): Promise<Presence>;
+    get(params: { presenceId: string  }): Promise<Models.Presence>;
     /**
      * Get a presence log by its unique ID. Entries whose `expiresAt` is in the past are treated as not found.
      * 
      *
      * @param {string} presenceId - Presence unique ID.
      * @throws {AppwriteException}
-     * @returns {Promise<Presence>}
+     * @returns {Promise<Models.Presence>}
      * @deprecated Use the object parameter style method for a better developer experience.
      */
-    get<Presence extends Models.Presence = Models.DefaultPresence>(presenceId: string): Promise<Presence>;
-    get<Presence extends Models.Presence = Models.DefaultPresence>(
+    get(presenceId: string): Promise<Models.Presence>;
+    get(
         paramsOrFirst: { presenceId: string } | string    
-    ): Promise<Presence> {
+    ): Promise<Models.Presence> {
         let params: { presenceId: string };
 
         if ((paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst))) {
@@ -119,6 +121,8 @@ export class Presences extends Service {
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call('get', uri, {
+            'X-Appwrite-Project': this.client.config.project,
+            'accept': 'application/json',
         }, payload);
     }
 
@@ -134,7 +138,7 @@ export class Presences extends Service {
      * @throws {AppwriteException}
      * @returns {Promise}
      */
-    upsert<Presence extends Models.Presence = Models.DefaultPresence>(params: { presenceId: string, status: string, permissions?: string[], expiresAt?: string, metadata?: object  }): Promise<Presence>;
+    upsert(params: { presenceId: string, status: string, permissions?: string[], expiresAt?: string, metadata?: object  }): Promise<Models.Presence>;
     /**
      * Create or update a presence log by its user ID.
      * 
@@ -145,14 +149,14 @@ export class Presences extends Service {
      * @param {string} expiresAt - Presence expiry datetime.
      * @param {object} metadata - Presence metadata object.
      * @throws {AppwriteException}
-     * @returns {Promise<Presence>}
+     * @returns {Promise<Models.Presence>}
      * @deprecated Use the object parameter style method for a better developer experience.
      */
-    upsert<Presence extends Models.Presence = Models.DefaultPresence>(presenceId: string, status: string, permissions?: string[], expiresAt?: string, metadata?: object): Promise<Presence>;
-    upsert<Presence extends Models.Presence = Models.DefaultPresence>(
+    upsert(presenceId: string, status: string, permissions?: string[], expiresAt?: string, metadata?: object): Promise<Models.Presence>;
+    upsert(
         paramsOrFirst: { presenceId: string, status: string, permissions?: string[], expiresAt?: string, metadata?: object } | string,
         ...rest: [(string)?, (string[])?, (string)?, (object)?]    
-    ): Promise<Presence> {
+    ): Promise<Models.Presence> {
         let params: { presenceId: string, status: string, permissions?: string[], expiresAt?: string, metadata?: object };
 
         if ((paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst))) {
@@ -202,7 +206,9 @@ export class Presences extends Service {
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call('put', uri, {
+            'X-Appwrite-Project': this.client.config.project,
             'content-type': 'application/json',
+            'accept': 'application/json',
         }, payload);
     }
 
@@ -219,7 +225,7 @@ export class Presences extends Service {
      * @throws {AppwriteException}
      * @returns {Promise}
      */
-    update<Presence extends Models.Presence = Models.DefaultPresence>(params: { presenceId: string, status?: string, expiresAt?: string, metadata?: object, permissions?: string[], purge?: boolean  }): Promise<Presence>;
+    update(params: { presenceId: string, status?: string, expiresAt?: string, metadata?: object, permissions?: string[], purge?: boolean  }): Promise<Models.Presence>;
     /**
      * Update a presence log by its unique ID. Using the patch method you can pass only specific fields that will get updated.
      * 
@@ -231,14 +237,14 @@ export class Presences extends Service {
      * @param {string[]} permissions - An array of permissions strings. By default, only the current user is granted all permissions. [Learn more about permissions](https://appwrite.io/docs/permissions).
      * @param {boolean} purge - When true, purge cached responses used by list presences endpoint.
      * @throws {AppwriteException}
-     * @returns {Promise<Presence>}
+     * @returns {Promise<Models.Presence>}
      * @deprecated Use the object parameter style method for a better developer experience.
      */
-    update<Presence extends Models.Presence = Models.DefaultPresence>(presenceId: string, status?: string, expiresAt?: string, metadata?: object, permissions?: string[], purge?: boolean): Promise<Presence>;
-    update<Presence extends Models.Presence = Models.DefaultPresence>(
+    update(presenceId: string, status?: string, expiresAt?: string, metadata?: object, permissions?: string[], purge?: boolean): Promise<Models.Presence>;
+    update(
         paramsOrFirst: { presenceId: string, status?: string, expiresAt?: string, metadata?: object, permissions?: string[], purge?: boolean } | string,
         ...rest: [(string)?, (string)?, (object)?, (string[])?, (boolean)?]    
-    ): Promise<Presence> {
+    ): Promise<Models.Presence> {
         let params: { presenceId: string, status?: string, expiresAt?: string, metadata?: object, permissions?: string[], purge?: boolean };
 
         if ((paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst))) {
@@ -290,7 +296,9 @@ export class Presences extends Service {
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call('patch', uri, {
+            'X-Appwrite-Project': this.client.config.project,
             'content-type': 'application/json',
+            'accept': 'application/json',
         }, payload);
     }
 
@@ -337,6 +345,7 @@ export class Presences extends Service {
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call('delete', uri, {
+            'X-Appwrite-Project': this.client.config.project,
             'content-type': 'application/json',
         }, payload);
     }
