@@ -180,7 +180,7 @@ class Client {
         'x-sdk-name': 'React Native',
         'x-sdk-platform': 'client',
         'x-sdk-language': 'reactnative',
-        'x-sdk-version': '0.30.1',
+        'x-sdk-version': '0.32.0',
         'X-Appwrite-Response-Format': '1.9.5',
     };
 
@@ -264,7 +264,6 @@ class Client {
      * @return {this}
      */
     setProject(value: string): this {
-        this.headers['X-Appwrite-Project'] = value;
         this.config.project = value;
         return this;
     }
@@ -676,6 +675,12 @@ class Client {
         }
     }
 
+    async ping(): Promise<unknown> {
+        return this.call('GET', new URL(this.config.endpoint + '/ping'), {
+            'X-Appwrite-Project': this.config.project,
+        });
+    }
+
     async call(method: string, url: URL, headers: Headers = {}, params: Payload = {}, responseType = 'json'): Promise<any> {
         method = method.toUpperCase();
 
@@ -758,7 +763,12 @@ class Client {
             }
 
             if (data && typeof data === 'object') {
-                data.toString = () => JSONbig.stringify(data);
+                Object.defineProperty(data, 'toString', {
+                    value: () => JSONbig.stringify(data),
+                    writable: true,
+                    enumerable: false,
+                    configurable: true,
+                });
             }
 
             return data;

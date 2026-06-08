@@ -72,6 +72,8 @@ export class Functions extends Service {
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call('get', uri, {
+            'X-Appwrite-Project': this.client.config.project,
+            'accept': 'application/json',
         }, payload);
     }
 
@@ -165,7 +167,9 @@ export class Functions extends Service {
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call('post', uri, {
+            'X-Appwrite-Project': this.client.config.project,
             'content-type': 'application/json',
+            'accept': 'multipart/form-data',
         }, payload);
     }
 
@@ -219,6 +223,8 @@ export class Functions extends Service {
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call('get', uri, {
+            'X-Appwrite-Project': this.client.config.project,
+            'accept': 'application/json',
         }, payload);
     }
 };

@@ -239,11 +239,13 @@ export class Realtime {
             try {
                 const connectionId = ++this.connectionId;
                 const WebSocketCtor: any = WebSocket;
-                const socket = (this.socket = new WebSocketCtor(url, undefined, {
-                    headers: {
-                        Origin: `appwrite-${Platform.OS}://${this.client.config.platform}`
-                    }
-                }));
+                const socket = (this.socket = Platform.OS === 'web'
+                    ? new WebSocketCtor(url)
+                    : new WebSocketCtor(url, undefined, {
+                        headers: {
+                            Origin: `appwrite-${Platform.OS}://${this.client.config.platform}`
+                        }
+                    }));
 
                 socket.addEventListener('open', () => {
                     if (connectionId !== this.connectionId) {

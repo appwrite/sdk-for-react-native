@@ -1,15 +1,15 @@
 ```javascript
-import { Client, Account } from "react-native-appwrite";
+import { Client, Oauth2 } from "react-native-appwrite";
 
 const client = new Client()
     .setEndpoint('https://<REGION>.cloud.appwrite.io/v1') // Your API Endpoint
     .setProject('<YOUR_PROJECT_ID>'); // Your project ID
 
-const account = new Account(client);
+const oauth2 = new Oauth2(client);
 
-const result = await account.updatePassword({
-    password: '',
-    oldPassword: '<OLD_PASSWORD>' // optional
+const result = await oauth2.createGrant({
+    projectId: '<PROJECT_ID>',
+    userCode: '<USER_CODE>'
 });
 
 console.log(result);
