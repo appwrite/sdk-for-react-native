@@ -90,7 +90,7 @@ export class Functions extends Service {
      * @throws {AppwriteException}
      * @returns {Promise}
      */
-    createExecution(params: { functionId: string, body?: string, async?: boolean, xpath?: string, method?: ExecutionMethod, headers?: object, scheduledAt?: string  }): Promise<Models.Execution>;
+    async createExecution(params: { functionId: string, body?: string, async?: boolean, xpath?: string, method?: ExecutionMethod, headers?: object, scheduledAt?: string , onProgress?: (progress: UploadProgress) => void }): Promise<Models.Execution>;
     /**
      * Trigger a function execution. The returned object will return you the current execution status. You can ping the `Get Execution` endpoint to get updates on the current execution status. Once this endpoint is called, your function execution process will start asynchronously.
      *
@@ -105,15 +105,17 @@ export class Functions extends Service {
      * @returns {Promise<Models.Execution>}
      * @deprecated Use the object parameter style method for a better developer experience.
      */
-    createExecution(functionId: string, body?: string, async?: boolean, xpath?: string, method?: ExecutionMethod, headers?: object, scheduledAt?: string): Promise<Models.Execution>;
-    createExecution(
-        paramsOrFirst: { functionId: string, body?: string, async?: boolean, xpath?: string, method?: ExecutionMethod, headers?: object, scheduledAt?: string } | string,
-        ...rest: [(string)?, (boolean)?, (string)?, (ExecutionMethod)?, (object)?, (string)?]    
+    async createExecution(functionId: string, body?: string, async?: boolean, xpath?: string, method?: ExecutionMethod, headers?: object, scheduledAt?: string, onProgress?: (progress: UploadProgress) => void): Promise<Models.Execution>;
+    async createExecution(
+        paramsOrFirst: { functionId: string, body?: string, async?: boolean, xpath?: string, method?: ExecutionMethod, headers?: object, scheduledAt?: string, onProgress?: (progress: UploadProgress) => void  } | string,
+        ...rest: [(string)?, (boolean)?, (string)?, (ExecutionMethod)?, (object)?, (string)?,((progress: UploadProgress) => void)?]    
     ): Promise<Models.Execution> {
         let params: { functionId: string, body?: string, async?: boolean, xpath?: string, method?: ExecutionMethod, headers?: object, scheduledAt?: string };
+        let onProgress: ((progress: UploadProgress) => void);
 
         if ((paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst))) {
             params = (paramsOrFirst || {}) as { functionId: string, body?: string, async?: boolean, xpath?: string, method?: ExecutionMethod, headers?: object, scheduledAt?: string };
+            onProgress = paramsOrFirst?.onProgress as ((progress: UploadProgress) => void);
         } else {
             params = {
                 functionId: paramsOrFirst as string,
@@ -124,6 +126,7 @@ export class Functions extends Service {
                 headers: rest[4] as object,
                 scheduledAt: rest[5] as string            
             };
+            onProgress = rest[6] as ((progress: UploadProgress) => void);
         }
 
         const functionId = params.functionId;
@@ -166,11 +169,6 @@ export class Functions extends Service {
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
-        return this.client.call('post', uri, {
-            'X-Appwrite-Project': this.client.config.project,
-            'content-type': 'application/json',
-            'accept': 'multipart/form-data',
-        }, payload);
     }
 
     /**
