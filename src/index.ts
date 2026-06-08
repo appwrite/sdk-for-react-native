@@ -1,13 +1,11 @@
 export { Client, AppwriteException } from './client';
 export { Account } from './services/account';
-export { Apps } from './services/apps';
 export { Avatars } from './services/avatars';
 export { Databases } from './services/databases';
 export { Functions } from './services/functions';
 export { Graphql } from './services/graphql';
 export { Locale } from './services/locale';
 export { Messaging } from './services/messaging';
-export { Oauth2 } from './services/oauth-2';
 export { Presences } from './services/presences';
 export { Storage } from './services/storage';
 export { TablesDB } from './services/tables-db';
