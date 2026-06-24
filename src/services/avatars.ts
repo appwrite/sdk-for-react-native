@@ -73,7 +73,7 @@ export class Avatars extends Service {
             throw new AppwriteException('Missing required parameter: "code"');
         }
 
-        const apiPath = '/avatars/browsers/{code}'.replace('{code}', code);
+        const apiPath = '/avatars/browsers/{code}'.replace('{code}', encodeURIComponent(String(code)));
         const payload: Payload = {};
 
         if (typeof width !== 'undefined') {
@@ -90,6 +90,8 @@ export class Avatars extends Service {
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         payload['project'] = this.client.config.project;
+
+        payload['impersonateuserid'] = this.client.config.impersonateuserid;
 
 
         for (const [key, value] of Object.entries(Service.flatten(payload))) {
@@ -156,7 +158,7 @@ export class Avatars extends Service {
             throw new AppwriteException('Missing required parameter: "code"');
         }
 
-        const apiPath = '/avatars/credit-cards/{code}'.replace('{code}', code);
+        const apiPath = '/avatars/credit-cards/{code}'.replace('{code}', encodeURIComponent(String(code)));
         const payload: Payload = {};
 
         if (typeof width !== 'undefined') {
@@ -173,6 +175,8 @@ export class Avatars extends Service {
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         payload['project'] = this.client.config.project;
+
+        payload['impersonateuserid'] = this.client.config.impersonateuserid;
 
 
         for (const [key, value] of Object.entries(Service.flatten(payload))) {
@@ -233,6 +237,8 @@ export class Avatars extends Service {
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         payload['project'] = this.client.config.project;
+
+        payload['impersonateuserid'] = this.client.config.impersonateuserid;
 
 
         for (const [key, value] of Object.entries(Service.flatten(payload))) {
@@ -299,7 +305,7 @@ export class Avatars extends Service {
             throw new AppwriteException('Missing required parameter: "code"');
         }
 
-        const apiPath = '/avatars/flags/{code}'.replace('{code}', code);
+        const apiPath = '/avatars/flags/{code}'.replace('{code}', encodeURIComponent(String(code)));
         const payload: Payload = {};
 
         if (typeof width !== 'undefined') {
@@ -316,6 +322,8 @@ export class Avatars extends Service {
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         payload['project'] = this.client.config.project;
+
+        payload['impersonateuserid'] = this.client.config.impersonateuserid;
 
 
         for (const [key, value] of Object.entries(Service.flatten(payload))) {
@@ -397,6 +405,8 @@ export class Avatars extends Service {
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         payload['project'] = this.client.config.project;
+
+        payload['impersonateuserid'] = this.client.config.impersonateuserid;
 
 
         for (const [key, value] of Object.entries(Service.flatten(payload))) {
@@ -485,6 +495,8 @@ export class Avatars extends Service {
         const uri = new URL(this.client.config.endpoint + apiPath);
         payload['project'] = this.client.config.project;
 
+        payload['impersonateuserid'] = this.client.config.impersonateuserid;
+
 
         for (const [key, value] of Object.entries(Service.flatten(payload))) {
             uri.searchParams.append(key, value);
@@ -567,6 +579,8 @@ export class Avatars extends Service {
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         payload['project'] = this.client.config.project;
+
+        payload['impersonateuserid'] = this.client.config.impersonateuserid;
 
 
         for (const [key, value] of Object.entries(Service.flatten(payload))) {
@@ -785,6 +799,8 @@ export class Avatars extends Service {
         const uri = new URL(this.client.config.endpoint + apiPath);
         payload['project'] = this.client.config.project;
 
+        payload['impersonateuserid'] = this.client.config.impersonateuserid;
+
 
         for (const [key, value] of Object.entries(Service.flatten(payload))) {
             uri.searchParams.append(key, value);
@@ -815,7 +831,7 @@ export class Avatars extends Service {
      * @returns {URL}
     */
     getBrowserURL(code: Browser, width?: number, height?: number, quality?: number): URL {
-        const apiPath = '/avatars/browsers/{code}'.replace('{code}', code);
+        const apiPath = '/avatars/browsers/{code}'.replace('{code}', encodeURIComponent(String(code)));
         const payload: Payload = {};
 
         if (typeof width !== 'undefined') {
@@ -832,6 +848,8 @@ export class Avatars extends Service {
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         payload['project'] = this.client.config.project;
+
+        payload['impersonateuserid'] = this.client.config.impersonateuserid;
 
         for (const [key, value] of Object.entries(Service.flatten(payload))) {
             uri.searchParams.append(key, value);
@@ -859,7 +877,7 @@ export class Avatars extends Service {
      * @returns {URL}
     */
     getCreditCardURL(code: CreditCard, width?: number, height?: number, quality?: number): URL {
-        const apiPath = '/avatars/credit-cards/{code}'.replace('{code}', code);
+        const apiPath = '/avatars/credit-cards/{code}'.replace('{code}', encodeURIComponent(String(code)));
         const payload: Payload = {};
 
         if (typeof width !== 'undefined') {
@@ -876,6 +894,8 @@ export class Avatars extends Service {
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         payload['project'] = this.client.config.project;
+
+        payload['impersonateuserid'] = this.client.config.impersonateuserid;
 
         for (const [key, value] of Object.entries(Service.flatten(payload))) {
             uri.searchParams.append(key, value);
@@ -905,6 +925,8 @@ export class Avatars extends Service {
         const uri = new URL(this.client.config.endpoint + apiPath);
         payload['project'] = this.client.config.project;
 
+        payload['impersonateuserid'] = this.client.config.impersonateuserid;
+
         for (const [key, value] of Object.entries(Service.flatten(payload))) {
             uri.searchParams.append(key, value);
         }
@@ -932,7 +954,7 @@ export class Avatars extends Service {
      * @returns {URL}
     */
     getFlagURL(code: Flag, width?: number, height?: number, quality?: number): URL {
-        const apiPath = '/avatars/flags/{code}'.replace('{code}', code);
+        const apiPath = '/avatars/flags/{code}'.replace('{code}', encodeURIComponent(String(code)));
         const payload: Payload = {};
 
         if (typeof width !== 'undefined') {
@@ -949,6 +971,8 @@ export class Avatars extends Service {
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         payload['project'] = this.client.config.project;
+
+        payload['impersonateuserid'] = this.client.config.impersonateuserid;
 
         for (const [key, value] of Object.entries(Service.flatten(payload))) {
             uri.searchParams.append(key, value);
@@ -994,6 +1018,8 @@ export class Avatars extends Service {
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         payload['project'] = this.client.config.project;
+
+        payload['impersonateuserid'] = this.client.config.impersonateuserid;
 
         for (const [key, value] of Object.entries(Service.flatten(payload))) {
             uri.searchParams.append(key, value);
@@ -1050,6 +1076,8 @@ export class Avatars extends Service {
         const uri = new URL(this.client.config.endpoint + apiPath);
         payload['project'] = this.client.config.project;
 
+        payload['impersonateuserid'] = this.client.config.impersonateuserid;
+
         for (const [key, value] of Object.entries(Service.flatten(payload))) {
             uri.searchParams.append(key, value);
         }
@@ -1091,6 +1119,8 @@ export class Avatars extends Service {
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         payload['project'] = this.client.config.project;
+
+        payload['impersonateuserid'] = this.client.config.impersonateuserid;
 
         for (const [key, value] of Object.entries(Service.flatten(payload))) {
             uri.searchParams.append(key, value);
@@ -1220,6 +1250,8 @@ export class Avatars extends Service {
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         payload['project'] = this.client.config.project;
+
+        payload['impersonateuserid'] = this.client.config.impersonateuserid;
 
         for (const [key, value] of Object.entries(Service.flatten(payload))) {
             uri.searchParams.append(key, value);

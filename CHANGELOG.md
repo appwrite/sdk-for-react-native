@@ -1,5 +1,11 @@
 # Change log
 
+## 0.33.0
+
+* Added: Realtime connections now send the configured JWT for authentication.
+* Added: Forwarded `impersonateUserId` on `avatars` and `storage` file requests.
+* Fixed: URL-encode path parameters across all services.
+
 ## 0.32.0
 
 * Breaking: Renamed `Theme` enum to `BrowserTheme`.

@@ -206,7 +206,9 @@ export class Realtime {
         }
 
         // URL carries only the project; channels/queries are sent via the subscribe message.
-        const queryParams = `project=${projectId}`;
+        let queryParams = `project=${projectId}`;
+
+        const jwt = this.client.config.jwt;
 
         const endpoint =
             this.client.config.endpointRealtime !== ''
@@ -240,10 +242,11 @@ export class Realtime {
                 const connectionId = ++this.connectionId;
                 const WebSocketCtor: any = WebSocket;
                 const socket = (this.socket = Platform.OS === 'web'
-                    ? new WebSocketCtor(url)
+                    ? new WebSocketCtor(jwt ? `${url}&jwt=${encodeURIComponent(jwt)}` : url)
                     : new WebSocketCtor(url, undefined, {
                         headers: {
-                            Origin: `appwrite-${Platform.OS}://${this.client.config.platform}`
+                            Origin: `appwrite-${Platform.OS}://${this.client.config.platform}`,
+                            ...(jwt ? { 'x-appwrite-jwt': jwt } : {})
                         }
                     }));
 

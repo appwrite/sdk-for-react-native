@@ -116,7 +116,7 @@ export class Presences extends Service {
             throw new AppwriteException('Missing required parameter: "presenceId"');
         }
 
-        const apiPath = '/presences/{presenceId}'.replace('{presenceId}', presenceId);
+        const apiPath = '/presences/{presenceId}'.replace('{presenceId}', encodeURIComponent(String(presenceId)));
         const payload: Payload = {};
 
         const uri = new URL(this.client.config.endpoint + apiPath);
@@ -185,7 +185,7 @@ export class Presences extends Service {
             throw new AppwriteException('Missing required parameter: "status"');
         }
 
-        const apiPath = '/presences/{presenceId}'.replace('{presenceId}', presenceId);
+        const apiPath = '/presences/{presenceId}'.replace('{presenceId}', encodeURIComponent(String(presenceId)));
         const payload: Payload = {};
 
         if (typeof status !== 'undefined') {
@@ -271,7 +271,7 @@ export class Presences extends Service {
             throw new AppwriteException('Missing required parameter: "presenceId"');
         }
 
-        const apiPath = '/presences/{presenceId}'.replace('{presenceId}', presenceId);
+        const apiPath = '/presences/{presenceId}'.replace('{presenceId}', encodeURIComponent(String(presenceId)));
         const payload: Payload = {};
 
         if (typeof status !== 'undefined') {
@@ -340,7 +340,7 @@ export class Presences extends Service {
             throw new AppwriteException('Missing required parameter: "presenceId"');
         }
 
-        const apiPath = '/presences/{presenceId}'.replace('{presenceId}', presenceId);
+        const apiPath = '/presences/{presenceId}'.replace('{presenceId}', encodeURIComponent(String(presenceId)));
         const payload: Payload = {};
 
         const uri = new URL(this.client.config.endpoint + apiPath);

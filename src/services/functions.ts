@@ -59,7 +59,7 @@ export class Functions extends Service {
             throw new AppwriteException('Missing required parameter: "functionId"');
         }
 
-        const apiPath = '/functions/{functionId}/executions'.replace('{functionId}', functionId);
+        const apiPath = '/functions/{functionId}/executions'.replace('{functionId}', encodeURIComponent(String(functionId)));
         const payload: Payload = {};
 
         if (typeof queries !== 'undefined') {
@@ -138,7 +138,7 @@ export class Functions extends Service {
             throw new AppwriteException('Missing required parameter: "functionId"');
         }
 
-        const apiPath = '/functions/{functionId}/executions'.replace('{functionId}', functionId);
+        const apiPath = '/functions/{functionId}/executions'.replace('{functionId}', encodeURIComponent(String(functionId)));
         const payload: Payload = {};
 
         if (typeof body !== 'undefined') {
@@ -218,7 +218,7 @@ export class Functions extends Service {
             throw new AppwriteException('Missing required parameter: "executionId"');
         }
 
-        const apiPath = '/functions/{functionId}/executions/{executionId}'.replace('{functionId}', functionId).replace('{executionId}', executionId);
+        const apiPath = '/functions/{functionId}/executions/{executionId}'.replace('{functionId}', encodeURIComponent(String(functionId))).replace('{executionId}', encodeURIComponent(String(executionId)));
         const payload: Payload = {};
 
         const uri = new URL(this.client.config.endpoint + apiPath);
