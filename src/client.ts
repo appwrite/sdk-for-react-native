@@ -180,7 +180,7 @@ class Client {
         'x-sdk-name': 'React Native',
         'x-sdk-platform': 'client',
         'x-sdk-language': 'reactnative',
-        'x-sdk-version': '0.32.0',
+        'x-sdk-version': '0.33.0',
         'X-Appwrite-Response-Format': '1.9.5',
     };
 
@@ -345,13 +345,7 @@ class Client {
     /**
      * Set ImpersonateUserId
      *
-     * Impersonate a user by ID on an already user-authenticated request. Requires
-     * the current request to be authenticated as a user with impersonator
-     * capability; X-Appwrite-Key alone is not sufficient. Impersonator users are
-     * intentionally granted users.read so they can discover a target before
-     * impersonation begins. Internal audit logs still attribute actions to the
-     * original impersonator and record the impersonated target only in internal
-     * audit payload data.
+     * Impersonate a user by ID
      *
      * @param value string
      *
@@ -366,13 +360,7 @@ class Client {
     /**
      * Set ImpersonateUserEmail
      *
-     * Impersonate a user by email on an already user-authenticated request.
-     * Requires the current request to be authenticated as a user with
-     * impersonator capability; X-Appwrite-Key alone is not sufficient.
-     * Impersonator users are intentionally granted users.read so they can
-     * discover a target before impersonation begins. Internal audit logs still
-     * attribute actions to the original impersonator and record the impersonated
-     * target only in internal audit payload data.
+     * Impersonate a user by email
      *
      * @param value string
      *
@@ -387,13 +375,7 @@ class Client {
     /**
      * Set ImpersonateUserPhone
      *
-     * Impersonate a user by phone on an already user-authenticated request.
-     * Requires the current request to be authenticated as a user with
-     * impersonator capability; X-Appwrite-Key alone is not sufficient.
-     * Impersonator users are intentionally granted users.read so they can
-     * discover a target before impersonation begins. Internal audit logs still
-     * attribute actions to the original impersonator and record the impersonated
-     * target only in internal audit payload data.
+     * Impersonate a user by phone
      *
      * @param value string
      *
@@ -458,6 +440,11 @@ class Client {
             const channels = new URLSearchParams();
             channels.set('project', this.config.project);
 
+            const jwt = this.config.jwt;
+            if (jwt && Platform.OS === 'web') {
+                channels.set('jwt', jwt);
+            }
+
             const url = this.config.endpointRealtime + '/realtime?' + channels.toString();
 
             if (
@@ -477,7 +464,8 @@ class Client {
                 // @ts-ignore
                 this.realtime.socket = new WebSocket(url, undefined, {
                     headers: {
-                        Origin: `appwrite-${Platform.OS}://${this.config.platform}`
+                        Origin: `appwrite-${Platform.OS}://${this.config.platform}`,
+                        ...(jwt && Platform.OS !== 'web' ? { 'x-appwrite-jwt': jwt } : {})
                     }
                 });
                 this.realtime.socket.addEventListener('message', this.realtime.onMessage);
@@ -678,6 +666,7 @@ class Client {
     async ping(): Promise<unknown> {
         return this.call('GET', new URL(this.config.endpoint + '/ping'), {
             'X-Appwrite-Project': this.config.project,
+            'accept': 'application/json',
         });
     }
 

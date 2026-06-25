@@ -64,7 +64,7 @@ export class Storage extends Service {
             throw new AppwriteException('Missing required parameter: "bucketId"');
         }
 
-        const apiPath = '/storage/buckets/{bucketId}/files'.replace('{bucketId}', bucketId);
+        const apiPath = '/storage/buckets/{bucketId}/files'.replace('{bucketId}', encodeURIComponent(String(bucketId)));
         const payload: Payload = {};
 
         if (typeof queries !== 'undefined') {
@@ -160,7 +160,7 @@ export class Storage extends Service {
             throw new AppwriteException('Missing required parameter: "file"');
         }
 
-        const apiPath = '/storage/buckets/{bucketId}/files'.replace('{bucketId}', bucketId);
+        const apiPath = '/storage/buckets/{bucketId}/files'.replace('{bucketId}', encodeURIComponent(String(bucketId)));
         const payload: Payload = {};
 
         if (typeof fileId !== 'undefined') {
@@ -381,7 +381,7 @@ export class Storage extends Service {
             throw new AppwriteException('Missing required parameter: "fileId"');
         }
 
-        const apiPath = '/storage/buckets/{bucketId}/files/{fileId}'.replace('{bucketId}', bucketId).replace('{fileId}', fileId);
+        const apiPath = '/storage/buckets/{bucketId}/files/{fileId}'.replace('{bucketId}', encodeURIComponent(String(bucketId))).replace('{fileId}', encodeURIComponent(String(fileId)));
         const payload: Payload = {};
 
         const uri = new URL(this.client.config.endpoint + apiPath);
@@ -444,7 +444,7 @@ export class Storage extends Service {
             throw new AppwriteException('Missing required parameter: "fileId"');
         }
 
-        const apiPath = '/storage/buckets/{bucketId}/files/{fileId}'.replace('{bucketId}', bucketId).replace('{fileId}', fileId);
+        const apiPath = '/storage/buckets/{bucketId}/files/{fileId}'.replace('{bucketId}', encodeURIComponent(String(bucketId))).replace('{fileId}', encodeURIComponent(String(fileId)));
         const payload: Payload = {};
 
         if (typeof name !== 'undefined') {
@@ -508,7 +508,7 @@ export class Storage extends Service {
             throw new AppwriteException('Missing required parameter: "fileId"');
         }
 
-        const apiPath = '/storage/buckets/{bucketId}/files/{fileId}'.replace('{bucketId}', bucketId).replace('{fileId}', fileId);
+        const apiPath = '/storage/buckets/{bucketId}/files/{fileId}'.replace('{bucketId}', encodeURIComponent(String(bucketId))).replace('{fileId}', encodeURIComponent(String(fileId)));
         const payload: Payload = {};
 
         const uri = new URL(this.client.config.endpoint + apiPath);
@@ -567,7 +567,7 @@ export class Storage extends Service {
             throw new AppwriteException('Missing required parameter: "fileId"');
         }
 
-        const apiPath = '/storage/buckets/{bucketId}/files/{fileId}/download'.replace('{bucketId}', bucketId).replace('{fileId}', fileId);
+        const apiPath = '/storage/buckets/{bucketId}/files/{fileId}/download'.replace('{bucketId}', encodeURIComponent(String(bucketId))).replace('{fileId}', encodeURIComponent(String(fileId)));
         const payload: Payload = {};
 
         if (typeof token !== 'undefined') {
@@ -576,6 +576,8 @@ export class Storage extends Service {
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         payload['project'] = this.client.config.project;
+
+        payload['impersonateuserid'] = this.client.config.impersonateuserid;
 
 
         for (const [key, value] of Object.entries(Service.flatten(payload))) {
@@ -680,7 +682,7 @@ export class Storage extends Service {
             throw new AppwriteException('Missing required parameter: "fileId"');
         }
 
-        const apiPath = '/storage/buckets/{bucketId}/files/{fileId}/preview'.replace('{bucketId}', bucketId).replace('{fileId}', fileId);
+        const apiPath = '/storage/buckets/{bucketId}/files/{fileId}/preview'.replace('{bucketId}', encodeURIComponent(String(bucketId))).replace('{fileId}', encodeURIComponent(String(fileId)));
         const payload: Payload = {};
 
         if (typeof width !== 'undefined') {
@@ -733,6 +735,8 @@ export class Storage extends Service {
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         payload['project'] = this.client.config.project;
+
+        payload['impersonateuserid'] = this.client.config.impersonateuserid;
 
 
         for (const [key, value] of Object.entries(Service.flatten(payload))) {
@@ -793,7 +797,7 @@ export class Storage extends Service {
             throw new AppwriteException('Missing required parameter: "fileId"');
         }
 
-        const apiPath = '/storage/buckets/{bucketId}/files/{fileId}/view'.replace('{bucketId}', bucketId).replace('{fileId}', fileId);
+        const apiPath = '/storage/buckets/{bucketId}/files/{fileId}/view'.replace('{bucketId}', encodeURIComponent(String(bucketId))).replace('{fileId}', encodeURIComponent(String(fileId)));
         const payload: Payload = {};
 
         if (typeof token !== 'undefined') {
@@ -802,6 +806,8 @@ export class Storage extends Service {
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         payload['project'] = this.client.config.project;
+
+        payload['impersonateuserid'] = this.client.config.impersonateuserid;
 
 
         for (const [key, value] of Object.entries(Service.flatten(payload))) {
@@ -825,7 +831,7 @@ export class Storage extends Service {
      * @returns {URL}
     */
     getFileDownloadURL(bucketId: string, fileId: string, token?: string): URL {
-        const apiPath = '/storage/buckets/{bucketId}/files/{fileId}/download'.replace('{bucketId}', bucketId).replace('{fileId}', fileId);
+        const apiPath = '/storage/buckets/{bucketId}/files/{fileId}/download'.replace('{bucketId}', encodeURIComponent(String(bucketId))).replace('{fileId}', encodeURIComponent(String(fileId)));
         const payload: Payload = {};
 
         if (typeof token !== 'undefined') {
@@ -834,6 +840,8 @@ export class Storage extends Service {
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         payload['project'] = this.client.config.project;
+
+        payload['impersonateuserid'] = this.client.config.impersonateuserid;
 
         for (const [key, value] of Object.entries(Service.flatten(payload))) {
             uri.searchParams.append(key, value);
@@ -867,7 +875,7 @@ export class Storage extends Service {
      * @returns {URL}
     */
     getFilePreviewURL(bucketId: string, fileId: string, width?: number, height?: number, gravity?: ImageGravity, quality?: number, borderWidth?: number, borderColor?: string, borderRadius?: number, opacity?: number, rotation?: number, background?: string, output?: ImageFormat, token?: string): URL {
-        const apiPath = '/storage/buckets/{bucketId}/files/{fileId}/preview'.replace('{bucketId}', bucketId).replace('{fileId}', fileId);
+        const apiPath = '/storage/buckets/{bucketId}/files/{fileId}/preview'.replace('{bucketId}', encodeURIComponent(String(bucketId))).replace('{fileId}', encodeURIComponent(String(fileId)));
         const payload: Payload = {};
 
         if (typeof width !== 'undefined') {
@@ -921,6 +929,8 @@ export class Storage extends Service {
         const uri = new URL(this.client.config.endpoint + apiPath);
         payload['project'] = this.client.config.project;
 
+        payload['impersonateuserid'] = this.client.config.impersonateuserid;
+
         for (const [key, value] of Object.entries(Service.flatten(payload))) {
             uri.searchParams.append(key, value);
         }
@@ -940,7 +950,7 @@ export class Storage extends Service {
      * @returns {URL}
     */
     getFileViewURL(bucketId: string, fileId: string, token?: string): URL {
-        const apiPath = '/storage/buckets/{bucketId}/files/{fileId}/view'.replace('{bucketId}', bucketId).replace('{fileId}', fileId);
+        const apiPath = '/storage/buckets/{bucketId}/files/{fileId}/view'.replace('{bucketId}', encodeURIComponent(String(bucketId))).replace('{fileId}', encodeURIComponent(String(fileId)));
         const payload: Payload = {};
 
         if (typeof token !== 'undefined') {
@@ -949,6 +959,8 @@ export class Storage extends Service {
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         payload['project'] = this.client.config.project;
+
+        payload['impersonateuserid'] = this.client.config.impersonateuserid;
 
         for (const [key, value] of Object.entries(Service.flatten(payload))) {
             uri.searchParams.append(key, value);
