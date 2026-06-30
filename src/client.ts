@@ -420,14 +420,17 @@ class Client {
             }
         },
         createHeartbeat: () => {
-            if (this.realtime.heartbeat) {
-                clearTimeout(this.realtime.heartbeat);
+            if (this.realtime.heartbeat !== undefined) {
+                clearInterval(this.realtime.heartbeat);
+                this.realtime.heartbeat = undefined;
             }
 
             this.realtime.heartbeat = window?.setInterval(() => {
-                this.realtime.socket?.send(JSONbig.stringify({
-                    type: 'ping'
-                }));
+                if (this.realtime.socket?.readyState === WebSocket.OPEN) {
+                    this.realtime.socket.send(JSONbig.stringify({
+                        type: 'ping'
+                    }));
+                }
             }, 20_000);
         },
         createSocket: () => {
