@@ -294,7 +294,7 @@ class Client {
      * @return {this}
      */
     setBearer(value: string): this {
-        this.headers['Authorization'] = value;
+        this.headers['Authorization'] = `Bearer ${value}`;
         this.config.bearer = value;
         return this;
     }
