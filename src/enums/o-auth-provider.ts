@@ -1,6 +1,7 @@
 export enum OAuthProvider {
     Amazon = 'amazon',
     Apple = 'apple',
+    Appwrite = 'appwrite',
     Auth0 = 'auth0',
     Authentik = 'authentik',
     Autodesk = 'autodesk',

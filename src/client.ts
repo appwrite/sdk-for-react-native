@@ -168,6 +168,7 @@ class Client {
         platform: '',
         project: '',
         jwt: '',
+        bearer: '',
         locale: '',
         session: '',
         devkey: '',
@@ -180,7 +181,7 @@ class Client {
         'x-sdk-name': 'React Native',
         'x-sdk-platform': 'client',
         'x-sdk-language': 'reactnative',
-        'x-sdk-version': '0.33.0',
+        'x-sdk-version': '0.34.0',
         'X-Appwrite-Response-Format': '1.9.5',
     };
 
@@ -280,6 +281,21 @@ class Client {
     setJWT(value: string): this {
         this.headers['X-Appwrite-JWT'] = value;
         this.config.jwt = value;
+        return this;
+    }
+
+    /**
+     * Set Bearer
+     *
+     * The OAuth access token to authenticate with
+     *
+     * @param value string
+     *
+     * @return {this}
+     */
+    setBearer(value: string): this {
+        this.headers['Authorization'] = `Bearer ${value}`;
+        this.config.bearer = value;
         return this;
     }
 

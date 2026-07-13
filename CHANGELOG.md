@@ -1,10 +1,16 @@
 # Change log
 
+## 0.34.0
+
+* Added: `Client.setBearer()` method for OAuth access token authentication
+* Added: `Query.vectorDot`, `Query.vectorCosine`, and `Query.vectorEuclidean` vector similarity queries
+* Added: `Appwrite` value to the `OAuthProvider` enum
+* Added: optional geolocation fields (`city`, `timeZone`, `latitude`, `isp`, etc.) to `Models.Locale`
+
 ## 0.33.0
 
 * Added: Realtime connections now send the configured JWT for authentication.
 * Added: Forwarded `impersonateUserId` on `avatars` and `storage` file requests.
-* Fixed: URL-encode path parameters across all services.
 
 ## 0.32.0
 

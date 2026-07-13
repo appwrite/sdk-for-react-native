@@ -388,7 +388,7 @@ export namespace Models {
          */
         mode: string;
         /**
-         * User type who triggered the audit log. Possible values: user, admin, guest, keyProject, keyAccount, keyOrganization.
+         * User type who triggered the audit log. Possible values: user, admin, guest, hidden, keyProject, keyAccount, keyOrganization.
          */
         userType: string;
         /**
@@ -928,6 +928,50 @@ export namespace Models {
          * Currency code in [ISO 4217-1](http://en.wikipedia.org/wiki/ISO_4217) three-character format
          */
         currency: string;
+        /**
+         * City
+         */
+        city?: string;
+        /**
+         * Name of timezone
+         */
+        timeZone?: string;
+        /**
+         * Postal code
+         */
+        postalCode?: string;
+        /**
+         * Latitude
+         */
+        latitude?: number;
+        /**
+         * Longitude
+         */
+        longitude?: number;
+        /**
+         * Autonomous System Number (ASN) of the IP
+         */
+        autonomousSystemNumber?: string;
+        /**
+         * Organization that owns the ASN
+         */
+        autonomousSystemOrganization?: string;
+        /**
+         * Internet service provider of the IP
+         */
+        isp?: string;
+        /**
+         * Connection type of the IP (e.g. cable, cellular, corporate)
+         */
+        connectionType?: string;
+        /**
+         * User type classification of the IP (e.g. residential, business, hosting)
+         */
+        connectionUsageType?: string;
+        /**
+         * Registered organization of the IP
+         */
+        connectionOrganization?: string;
     }
 
     /**

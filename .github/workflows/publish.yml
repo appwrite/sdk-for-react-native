@@ -34,9 +34,10 @@ jobs:
           echo "tag=latest" >> "$GITHUB_OUTPUT"
         fi
 
-    - name: Install dependencies and build
+    - name: Install dependencies, audit, and build
       run: |
         npm ci
+        npm audit --audit-level=high --omit=dev
         npm run build
 
     - name: Publish
