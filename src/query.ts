@@ -337,6 +337,36 @@ export class Query {
     new Query("distanceLessThan", attribute, [[values, distance, meters]] as QueryTypesList).toString();
 
   /**
+   * Filter resources using vector dot product similarity.
+   *
+   * @param {string} attribute
+   * @param {number[]} vector
+   * @returns {string}
+   */
+  static vectorDot = (attribute: string, vector: number[]): string =>
+    new Query("vectorDot", attribute, [vector] as QueryTypesList).toString();
+
+  /**
+   * Filter resources using vector cosine similarity.
+   *
+   * @param {string} attribute
+   * @param {number[]} vector
+   * @returns {string}
+   */
+  static vectorCosine = (attribute: string, vector: number[]): string =>
+    new Query("vectorCosine", attribute, [vector] as QueryTypesList).toString();
+
+  /**
+   * Filter resources using vector Euclidean distance.
+   *
+   * @param {string} attribute
+   * @param {number[]} vector
+   * @returns {string}
+   */
+  static vectorEuclidean = (attribute: string, vector: number[]): string =>
+    new Query("vectorEuclidean", attribute, [vector] as QueryTypesList).toString();
+
+  /**
    * Filter resources where attribute intersects with the given geometry.
    *
    * @param {string} attribute
