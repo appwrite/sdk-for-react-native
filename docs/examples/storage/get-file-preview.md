@@ -17,7 +17,7 @@ const result = storage.getFilePreview({
     fileId: '<FILE_ID>',
     width: 0, // optional
     height: 0, // optional
-    gravity: ImageGravity.Center, // optional
+    gravity: ImageGravity.Auto, // optional
     quality: -1, // optional
     borderWidth: 0, // optional
     borderColor: 'FFFFFF', // optional

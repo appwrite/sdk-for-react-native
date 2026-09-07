@@ -858,7 +858,7 @@ export class Storage extends Service {
      * @param {string} params.fileId - File ID
      * @param {number} params.width - Resize preview image width, Pass an integer between 0 to 4000.
      * @param {number} params.height - Resize preview image height, Pass an integer between 0 to 4000.
-     * @param {ImageGravity} params.gravity - Image crop gravity. Can be one of center,top-left,top,top-right,left,right,bottom-left,bottom,bottom-right
+     * @param {ImageGravity} params.gravity - Image crop gravity. Can be one of auto,center,top-left,top,top-right,left,right,bottom-left,bottom,bottom-right
      * @param {number} params.quality - Preview image quality. Pass an integer between 0 to 100. Defaults to keep existing image quality.
      * @param {number} params.borderWidth - Preview image border in pixels. Pass an integer between 0 to 100. Defaults to 0.
      * @param {string} params.borderColor - Preview image border color. Use a valid HEX color, no # is needed for prefix.
@@ -894,7 +894,7 @@ export class Storage extends Service {
      * @param {string} fileId - File ID
      * @param {number} width - Resize preview image width, Pass an integer between 0 to 4000.
      * @param {number} height - Resize preview image height, Pass an integer between 0 to 4000.
-     * @param {ImageGravity} gravity - Image crop gravity. Can be one of center,top-left,top,top-right,left,right,bottom-left,bottom,bottom-right
+     * @param {ImageGravity} gravity - Image crop gravity. Can be one of auto,center,top-left,top,top-right,left,right,bottom-left,bottom,bottom-right
      * @param {number} quality - Preview image quality. Pass an integer between 0 to 100. Defaults to keep existing image quality.
      * @param {number} borderWidth - Preview image border in pixels. Pass an integer between 0 to 100. Defaults to 0.
      * @param {string} borderColor - Preview image border color. Use a valid HEX color, no # is needed for prefix.

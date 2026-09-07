@@ -15,7 +15,9 @@
 * Added: `AppInstallation`, `Oauth2Consent`, `Oauth2ConsentToken` models and list types
 * Added: `Custom` value to `AuthenticationFactor` and `custom` field on `MfaFactors`
 * Added: `Cloudflare`, `Huggingface`, `Resend` values to `OAuthProvider`
+* Added: `Auto` value to `ImageGravity` enum
 * Updated: source formatted with Prettier and linted with ESLint
+* Fixed: positional calls with an `undefined` leading argument and trailing arguments dispatch correctly
 
 ## 0.34.0
 
