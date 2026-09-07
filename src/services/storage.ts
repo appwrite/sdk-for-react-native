@@ -7,51 +7,79 @@ import { Platform as RNPlatform } from 'react-native';
 
 import { ImageGravity } from '../enums/image-gravity';
 import { ImageFormat } from '../enums/image-format';
-
 export class Storage extends Service {
-
-     constructor(client: Client)
-     {
+    constructor(client: Client) {
         super(client);
-     }
+    }
 
     /**
      * Get a list of all the user files. You can use the query params to filter your results.
      *
      * @param {string} params.bucketId - Storage bucket unique ID. You can create a new storage bucket using the Storage service [server integration](https://appwrite.io/docs/server/storage#createBucket).
-     * @param {string[]} params.queries - Array of query strings generated using the Query class provided by the SDK. [Learn more about queries](https://appwrite.io/docs/queries). Maximum of 100 queries are allowed, each 4096 characters long. You may filter on the following attributes: name, signature, mimeType, sizeOriginal, chunksTotal, chunksUploaded
+     * @param {string[]} params.queries - Array of query strings generated using the Query class provided by the SDK. [Learn more about queries](https://appwrite.io/docs/queries). Maximum of 100 queries are allowed, each 4096 characters long. You may filter on the following attributes: name, folder, signature, mimeType, sizeOriginal, chunksTotal, chunksUploaded
      * @param {string} params.search - Search term to filter your list results. Max length: 256 chars.
      * @param {boolean} params.total - When set to false, the total count returned will be 0 and will not be calculated.
      * @throws {AppwriteException}
      * @returns {Promise}
      */
-    listFiles(params: { bucketId: string, queries?: string[], search?: string, total?: boolean  }): Promise<Models.FileList>;
+    listFiles(params: {
+        bucketId: string;
+        queries?: string[];
+        search?: string;
+        total?: boolean;
+    }): Promise<Models.FileList>;
     /**
      * Get a list of all the user files. You can use the query params to filter your results.
      *
      * @param {string} bucketId - Storage bucket unique ID. You can create a new storage bucket using the Storage service [server integration](https://appwrite.io/docs/server/storage#createBucket).
-     * @param {string[]} queries - Array of query strings generated using the Query class provided by the SDK. [Learn more about queries](https://appwrite.io/docs/queries). Maximum of 100 queries are allowed, each 4096 characters long. You may filter on the following attributes: name, signature, mimeType, sizeOriginal, chunksTotal, chunksUploaded
+     * @param {string[]} queries - Array of query strings generated using the Query class provided by the SDK. [Learn more about queries](https://appwrite.io/docs/queries). Maximum of 100 queries are allowed, each 4096 characters long. You may filter on the following attributes: name, folder, signature, mimeType, sizeOriginal, chunksTotal, chunksUploaded
      * @param {string} search - Search term to filter your list results. Max length: 256 chars.
      * @param {boolean} total - When set to false, the total count returned will be 0 and will not be calculated.
      * @throws {AppwriteException}
      * @returns {Promise<Models.FileList>}
      * @deprecated Use the object parameter style method for a better developer experience.
      */
-    listFiles(bucketId: string, queries?: string[], search?: string, total?: boolean): Promise<Models.FileList>;
     listFiles(
-        paramsOrFirst: { bucketId: string, queries?: string[], search?: string, total?: boolean } | string,
-        ...rest: [(string[])?, (string)?, (boolean)?]    
+        bucketId: string,
+        queries?: string[],
+        search?: string,
+        total?: boolean,
+    ): Promise<Models.FileList>;
+    listFiles(
+        paramsOrFirst:
+            | {
+                  bucketId: string;
+                  queries?: string[];
+                  search?: string;
+                  total?: boolean;
+              }
+            | string,
+        ...rest: [string[]?, string?, boolean?]
     ): Promise<Models.FileList> {
-        let params: { bucketId: string, queries?: string[], search?: string, total?: boolean };
+        let params: {
+            bucketId: string;
+            queries?: string[];
+            search?: string;
+            total?: boolean;
+        };
 
-        if ((paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst))) {
-            params = (paramsOrFirst || {}) as { bucketId: string, queries?: string[], search?: string, total?: boolean };
+        if (
+            paramsOrFirst &&
+            typeof paramsOrFirst === 'object' &&
+            !Array.isArray(paramsOrFirst)
+        ) {
+            params = (paramsOrFirst || {}) as {
+                bucketId: string;
+                queries?: string[];
+                search?: string;
+                total?: boolean;
+            };
         } else {
             params = {
                 bucketId: paramsOrFirst as string,
                 queries: rest[0] as string[],
                 search: rest[1] as string,
-                total: rest[2] as boolean            
+                total: rest[2] as boolean,
             };
         }
 
@@ -61,10 +89,15 @@ export class Storage extends Service {
         const total = params.total;
 
         if (typeof bucketId === 'undefined') {
-            throw new AppwriteException('Missing required parameter: "bucketId"');
+            throw new AppwriteException(
+                'Missing required parameter: "bucketId"',
+            );
         }
 
-        const apiPath = '/storage/buckets/{bucketId}/files'.replace('{bucketId}', encodeURIComponent(String(bucketId)));
+        const apiPath = '/storage/buckets/{bucketId}/files'.replace(
+            '{bucketId}',
+            encodeURIComponent(String(bucketId)),
+        );
         const payload: Payload = {};
 
         if (typeof queries !== 'undefined') {
@@ -80,76 +113,144 @@ export class Storage extends Service {
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
-        return this.client.call('get', uri, {
-            'X-Appwrite-Project': this.client.config.project,
-            'accept': 'application/json',
-        }, payload);
+        return this.client.call(
+            'get',
+            uri,
+            {
+                'X-Appwrite-Project': this.client.config.project,
+                accept: 'application/json',
+            },
+            payload,
+        );
     }
 
     /**
      * Create a new file. Before using this route, you should create a new bucket resource using either a [server integration](https://appwrite.io/docs/server/storage#storageCreateBucket) API or directly from your Appwrite console.
-     * 
+     *
      * Larger files should be uploaded using multiple requests with the [content-range](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Range) header to send a partial request with a maximum supported chunk of `5MB`. The `content-range` header values should always be in bytes.
-     * 
+     *
      * When the first request is sent, the server will return the **File** object, and the subsequent part request must include the file's **id** in `x-appwrite-id` header to allow the server to know that the partial upload is for the existing file and not for a new one.
-     * 
+     *
      * If you're creating a new file using one of the Appwrite SDKs, all the chunking logic will be managed by the SDK internally.
-     * 
+     *
      *
      * @param {string} params.bucketId - Storage bucket unique ID. You can create a new storage bucket using the Storage service [server integration](https://appwrite.io/docs/server/storage#createBucket).
      * @param {string} params.fileId - File ID. Choose a custom ID or generate a random ID with `ID.unique()`. Valid chars are a-z, A-Z, 0-9, period, hyphen, and underscore. Can't start with a special char. Max length is 36 chars.
-     * @param {{name: string, type: string, size: number, uri: string}} params.file - Binary file. Appwrite SDKs provide helpers to handle file input. [Learn about file input](https://appwrite.io/docs/products/storage/upload-download#input-file).
+     * @param {{ name: string; type: string; size: number; uri: string }} params.file - Binary file. Appwrite SDKs provide helpers to handle file input. [Learn about file input](https://appwrite.io/docs/products/storage/upload-download#input-file).
      * @param {string[]} params.permissions - An array of permission strings. By default, only the current user is granted all permissions. [Learn more about permissions](https://appwrite.io/docs/permissions).
+     * @param {string} params.folder - Virtual folder to place the file in, for example "photos/2026". Nest folders with `/`. Defaults to the bucket root.
      * @throws {AppwriteException}
      * @returns {Promise}
      */
-    async createFile(params: { bucketId: string, fileId: string, file: {name: string, type: string, size: number, uri: string}, permissions?: string[] , onProgress?: (progress: UploadProgress) => void }): Promise<Models.File>;
+    async createFile(params: {
+        bucketId: string;
+        fileId: string;
+        file: { name: string; type: string; size: number; uri: string };
+        permissions?: string[];
+        folder?: string;
+        onProgress?: (progress: UploadProgress) => void;
+    }): Promise<Models.File>;
     /**
      * Create a new file. Before using this route, you should create a new bucket resource using either a [server integration](https://appwrite.io/docs/server/storage#storageCreateBucket) API or directly from your Appwrite console.
-     * 
+     *
      * Larger files should be uploaded using multiple requests with the [content-range](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Range) header to send a partial request with a maximum supported chunk of `5MB`. The `content-range` header values should always be in bytes.
-     * 
+     *
      * When the first request is sent, the server will return the **File** object, and the subsequent part request must include the file's **id** in `x-appwrite-id` header to allow the server to know that the partial upload is for the existing file and not for a new one.
-     * 
+     *
      * If you're creating a new file using one of the Appwrite SDKs, all the chunking logic will be managed by the SDK internally.
-     * 
+     *
      *
      * @param {string} bucketId - Storage bucket unique ID. You can create a new storage bucket using the Storage service [server integration](https://appwrite.io/docs/server/storage#createBucket).
      * @param {string} fileId - File ID. Choose a custom ID or generate a random ID with `ID.unique()`. Valid chars are a-z, A-Z, 0-9, period, hyphen, and underscore. Can't start with a special char. Max length is 36 chars.
-     * @param {{name: string, type: string, size: number, uri: string}} file - Binary file. Appwrite SDKs provide helpers to handle file input. [Learn about file input](https://appwrite.io/docs/products/storage/upload-download#input-file).
+     * @param {{ name: string; type: string; size: number; uri: string }} file - Binary file. Appwrite SDKs provide helpers to handle file input. [Learn about file input](https://appwrite.io/docs/products/storage/upload-download#input-file).
      * @param {string[]} permissions - An array of permission strings. By default, only the current user is granted all permissions. [Learn more about permissions](https://appwrite.io/docs/permissions).
+     * @param {string} folder - Virtual folder to place the file in, for example "photos/2026". Nest folders with `/`. Defaults to the bucket root.
      * @throws {AppwriteException}
      * @returns {Promise<Models.File>}
      * @deprecated Use the object parameter style method for a better developer experience.
      */
-    async createFile(bucketId: string, fileId: string, file: {name: string, type: string, size: number, uri: string}, permissions?: string[], onProgress?: (progress: UploadProgress) => void): Promise<Models.File>;
     async createFile(
-        paramsOrFirst: { bucketId: string, fileId: string, file: {name: string, type: string, size: number, uri: string}, permissions?: string[], onProgress?: (progress: UploadProgress) => void  } | string,
-        ...rest: [(string)?, ({name: string, type: string, size: number, uri: string})?, (string[])?,((progress: UploadProgress) => void)?]    
+        bucketId: string,
+        fileId: string,
+        file: { name: string; type: string; size: number; uri: string },
+        permissions?: string[],
+        folder?: string,
+        onProgress?: (progress: UploadProgress) => void,
+    ): Promise<Models.File>;
+    async createFile(
+        paramsOrFirst:
+            | {
+                  bucketId: string;
+                  fileId: string;
+                  file: {
+                      name: string;
+                      type: string;
+                      size: number;
+                      uri: string;
+                  };
+                  permissions?: string[];
+                  folder?: string;
+                  onProgress?: (progress: UploadProgress) => void;
+              }
+            | string,
+        ...rest: [
+            string?,
+            { name: string; type: string; size: number; uri: string }?,
+            string[]?,
+            string?,
+            ((progress: UploadProgress) => void)?,
+        ]
     ): Promise<Models.File> {
-        let params: { bucketId: string, fileId: string, file: {name: string, type: string, size: number, uri: string}, permissions?: string[] };
-        let onProgress: ((progress: UploadProgress) => void);
+        let params: {
+            bucketId: string;
+            fileId: string;
+            file: { name: string; type: string; size: number; uri: string };
+            permissions?: string[];
+            folder?: string;
+        };
+        let onProgress: (progress: UploadProgress) => void;
 
-        if ((paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst))) {
-            params = (paramsOrFirst || {}) as { bucketId: string, fileId: string, file: {name: string, type: string, size: number, uri: string}, permissions?: string[] };
-            onProgress = paramsOrFirst?.onProgress as ((progress: UploadProgress) => void);
+        if (
+            paramsOrFirst &&
+            typeof paramsOrFirst === 'object' &&
+            !Array.isArray(paramsOrFirst)
+        ) {
+            params = (paramsOrFirst || {}) as {
+                bucketId: string;
+                fileId: string;
+                file: { name: string; type: string; size: number; uri: string };
+                permissions?: string[];
+                folder?: string;
+            };
+            onProgress = paramsOrFirst?.onProgress as (
+                progress: UploadProgress,
+            ) => void;
         } else {
             params = {
                 bucketId: paramsOrFirst as string,
                 fileId: rest[0] as string,
-                file: rest[1] as {name: string, type: string, size: number, uri: string},
-                permissions: rest[2] as string[]            
+                file: rest[1] as {
+                    name: string;
+                    type: string;
+                    size: number;
+                    uri: string;
+                },
+                permissions: rest[2] as string[],
+                folder: rest[3] as string,
             };
-            onProgress = rest[3] as ((progress: UploadProgress) => void);
+            onProgress = rest[4] as (progress: UploadProgress) => void;
         }
 
         const bucketId = params.bucketId;
         const fileId = params.fileId;
         const file = params.file;
         const permissions = params.permissions;
+        const folder = params.folder;
 
         if (typeof bucketId === 'undefined') {
-            throw new AppwriteException('Missing required parameter: "bucketId"');
+            throw new AppwriteException(
+                'Missing required parameter: "bucketId"',
+            );
         }
 
         if (typeof fileId === 'undefined') {
@@ -160,7 +261,10 @@ export class Storage extends Service {
             throw new AppwriteException('Missing required parameter: "file"');
         }
 
-        const apiPath = '/storage/buckets/{bucketId}/files'.replace('{bucketId}', encodeURIComponent(String(bucketId)));
+        const apiPath = '/storage/buckets/{bucketId}/files'.replace(
+            '{bucketId}',
+            encodeURIComponent(String(bucketId)),
+        );
         const payload: Payload = {};
 
         if (typeof fileId !== 'undefined') {
@@ -175,30 +279,52 @@ export class Storage extends Service {
             payload['permissions'] = permissions;
         }
 
+        if (typeof folder !== 'undefined') {
+            payload['folder'] = folder;
+        }
+
         const uri = new URL(this.client.config.endpoint + apiPath);
 
         const size = file.size;
 
         if (size <= Service.CHUNK_SIZE) {
-            return this.client.call('post', uri, {
-                'X-Appwrite-Project': this.client.config.project,
-                'content-type': 'multipart/form-data',
-                'accept': 'application/json',
-            }, payload);
+            return this.client.call(
+                'post',
+                uri,
+                {
+                    'X-Appwrite-Project': this.client.config.project,
+                    'content-type': 'multipart/form-data',
+                    accept: 'application/json',
+                },
+                payload,
+            );
         }
 
         const apiHeaders: { [header: string]: string } = {
             'X-Appwrite-Project': this.client.config.project,
             'content-type': 'multipart/form-data',
-            'accept': 'application/json',
-        }
+            accept: 'application/json',
+        };
 
         let offset = 0;
         let response = undefined;
-        try {
-            response = await this.client.call('GET', new URL(this.client.config.endpoint + apiPath + '/' + fileId), apiHeaders);
-            offset = response.chunksUploaded * Service.CHUNK_SIZE;
-        } catch(e) {
+        const providedUploadId = fileId;
+        if (providedUploadId) {
+            try {
+                response = await this.client.call(
+                    'GET',
+                    new URL(
+                        this.client.config.endpoint +
+                            apiPath +
+                            '/' +
+                            providedUploadId,
+                    ),
+                    apiHeaders,
+                );
+                offset = response.chunksUploaded * Service.CHUNK_SIZE;
+            } catch (_e) {
+                // A missing upload simply means we start from the first chunk.
+            }
         }
 
         const totalChunks = Math.ceil(size / Service.CHUNK_SIZE);
@@ -206,22 +332,39 @@ export class Storage extends Service {
         // Upload first chunk alone to get the upload ID
         if (offset === 0) {
             const firstChunkEnd = Math.min(Service.CHUNK_SIZE, size);
-            const firstChunkHeaders = { ...apiHeaders, 'content-range': 'bytes 0-' + (firstChunkEnd - 1) + '/' + size };
+            const firstChunkHeaders = {
+                ...apiHeaders,
+                'content-range': 'bytes 0-' + (firstChunkEnd - 1) + '/' + size,
+            };
 
-            let firstChunk = await FileSystem.readAsStringAsync(file.uri, {
+            const firstChunk = await FileSystem.readAsStringAsync(file.uri, {
                 encoding: FileSystem.EncodingType.Base64,
                 position: 0,
-                length: Service.CHUNK_SIZE
+                length: Service.CHUNK_SIZE,
             });
-            var firstPath = `data:${file.type};base64,${firstChunk}`;
+            let firstPath = `data:${file.type};base64,${firstChunk}`;
             if (RNPlatform.OS.toLowerCase() === 'android') {
-                firstPath = FileSystem.cacheDirectory + '/tmp_chunk_' + new Date().getTime();
-                await FileSystem.writeAsStringAsync(firstPath, firstChunk, {encoding: FileSystem.EncodingType.Base64});
+                firstPath =
+                    FileSystem.cacheDirectory +
+                    '/tmp_chunk_' +
+                    new Date().getTime();
+                await FileSystem.writeAsStringAsync(firstPath, firstChunk, {
+                    encoding: FileSystem.EncodingType.Base64,
+                });
             }
 
-            payload['file'] = { uri: firstPath, name: file.name, type: file.type };
+            payload['file'] = {
+                uri: firstPath,
+                name: file.name,
+                type: file.type,
+            };
 
-            response = await this.client.call('post', uri, firstChunkHeaders, payload);
+            response = await this.client.call(
+                'post',
+                uri,
+                firstChunkHeaders,
+                payload,
+            );
             offset = firstChunkEnd;
 
             if (onProgress) {
@@ -230,7 +373,7 @@ export class Storage extends Service {
                     progress: (offset / size) * 100,
                     sizeUploaded: offset,
                     chunksTotal: totalChunks,
-                    chunksUploaded: 1
+                    chunksUploaded: 1,
                 });
             }
         }
@@ -258,39 +401,60 @@ export class Storage extends Service {
         const isUploadComplete = (chunkResponse: any) => {
             const chunksUploaded = chunkResponse?.chunksUploaded;
             const chunksTotal = chunkResponse?.chunksTotal ?? totalChunks;
-            return typeof chunksUploaded === 'number' && typeof chunksTotal === 'number' && chunksUploaded >= chunksTotal;
+            return (
+                typeof chunksUploaded === 'number' &&
+                typeof chunksTotal === 'number' &&
+                chunksUploaded >= chunksTotal
+            );
         };
 
-        const uploadChunk = async (chunk: typeof chunks[0]) => {
+        const uploadChunk = async (chunk: (typeof chunks)[0]) => {
             const chunkHeaders = { ...apiHeaders };
             if (uploadId) {
                 chunkHeaders['x-appwrite-id'] = uploadId;
             }
-            chunkHeaders['content-range'] = 'bytes ' + chunk.start + '-' + (chunk.end - 1) + '/' + size;
+            chunkHeaders['content-range'] =
+                'bytes ' + chunk.start + '-' + (chunk.end - 1) + '/' + size;
 
             const chunkData = await FileSystem.readAsStringAsync(file.uri, {
                 encoding: FileSystem.EncodingType.Base64,
                 position: chunk.start,
-                length: chunk.end - chunk.start
+                length: chunk.end - chunk.start,
             });
 
             let chunkPath = `data:${file.type};base64,${chunkData}`;
             if (RNPlatform.OS.toLowerCase() === 'android') {
-                chunkPath = FileSystem.cacheDirectory + '/tmp_chunk_' + new Date().getTime() + '_' + chunk.index;
-                await FileSystem.writeAsStringAsync(chunkPath, chunkData, {encoding: FileSystem.EncodingType.Base64});
+                chunkPath =
+                    FileSystem.cacheDirectory +
+                    '/tmp_chunk_' +
+                    new Date().getTime() +
+                    '_' +
+                    chunk.index;
+                await FileSystem.writeAsStringAsync(chunkPath, chunkData, {
+                    encoding: FileSystem.EncodingType.Base64,
+                });
             }
 
             const chunkPayload = { ...payload };
-            chunkPayload['file'] = { uri: chunkPath, name: file.name, type: file.type };
+            chunkPayload['file'] = {
+                uri: chunkPath,
+                name: file.name,
+                type: file.type,
+            };
 
-            const chunkResponse = await this.client.call('post', uri, chunkHeaders, chunkPayload);
+            const chunkResponse = await this.client.call(
+                'post',
+                uri,
+                chunkHeaders,
+                chunkPayload,
+            );
 
             if (failed) {
                 return chunkResponse;
             }
 
             completedCount++;
-            uploadedBytes += (chunk.end - chunk.start);
+            uploadedBytes += chunk.end - chunk.start;
 
             response = chunkResponse;
             if (isUploadComplete(chunkResponse)) {
@@ -303,7 +467,7 @@ export class Storage extends Service {
                     progress: (uploadedBytes / size) * 100,
                     sizeUploaded: uploadedBytes,
                     chunksTotal: totalChunks,
-                    chunksUploaded: completedCount
+                    chunksUploaded: completedCount,
                 });
             }
 
@@ -327,7 +491,7 @@ export class Storage extends Service {
                             throw error;
                         }
                     }
-                })()
+                })(),
             );
         }
 
@@ -344,7 +508,7 @@ export class Storage extends Service {
      * @throws {AppwriteException}
      * @returns {Promise}
      */
-    getFile(params: { bucketId: string, fileId: string  }): Promise<Models.File>;
+    getFile(params: { bucketId: string; fileId: string }): Promise<Models.File>;
     /**
      * Get a file by its unique ID. This endpoint response returns a JSON object with the file metadata.
      *
@@ -356,17 +520,24 @@ export class Storage extends Service {
      */
     getFile(bucketId: string, fileId: string): Promise<Models.File>;
     getFile(
-        paramsOrFirst: { bucketId: string, fileId: string } | string,
-        ...rest: [(string)?]    
+        paramsOrFirst: { bucketId: string; fileId: string } | string,
+        ...rest: [string?]
     ): Promise<Models.File> {
-        let params: { bucketId: string, fileId: string };
+        let params: { bucketId: string; fileId: string };
 
-        if ((paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst))) {
-            params = (paramsOrFirst || {}) as { bucketId: string, fileId: string };
+        if (
+            paramsOrFirst &&
+            typeof paramsOrFirst === 'object' &&
+            !Array.isArray(paramsOrFirst)
+        ) {
+            params = (paramsOrFirst || {}) as {
+                bucketId: string;
+                fileId: string;
+            };
         } else {
             params = {
                 bucketId: paramsOrFirst as string,
-                fileId: rest[0] as string            
+                fileId: rest[0] as string,
             };
         }
 
@@ -374,21 +545,30 @@ export class Storage extends Service {
         const fileId = params.fileId;
 
         if (typeof bucketId === 'undefined') {
-            throw new AppwriteException('Missing required parameter: "bucketId"');
+            throw new AppwriteException(
+                'Missing required parameter: "bucketId"',
+            );
         }
 
         if (typeof fileId === 'undefined') {
             throw new AppwriteException('Missing required parameter: "fileId"');
         }
 
-        const apiPath = '/storage/buckets/{bucketId}/files/{fileId}'.replace('{bucketId}', encodeURIComponent(String(bucketId))).replace('{fileId}', encodeURIComponent(String(fileId)));
+        const apiPath = '/storage/buckets/{bucketId}/files/{fileId}'
+            .replace('{bucketId}', encodeURIComponent(String(bucketId)))
+            .replace('{fileId}', encodeURIComponent(String(fileId)));
         const payload: Payload = {};
 
         const uri = new URL(this.client.config.endpoint + apiPath);
-        return this.client.call('get', uri, {
-            'X-Appwrite-Project': this.client.config.project,
-            'accept': 'application/json',
-        }, payload);
+        return this.client.call(
+            'get',
+            uri,
+            {
+                'X-Appwrite-Project': this.client.config.project,
+                accept: 'application/json',
+            },
+            payload,
+        );
     }
 
     /**
@@ -401,7 +581,12 @@ export class Storage extends Service {
      * @throws {AppwriteException}
      * @returns {Promise}
      */
-    updateFile(params: { bucketId: string, fileId: string, name?: string, permissions?: string[]  }): Promise<Models.File>;
+    updateFile(params: {
+        bucketId: string;
+        fileId: string;
+        name?: string;
+        permissions?: string[];
+    }): Promise<Models.File>;
     /**
      * Update a file by its unique ID. Only users with write permissions have access to update this resource.
      *
@@ -413,21 +598,47 @@ export class Storage extends Service {
      * @returns {Promise<Models.File>}
      * @deprecated Use the object parameter style method for a better developer experience.
      */
-    updateFile(bucketId: string, fileId: string, name?: string, permissions?: string[]): Promise<Models.File>;
     updateFile(
-        paramsOrFirst: { bucketId: string, fileId: string, name?: string, permissions?: string[] } | string,
-        ...rest: [(string)?, (string)?, (string[])?]    
+        bucketId: string,
+        fileId: string,
+        name?: string,
+        permissions?: string[],
+    ): Promise<Models.File>;
+    updateFile(
+        paramsOrFirst:
+            | {
+                  bucketId: string;
+                  fileId: string;
+                  name?: string;
+                  permissions?: string[];
+              }
+            | string,
+        ...rest: [string?, string?, string[]?]
     ): Promise<Models.File> {
-        let params: { bucketId: string, fileId: string, name?: string, permissions?: string[] };
+        let params: {
+            bucketId: string;
+            fileId: string;
+            name?: string;
+            permissions?: string[];
+        };
 
-        if ((paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst))) {
-            params = (paramsOrFirst || {}) as { bucketId: string, fileId: string, name?: string, permissions?: string[] };
+        if (
+            paramsOrFirst &&
+            typeof paramsOrFirst === 'object' &&
+            !Array.isArray(paramsOrFirst)
+        ) {
+            params = (paramsOrFirst || {}) as {
+                bucketId: string;
+                fileId: string;
+                name?: string;
+                permissions?: string[];
+            };
         } else {
             params = {
                 bucketId: paramsOrFirst as string,
                 fileId: rest[0] as string,
                 name: rest[1] as string,
-                permissions: rest[2] as string[]            
+                permissions: rest[2] as string[],
             };
         }
 
@@ -437,14 +648,18 @@ export class Storage extends Service {
         const permissions = params.permissions;
 
         if (typeof bucketId === 'undefined') {
-            throw new AppwriteException('Missing required parameter: "bucketId"');
+            throw new AppwriteException(
+                'Missing required parameter: "bucketId"',
+            );
         }
 
         if (typeof fileId === 'undefined') {
             throw new AppwriteException('Missing required parameter: "fileId"');
         }
 
-        const apiPath = '/storage/buckets/{bucketId}/files/{fileId}'.replace('{bucketId}', encodeURIComponent(String(bucketId))).replace('{fileId}', encodeURIComponent(String(fileId)));
+        const apiPath = '/storage/buckets/{bucketId}/files/{fileId}'
+            .replace('{bucketId}', encodeURIComponent(String(bucketId)))
+            .replace('{fileId}', encodeURIComponent(String(fileId)));
         const payload: Payload = {};
 
         if (typeof name !== 'undefined') {
@@ -456,11 +671,16 @@ export class Storage extends Service {
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
-        return this.client.call('put', uri, {
-            'X-Appwrite-Project': this.client.config.project,
-            'content-type': 'application/json',
-            'accept': 'application/json',
-        }, payload);
+        return this.client.call(
+            'put',
+            uri,
+            {
+                'X-Appwrite-Project': this.client.config.project,
+                'content-type': 'application/json',
+                accept: 'application/json',
+            },
+            payload,
+        );
     }
 
     /**
@@ -471,7 +691,7 @@ export class Storage extends Service {
      * @throws {AppwriteException}
      * @returns {Promise}
      */
-    deleteFile(params: { bucketId: string, fileId: string  }): Promise<{}>;
+    deleteFile(params: { bucketId: string; fileId: string }): Promise<{}>;
     /**
      * Delete a file by its unique ID. Only users with write permissions have access to delete this resource.
      *
@@ -483,17 +703,24 @@ export class Storage extends Service {
      */
     deleteFile(bucketId: string, fileId: string): Promise<{}>;
     deleteFile(
-        paramsOrFirst: { bucketId: string, fileId: string } | string,
-        ...rest: [(string)?]    
+        paramsOrFirst: { bucketId: string; fileId: string } | string,
+        ...rest: [string?]
     ): Promise<{}> {
-        let params: { bucketId: string, fileId: string };
+        let params: { bucketId: string; fileId: string };
 
-        if ((paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst))) {
-            params = (paramsOrFirst || {}) as { bucketId: string, fileId: string };
+        if (
+            paramsOrFirst &&
+            typeof paramsOrFirst === 'object' &&
+            !Array.isArray(paramsOrFirst)
+        ) {
+            params = (paramsOrFirst || {}) as {
+                bucketId: string;
+                fileId: string;
+            };
         } else {
             params = {
                 bucketId: paramsOrFirst as string,
-                fileId: rest[0] as string            
+                fileId: rest[0] as string,
             };
         }
 
@@ -501,21 +728,30 @@ export class Storage extends Service {
         const fileId = params.fileId;
 
         if (typeof bucketId === 'undefined') {
-            throw new AppwriteException('Missing required parameter: "bucketId"');
+            throw new AppwriteException(
+                'Missing required parameter: "bucketId"',
+            );
         }
 
         if (typeof fileId === 'undefined') {
             throw new AppwriteException('Missing required parameter: "fileId"');
         }
 
-        const apiPath = '/storage/buckets/{bucketId}/files/{fileId}'.replace('{bucketId}', encodeURIComponent(String(bucketId))).replace('{fileId}', encodeURIComponent(String(fileId)));
+        const apiPath = '/storage/buckets/{bucketId}/files/{fileId}'
+            .replace('{bucketId}', encodeURIComponent(String(bucketId)))
+            .replace('{fileId}', encodeURIComponent(String(fileId)));
         const payload: Payload = {};
 
         const uri = new URL(this.client.config.endpoint + apiPath);
-        return this.client.call('delete', uri, {
-            'X-Appwrite-Project': this.client.config.project,
-            'content-type': 'application/json',
-        }, payload);
+        return this.client.call(
+            'delete',
+            uri,
+            {
+                'X-Appwrite-Project': this.client.config.project,
+                'content-type': 'application/json',
+            },
+            payload,
+        );
     }
 
     /**
@@ -527,7 +763,11 @@ export class Storage extends Service {
      * @throws {AppwriteException}
      * @returns {ArrayBuffer}
      */
-    getFileDownload(params: { bucketId: string, fileId: string, token?: string  }): Promise<ArrayBuffer>;
+    getFileDownload(params: {
+        bucketId: string;
+        fileId: string;
+        token?: string;
+    }): Promise<ArrayBuffer>;
     /**
      * Get a file content by its unique ID. The endpoint response return with a 'Content-Disposition: attachment' header that tells the browser to start downloading the file to user downloads directory.
      *
@@ -538,20 +778,33 @@ export class Storage extends Service {
      * @returns {Promise<ArrayBuffer>}
      * @deprecated Use the object parameter style method for a better developer experience.
      */
-    getFileDownload(bucketId: string, fileId: string, token?: string): Promise<ArrayBuffer>;
     getFileDownload(
-        paramsOrFirst: { bucketId: string, fileId: string, token?: string } | string,
-        ...rest: [(string)?, (string)?]    
+        bucketId: string,
+        fileId: string,
+        token?: string,
+    ): Promise<ArrayBuffer>;
+    getFileDownload(
+        paramsOrFirst:
+            { bucketId: string; fileId: string; token?: string } | string,
+        ...rest: [string?, string?]
     ): Promise<ArrayBuffer> {
-        let params: { bucketId: string, fileId: string, token?: string };
+        let params: { bucketId: string; fileId: string; token?: string };
 
-        if ((paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst))) {
-            params = (paramsOrFirst || {}) as { bucketId: string, fileId: string, token?: string };
+        if (
+            paramsOrFirst &&
+            typeof paramsOrFirst === 'object' &&
+            !Array.isArray(paramsOrFirst)
+        ) {
+            params = (paramsOrFirst || {}) as {
+                bucketId: string;
+                fileId: string;
+                token?: string;
+            };
         } else {
             params = {
                 bucketId: paramsOrFirst as string,
                 fileId: rest[0] as string,
-                token: rest[1] as string            
+                token: rest[1] as string,
             };
         }
 
@@ -560,14 +813,18 @@ export class Storage extends Service {
         const token = params.token;
 
         if (typeof bucketId === 'undefined') {
-            throw new AppwriteException('Missing required parameter: "bucketId"');
+            throw new AppwriteException(
+                'Missing required parameter: "bucketId"',
+            );
         }
 
         if (typeof fileId === 'undefined') {
             throw new AppwriteException('Missing required parameter: "fileId"');
         }
 
-        const apiPath = '/storage/buckets/{bucketId}/files/{fileId}/download'.replace('{bucketId}', encodeURIComponent(String(bucketId))).replace('{fileId}', encodeURIComponent(String(fileId)));
+        const apiPath = '/storage/buckets/{bucketId}/files/{fileId}/download'
+            .replace('{bucketId}', encodeURIComponent(String(bucketId)))
+            .replace('{fileId}', encodeURIComponent(String(fileId)));
         const payload: Payload = {};
 
         if (typeof token !== 'undefined') {
@@ -579,14 +836,19 @@ export class Storage extends Service {
 
         payload['impersonateuserid'] = this.client.config.impersonateuserid;
 
-
         for (const [key, value] of Object.entries(Service.flatten(payload))) {
             uri.searchParams.append(key, value);
         }
-        return this.client.call('get', uri, {
-            'X-Appwrite-Project': this.client.config.project,
-            'accept': '*/*',
-        }, payload, 'arrayBuffer');
+        return this.client.call(
+            'get',
+            uri,
+            {
+                'X-Appwrite-Project': this.client.config.project,
+                accept: '*/*',
+            },
+            payload,
+            'arrayBuffer',
+        );
     }
 
     /**
@@ -609,7 +871,22 @@ export class Storage extends Service {
      * @throws {AppwriteException}
      * @returns {ArrayBuffer}
      */
-    getFilePreview(params: { bucketId: string, fileId: string, width?: number, height?: number, gravity?: ImageGravity, quality?: number, borderWidth?: number, borderColor?: string, borderRadius?: number, opacity?: number, rotation?: number, background?: string, output?: ImageFormat, token?: string  }): Promise<ArrayBuffer>;
+    getFilePreview(params: {
+        bucketId: string;
+        fileId: string;
+        width?: number;
+        height?: number;
+        gravity?: ImageGravity;
+        quality?: number;
+        borderWidth?: number;
+        borderColor?: string;
+        borderRadius?: number;
+        opacity?: number;
+        rotation?: number;
+        background?: string;
+        output?: ImageFormat;
+        token?: string;
+    }): Promise<ArrayBuffer>;
     /**
      * Get a file preview image. Currently, this method supports preview for image files (jpg, png, and gif), other supported formats, like pdf, docs, slides, and spreadsheets, will return the file icon image. You can also pass query string arguments for cutting and resizing your preview image. Preview is supported only for image files smaller than 10MB.
      *
@@ -631,15 +908,95 @@ export class Storage extends Service {
      * @returns {Promise<ArrayBuffer>}
      * @deprecated Use the object parameter style method for a better developer experience.
      */
-    getFilePreview(bucketId: string, fileId: string, width?: number, height?: number, gravity?: ImageGravity, quality?: number, borderWidth?: number, borderColor?: string, borderRadius?: number, opacity?: number, rotation?: number, background?: string, output?: ImageFormat, token?: string): Promise<ArrayBuffer>;
     getFilePreview(
-        paramsOrFirst: { bucketId: string, fileId: string, width?: number, height?: number, gravity?: ImageGravity, quality?: number, borderWidth?: number, borderColor?: string, borderRadius?: number, opacity?: number, rotation?: number, background?: string, output?: ImageFormat, token?: string } | string,
-        ...rest: [(string)?, (number)?, (number)?, (ImageGravity)?, (number)?, (number)?, (string)?, (number)?, (number)?, (number)?, (string)?, (ImageFormat)?, (string)?]    
+        bucketId: string,
+        fileId: string,
+        width?: number,
+        height?: number,
+        gravity?: ImageGravity,
+        quality?: number,
+        borderWidth?: number,
+        borderColor?: string,
+        borderRadius?: number,
+        opacity?: number,
+        rotation?: number,
+        background?: string,
+        output?: ImageFormat,
+        token?: string,
+    ): Promise<ArrayBuffer>;
+    getFilePreview(
+        paramsOrFirst:
+            | {
+                  bucketId: string;
+                  fileId: string;
+                  width?: number;
+                  height?: number;
+                  gravity?: ImageGravity;
+                  quality?: number;
+                  borderWidth?: number;
+                  borderColor?: string;
+                  borderRadius?: number;
+                  opacity?: number;
+                  rotation?: number;
+                  background?: string;
+                  output?: ImageFormat;
+                  token?: string;
+              }
+            | string,
+        ...rest: [
+            string?,
+            number?,
+            number?,
+            ImageGravity?,
+            number?,
+            number?,
+            string?,
+            number?,
+            number?,
+            number?,
+            string?,
+            ImageFormat?,
+            string?,
+        ]
     ): Promise<ArrayBuffer> {
-        let params: { bucketId: string, fileId: string, width?: number, height?: number, gravity?: ImageGravity, quality?: number, borderWidth?: number, borderColor?: string, borderRadius?: number, opacity?: number, rotation?: number, background?: string, output?: ImageFormat, token?: string };
+        let params: {
+            bucketId: string;
+            fileId: string;
+            width?: number;
+            height?: number;
+            gravity?: ImageGravity;
+            quality?: number;
+            borderWidth?: number;
+            borderColor?: string;
+            borderRadius?: number;
+            opacity?: number;
+            rotation?: number;
+            background?: string;
+            output?: ImageFormat;
+            token?: string;
+        };
 
-        if ((paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst))) {
-            params = (paramsOrFirst || {}) as { bucketId: string, fileId: string, width?: number, height?: number, gravity?: ImageGravity, quality?: number, borderWidth?: number, borderColor?: string, borderRadius?: number, opacity?: number, rotation?: number, background?: string, output?: ImageFormat, token?: string };
+        if (
+            paramsOrFirst &&
+            typeof paramsOrFirst === 'object' &&
+            !Array.isArray(paramsOrFirst)
+        ) {
+            params = (paramsOrFirst || {}) as {
+                bucketId: string;
+                fileId: string;
+                width?: number;
+                height?: number;
+                gravity?: ImageGravity;
+                quality?: number;
+                borderWidth?: number;
+                borderColor?: string;
+                borderRadius?: number;
+                opacity?: number;
+                rotation?: number;
+                background?: string;
+                output?: ImageFormat;
+                token?: string;
+            };
         } else {
             params = {
                 bucketId: paramsOrFirst as string,
@@ -655,7 +1012,7 @@ export class Storage extends Service {
                 rotation: rest[9] as number,
                 background: rest[10] as string,
                 output: rest[11] as ImageFormat,
-                token: rest[12] as string            
+                token: rest[12] as string,
             };
         }
 
@@ -675,14 +1032,18 @@ export class Storage extends Service {
         const token = params.token;
 
         if (typeof bucketId === 'undefined') {
-            throw new AppwriteException('Missing required parameter: "bucketId"');
+            throw new AppwriteException(
+                'Missing required parameter: "bucketId"',
+            );
         }
 
         if (typeof fileId === 'undefined') {
             throw new AppwriteException('Missing required parameter: "fileId"');
         }
 
-        const apiPath = '/storage/buckets/{bucketId}/files/{fileId}/preview'.replace('{bucketId}', encodeURIComponent(String(bucketId))).replace('{fileId}', encodeURIComponent(String(fileId)));
+        const apiPath = '/storage/buckets/{bucketId}/files/{fileId}/preview'
+            .replace('{bucketId}', encodeURIComponent(String(bucketId)))
+            .replace('{fileId}', encodeURIComponent(String(fileId)));
         const payload: Payload = {};
 
         if (typeof width !== 'undefined') {
@@ -738,14 +1099,19 @@ export class Storage extends Service {
 
         payload['impersonateuserid'] = this.client.config.impersonateuserid;
 
-
         for (const [key, value] of Object.entries(Service.flatten(payload))) {
             uri.searchParams.append(key, value);
         }
-        return this.client.call('get', uri, {
-            'X-Appwrite-Project': this.client.config.project,
-            'accept': 'image/*',
-        }, payload, 'arrayBuffer');
+        return this.client.call(
+            'get',
+            uri,
+            {
+                'X-Appwrite-Project': this.client.config.project,
+                accept: 'image/*',
+            },
+            payload,
+            'arrayBuffer',
+        );
     }
 
     /**
@@ -757,7 +1123,11 @@ export class Storage extends Service {
      * @throws {AppwriteException}
      * @returns {ArrayBuffer}
      */
-    getFileView(params: { bucketId: string, fileId: string, token?: string  }): Promise<ArrayBuffer>;
+    getFileView(params: {
+        bucketId: string;
+        fileId: string;
+        token?: string;
+    }): Promise<ArrayBuffer>;
     /**
      * Get a file content by its unique ID. This endpoint is similar to the download method but returns with no  'Content-Disposition: attachment' header.
      *
@@ -768,20 +1138,33 @@ export class Storage extends Service {
      * @returns {Promise<ArrayBuffer>}
      * @deprecated Use the object parameter style method for a better developer experience.
      */
-    getFileView(bucketId: string, fileId: string, token?: string): Promise<ArrayBuffer>;
     getFileView(
-        paramsOrFirst: { bucketId: string, fileId: string, token?: string } | string,
-        ...rest: [(string)?, (string)?]    
+        bucketId: string,
+        fileId: string,
+        token?: string,
+    ): Promise<ArrayBuffer>;
+    getFileView(
+        paramsOrFirst:
+            { bucketId: string; fileId: string; token?: string } | string,
+        ...rest: [string?, string?]
     ): Promise<ArrayBuffer> {
-        let params: { bucketId: string, fileId: string, token?: string };
+        let params: { bucketId: string; fileId: string; token?: string };
 
-        if ((paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst))) {
-            params = (paramsOrFirst || {}) as { bucketId: string, fileId: string, token?: string };
+        if (
+            paramsOrFirst &&
+            typeof paramsOrFirst === 'object' &&
+            !Array.isArray(paramsOrFirst)
+        ) {
+            params = (paramsOrFirst || {}) as {
+                bucketId: string;
+                fileId: string;
+                token?: string;
+            };
         } else {
             params = {
                 bucketId: paramsOrFirst as string,
                 fileId: rest[0] as string,
-                token: rest[1] as string            
+                token: rest[1] as string,
             };
         }
 
@@ -790,14 +1173,18 @@ export class Storage extends Service {
         const token = params.token;
 
         if (typeof bucketId === 'undefined') {
-            throw new AppwriteException('Missing required parameter: "bucketId"');
+            throw new AppwriteException(
+                'Missing required parameter: "bucketId"',
+            );
         }
 
         if (typeof fileId === 'undefined') {
             throw new AppwriteException('Missing required parameter: "fileId"');
         }
 
-        const apiPath = '/storage/buckets/{bucketId}/files/{fileId}/view'.replace('{bucketId}', encodeURIComponent(String(bucketId))).replace('{fileId}', encodeURIComponent(String(fileId)));
+        const apiPath = '/storage/buckets/{bucketId}/files/{fileId}/view'
+            .replace('{bucketId}', encodeURIComponent(String(bucketId)))
+            .replace('{fileId}', encodeURIComponent(String(fileId)));
         const payload: Payload = {};
 
         if (typeof token !== 'undefined') {
@@ -809,19 +1196,24 @@ export class Storage extends Service {
 
         payload['impersonateuserid'] = this.client.config.impersonateuserid;
 
-
         for (const [key, value] of Object.entries(Service.flatten(payload))) {
             uri.searchParams.append(key, value);
         }
-        return this.client.call('get', uri, {
-            'X-Appwrite-Project': this.client.config.project,
-            'accept': '*/*',
-        }, payload, 'arrayBuffer');
+        return this.client.call(
+            'get',
+            uri,
+            {
+                'X-Appwrite-Project': this.client.config.project,
+                accept: '*/*',
+            },
+            payload,
+            'arrayBuffer',
+        );
     }
 
     /**
      * Get a file content by its unique ID. The endpoint response return with a
-     * 'Content-Disposition: attachment' header that tells the browser to start
+     * &#039;Content-Disposition: attachment&#039; header that tells the browser to start
      * downloading the file to user downloads directory.
      *
      * @param {string} bucketId
@@ -829,9 +1221,11 @@ export class Storage extends Service {
      * @param {string} token
      * @throws {AppwriteException}
      * @returns {URL}
-    */
+     */
     getFileDownloadURL(bucketId: string, fileId: string, token?: string): URL {
-        const apiPath = '/storage/buckets/{bucketId}/files/{fileId}/download'.replace('{bucketId}', encodeURIComponent(String(bucketId))).replace('{fileId}', encodeURIComponent(String(fileId)));
+        const apiPath = '/storage/buckets/{bucketId}/files/{fileId}/download'
+            .replace('{bucketId}', encodeURIComponent(String(bucketId)))
+            .replace('{fileId}', encodeURIComponent(String(fileId)));
         const payload: Payload = {};
 
         if (typeof token !== 'undefined') {
@@ -873,9 +1267,26 @@ export class Storage extends Service {
      * @param {string} token
      * @throws {AppwriteException}
      * @returns {URL}
-    */
-    getFilePreviewURL(bucketId: string, fileId: string, width?: number, height?: number, gravity?: ImageGravity, quality?: number, borderWidth?: number, borderColor?: string, borderRadius?: number, opacity?: number, rotation?: number, background?: string, output?: ImageFormat, token?: string): URL {
-        const apiPath = '/storage/buckets/{bucketId}/files/{fileId}/preview'.replace('{bucketId}', encodeURIComponent(String(bucketId))).replace('{fileId}', encodeURIComponent(String(fileId)));
+     */
+    getFilePreviewURL(
+        bucketId: string,
+        fileId: string,
+        width?: number,
+        height?: number,
+        gravity?: ImageGravity,
+        quality?: number,
+        borderWidth?: number,
+        borderColor?: string,
+        borderRadius?: number,
+        opacity?: number,
+        rotation?: number,
+        background?: string,
+        output?: ImageFormat,
+        token?: string,
+    ): URL {
+        const apiPath = '/storage/buckets/{bucketId}/files/{fileId}/preview'
+            .replace('{bucketId}', encodeURIComponent(String(bucketId)))
+            .replace('{fileId}', encodeURIComponent(String(fileId)));
         const payload: Payload = {};
 
         if (typeof width !== 'undefined') {
@@ -940,7 +1351,7 @@ export class Storage extends Service {
 
     /**
      * Get a file content by its unique ID. This endpoint is similar to the
-     * download method but returns with no  'Content-Disposition: attachment'
+     * download method but returns with no  &#039;Content-Disposition: attachment&#039;
      * header.
      *
      * @param {string} bucketId
@@ -948,9 +1359,11 @@ export class Storage extends Service {
      * @param {string} token
      * @throws {AppwriteException}
      * @returns {URL}
-    */
+     */
     getFileViewURL(bucketId: string, fileId: string, token?: string): URL {
-        const apiPath = '/storage/buckets/{bucketId}/files/{fileId}/view'.replace('{bucketId}', encodeURIComponent(String(bucketId))).replace('{fileId}', encodeURIComponent(String(fileId)));
+        const apiPath = '/storage/buckets/{bucketId}/files/{fileId}/view'
+            .replace('{bucketId}', encodeURIComponent(String(bucketId)))
+            .replace('{fileId}', encodeURIComponent(String(fileId)));
         const payload: Payload = {};
 
         if (typeof token !== 'undefined') {
@@ -968,4 +1381,4 @@ export class Storage extends Service {
 
         return uri;
     }
-};
+}

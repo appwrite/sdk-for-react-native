@@ -1,5 +1,10 @@
 ```javascript
-import { Client, Storage, ImageGravity, ImageFormat } from "react-native-appwrite";
+import {
+    Client,
+    Storage,
+    ImageGravity,
+    ImageFormat,
+} from 'react-native-appwrite';
 
 const client = new Client()
     .setEndpoint('https://<REGION>.cloud.appwrite.io/v1') // Your API Endpoint
@@ -15,13 +20,13 @@ const result = storage.getFilePreview({
     gravity: ImageGravity.Center, // optional
     quality: -1, // optional
     borderWidth: 0, // optional
-    borderColor: '', // optional
+    borderColor: 'FFFFFF', // optional
     borderRadius: 0, // optional
     opacity: 0, // optional
     rotation: -360, // optional
-    background: '', // optional
+    background: 'FFFFFF', // optional
     output: ImageFormat.Jpg, // optional
-    token: '<TOKEN>' // optional
+    token: '<TOKEN>', // optional
 });
 
 console.log(result);

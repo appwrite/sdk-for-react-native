@@ -1,5 +1,5 @@
 ```javascript
-import { Client, Databases } from "react-native-appwrite";
+import { Client, Databases } from 'react-native-appwrite';
 
 const client = new Client()
     .setEndpoint('https://<REGION>.cloud.appwrite.io/v1') // Your API Endpoint
@@ -8,7 +8,7 @@ const client = new Client()
 const databases = new Databases(client);
 
 const result = await databases.createTransaction({
-    ttl: 60 // optional
+    ttl: 60, // optional
 });
 
 console.log(result);

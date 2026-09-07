@@ -1,22 +1,25 @@
-import { readFileSync } from "fs";
-const pkg = JSON.parse(readFileSync("./package.json", "utf8"));
-import typescript from "@rollup/plugin-typescript";
+import { readFileSync } from 'fs';
+const pkg = JSON.parse(readFileSync('./package.json', 'utf8'));
+import typescript from '@rollup/plugin-typescript';
 
-const external = Object.keys(pkg.dependencies ?? {});
+const external = [
+    ...Object.keys(pkg.dependencies ?? {}),
+    ...Object.keys(pkg.peerDependencies ?? {}),
+];
 
 export default {
-    input: "src/index.ts",
+    input: 'src/index.ts',
     external,
-    plugins: [typescript({ outDir: "dist" })],
+    plugins: [typescript({ outDir: 'dist' })],
     output: [
         {
-            format: "cjs",
+            format: 'cjs',
             file: pkg.main,
             esModule: false,
             sourcemap: true,
         },
         {
-            format: "es",
+            format: 'es',
             file: pkg.module,
             sourcemap: true,
         },

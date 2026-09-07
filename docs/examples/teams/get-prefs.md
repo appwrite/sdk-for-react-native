@@ -1,5 +1,5 @@
 ```javascript
-import { Client, Teams } from "react-native-appwrite";
+import { Client, Teams } from 'react-native-appwrite';
 
 const client = new Client()
     .setEndpoint('https://<REGION>.cloud.appwrite.io/v1') // Your API Endpoint
@@ -8,7 +8,7 @@ const client = new Client()
 const teams = new Teams(client);
 
 const result = await teams.getPrefs({
-    teamId: '<TEAM_ID>'
+    teamId: '<TEAM_ID>',
 });
 
 console.log(result);

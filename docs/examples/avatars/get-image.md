@@ -1,5 +1,5 @@
 ```javascript
-import { Client, Avatars } from "react-native-appwrite";
+import { Client, Avatars } from 'react-native-appwrite';
 
 const client = new Client()
     .setEndpoint('https://<REGION>.cloud.appwrite.io/v1') // Your API Endpoint
@@ -10,7 +10,7 @@ const avatars = new Avatars(client);
 const result = avatars.getImage({
     url: 'https://example.com',
     width: 0, // optional
-    height: 0 // optional
+    height: 0, // optional
 });
 
 console.log(result);

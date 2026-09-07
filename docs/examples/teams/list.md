@@ -1,5 +1,5 @@
 ```javascript
-import { Client, Teams } from "react-native-appwrite";
+import { Client, Teams } from 'react-native-appwrite';
 
 const client = new Client()
     .setEndpoint('https://<REGION>.cloud.appwrite.io/v1') // Your API Endpoint
@@ -10,7 +10,7 @@ const teams = new Teams(client);
 const result = await teams.list({
     queries: [], // optional
     search: '<SEARCH>', // optional
-    total: false // optional
+    total: false, // optional
 });
 
 console.log(result);

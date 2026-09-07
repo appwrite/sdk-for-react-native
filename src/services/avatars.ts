@@ -1,9 +1,6 @@
 import { Service } from '../service';
 import { AppwriteException, Client } from '../client';
-import type { Models } from '../models';
-import type { UploadProgress, Payload } from '../client';
-import * as FileSystem from 'expo-file-system';
-import { Platform as RNPlatform } from 'react-native';
+import type { Payload } from '../client';
 
 import { Browser } from '../enums/browser';
 import { CreditCard } from '../enums/credit-card';
@@ -12,17 +9,14 @@ import { BrowserTheme } from '../enums/browser-theme';
 import { Timezone } from '../enums/timezone';
 import { BrowserPermission } from '../enums/browser-permission';
 import { ImageFormat } from '../enums/image-format';
-
 export class Avatars extends Service {
-
-     constructor(client: Client)
-     {
+    constructor(client: Client) {
         super(client);
-     }
+    }
 
     /**
      * You can use this endpoint to show different browser icons to your users. The code argument receives the browser code as it appears in your user [GET /account/sessions](https://appwrite.io/docs/references/cloud/client-web/account#getSessions) endpoint. Use width, height and quality arguments to change the output settings.
-     * 
+     *
      * When one dimension is specified and the other is 0, the image is scaled with preserved aspect ratio. If both dimensions are 0, the API provides an image at source quality. If dimensions are not specified, the default size of image returned is 100x100px.
      *
      * @param {Browser} params.code - Browser Code.
@@ -32,10 +26,15 @@ export class Avatars extends Service {
      * @throws {AppwriteException}
      * @returns {ArrayBuffer}
      */
-    getBrowser(params: { code: Browser, width?: number, height?: number, quality?: number  }): Promise<ArrayBuffer>;
+    getBrowser(params: {
+        code: Browser;
+        width?: number;
+        height?: number;
+        quality?: number;
+    }): Promise<ArrayBuffer>;
     /**
      * You can use this endpoint to show different browser icons to your users. The code argument receives the browser code as it appears in your user [GET /account/sessions](https://appwrite.io/docs/references/cloud/client-web/account#getSessions) endpoint. Use width, height and quality arguments to change the output settings.
-     * 
+     *
      * When one dimension is specified and the other is 0, the image is scaled with preserved aspect ratio. If both dimensions are 0, the API provides an image at source quality. If dimensions are not specified, the default size of image returned is 100x100px.
      *
      * @param {Browser} code - Browser Code.
@@ -46,21 +45,51 @@ export class Avatars extends Service {
      * @returns {Promise<ArrayBuffer>}
      * @deprecated Use the object parameter style method for a better developer experience.
      */
-    getBrowser(code: Browser, width?: number, height?: number, quality?: number): Promise<ArrayBuffer>;
     getBrowser(
-        paramsOrFirst: { code: Browser, width?: number, height?: number, quality?: number } | Browser,
-        ...rest: [(number)?, (number)?, (number)?]    
+        code: Browser,
+        width?: number,
+        height?: number,
+        quality?: number,
+    ): Promise<ArrayBuffer>;
+    getBrowser(
+        paramsOrFirst:
+            | {
+                  code: Browser;
+                  width?: number;
+                  height?: number;
+                  quality?: number;
+              }
+            | Browser,
+        ...rest: [number?, number?, number?]
     ): Promise<ArrayBuffer> {
-        let params: { code: Browser, width?: number, height?: number, quality?: number };
+        let params: {
+            code: Browser;
+            width?: number;
+            height?: number;
+            quality?: number;
+        };
 
-        if ((paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst) && ('code' in paramsOrFirst || 'width' in paramsOrFirst || 'height' in paramsOrFirst || 'quality' in paramsOrFirst))) {
-            params = (paramsOrFirst || {}) as { code: Browser, width?: number, height?: number, quality?: number };
+        if (
+            paramsOrFirst &&
+            typeof paramsOrFirst === 'object' &&
+            !Array.isArray(paramsOrFirst) &&
+            ('code' in paramsOrFirst ||
+                'width' in paramsOrFirst ||
+                'height' in paramsOrFirst ||
+                'quality' in paramsOrFirst)
+        ) {
+            params = (paramsOrFirst || {}) as {
+                code: Browser;
+                width?: number;
+                height?: number;
+                quality?: number;
+            };
         } else {
             params = {
                 code: paramsOrFirst as Browser,
                 width: rest[0] as number,
                 height: rest[1] as number,
-                quality: rest[2] as number            
+                quality: rest[2] as number,
             };
         }
 
@@ -73,7 +102,10 @@ export class Avatars extends Service {
             throw new AppwriteException('Missing required parameter: "code"');
         }
 
-        const apiPath = '/avatars/browsers/{code}'.replace('{code}', encodeURIComponent(String(code)));
+        const apiPath = '/avatars/browsers/{code}'.replace(
+            '{code}',
+            encodeURIComponent(String(code)),
+        );
         const payload: Payload = {};
 
         if (typeof width !== 'undefined') {
@@ -93,21 +125,26 @@ export class Avatars extends Service {
 
         payload['impersonateuserid'] = this.client.config.impersonateuserid;
 
-
         for (const [key, value] of Object.entries(Service.flatten(payload))) {
             uri.searchParams.append(key, value);
         }
-        return this.client.call('get', uri, {
-            'X-Appwrite-Project': this.client.config.project,
-            'accept': 'image/png',
-        }, payload, 'arrayBuffer');
+        return this.client.call(
+            'get',
+            uri,
+            {
+                'X-Appwrite-Project': this.client.config.project,
+                accept: 'image/png',
+            },
+            payload,
+            'arrayBuffer',
+        );
     }
 
     /**
      * The credit card endpoint will return you the icon of the credit card provider you need. Use width, height and quality arguments to change the output settings.
-     * 
+     *
      * When one dimension is specified and the other is 0, the image is scaled with preserved aspect ratio. If both dimensions are 0, the API provides an image at source quality. If dimensions are not specified, the default size of image returned is 100x100px.
-     * 
+     *
      *
      * @param {CreditCard} params.code - Credit Card Code. Possible values: amex, argencard, cabal, cencosud, diners, discover, elo, hipercard, jcb, mastercard, naranja, targeta-shopping, unionpay, visa, mir, maestro, rupay.
      * @param {number} params.width - Image width. Pass an integer between 0 to 2000. Defaults to 100.
@@ -116,12 +153,17 @@ export class Avatars extends Service {
      * @throws {AppwriteException}
      * @returns {ArrayBuffer}
      */
-    getCreditCard(params: { code: CreditCard, width?: number, height?: number, quality?: number  }): Promise<ArrayBuffer>;
+    getCreditCard(params: {
+        code: CreditCard;
+        width?: number;
+        height?: number;
+        quality?: number;
+    }): Promise<ArrayBuffer>;
     /**
      * The credit card endpoint will return you the icon of the credit card provider you need. Use width, height and quality arguments to change the output settings.
-     * 
+     *
      * When one dimension is specified and the other is 0, the image is scaled with preserved aspect ratio. If both dimensions are 0, the API provides an image at source quality. If dimensions are not specified, the default size of image returned is 100x100px.
-     * 
+     *
      *
      * @param {CreditCard} code - Credit Card Code. Possible values: amex, argencard, cabal, cencosud, diners, discover, elo, hipercard, jcb, mastercard, naranja, targeta-shopping, unionpay, visa, mir, maestro, rupay.
      * @param {number} width - Image width. Pass an integer between 0 to 2000. Defaults to 100.
@@ -131,21 +173,51 @@ export class Avatars extends Service {
      * @returns {Promise<ArrayBuffer>}
      * @deprecated Use the object parameter style method for a better developer experience.
      */
-    getCreditCard(code: CreditCard, width?: number, height?: number, quality?: number): Promise<ArrayBuffer>;
     getCreditCard(
-        paramsOrFirst: { code: CreditCard, width?: number, height?: number, quality?: number } | CreditCard,
-        ...rest: [(number)?, (number)?, (number)?]    
+        code: CreditCard,
+        width?: number,
+        height?: number,
+        quality?: number,
+    ): Promise<ArrayBuffer>;
+    getCreditCard(
+        paramsOrFirst:
+            | {
+                  code: CreditCard;
+                  width?: number;
+                  height?: number;
+                  quality?: number;
+              }
+            | CreditCard,
+        ...rest: [number?, number?, number?]
     ): Promise<ArrayBuffer> {
-        let params: { code: CreditCard, width?: number, height?: number, quality?: number };
+        let params: {
+            code: CreditCard;
+            width?: number;
+            height?: number;
+            quality?: number;
+        };
 
-        if ((paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst) && ('code' in paramsOrFirst || 'width' in paramsOrFirst || 'height' in paramsOrFirst || 'quality' in paramsOrFirst))) {
-            params = (paramsOrFirst || {}) as { code: CreditCard, width?: number, height?: number, quality?: number };
+        if (
+            paramsOrFirst &&
+            typeof paramsOrFirst === 'object' &&
+            !Array.isArray(paramsOrFirst) &&
+            ('code' in paramsOrFirst ||
+                'width' in paramsOrFirst ||
+                'height' in paramsOrFirst ||
+                'quality' in paramsOrFirst)
+        ) {
+            params = (paramsOrFirst || {}) as {
+                code: CreditCard;
+                width?: number;
+                height?: number;
+                quality?: number;
+            };
         } else {
             params = {
                 code: paramsOrFirst as CreditCard,
                 width: rest[0] as number,
                 height: rest[1] as number,
-                quality: rest[2] as number            
+                quality: rest[2] as number,
             };
         }
 
@@ -158,7 +230,10 @@ export class Avatars extends Service {
             throw new AppwriteException('Missing required parameter: "code"');
         }
 
-        const apiPath = '/avatars/credit-cards/{code}'.replace('{code}', encodeURIComponent(String(code)));
+        const apiPath = '/avatars/credit-cards/{code}'.replace(
+            '{code}',
+            encodeURIComponent(String(code)),
+        );
         const payload: Payload = {};
 
         if (typeof width !== 'undefined') {
@@ -178,29 +253,34 @@ export class Avatars extends Service {
 
         payload['impersonateuserid'] = this.client.config.impersonateuserid;
 
-
         for (const [key, value] of Object.entries(Service.flatten(payload))) {
             uri.searchParams.append(key, value);
         }
-        return this.client.call('get', uri, {
-            'X-Appwrite-Project': this.client.config.project,
-            'accept': 'image/png',
-        }, payload, 'arrayBuffer');
+        return this.client.call(
+            'get',
+            uri,
+            {
+                'X-Appwrite-Project': this.client.config.project,
+                accept: 'image/png',
+            },
+            payload,
+            'arrayBuffer',
+        );
     }
 
     /**
      * Use this endpoint to fetch the favorite icon (AKA favicon) of any remote website URL.
-     * 
+     *
      * This endpoint does not follow HTTP redirects.
      *
      * @param {string} params.url - Website URL which you want to fetch the favicon from.
      * @throws {AppwriteException}
      * @returns {ArrayBuffer}
      */
-    getFavicon(params: { url: string  }): Promise<ArrayBuffer>;
+    getFavicon(params: { url: string }): Promise<ArrayBuffer>;
     /**
      * Use this endpoint to fetch the favorite icon (AKA favicon) of any remote website URL.
-     * 
+     *
      * This endpoint does not follow HTTP redirects.
      *
      * @param {string} url - Website URL which you want to fetch the favicon from.
@@ -209,16 +289,18 @@ export class Avatars extends Service {
      * @deprecated Use the object parameter style method for a better developer experience.
      */
     getFavicon(url: string): Promise<ArrayBuffer>;
-    getFavicon(
-        paramsOrFirst: { url: string } | string    
-    ): Promise<ArrayBuffer> {
+    getFavicon(paramsOrFirst: { url: string } | string): Promise<ArrayBuffer> {
         let params: { url: string };
 
-        if ((paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst))) {
+        if (
+            paramsOrFirst &&
+            typeof paramsOrFirst === 'object' &&
+            !Array.isArray(paramsOrFirst)
+        ) {
             params = (paramsOrFirst || {}) as { url: string };
         } else {
             params = {
-                url: paramsOrFirst as string            
+                url: paramsOrFirst as string,
             };
         }
 
@@ -240,21 +322,26 @@ export class Avatars extends Service {
 
         payload['impersonateuserid'] = this.client.config.impersonateuserid;
 
-
         for (const [key, value] of Object.entries(Service.flatten(payload))) {
             uri.searchParams.append(key, value);
         }
-        return this.client.call('get', uri, {
-            'X-Appwrite-Project': this.client.config.project,
-            'accept': 'image/*',
-        }, payload, 'arrayBuffer');
+        return this.client.call(
+            'get',
+            uri,
+            {
+                'X-Appwrite-Project': this.client.config.project,
+                accept: 'image/*',
+            },
+            payload,
+            'arrayBuffer',
+        );
     }
 
     /**
      * You can use this endpoint to show different country flags icons to your users. The code argument receives the 2 letter country code. Use width, height and quality arguments to change the output settings. Country codes follow the [ISO 3166-1](https://en.wikipedia.org/wiki/ISO_3166-1) standard.
-     * 
+     *
      * When one dimension is specified and the other is 0, the image is scaled with preserved aspect ratio. If both dimensions are 0, the API provides an image at source quality. If dimensions are not specified, the default size of image returned is 100x100px.
-     * 
+     *
      *
      * @param {Flag} params.code - Country Code. ISO Alpha-2 country code format.
      * @param {number} params.width - Image width. Pass an integer between 0 to 2000. Defaults to 100.
@@ -263,12 +350,17 @@ export class Avatars extends Service {
      * @throws {AppwriteException}
      * @returns {ArrayBuffer}
      */
-    getFlag(params: { code: Flag, width?: number, height?: number, quality?: number  }): Promise<ArrayBuffer>;
+    getFlag(params: {
+        code: Flag;
+        width?: number;
+        height?: number;
+        quality?: number;
+    }): Promise<ArrayBuffer>;
     /**
      * You can use this endpoint to show different country flags icons to your users. The code argument receives the 2 letter country code. Use width, height and quality arguments to change the output settings. Country codes follow the [ISO 3166-1](https://en.wikipedia.org/wiki/ISO_3166-1) standard.
-     * 
+     *
      * When one dimension is specified and the other is 0, the image is scaled with preserved aspect ratio. If both dimensions are 0, the API provides an image at source quality. If dimensions are not specified, the default size of image returned is 100x100px.
-     * 
+     *
      *
      * @param {Flag} code - Country Code. ISO Alpha-2 country code format.
      * @param {number} width - Image width. Pass an integer between 0 to 2000. Defaults to 100.
@@ -278,21 +370,46 @@ export class Avatars extends Service {
      * @returns {Promise<ArrayBuffer>}
      * @deprecated Use the object parameter style method for a better developer experience.
      */
-    getFlag(code: Flag, width?: number, height?: number, quality?: number): Promise<ArrayBuffer>;
     getFlag(
-        paramsOrFirst: { code: Flag, width?: number, height?: number, quality?: number } | Flag,
-        ...rest: [(number)?, (number)?, (number)?]    
+        code: Flag,
+        width?: number,
+        height?: number,
+        quality?: number,
+    ): Promise<ArrayBuffer>;
+    getFlag(
+        paramsOrFirst:
+            | { code: Flag; width?: number; height?: number; quality?: number }
+            | Flag,
+        ...rest: [number?, number?, number?]
     ): Promise<ArrayBuffer> {
-        let params: { code: Flag, width?: number, height?: number, quality?: number };
+        let params: {
+            code: Flag;
+            width?: number;
+            height?: number;
+            quality?: number;
+        };
 
-        if ((paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst) && ('code' in paramsOrFirst || 'width' in paramsOrFirst || 'height' in paramsOrFirst || 'quality' in paramsOrFirst))) {
-            params = (paramsOrFirst || {}) as { code: Flag, width?: number, height?: number, quality?: number };
+        if (
+            paramsOrFirst &&
+            typeof paramsOrFirst === 'object' &&
+            !Array.isArray(paramsOrFirst) &&
+            ('code' in paramsOrFirst ||
+                'width' in paramsOrFirst ||
+                'height' in paramsOrFirst ||
+                'quality' in paramsOrFirst)
+        ) {
+            params = (paramsOrFirst || {}) as {
+                code: Flag;
+                width?: number;
+                height?: number;
+                quality?: number;
+            };
         } else {
             params = {
                 code: paramsOrFirst as Flag,
                 width: rest[0] as number,
                 height: rest[1] as number,
-                quality: rest[2] as number            
+                quality: rest[2] as number,
             };
         }
 
@@ -305,7 +422,10 @@ export class Avatars extends Service {
             throw new AppwriteException('Missing required parameter: "code"');
         }
 
-        const apiPath = '/avatars/flags/{code}'.replace('{code}', encodeURIComponent(String(code)));
+        const apiPath = '/avatars/flags/{code}'.replace(
+            '{code}',
+            encodeURIComponent(String(code)),
+        );
         const payload: Payload = {};
 
         if (typeof width !== 'undefined') {
@@ -325,21 +445,26 @@ export class Avatars extends Service {
 
         payload['impersonateuserid'] = this.client.config.impersonateuserid;
 
-
         for (const [key, value] of Object.entries(Service.flatten(payload))) {
             uri.searchParams.append(key, value);
         }
-        return this.client.call('get', uri, {
-            'X-Appwrite-Project': this.client.config.project,
-            'accept': 'image/png',
-        }, payload, 'arrayBuffer');
+        return this.client.call(
+            'get',
+            uri,
+            {
+                'X-Appwrite-Project': this.client.config.project,
+                accept: 'image/png',
+            },
+            payload,
+            'arrayBuffer',
+        );
     }
 
     /**
      * Use this endpoint to fetch a remote image URL and crop it to any image size you want. This endpoint is very useful if you need to crop and display remote images in your app or in case you want to make sure a 3rd party image is properly served using a TLS protocol.
-     * 
+     *
      * When one dimension is specified and the other is 0, the image is scaled with preserved aspect ratio. If both dimensions are 0, the API provides an image at source quality. If dimensions are not specified, the default size of image returned is 400x400px.
-     * 
+     *
      * This endpoint does not follow HTTP redirects.
      *
      * @param {string} params.url - Image URL which you want to crop.
@@ -348,12 +473,16 @@ export class Avatars extends Service {
      * @throws {AppwriteException}
      * @returns {ArrayBuffer}
      */
-    getImage(params: { url: string, width?: number, height?: number  }): Promise<ArrayBuffer>;
+    getImage(params: {
+        url: string;
+        width?: number;
+        height?: number;
+    }): Promise<ArrayBuffer>;
     /**
      * Use this endpoint to fetch a remote image URL and crop it to any image size you want. This endpoint is very useful if you need to crop and display remote images in your app or in case you want to make sure a 3rd party image is properly served using a TLS protocol.
-     * 
+     *
      * When one dimension is specified and the other is 0, the image is scaled with preserved aspect ratio. If both dimensions are 0, the API provides an image at source quality. If dimensions are not specified, the default size of image returned is 400x400px.
-     * 
+     *
      * This endpoint does not follow HTTP redirects.
      *
      * @param {string} url - Image URL which you want to crop.
@@ -363,20 +492,33 @@ export class Avatars extends Service {
      * @returns {Promise<ArrayBuffer>}
      * @deprecated Use the object parameter style method for a better developer experience.
      */
-    getImage(url: string, width?: number, height?: number): Promise<ArrayBuffer>;
     getImage(
-        paramsOrFirst: { url: string, width?: number, height?: number } | string,
-        ...rest: [(number)?, (number)?]    
+        url: string,
+        width?: number,
+        height?: number,
+    ): Promise<ArrayBuffer>;
+    getImage(
+        paramsOrFirst:
+            { url: string; width?: number; height?: number } | string,
+        ...rest: [number?, number?]
     ): Promise<ArrayBuffer> {
-        let params: { url: string, width?: number, height?: number };
+        let params: { url: string; width?: number; height?: number };
 
-        if ((paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst))) {
-            params = (paramsOrFirst || {}) as { url: string, width?: number, height?: number };
+        if (
+            paramsOrFirst &&
+            typeof paramsOrFirst === 'object' &&
+            !Array.isArray(paramsOrFirst)
+        ) {
+            params = (paramsOrFirst || {}) as {
+                url: string;
+                width?: number;
+                height?: number;
+            };
         } else {
             params = {
                 url: paramsOrFirst as string,
                 width: rest[0] as number,
-                height: rest[1] as number            
+                height: rest[1] as number,
             };
         }
 
@@ -408,23 +550,28 @@ export class Avatars extends Service {
 
         payload['impersonateuserid'] = this.client.config.impersonateuserid;
 
-
         for (const [key, value] of Object.entries(Service.flatten(payload))) {
             uri.searchParams.append(key, value);
         }
-        return this.client.call('get', uri, {
-            'X-Appwrite-Project': this.client.config.project,
-            'accept': 'image/*',
-        }, payload, 'arrayBuffer');
+        return this.client.call(
+            'get',
+            uri,
+            {
+                'X-Appwrite-Project': this.client.config.project,
+                accept: 'image/*',
+            },
+            payload,
+            'arrayBuffer',
+        );
     }
 
     /**
      * Use this endpoint to show your user initials avatar icon on your website or app. By default, this route will try to print your logged-in user name or email initials. You can also overwrite the user name if you pass the 'name' parameter. If no name is given and no user is logged, an empty avatar will be returned.
-     * 
+     *
      * You can use the color and background params to change the avatar colors. By default, a random theme will be selected. The random theme will persist for the user's initials when reloading the same theme will always return for the same initials.
-     * 
+     *
      * When one dimension is specified and the other is 0, the image is scaled with preserved aspect ratio. If both dimensions are 0, the API provides an image at source quality. If dimensions are not specified, the default size of image returned is 100x100px.
-     * 
+     *
      *
      * @param {string} params.name - Full Name. When empty, current user name or email will be used. Max length: 128 chars.
      * @param {number} params.width - Image width. Pass an integer between 0 to 2000. Defaults to 100.
@@ -433,14 +580,19 @@ export class Avatars extends Service {
      * @throws {AppwriteException}
      * @returns {ArrayBuffer}
      */
-    getInitials(params?: { name?: string, width?: number, height?: number, background?: string  }): Promise<ArrayBuffer>;
+    getInitials(params?: {
+        name?: string;
+        width?: number;
+        height?: number;
+        background?: string;
+    }): Promise<ArrayBuffer>;
     /**
      * Use this endpoint to show your user initials avatar icon on your website or app. By default, this route will try to print your logged-in user name or email initials. You can also overwrite the user name if you pass the 'name' parameter. If no name is given and no user is logged, an empty avatar will be returned.
-     * 
+     *
      * You can use the color and background params to change the avatar colors. By default, a random theme will be selected. The random theme will persist for the user's initials when reloading the same theme will always return for the same initials.
-     * 
+     *
      * When one dimension is specified and the other is 0, the image is scaled with preserved aspect ratio. If both dimensions are 0, the API provides an image at source quality. If dimensions are not specified, the default size of image returned is 100x100px.
-     * 
+     *
      *
      * @param {string} name - Full Name. When empty, current user name or email will be used. Max length: 128 chars.
      * @param {number} width - Image width. Pass an integer between 0 to 2000. Defaults to 100.
@@ -450,21 +602,48 @@ export class Avatars extends Service {
      * @returns {Promise<ArrayBuffer>}
      * @deprecated Use the object parameter style method for a better developer experience.
      */
-    getInitials(name?: string, width?: number, height?: number, background?: string): Promise<ArrayBuffer>;
     getInitials(
-        paramsOrFirst?: { name?: string, width?: number, height?: number, background?: string } | string,
-        ...rest: [(number)?, (number)?, (string)?]    
+        name?: string,
+        width?: number,
+        height?: number,
+        background?: string,
+    ): Promise<ArrayBuffer>;
+    getInitials(
+        paramsOrFirst?:
+            | {
+                  name?: string;
+                  width?: number;
+                  height?: number;
+                  background?: string;
+              }
+            | string,
+        ...rest: [number?, number?, string?]
     ): Promise<ArrayBuffer> {
-        let params: { name?: string, width?: number, height?: number, background?: string };
+        let params: {
+            name?: string;
+            width?: number;
+            height?: number;
+            background?: string;
+        };
 
-        if (!paramsOrFirst || (paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst))) {
-            params = (paramsOrFirst || {}) as { name?: string, width?: number, height?: number, background?: string };
+        if (
+            !paramsOrFirst ||
+            (paramsOrFirst &&
+                typeof paramsOrFirst === 'object' &&
+                !Array.isArray(paramsOrFirst))
+        ) {
+            params = (paramsOrFirst || {}) as {
+                name?: string;
+                width?: number;
+                height?: number;
+                background?: string;
+            };
         } else {
             params = {
                 name: paramsOrFirst as string,
                 width: rest[0] as number,
                 height: rest[1] as number,
-                background: rest[2] as string            
+                background: rest[2] as string,
             };
         }
 
@@ -497,19 +676,196 @@ export class Avatars extends Service {
 
         payload['impersonateuserid'] = this.client.config.impersonateuserid;
 
+        for (const [key, value] of Object.entries(Service.flatten(payload))) {
+            uri.searchParams.append(key, value);
+        }
+        return this.client.call(
+            'get',
+            uri,
+            {
+                'X-Appwrite-Project': this.client.config.project,
+                accept: 'image/png',
+            },
+            payload,
+            'arrayBuffer',
+        );
+    }
+
+    /**
+     * Returns the best available profile photo for a user. The endpoint tries each source in priority order and returns the first successful result: OAuth2 identity photo, Gravatar, Libravatar, Appwrite Initials, built-in static fallback.
+     *
+     * Passing `userId` — `current()` for the authenticated user — resolves the photo from everything known about that user: identity photos, email, and name. An explicit `emailHash` or `name` then overrides just that value, and the user's remaining sources stay in the chain. Without `userId`, passing `emailHash` and/or `name` resolves the avatar from those values alone: the hash is looked up on Gravatar and Libravatar, the name is rendered as initials, and the session user stays out of the chain so their own photo never shadows the avatar being asked for. When nothing is passed, the photo resolves for the currently authenticated user. Emails are only ever accepted pre-hashed, so no address ends up in a URL.
+     *
+     * @param {number} params.width - Output image width in pixels. Pass an integer between 0 and 2000. Defaults to 256.
+     * @param {number} params.height - Output image height in pixels. Pass an integer between 0 and 2000. Defaults to 256.
+     * @param {number} params.quality - Output image quality between 0 and 100. Defaults to 100.
+     * @param {string} params.output - Output image format. Defaults to 'png'.
+     * @param {string} params.rating - Maximum image rating to fetch from Gravatar/Libravatar. Defaults to 'g'.
+     * @param {string} params.userId - User ID to resolve the photo for. Pass 'current()' for the currently authenticated user. When omitted, the session user is used only if no emailHash and no name is passed.
+     * @param {string} params.emailHash - SHA256 hash of the lowercase, trimmed email address to look up on Gravatar and Libravatar instead of the user's own email. Pass the hash, never the address itself.
+     * @param {string} params.name - Name to render initials from instead of the user's own name. Max length: 128 chars.
+     * @throws {AppwriteException}
+     * @returns {ArrayBuffer}
+     */
+    getPhoto(params?: {
+        width?: number;
+        height?: number;
+        quality?: number;
+        output?: string;
+        rating?: string;
+        userId?: string;
+        emailHash?: string;
+        name?: string;
+    }): Promise<ArrayBuffer>;
+    /**
+     * Returns the best available profile photo for a user. The endpoint tries each source in priority order and returns the first successful result: OAuth2 identity photo, Gravatar, Libravatar, Appwrite Initials, built-in static fallback.
+     *
+     * Passing `userId` — `current()` for the authenticated user — resolves the photo from everything known about that user: identity photos, email, and name. An explicit `emailHash` or `name` then overrides just that value, and the user's remaining sources stay in the chain. Without `userId`, passing `emailHash` and/or `name` resolves the avatar from those values alone: the hash is looked up on Gravatar and Libravatar, the name is rendered as initials, and the session user stays out of the chain so their own photo never shadows the avatar being asked for. When nothing is passed, the photo resolves for the currently authenticated user. Emails are only ever accepted pre-hashed, so no address ends up in a URL.
+     *
+     * @param {number} width - Output image width in pixels. Pass an integer between 0 and 2000. Defaults to 256.
+     * @param {number} height - Output image height in pixels. Pass an integer between 0 and 2000. Defaults to 256.
+     * @param {number} quality - Output image quality between 0 and 100. Defaults to 100.
+     * @param {string} output - Output image format. Defaults to 'png'.
+     * @param {string} rating - Maximum image rating to fetch from Gravatar/Libravatar. Defaults to 'g'.
+     * @param {string} userId - User ID to resolve the photo for. Pass 'current()' for the currently authenticated user. When omitted, the session user is used only if no emailHash and no name is passed.
+     * @param {string} emailHash - SHA256 hash of the lowercase, trimmed email address to look up on Gravatar and Libravatar instead of the user's own email. Pass the hash, never the address itself.
+     * @param {string} name - Name to render initials from instead of the user's own name. Max length: 128 chars.
+     * @throws {AppwriteException}
+     * @returns {Promise<ArrayBuffer>}
+     * @deprecated Use the object parameter style method for a better developer experience.
+     */
+    getPhoto(
+        width?: number,
+        height?: number,
+        quality?: number,
+        output?: string,
+        rating?: string,
+        userId?: string,
+        emailHash?: string,
+        name?: string,
+    ): Promise<ArrayBuffer>;
+    getPhoto(
+        paramsOrFirst?:
+            | {
+                  width?: number;
+                  height?: number;
+                  quality?: number;
+                  output?: string;
+                  rating?: string;
+                  userId?: string;
+                  emailHash?: string;
+                  name?: string;
+              }
+            | number,
+        ...rest: [number?, number?, string?, string?, string?, string?, string?]
+    ): Promise<ArrayBuffer> {
+        let params: {
+            width?: number;
+            height?: number;
+            quality?: number;
+            output?: string;
+            rating?: string;
+            userId?: string;
+            emailHash?: string;
+            name?: string;
+        };
+
+        if (
+            !paramsOrFirst ||
+            (paramsOrFirst &&
+                typeof paramsOrFirst === 'object' &&
+                !Array.isArray(paramsOrFirst))
+        ) {
+            params = (paramsOrFirst || {}) as {
+                width?: number;
+                height?: number;
+                quality?: number;
+                output?: string;
+                rating?: string;
+                userId?: string;
+                emailHash?: string;
+                name?: string;
+            };
+        } else {
+            params = {
+                width: paramsOrFirst as number,
+                height: rest[0] as number,
+                quality: rest[1] as number,
+                output: rest[2] as string,
+                rating: rest[3] as string,
+                userId: rest[4] as string,
+                emailHash: rest[5] as string,
+                name: rest[6] as string,
+            };
+        }
+
+        const width = params.width;
+        const height = params.height;
+        const quality = params.quality;
+        const output = params.output;
+        const rating = params.rating;
+        const userId = params.userId;
+        const emailHash = params.emailHash;
+        const name = params.name;
+
+        const apiPath = '/avatars/photo';
+        const payload: Payload = {};
+
+        if (typeof width !== 'undefined') {
+            payload['width'] = width;
+        }
+
+        if (typeof height !== 'undefined') {
+            payload['height'] = height;
+        }
+
+        if (typeof quality !== 'undefined') {
+            payload['quality'] = quality;
+        }
+
+        if (typeof output !== 'undefined') {
+            payload['output'] = output;
+        }
+
+        if (typeof rating !== 'undefined') {
+            payload['rating'] = rating;
+        }
+
+        if (typeof userId !== 'undefined') {
+            payload['userId'] = userId;
+        }
+
+        if (typeof emailHash !== 'undefined') {
+            payload['emailHash'] = emailHash;
+        }
+
+        if (typeof name !== 'undefined') {
+            payload['name'] = name;
+        }
+
+        const uri = new URL(this.client.config.endpoint + apiPath);
+        payload['project'] = this.client.config.project;
+
+        payload['impersonateuserid'] = this.client.config.impersonateuserid;
 
         for (const [key, value] of Object.entries(Service.flatten(payload))) {
             uri.searchParams.append(key, value);
         }
-        return this.client.call('get', uri, {
-            'X-Appwrite-Project': this.client.config.project,
-            'accept': 'image/png',
-        }, payload, 'arrayBuffer');
+        return this.client.call(
+            'get',
+            uri,
+            {
+                'X-Appwrite-Project': this.client.config.project,
+                accept: 'image/*',
+            },
+            payload,
+            'arrayBuffer',
+        );
     }
 
     /**
      * Converts a given plain text to a QR code image. You can use the query parameters to change the size and style of the resulting image.
-     * 
+     *
      *
      * @param {string} params.text - Plain text to be converted to QR code image.
      * @param {number} params.size - QR code size. Pass an integer between 1 to 1000. Defaults to 400.
@@ -518,10 +874,15 @@ export class Avatars extends Service {
      * @throws {AppwriteException}
      * @returns {ArrayBuffer}
      */
-    getQR(params: { text: string, size?: number, margin?: number, download?: boolean  }): Promise<ArrayBuffer>;
+    getQR(params: {
+        text: string;
+        size?: number;
+        margin?: number;
+        download?: boolean;
+    }): Promise<ArrayBuffer>;
     /**
      * Converts a given plain text to a QR code image. You can use the query parameters to change the size and style of the resulting image.
-     * 
+     *
      *
      * @param {string} text - Plain text to be converted to QR code image.
      * @param {number} size - QR code size. Pass an integer between 1 to 1000. Defaults to 400.
@@ -531,21 +892,47 @@ export class Avatars extends Service {
      * @returns {Promise<ArrayBuffer>}
      * @deprecated Use the object parameter style method for a better developer experience.
      */
-    getQR(text: string, size?: number, margin?: number, download?: boolean): Promise<ArrayBuffer>;
     getQR(
-        paramsOrFirst: { text: string, size?: number, margin?: number, download?: boolean } | string,
-        ...rest: [(number)?, (number)?, (boolean)?]    
+        text: string,
+        size?: number,
+        margin?: number,
+        download?: boolean,
+    ): Promise<ArrayBuffer>;
+    getQR(
+        paramsOrFirst:
+            | {
+                  text: string;
+                  size?: number;
+                  margin?: number;
+                  download?: boolean;
+              }
+            | string,
+        ...rest: [number?, number?, boolean?]
     ): Promise<ArrayBuffer> {
-        let params: { text: string, size?: number, margin?: number, download?: boolean };
+        let params: {
+            text: string;
+            size?: number;
+            margin?: number;
+            download?: boolean;
+        };
 
-        if ((paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst))) {
-            params = (paramsOrFirst || {}) as { text: string, size?: number, margin?: number, download?: boolean };
+        if (
+            paramsOrFirst &&
+            typeof paramsOrFirst === 'object' &&
+            !Array.isArray(paramsOrFirst)
+        ) {
+            params = (paramsOrFirst || {}) as {
+                text: string;
+                size?: number;
+                margin?: number;
+                download?: boolean;
+            };
         } else {
             params = {
                 text: paramsOrFirst as string,
                 size: rest[0] as number,
                 margin: rest[1] as number,
-                download: rest[2] as boolean            
+                download: rest[2] as boolean,
             };
         }
 
@@ -582,21 +969,26 @@ export class Avatars extends Service {
 
         payload['impersonateuserid'] = this.client.config.impersonateuserid;
 
-
         for (const [key, value] of Object.entries(Service.flatten(payload))) {
             uri.searchParams.append(key, value);
         }
-        return this.client.call('get', uri, {
-            'X-Appwrite-Project': this.client.config.project,
-            'accept': 'image/png',
-        }, payload, 'arrayBuffer');
+        return this.client.call(
+            'get',
+            uri,
+            {
+                'X-Appwrite-Project': this.client.config.project,
+                accept: 'image/png',
+            },
+            payload,
+            'arrayBuffer',
+        );
     }
 
     /**
      * Use this endpoint to capture a screenshot of any website URL. This endpoint uses a headless browser to render the webpage and capture it as an image.
-     * 
+     *
      * You can configure the browser viewport size, theme, user agent, geolocation, permissions, and more. Capture either just the viewport or the full page scroll.
-     * 
+     *
      * When width and height are specified, the image is resized accordingly. If both dimensions are 0, the API provides an image at original size. If dimensions are not specified, the default viewport size is 1280x720px.
      *
      * @param {string} params.url - Website URL which you want to capture.
@@ -622,12 +1014,33 @@ export class Avatars extends Service {
      * @throws {AppwriteException}
      * @returns {ArrayBuffer}
      */
-    getScreenshot(params: { url: string, headers?: object, viewportWidth?: number, viewportHeight?: number, scale?: number, theme?: BrowserTheme, userAgent?: string, fullpage?: boolean, locale?: string, timezone?: Timezone, latitude?: number, longitude?: number, accuracy?: number, touch?: boolean, permissions?: BrowserPermission[], sleep?: number, width?: number, height?: number, quality?: number, output?: ImageFormat  }): Promise<ArrayBuffer>;
+    getScreenshot(params: {
+        url: string;
+        headers?: object;
+        viewportWidth?: number;
+        viewportHeight?: number;
+        scale?: number;
+        theme?: BrowserTheme;
+        userAgent?: string;
+        fullpage?: boolean;
+        locale?: string;
+        timezone?: Timezone;
+        latitude?: number;
+        longitude?: number;
+        accuracy?: number;
+        touch?: boolean;
+        permissions?: BrowserPermission[];
+        sleep?: number;
+        width?: number;
+        height?: number;
+        quality?: number;
+        output?: ImageFormat;
+    }): Promise<ArrayBuffer>;
     /**
      * Use this endpoint to capture a screenshot of any website URL. This endpoint uses a headless browser to render the webpage and capture it as an image.
-     * 
+     *
      * You can configure the browser viewport size, theme, user agent, geolocation, permissions, and more. Capture either just the viewport or the full page scroll.
-     * 
+     *
      * When width and height are specified, the image is resized accordingly. If both dimensions are 0, the API provides an image at original size. If dimensions are not specified, the default viewport size is 1280x720px.
      *
      * @param {string} url - Website URL which you want to capture.
@@ -654,15 +1067,125 @@ export class Avatars extends Service {
      * @returns {Promise<ArrayBuffer>}
      * @deprecated Use the object parameter style method for a better developer experience.
      */
-    getScreenshot(url: string, headers?: object, viewportWidth?: number, viewportHeight?: number, scale?: number, theme?: BrowserTheme, userAgent?: string, fullpage?: boolean, locale?: string, timezone?: Timezone, latitude?: number, longitude?: number, accuracy?: number, touch?: boolean, permissions?: BrowserPermission[], sleep?: number, width?: number, height?: number, quality?: number, output?: ImageFormat): Promise<ArrayBuffer>;
     getScreenshot(
-        paramsOrFirst: { url: string, headers?: object, viewportWidth?: number, viewportHeight?: number, scale?: number, theme?: BrowserTheme, userAgent?: string, fullpage?: boolean, locale?: string, timezone?: Timezone, latitude?: number, longitude?: number, accuracy?: number, touch?: boolean, permissions?: BrowserPermission[], sleep?: number, width?: number, height?: number, quality?: number, output?: ImageFormat } | string,
-        ...rest: [(object)?, (number)?, (number)?, (number)?, (BrowserTheme)?, (string)?, (boolean)?, (string)?, (Timezone)?, (number)?, (number)?, (number)?, (boolean)?, (BrowserPermission[])?, (number)?, (number)?, (number)?, (number)?, (ImageFormat)?]    
+        url: string,
+        headers?: object,
+        viewportWidth?: number,
+        viewportHeight?: number,
+        scale?: number,
+        theme?: BrowserTheme,
+        userAgent?: string,
+        fullpage?: boolean,
+        locale?: string,
+        timezone?: Timezone,
+        latitude?: number,
+        longitude?: number,
+        accuracy?: number,
+        touch?: boolean,
+        permissions?: BrowserPermission[],
+        sleep?: number,
+        width?: number,
+        height?: number,
+        quality?: number,
+        output?: ImageFormat,
+    ): Promise<ArrayBuffer>;
+    getScreenshot(
+        paramsOrFirst:
+            | {
+                  url: string;
+                  headers?: object;
+                  viewportWidth?: number;
+                  viewportHeight?: number;
+                  scale?: number;
+                  theme?: BrowserTheme;
+                  userAgent?: string;
+                  fullpage?: boolean;
+                  locale?: string;
+                  timezone?: Timezone;
+                  latitude?: number;
+                  longitude?: number;
+                  accuracy?: number;
+                  touch?: boolean;
+                  permissions?: BrowserPermission[];
+                  sleep?: number;
+                  width?: number;
+                  height?: number;
+                  quality?: number;
+                  output?: ImageFormat;
+              }
+            | string,
+        ...rest: [
+            object?,
+            number?,
+            number?,
+            number?,
+            BrowserTheme?,
+            string?,
+            boolean?,
+            string?,
+            Timezone?,
+            number?,
+            number?,
+            number?,
+            boolean?,
+            BrowserPermission[]?,
+            number?,
+            number?,
+            number?,
+            number?,
+            ImageFormat?,
+        ]
     ): Promise<ArrayBuffer> {
-        let params: { url: string, headers?: object, viewportWidth?: number, viewportHeight?: number, scale?: number, theme?: BrowserTheme, userAgent?: string, fullpage?: boolean, locale?: string, timezone?: Timezone, latitude?: number, longitude?: number, accuracy?: number, touch?: boolean, permissions?: BrowserPermission[], sleep?: number, width?: number, height?: number, quality?: number, output?: ImageFormat };
+        let params: {
+            url: string;
+            headers?: object;
+            viewportWidth?: number;
+            viewportHeight?: number;
+            scale?: number;
+            theme?: BrowserTheme;
+            userAgent?: string;
+            fullpage?: boolean;
+            locale?: string;
+            timezone?: Timezone;
+            latitude?: number;
+            longitude?: number;
+            accuracy?: number;
+            touch?: boolean;
+            permissions?: BrowserPermission[];
+            sleep?: number;
+            width?: number;
+            height?: number;
+            quality?: number;
+            output?: ImageFormat;
+        };
 
-        if ((paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst))) {
-            params = (paramsOrFirst || {}) as { url: string, headers?: object, viewportWidth?: number, viewportHeight?: number, scale?: number, theme?: BrowserTheme, userAgent?: string, fullpage?: boolean, locale?: string, timezone?: Timezone, latitude?: number, longitude?: number, accuracy?: number, touch?: boolean, permissions?: BrowserPermission[], sleep?: number, width?: number, height?: number, quality?: number, output?: ImageFormat };
+        if (
+            paramsOrFirst &&
+            typeof paramsOrFirst === 'object' &&
+            !Array.isArray(paramsOrFirst)
+        ) {
+            params = (paramsOrFirst || {}) as {
+                url: string;
+                headers?: object;
+                viewportWidth?: number;
+                viewportHeight?: number;
+                scale?: number;
+                theme?: BrowserTheme;
+                userAgent?: string;
+                fullpage?: boolean;
+                locale?: string;
+                timezone?: Timezone;
+                latitude?: number;
+                longitude?: number;
+                accuracy?: number;
+                touch?: boolean;
+                permissions?: BrowserPermission[];
+                sleep?: number;
+                width?: number;
+                height?: number;
+                quality?: number;
+                output?: ImageFormat;
+            };
         } else {
             params = {
                 url: paramsOrFirst as string,
@@ -684,7 +1207,7 @@ export class Avatars extends Service {
                 width: rest[15] as number,
                 height: rest[16] as number,
                 quality: rest[17] as number,
-                output: rest[18] as ImageFormat            
+                output: rest[18] as ImageFormat,
             };
         }
 
@@ -801,14 +1324,19 @@ export class Avatars extends Service {
 
         payload['impersonateuserid'] = this.client.config.impersonateuserid;
 
-
         for (const [key, value] of Object.entries(Service.flatten(payload))) {
             uri.searchParams.append(key, value);
         }
-        return this.client.call('get', uri, {
-            'X-Appwrite-Project': this.client.config.project,
-            'accept': 'image/png',
-        }, payload, 'arrayBuffer');
+        return this.client.call(
+            'get',
+            uri,
+            {
+                'X-Appwrite-Project': this.client.config.project,
+                accept: 'image/png',
+            },
+            payload,
+            'arrayBuffer',
+        );
     }
 
     /**
@@ -817,7 +1345,7 @@ export class Avatars extends Service {
      * /account/sessions](https://appwrite.io/docs/references/cloud/client-web/account#getSessions)
      * endpoint. Use width, height and quality arguments to change the output
      * settings.
-     * 
+     *
      * When one dimension is specified and the other is 0, the image is scaled
      * with preserved aspect ratio. If both dimensions are 0, the API provides an
      * image at source quality. If dimensions are not specified, the default size
@@ -829,9 +1357,17 @@ export class Avatars extends Service {
      * @param {number} quality
      * @throws {AppwriteException}
      * @returns {URL}
-    */
-    getBrowserURL(code: Browser, width?: number, height?: number, quality?: number): URL {
-        const apiPath = '/avatars/browsers/{code}'.replace('{code}', encodeURIComponent(String(code)));
+     */
+    getBrowserURL(
+        code: Browser,
+        width?: number,
+        height?: number,
+        quality?: number,
+    ): URL {
+        const apiPath = '/avatars/browsers/{code}'.replace(
+            '{code}',
+            encodeURIComponent(String(code)),
+        );
         const payload: Payload = {};
 
         if (typeof width !== 'undefined') {
@@ -862,12 +1398,12 @@ export class Avatars extends Service {
      * The credit card endpoint will return you the icon of the credit card
      * provider you need. Use width, height and quality arguments to change the
      * output settings.
-     * 
+     *
      * When one dimension is specified and the other is 0, the image is scaled
      * with preserved aspect ratio. If both dimensions are 0, the API provides an
      * image at source quality. If dimensions are not specified, the default size
      * of image returned is 100x100px.
-     * 
+     *
      *
      * @param {CreditCard} code
      * @param {number} width
@@ -875,9 +1411,17 @@ export class Avatars extends Service {
      * @param {number} quality
      * @throws {AppwriteException}
      * @returns {URL}
-    */
-    getCreditCardURL(code: CreditCard, width?: number, height?: number, quality?: number): URL {
-        const apiPath = '/avatars/credit-cards/{code}'.replace('{code}', encodeURIComponent(String(code)));
+     */
+    getCreditCardURL(
+        code: CreditCard,
+        width?: number,
+        height?: number,
+        quality?: number,
+    ): URL {
+        const apiPath = '/avatars/credit-cards/{code}'.replace(
+            '{code}',
+            encodeURIComponent(String(code)),
+        );
         const payload: Payload = {};
 
         if (typeof width !== 'undefined') {
@@ -907,13 +1451,13 @@ export class Avatars extends Service {
     /**
      * Use this endpoint to fetch the favorite icon (AKA favicon) of any remote
      * website URL.
-     * 
+     *
      * This endpoint does not follow HTTP redirects.
      *
      * @param {string} url
      * @throws {AppwriteException}
      * @returns {URL}
-    */
+     */
     getFaviconURL(url: string): URL {
         const apiPath = '/avatars/favicon';
         const payload: Payload = {};
@@ -939,12 +1483,12 @@ export class Avatars extends Service {
      * users. The code argument receives the 2 letter country code. Use width,
      * height and quality arguments to change the output settings. Country codes
      * follow the [ISO 3166-1](https://en.wikipedia.org/wiki/ISO_3166-1) standard.
-     * 
+     *
      * When one dimension is specified and the other is 0, the image is scaled
      * with preserved aspect ratio. If both dimensions are 0, the API provides an
      * image at source quality. If dimensions are not specified, the default size
      * of image returned is 100x100px.
-     * 
+     *
      *
      * @param {Flag} code
      * @param {number} width
@@ -952,9 +1496,17 @@ export class Avatars extends Service {
      * @param {number} quality
      * @throws {AppwriteException}
      * @returns {URL}
-    */
-    getFlagURL(code: Flag, width?: number, height?: number, quality?: number): URL {
-        const apiPath = '/avatars/flags/{code}'.replace('{code}', encodeURIComponent(String(code)));
+     */
+    getFlagURL(
+        code: Flag,
+        width?: number,
+        height?: number,
+        quality?: number,
+    ): URL {
+        const apiPath = '/avatars/flags/{code}'.replace(
+            '{code}',
+            encodeURIComponent(String(code)),
+        );
         const payload: Payload = {};
 
         if (typeof width !== 'undefined') {
@@ -986,12 +1538,12 @@ export class Avatars extends Service {
      * you want. This endpoint is very useful if you need to crop and display
      * remote images in your app or in case you want to make sure a 3rd party
      * image is properly served using a TLS protocol.
-     * 
+     *
      * When one dimension is specified and the other is 0, the image is scaled
      * with preserved aspect ratio. If both dimensions are 0, the API provides an
      * image at source quality. If dimensions are not specified, the default size
      * of image returned is 400x400px.
-     * 
+     *
      * This endpoint does not follow HTTP redirects.
      *
      * @param {string} url
@@ -999,7 +1551,7 @@ export class Avatars extends Service {
      * @param {number} height
      * @throws {AppwriteException}
      * @returns {URL}
-    */
+     */
     getImageURL(url: string, width?: number, height?: number): URL {
         const apiPath = '/avatars/image';
         const payload: Payload = {};
@@ -1031,20 +1583,20 @@ export class Avatars extends Service {
     /**
      * Use this endpoint to show your user initials avatar icon on your website or
      * app. By default, this route will try to print your logged-in user name or
-     * email initials. You can also overwrite the user name if you pass the 'name'
+     * email initials. You can also overwrite the user name if you pass the &#039;name&#039;
      * parameter. If no name is given and no user is logged, an empty avatar will
      * be returned.
-     * 
+     *
      * You can use the color and background params to change the avatar colors. By
      * default, a random theme will be selected. The random theme will persist for
-     * the user's initials when reloading the same theme will always return for
+     * the user&#039;s initials when reloading the same theme will always return for
      * the same initials.
-     * 
+     *
      * When one dimension is specified and the other is 0, the image is scaled
      * with preserved aspect ratio. If both dimensions are 0, the API provides an
      * image at source quality. If dimensions are not specified, the default size
      * of image returned is 100x100px.
-     * 
+     *
      *
      * @param {string} name
      * @param {number} width
@@ -1052,8 +1604,13 @@ export class Avatars extends Service {
      * @param {string} background
      * @throws {AppwriteException}
      * @returns {URL}
-    */
-    getInitialsURL(name?: string, width?: number, height?: number, background?: string): URL {
+     */
+    getInitialsURL(
+        name?: string,
+        width?: number,
+        height?: number,
+        background?: string,
+    ): URL {
         const apiPath = '/avatars/initials';
         const payload: Payload = {};
 
@@ -1086,9 +1643,94 @@ export class Avatars extends Service {
     }
 
     /**
+     * Returns the best available profile photo for a user. The endpoint tries
+     * each source in priority order and returns the first successful result:
+     * OAuth2 identity photo, Gravatar, Libravatar, Appwrite Initials, built-in
+     * static fallback.
+     *
+     * Passing `userId` — `current()` for the authenticated user — resolves
+     * the photo from everything known about that user: identity photos, email,
+     * and name. An explicit `emailHash` or `name` then overrides just that value,
+     * and the user&#039;s remaining sources stay in the chain. Without `userId`,
+     * passing `emailHash` and/or `name` resolves the avatar from those values
+     * alone: the hash is looked up on Gravatar and Libravatar, the name is
+     * rendered as initials, and the session user stays out of the chain so their
+     * own photo never shadows the avatar being asked for. When nothing is passed,
+     * the photo resolves for the currently authenticated user. Emails are only
+     * ever accepted pre-hashed, so no address ends up in a URL.
+     *
+     * @param {number} width
+     * @param {number} height
+     * @param {number} quality
+     * @param {string} output
+     * @param {string} rating
+     * @param {string} userId
+     * @param {string} emailHash
+     * @param {string} name
+     * @throws {AppwriteException}
+     * @returns {URL}
+     */
+    getPhotoURL(
+        width?: number,
+        height?: number,
+        quality?: number,
+        output?: string,
+        rating?: string,
+        userId?: string,
+        emailHash?: string,
+        name?: string,
+    ): URL {
+        const apiPath = '/avatars/photo';
+        const payload: Payload = {};
+
+        if (typeof width !== 'undefined') {
+            payload['width'] = width;
+        }
+
+        if (typeof height !== 'undefined') {
+            payload['height'] = height;
+        }
+
+        if (typeof quality !== 'undefined') {
+            payload['quality'] = quality;
+        }
+
+        if (typeof output !== 'undefined') {
+            payload['output'] = output;
+        }
+
+        if (typeof rating !== 'undefined') {
+            payload['rating'] = rating;
+        }
+
+        if (typeof userId !== 'undefined') {
+            payload['userId'] = userId;
+        }
+
+        if (typeof emailHash !== 'undefined') {
+            payload['emailHash'] = emailHash;
+        }
+
+        if (typeof name !== 'undefined') {
+            payload['name'] = name;
+        }
+
+        const uri = new URL(this.client.config.endpoint + apiPath);
+        payload['project'] = this.client.config.project;
+
+        payload['impersonateuserid'] = this.client.config.impersonateuserid;
+
+        for (const [key, value] of Object.entries(Service.flatten(payload))) {
+            uri.searchParams.append(key, value);
+        }
+
+        return uri;
+    }
+
+    /**
      * Converts a given plain text to a QR code image. You can use the query
      * parameters to change the size and style of the resulting image.
-     * 
+     *
      *
      * @param {string} text
      * @param {number} size
@@ -1096,8 +1738,13 @@ export class Avatars extends Service {
      * @param {boolean} download
      * @throws {AppwriteException}
      * @returns {URL}
-    */
-    getQRURL(text: string, size?: number, margin?: number, download?: boolean): URL {
+     */
+    getQRURL(
+        text: string,
+        size?: number,
+        margin?: number,
+        download?: boolean,
+    ): URL {
         const apiPath = '/avatars/qr';
         const payload: Payload = {};
 
@@ -1132,11 +1779,11 @@ export class Avatars extends Service {
     /**
      * Use this endpoint to capture a screenshot of any website URL. This endpoint
      * uses a headless browser to render the webpage and capture it as an image.
-     * 
+     *
      * You can configure the browser viewport size, theme, user agent,
      * geolocation, permissions, and more. Capture either just the viewport or the
      * full page scroll.
-     * 
+     *
      * When width and height are specified, the image is resized accordingly. If
      * both dimensions are 0, the API provides an image at original size. If
      * dimensions are not specified, the default viewport size is 1280x720px.
@@ -1163,8 +1810,29 @@ export class Avatars extends Service {
      * @param {ImageFormat} output
      * @throws {AppwriteException}
      * @returns {URL}
-    */
-    getScreenshotURL(url: string, headers?: object, viewportWidth?: number, viewportHeight?: number, scale?: number, theme?: BrowserTheme, userAgent?: string, fullpage?: boolean, locale?: string, timezone?: Timezone, latitude?: number, longitude?: number, accuracy?: number, touch?: boolean, permissions?: BrowserPermission[], sleep?: number, width?: number, height?: number, quality?: number, output?: ImageFormat): URL {
+     */
+    getScreenshotURL(
+        url: string,
+        headers?: object,
+        viewportWidth?: number,
+        viewportHeight?: number,
+        scale?: number,
+        theme?: BrowserTheme,
+        userAgent?: string,
+        fullpage?: boolean,
+        locale?: string,
+        timezone?: Timezone,
+        latitude?: number,
+        longitude?: number,
+        accuracy?: number,
+        touch?: boolean,
+        permissions?: BrowserPermission[],
+        sleep?: number,
+        width?: number,
+        height?: number,
+        quality?: number,
+        output?: ImageFormat,
+    ): URL {
         const apiPath = '/avatars/screenshots';
         const payload: Payload = {};
 
@@ -1259,4 +1927,4 @@ export class Avatars extends Service {
 
         return uri;
     }
-};
+}

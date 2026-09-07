@@ -1,5 +1,5 @@
 ```javascript
-import { Client, Messaging } from "react-native-appwrite";
+import { Client, Messaging } from 'react-native-appwrite';
 
 const client = new Client()
     .setEndpoint('https://<REGION>.cloud.appwrite.io/v1') // Your API Endpoint
@@ -10,7 +10,7 @@ const messaging = new Messaging(client);
 const result = await messaging.createSubscriber({
     topicId: '<TOPIC_ID>',
     subscriberId: '<SUBSCRIBER_ID>',
-    targetId: '<TARGET_ID>'
+    targetId: '<TARGET_ID>',
 });
 
 console.log(result);

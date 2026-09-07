@@ -1,5 +1,5 @@
 ```javascript
-import { Client, Avatars } from "react-native-appwrite";
+import { Client, Avatars } from 'react-native-appwrite';
 
 const client = new Client()
     .setEndpoint('https://<REGION>.cloud.appwrite.io/v1') // Your API Endpoint
@@ -11,7 +11,7 @@ const result = avatars.getQR({
     text: '<TEXT>',
     size: 1, // optional
     margin: 0, // optional
-    download: false // optional
+    download: false, // optional
 });
 
 console.log(result);

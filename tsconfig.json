@@ -16,7 +16,7 @@
         "skipLibCheck": true,
         "strict": true,
         "target": "ES6",
-        "traceResolution": false,
+        "traceResolution": false
     },
     "compileOnSave": false,
     "exclude": ["node_modules", "dist"],

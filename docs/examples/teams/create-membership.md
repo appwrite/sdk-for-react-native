@@ -1,5 +1,5 @@
 ```javascript
-import { Client, Teams } from "react-native-appwrite";
+import { Client, Teams } from 'react-native-appwrite';
 
 const client = new Client()
     .setEndpoint('https://<REGION>.cloud.appwrite.io/v1') // Your API Endpoint
@@ -14,7 +14,7 @@ const result = await teams.createMembership({
     userId: '<USER_ID>', // optional
     phone: '+12065550100', // optional
     url: 'https://example.com', // optional
-    name: '<NAME>' // optional
+    name: '<NAME>', // optional
 });
 
 console.log(result);

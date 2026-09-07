@@ -1,5 +1,5 @@
 ```javascript
-import { Client, Presences } from "react-native-appwrite";
+import { Client, Presences } from 'react-native-appwrite';
 
 const client = new Client()
     .setEndpoint('https://<REGION>.cloud.appwrite.io/v1') // Your API Endpoint
@@ -10,7 +10,7 @@ const presences = new Presences(client);
 const result = await presences.list({
     queries: [], // optional
     total: false, // optional
-    ttl: 0 // optional
+    ttl: 0, // optional
 });
 
 console.log(result);

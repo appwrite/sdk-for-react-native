@@ -1,5 +1,5 @@
 ```javascript
-import { Client, Databases } from "react-native-appwrite";
+import { Client, Databases } from 'react-native-appwrite';
 
 const client = new Client()
     .setEndpoint('https://<REGION>.cloud.appwrite.io/v1') // Your API Endpoint
@@ -11,10 +11,10 @@ const result = await databases.decrementDocumentAttribute({
     databaseId: '<DATABASE_ID>',
     collectionId: '<COLLECTION_ID>',
     documentId: '<DOCUMENT_ID>',
-    attribute: '',
-    value: 0, // optional
+    attribute: '<ATTRIBUTE>',
+    value: 1, // optional
     min: 0, // optional
-    transactionId: '<TRANSACTION_ID>' // optional
+    transactionId: '<TRANSACTION_ID>', // optional
 });
 
 console.log(result);

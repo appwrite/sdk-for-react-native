@@ -1,17 +1,11 @@
 import { Service } from '../service';
 import { AppwriteException, Client } from '../client';
-import type { Models } from '../models';
-import type { UploadProgress, Payload } from '../client';
-import * as FileSystem from 'expo-file-system';
-import { Platform as RNPlatform } from 'react-native';
-
+import type { Payload } from '../client';
 
 export class Graphql extends Service {
-
-     constructor(client: Client)
-     {
+    constructor(client: Client) {
         super(client);
-     }
+    }
 
     /**
      * Execute a GraphQL mutation.
@@ -20,7 +14,7 @@ export class Graphql extends Service {
      * @throws {AppwriteException}
      * @returns {Promise}
      */
-    query(params: { query: object  }): Promise<{}>;
+    query(params: { query: object }): Promise<{}>;
     /**
      * Execute a GraphQL mutation.
      *
@@ -30,16 +24,19 @@ export class Graphql extends Service {
      * @deprecated Use the object parameter style method for a better developer experience.
      */
     query(query: object): Promise<{}>;
-    query(
-        paramsOrFirst: { query: object } | object    
-    ): Promise<{}> {
+    query(paramsOrFirst: { query: object } | object): Promise<{}> {
         let params: { query: object };
 
-        if ((paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst) && ('query' in paramsOrFirst))) {
+        if (
+            paramsOrFirst &&
+            typeof paramsOrFirst === 'object' &&
+            !Array.isArray(paramsOrFirst) &&
+            'query' in paramsOrFirst
+        ) {
             params = (paramsOrFirst || {}) as { query: object };
         } else {
             params = {
-                query: paramsOrFirst as object            
+                query: paramsOrFirst as object,
             };
         }
 
@@ -57,12 +54,17 @@ export class Graphql extends Service {
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
-        return this.client.call('post', uri, {
-            'X-Appwrite-Project': this.client.config.project,
-            'x-sdk-graphql': 'true',
-            'content-type': 'application/json',
-            'accept': 'application/json',
-        }, payload);
+        return this.client.call(
+            'post',
+            uri,
+            {
+                'X-Appwrite-Project': this.client.config.project,
+                'x-sdk-graphql': 'true',
+                'content-type': 'application/json',
+                accept: 'application/json',
+            },
+            payload,
+        );
     }
 
     /**
@@ -72,7 +74,7 @@ export class Graphql extends Service {
      * @throws {AppwriteException}
      * @returns {Promise}
      */
-    mutation(params: { query: object  }): Promise<{}>;
+    mutation(params: { query: object }): Promise<{}>;
     /**
      * Execute a GraphQL mutation.
      *
@@ -82,16 +84,19 @@ export class Graphql extends Service {
      * @deprecated Use the object parameter style method for a better developer experience.
      */
     mutation(query: object): Promise<{}>;
-    mutation(
-        paramsOrFirst: { query: object } | object    
-    ): Promise<{}> {
+    mutation(paramsOrFirst: { query: object } | object): Promise<{}> {
         let params: { query: object };
 
-        if ((paramsOrFirst && typeof paramsOrFirst === 'object' && !Array.isArray(paramsOrFirst) && ('query' in paramsOrFirst))) {
+        if (
+            paramsOrFirst &&
+            typeof paramsOrFirst === 'object' &&
+            !Array.isArray(paramsOrFirst) &&
+            'query' in paramsOrFirst
+        ) {
             params = (paramsOrFirst || {}) as { query: object };
         } else {
             params = {
-                query: paramsOrFirst as object            
+                query: paramsOrFirst as object,
             };
         }
 
@@ -109,11 +114,16 @@ export class Graphql extends Service {
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
-        return this.client.call('post', uri, {
-            'X-Appwrite-Project': this.client.config.project,
-            'x-sdk-graphql': 'true',
-            'content-type': 'application/json',
-            'accept': 'application/json',
-        }, payload);
+        return this.client.call(
+            'post',
+            uri,
+            {
+                'X-Appwrite-Project': this.client.config.project,
+                'x-sdk-graphql': 'true',
+                'content-type': 'application/json',
+                accept: 'application/json',
+            },
+            payload,
+        );
     }
-};
+}
