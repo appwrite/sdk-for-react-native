@@ -1,5 +1,5 @@
 ```javascript
-import { Client, Account } from "react-native-appwrite";
+import { Client, Account } from 'react-native-appwrite';
 
 const client = new Client()
     .setEndpoint('https://<REGION>.cloud.appwrite.io/v1') // Your API Endpoint

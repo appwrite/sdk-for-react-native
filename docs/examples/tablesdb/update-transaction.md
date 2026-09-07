@@ -1,5 +1,5 @@
 ```javascript
-import { Client, TablesDB } from "react-native-appwrite";
+import { Client, TablesDB } from 'react-native-appwrite';
 
 const client = new Client()
     .setEndpoint('https://<REGION>.cloud.appwrite.io/v1') // Your API Endpoint
@@ -10,7 +10,7 @@ const tablesDB = new TablesDB(client);
 const result = await tablesDB.updateTransaction({
     transactionId: '<TRANSACTION_ID>',
     commit: false, // optional
-    rollback: false // optional
+    rollback: false, // optional
 });
 
 console.log(result);

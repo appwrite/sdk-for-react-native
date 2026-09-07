@@ -1,5 +1,5 @@
 ```javascript
-import { Client, Avatars, CreditCard } from "react-native-appwrite";
+import { Client, Avatars, CreditCard } from 'react-native-appwrite';
 
 const client = new Client()
     .setEndpoint('https://<REGION>.cloud.appwrite.io/v1') // Your API Endpoint
@@ -11,7 +11,7 @@ const result = avatars.getCreditCard({
     code: CreditCard.AmericanExpress,
     width: 0, // optional
     height: 0, // optional
-    quality: -1 // optional
+    quality: -1, // optional
 });
 
 console.log(result);

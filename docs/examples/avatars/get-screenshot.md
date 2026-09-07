@@ -1,5 +1,12 @@
 ```javascript
-import { Client, Avatars, BrowserTheme, Timezone, BrowserPermission, ImageFormat } from "react-native-appwrite";
+import {
+    Client,
+    Avatars,
+    BrowserTheme,
+    Timezone,
+    BrowserPermission,
+    ImageFormat,
+} from 'react-native-appwrite';
 
 const client = new Client()
     .setEndpoint('https://<REGION>.cloud.appwrite.io/v1') // Your API Endpoint
@@ -10,14 +17,15 @@ const avatars = new Avatars(client);
 const result = avatars.getScreenshot({
     url: 'https://example.com',
     headers: {
-        "Authorization": "Bearer token123",
-        "X-Custom-Header": "value"
+        Authorization: 'Bearer token123',
+        'X-Custom-Header': 'value',
     }, // optional
     viewportWidth: 1920, // optional
     viewportHeight: 1080, // optional
     scale: 2, // optional
     theme: BrowserTheme.Dark, // optional
-    userAgent: 'Mozilla/5.0 (iPhone; CPU iPhone OS 14_0 like Mac OS X) AppleWebKit/605.1.15', // optional
+    userAgent:
+        'Mozilla/5.0 (iPhone; CPU iPhone OS 14_0 like Mac OS X) AppleWebKit/605.1.15', // optional
     fullpage: true, // optional
     locale: 'en-US', // optional
     timezone: Timezone.AfricaAbidjan, // optional
@@ -25,12 +33,15 @@ const result = avatars.getScreenshot({
     longitude: -122.4194, // optional
     accuracy: 100, // optional
     touch: true, // optional
-    permissions: [BrowserPermission.Geolocation, BrowserPermission.Notifications], // optional
+    permissions: [
+        BrowserPermission.Geolocation,
+        BrowserPermission.Notifications,
+    ], // optional
     sleep: 3, // optional
     width: 800, // optional
     height: 600, // optional
     quality: 85, // optional
-    output: ImageFormat.Jpeg // optional
+    output: ImageFormat.Jpeg, // optional
 });
 
 console.log(result);

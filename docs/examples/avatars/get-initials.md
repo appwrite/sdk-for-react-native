@@ -1,5 +1,5 @@
 ```javascript
-import { Client, Avatars } from "react-native-appwrite";
+import { Client, Avatars } from 'react-native-appwrite';
 
 const client = new Client()
     .setEndpoint('https://<REGION>.cloud.appwrite.io/v1') // Your API Endpoint
@@ -11,7 +11,7 @@ const result = avatars.getInitials({
     name: '<NAME>', // optional
     width: 0, // optional
     height: 0, // optional
-    background: '' // optional
+    background: 'FFFFFF', // optional
 });
 
 console.log(result);

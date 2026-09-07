@@ -3,4 +3,5 @@ export enum AuthenticationFactor {
     Phone = 'phone',
     Totp = 'totp',
     Recoverycode = 'recoverycode',
+    Custom = 'custom',
 }

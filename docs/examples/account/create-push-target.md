@@ -1,5 +1,5 @@
 ```javascript
-import { Client, Account } from "react-native-appwrite";
+import { Client, Account } from 'react-native-appwrite';
 
 const client = new Client()
     .setEndpoint('https://<REGION>.cloud.appwrite.io/v1') // Your API Endpoint
@@ -10,7 +10,7 @@ const account = new Account(client);
 const result = await account.createPushTarget({
     targetId: '<TARGET_ID>',
     identifier: '<IDENTIFIER>',
-    providerId: '<PROVIDER_ID>' // optional
+    providerId: '<PROVIDER_ID>', // optional
 });
 
 console.log(result);

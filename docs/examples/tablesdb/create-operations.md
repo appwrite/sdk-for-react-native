@@ -1,5 +1,5 @@
 ```javascript
-import { Client, TablesDB } from "react-native-appwrite";
+import { Client, TablesDB } from 'react-native-appwrite';
 
 const client = new Client()
     .setEndpoint('https://<REGION>.cloud.appwrite.io/v1') // Your API Endpoint
@@ -10,16 +10,16 @@ const tablesDB = new TablesDB(client);
 const result = await tablesDB.createOperations({
     transactionId: '<TRANSACTION_ID>',
     operations: [
-	    {
-	        "action": "create",
-	        "databaseId": "<DATABASE_ID>",
-	        "tableId": "<TABLE_ID>",
-	        "rowId": "<ROW_ID>",
-	        "data": {
-	            "name": "Walter O'Brien"
-	        }
-	    }
-	] // optional
+        {
+            action: 'create',
+            databaseId: '<DATABASE_ID>',
+            tableId: '<TABLE_ID>',
+            rowId: '<ROW_ID>',
+            data: {
+                name: "Walter O'Brien",
+            },
+        },
+    ], // optional
 });
 
 console.log(result);

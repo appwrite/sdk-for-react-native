@@ -1,5 +1,5 @@
 ```javascript
-import { Client, Account, OAuthProvider } from "react-native-appwrite";
+import { Client, Account, OAuthProvider } from 'react-native-appwrite';
 
 const client = new Client()
     .setEndpoint('https://<REGION>.cloud.appwrite.io/v1') // Your API Endpoint
@@ -11,7 +11,6 @@ account.createOAuth2Token({
     provider: OAuthProvider.Amazon,
     success: 'https://example.com', // optional
     failure: 'https://example.com', // optional
-    scopes: [] // optional
+    scopes: [], // optional
 });
-
 ```

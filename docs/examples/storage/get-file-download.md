@@ -1,5 +1,5 @@
 ```javascript
-import { Client, Storage } from "react-native-appwrite";
+import { Client, Storage } from 'react-native-appwrite';
 
 const client = new Client()
     .setEndpoint('https://<REGION>.cloud.appwrite.io/v1') // Your API Endpoint
@@ -10,7 +10,7 @@ const storage = new Storage(client);
 const result = storage.getFileDownload({
     bucketId: '<BUCKET_ID>',
     fileId: '<FILE_ID>',
-    token: '<TOKEN>' // optional
+    token: '<TOKEN>', // optional
 });
 
 console.log(result);

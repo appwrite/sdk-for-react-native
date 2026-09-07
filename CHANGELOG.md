@@ -1,5 +1,24 @@
 # Change log
 
+## 0.35.0
+
+* Breaking: `Execution.functionId` replaced by `resourceId` and `resourceType`
+* Breaking: `react-native` is now a peer dependency instead of a dependency
+* Breaking: SDK now targets Appwrite 2.0 (`X-Appwrite-Response-Format: 2.0.0`)
+* Added: `DocumentsDB` and `VectorsDB` services for document and vector database access
+* Added: `Organization` service with `listInstallations`, `createInstallation`, `getInstallation`, `updateInstallation`, `deleteInstallation`
+* Added: `Teams` installation methods `listInstallations`, `createInstallation`, `getInstallation`, `updateInstallation`, `deleteInstallation`
+* Added: `Account` consent methods `listConsents`, `getConsent`, `deleteConsent`, `listConsentTokens`, `getConsentToken`, `deleteConsentToken`
+* Added: `Avatars.getPhoto` returning the best available user profile photo
+* Added: `folder` parameter to `Storage.createFile` and `folder`, `key` fields on `File`
+* Added: `ExecutionResourceType` enum with `Functions` and `Sites`
+* Added: `AppInstallation`, `Oauth2Consent`, `Oauth2ConsentToken` models and list types
+* Added: `Custom` value to `AuthenticationFactor` and `custom` field on `MfaFactors`
+* Added: `Cloudflare`, `Huggingface`, `Resend` values to `OAuthProvider`
+* Added: `Auto` value to `ImageGravity` enum
+* Updated: source formatted with Prettier and linted with ESLint
+* Fixed: positional calls with an `undefined` leading argument and trailing arguments dispatch correctly
+
 ## 0.34.0
 
 * Added: `Client.setBearer()` method for OAuth access token authentication

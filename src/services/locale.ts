@@ -1,21 +1,16 @@
 import { Service } from '../service';
-import { AppwriteException, Client } from '../client';
+import { Client } from '../client';
 import type { Models } from '../models';
-import type { UploadProgress, Payload } from '../client';
-import * as FileSystem from 'expo-file-system';
-import { Platform as RNPlatform } from 'react-native';
-
+import type { Payload } from '../client';
 
 export class Locale extends Service {
-
-     constructor(client: Client)
-     {
+    constructor(client: Client) {
         super(client);
-     }
+    }
 
     /**
      * Get the current user location based on IP. Returns an object with user country code, country name, continent name, continent code, ip address and suggested currency. You can use the locale header to get the data in a supported language.
-     * 
+     *
      * ([IP Geolocation by DB-IP](https://db-ip.com))
      *
      * @throws {AppwriteException}
@@ -26,10 +21,15 @@ export class Locale extends Service {
         const payload: Payload = {};
 
         const uri = new URL(this.client.config.endpoint + apiPath);
-        return this.client.call('get', uri, {
-            'X-Appwrite-Project': this.client.config.project,
-            'accept': 'application/json',
-        }, payload);
+        return this.client.call(
+            'get',
+            uri,
+            {
+                'X-Appwrite-Project': this.client.config.project,
+                accept: 'application/json',
+            },
+            payload,
+        );
     }
 
     /**
@@ -43,10 +43,15 @@ export class Locale extends Service {
         const payload: Payload = {};
 
         const uri = new URL(this.client.config.endpoint + apiPath);
-        return this.client.call('get', uri, {
-            'X-Appwrite-Project': this.client.config.project,
-            'accept': 'application/json',
-        }, payload);
+        return this.client.call(
+            'get',
+            uri,
+            {
+                'X-Appwrite-Project': this.client.config.project,
+                accept: 'application/json',
+            },
+            payload,
+        );
     }
 
     /**
@@ -60,10 +65,15 @@ export class Locale extends Service {
         const payload: Payload = {};
 
         const uri = new URL(this.client.config.endpoint + apiPath);
-        return this.client.call('get', uri, {
-            'X-Appwrite-Project': this.client.config.project,
-            'accept': 'application/json',
-        }, payload);
+        return this.client.call(
+            'get',
+            uri,
+            {
+                'X-Appwrite-Project': this.client.config.project,
+                accept: 'application/json',
+            },
+            payload,
+        );
     }
 
     /**
@@ -77,10 +87,15 @@ export class Locale extends Service {
         const payload: Payload = {};
 
         const uri = new URL(this.client.config.endpoint + apiPath);
-        return this.client.call('get', uri, {
-            'X-Appwrite-Project': this.client.config.project,
-            'accept': 'application/json',
-        }, payload);
+        return this.client.call(
+            'get',
+            uri,
+            {
+                'X-Appwrite-Project': this.client.config.project,
+                accept: 'application/json',
+            },
+            payload,
+        );
     }
 
     /**
@@ -94,10 +109,15 @@ export class Locale extends Service {
         const payload: Payload = {};
 
         const uri = new URL(this.client.config.endpoint + apiPath);
-        return this.client.call('get', uri, {
-            'X-Appwrite-Project': this.client.config.project,
-            'accept': 'application/json',
-        }, payload);
+        return this.client.call(
+            'get',
+            uri,
+            {
+                'X-Appwrite-Project': this.client.config.project,
+                accept: 'application/json',
+            },
+            payload,
+        );
     }
 
     /**
@@ -111,10 +131,15 @@ export class Locale extends Service {
         const payload: Payload = {};
 
         const uri = new URL(this.client.config.endpoint + apiPath);
-        return this.client.call('get', uri, {
-            'X-Appwrite-Project': this.client.config.project,
-            'accept': 'application/json',
-        }, payload);
+        return this.client.call(
+            'get',
+            uri,
+            {
+                'X-Appwrite-Project': this.client.config.project,
+                accept: 'application/json',
+            },
+            payload,
+        );
     }
 
     /**
@@ -128,10 +153,15 @@ export class Locale extends Service {
         const payload: Payload = {};
 
         const uri = new URL(this.client.config.endpoint + apiPath);
-        return this.client.call('get', uri, {
-            'X-Appwrite-Project': this.client.config.project,
-            'accept': 'application/json',
-        }, payload);
+        return this.client.call(
+            'get',
+            uri,
+            {
+                'X-Appwrite-Project': this.client.config.project,
+                accept: 'application/json',
+            },
+            payload,
+        );
     }
 
     /**
@@ -145,9 +175,14 @@ export class Locale extends Service {
         const payload: Payload = {};
 
         const uri = new URL(this.client.config.endpoint + apiPath);
-        return this.client.call('get', uri, {
-            'X-Appwrite-Project': this.client.config.project,
-            'accept': 'application/json',
-        }, payload);
+        return this.client.call(
+            'get',
+            uri,
+            {
+                'X-Appwrite-Project': this.client.config.project,
+                accept: 'application/json',
+            },
+            payload,
+        );
     }
-};
+}

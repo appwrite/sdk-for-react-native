@@ -1,5 +1,5 @@
 ```javascript
-import { Client, Account } from "react-native-appwrite";
+import { Client, Account } from 'react-native-appwrite';
 
 const client = new Client()
     .setEndpoint('https://<REGION>.cloud.appwrite.io/v1') // Your API Endpoint
@@ -11,7 +11,7 @@ const result = await account.create({
     userId: '<USER_ID>',
     email: 'email@example.com',
     password: 'password',
-    name: '<NAME>' // optional
+    name: '<NAME>', // optional
 });
 
 console.log(result);

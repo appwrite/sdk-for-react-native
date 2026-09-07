@@ -1,5 +1,5 @@
 ```javascript
-import { Client, Functions, ExecutionMethod } from "react-native-appwrite";
+import { Client, Functions, ExecutionMethod } from 'react-native-appwrite';
 
 const client = new Client()
     .setEndpoint('https://<REGION>.cloud.appwrite.io/v1') // Your API Endpoint
@@ -14,7 +14,7 @@ const result = await functions.createExecution({
     xpath: '<PATH>', // optional
     method: ExecutionMethod.GET, // optional
     headers: {}, // optional
-    scheduledAt: '<SCHEDULED_AT>' // optional
+    scheduledAt: '<SCHEDULED_AT>', // optional
 });
 
 console.log(result);

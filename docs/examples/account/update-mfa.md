@@ -1,5 +1,5 @@
 ```javascript
-import { Client, Account } from "react-native-appwrite";
+import { Client, Account } from 'react-native-appwrite';
 
 const client = new Client()
     .setEndpoint('https://<REGION>.cloud.appwrite.io/v1') // Your API Endpoint
@@ -8,7 +8,7 @@ const client = new Client()
 const account = new Account(client);
 
 const result = await account.updateMFA({
-    mfa: false
+    mfa: false,
 });
 
 console.log(result);

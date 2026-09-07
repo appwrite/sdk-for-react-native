@@ -7,12 +7,13 @@ export class ID {
         const msec = now.getMilliseconds();
 
         // Convert to hexadecimal
-        const hexTimestamp = sec.toString(16) + msec.toString(16).padStart(5, '0');
+        const hexTimestamp =
+            sec.toString(16) + msec.toString(16).padStart(5, '0');
         return hexTimestamp;
     }
 
     public static custom(id: string): string {
-        return id
+        return id;
     }
 
     public static unique(padding: number = 7): string {

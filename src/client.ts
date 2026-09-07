@@ -12,12 +12,14 @@ const MAX_INT64 = BigInt('9223372036854775807');
 const MIN_INT64 = BigInt('-9223372036854775808');
 
 function isBigNumber(value: any): boolean {
-    return value !== null
-        && typeof value === 'object'
-        && value._isBigNumber === true
-        && typeof value.isInteger === 'function'
-        && typeof value.toFixed === 'function'
-        && typeof value.toNumber === 'function';
+    return (
+        value !== null &&
+        typeof value === 'object' &&
+        value._isBigNumber === true &&
+        typeof value.isInteger === 'function' &&
+        typeof value.toFixed === 'function' &&
+        typeof value.toNumber === 'function'
+    );
 }
 
 function reviver(_key: string, value: any): any {
@@ -40,32 +42,37 @@ function reviver(_key: string, value: any): any {
 
 export const JSONbig = {
     parse: (text: string) => JSONbigParser.parse(text, reviver),
-    stringify: JSONbigSerializer.stringify
+    stringify: JSONbigSerializer.stringify,
 };
 
 type Payload = {
     [key: string]: any;
-}
+};
 
 type Headers = {
     [key: string]: string;
-}
+};
 
 type RealtimeResponse = {
     type: 'error' | 'event' | 'connected' | 'response' | 'pong';
-    data: RealtimeResponseAuthenticated | RealtimeResponseConnected | RealtimeResponseError | RealtimeResponseEvent<unknown> | undefined;
-}
+    data:
+        | RealtimeResponseAuthenticated
+        | RealtimeResponseConnected
+        | RealtimeResponseError
+        | RealtimeResponseEvent<unknown>
+        | undefined;
+};
 
 type RealtimeRequest = {
     type: 'authentication' | 'subscribe';
     data: RealtimeRequestAuthenticate | RealtimeRequestSubscribe[];
-}
+};
 
 type RealtimeRequestSubscribe = {
     subscriptionId?: string;
     channels: string[];
     queries: string[];
-}
+};
 
 type RealtimeResponseAction = {
     to?: string;
@@ -75,35 +82,35 @@ type RealtimeResponseAction = {
         channels?: string[];
         queries?: string[];
     }>;
-}
+};
 
-export type RealtimeResponseEvent<T extends unknown> = {
+export type RealtimeResponseEvent<T> = {
     events: string[];
     channels: string[];
     timestamp: number;
     payload: T;
     subscriptions?: string[];
-}
+};
 
 type RealtimeResponseError = {
     code: number;
     message: string;
-}
+};
 
 type RealtimeResponseConnected = {
     channels: string[];
     user?: object;
-}
+};
 
 type RealtimeResponseAuthenticated = {
     to: string;
     success: boolean;
     user: object;
-}
+};
 
 type RealtimeRequestAuthenticate = {
     session: string;
-}
+};
 
 type Realtime = {
     socket?: WebSocket;
@@ -115,16 +122,19 @@ type Realtime = {
 
     /**
      * Heartbeat interval for the realtime connection.
-    */
+     */
     heartbeat?: number;
 
     url?: string;
     lastMessage?: RealtimeResponse;
-    subscriptions: Map<number, {
-        channels: string[];
-        queries: string[];
-        callback: (payload: RealtimeResponseEvent<any>) => void
-    }>;
+    subscriptions: Map<
+        number,
+        {
+            channels: string[];
+            queries: string[];
+            callback: (payload: RealtimeResponseEvent<any>) => void;
+        }
+    >;
     slotToSubscriptionId: Map<number, string>;
     subscriptionIdToSlot: Map<string, number>;
     pendingSubscribeSlots: number[];
@@ -137,7 +147,7 @@ type Realtime = {
     createHeartbeat: () => void;
     sendSubscribeMessage: () => void;
     onMessage: (event: MessageEvent) => void;
-}
+};
 
 export type UploadProgress = {
     $id: string;
@@ -145,13 +155,18 @@ export type UploadProgress = {
     sizeUploaded: number;
     chunksTotal: number;
     chunksUploaded: number;
-}
+};
 
 class AppwriteException extends Error {
     code: number;
     response: string;
     type: string;
-    constructor(message: string, code: number = 0, type: string = '', response: string = '') {
+    constructor(
+        message: string,
+        code: number = 0,
+        type: string = '',
+        response: string = '',
+    ) {
         super(message);
         this.name = 'AppwriteException';
         this.message = message;
@@ -181,8 +196,8 @@ class Client {
         'x-sdk-name': 'React Native',
         'x-sdk-platform': 'client',
         'x-sdk-language': 'reactnative',
-        'x-sdk-version': '0.34.0',
-        'X-Appwrite-Response-Format': '1.9.5',
+        'x-sdk-version': '0.35.0',
+        'X-Appwrite-Response-Format': '2.0.0',
     };
 
     /**
@@ -211,12 +226,17 @@ class Client {
             throw new AppwriteException('Endpoint must be a valid string');
         }
 
-        if (!endpoint.startsWith('http://') && !endpoint.startsWith('https://')) {
+        if (
+            !endpoint.startsWith('http://') &&
+            !endpoint.startsWith('https://')
+        ) {
             throw new AppwriteException('Invalid endpoint URL: ' + endpoint);
         }
 
         this.config.endpoint = endpoint;
-        this.config.endpointRealtime = endpoint.replace('https://', 'wss://').replace('http://', 'ws://');
+        this.config.endpointRealtime = endpoint
+            .replace('https://', 'wss://')
+            .replace('http://', 'ws://');
 
         return this;
     }
@@ -233,8 +253,13 @@ class Client {
             throw new AppwriteException('Endpoint must be a valid string');
         }
 
-        if (!endpointRealtime.startsWith('ws://') && !endpointRealtime.startsWith('wss://')) {
-            throw new AppwriteException('Invalid realtime endpoint URL: ' + endpointRealtime);
+        if (
+            !endpointRealtime.startsWith('ws://') &&
+            !endpointRealtime.startsWith('wss://')
+        ) {
+            throw new AppwriteException(
+                'Invalid realtime endpoint URL: ' + endpointRealtime,
+            );
         }
 
         this.config.endpointRealtime = endpointRealtime;
@@ -403,7 +428,6 @@ class Client {
         return this;
     }
 
-
     private realtime: Realtime = {
         socket: undefined,
         timeout: undefined,
@@ -441,9 +465,11 @@ class Client {
             }
 
             this.realtime.heartbeat = window?.setInterval(() => {
-                this.realtime.socket?.send(JSONbig.stringify({
-                    type: 'ping'
-                }));
+                this.realtime.socket?.send(
+                    JSONbig.stringify({
+                        type: 'ping',
+                    }),
+                );
             }, 20_000);
         },
         createSocket: () => {
@@ -461,7 +487,10 @@ class Client {
                 channels.set('jwt', jwt);
             }
 
-            const url = this.config.endpointRealtime + '/realtime?' + channels.toString();
+            const url =
+                this.config.endpointRealtime +
+                '/realtime?' +
+                channels.toString();
 
             if (
                 url !== this.realtime.url || // Check if URL is present
@@ -477,45 +506,56 @@ class Client {
                 }
 
                 this.realtime.url = url;
-                // @ts-ignore
+                // @ts-expect-error self-signed agent is Node-only
                 this.realtime.socket = new WebSocket(url, undefined, {
                     headers: {
                         Origin: `appwrite-${Platform.OS}://${this.config.platform}`,
-                        ...(jwt && Platform.OS !== 'web' ? { 'x-appwrite-jwt': jwt } : {})
-                    }
+                        ...(jwt && Platform.OS !== 'web'
+                            ? { 'x-appwrite-jwt': jwt }
+                            : {}),
+                    },
                 });
-                this.realtime.socket.addEventListener('message', this.realtime.onMessage);
-                this.realtime.socket.addEventListener('open', _event => {
+                this.realtime.socket.addEventListener(
+                    'message',
+                    this.realtime.onMessage,
+                );
+                this.realtime.socket.addEventListener('open', (_event) => {
                     this.realtime.reconnectAttempts = 0;
                     this.realtime.createHeartbeat();
                 });
-                this.realtime.socket.addEventListener('close', event => {
+                this.realtime.socket.addEventListener('close', (event) => {
                     if (
                         !this.realtime.reconnect ||
-                        (
-                            this.realtime?.lastMessage?.type === 'error' && // Check if last message was of type error
-                            (<RealtimeResponseError>this.realtime?.lastMessage.data).code === 1008 // Check for policy violation 1008
-                        )
+                        (this.realtime?.lastMessage?.type === 'error' && // Check if last message was of type error
+                            (<RealtimeResponseError>(
+                                this.realtime?.lastMessage.data
+                            )).code === 1008) // Check for policy violation 1008
                     ) {
                         this.realtime.reconnect = true;
                         return;
                     }
 
                     const timeout = this.realtime.getTimeout();
-                    console.error(`Realtime got disconnected. Reconnect will be attempted in ${timeout / 1000} seconds.`, event.reason);
+                    console.error(
+                        `Realtime got disconnected. Reconnect will be attempted in ${timeout / 1000} seconds.`,
+                        event.reason,
+                    );
 
                     setTimeout(() => {
                         this.realtime.reconnectAttempts++;
                         this.realtime.createSocket();
                     }, timeout);
-                })
+                });
             } else if (this.realtime.socket?.readyState === WebSocket.OPEN) {
                 // URL is unchanged; re-send subscribe message to apply updated queries.
                 this.realtime.sendSubscribeMessage();
             }
         },
         sendSubscribeMessage: () => {
-            if (!this.realtime.socket || this.realtime.socket.readyState !== WebSocket.OPEN) {
+            if (
+                !this.realtime.socket ||
+                this.realtime.socket.readyState !== WebSocket.OPEN
+            ) {
                 return;
             }
 
@@ -527,9 +567,10 @@ class Client {
 
                 const row: RealtimeRequestSubscribe = {
                     channels: sub.channels,
-                    queries
+                    queries,
                 };
-                const knownSubscriptionId = this.realtime.slotToSubscriptionId.get(slot);
+                const knownSubscriptionId =
+                    this.realtime.slotToSubscriptionId.get(slot);
                 if (knownSubscriptionId) {
                     row.subscriptionId = knownSubscriptionId;
                 }
@@ -542,10 +583,12 @@ class Client {
                 return;
             }
 
-            this.realtime.socket.send(JSONbig.stringify(<RealtimeRequest>{
-                type: 'subscribe',
-                data: rows
-            }));
+            this.realtime.socket.send(
+                JSONbig.stringify(<RealtimeRequest>{
+                    type: 'subscribe',
+                    data: rows,
+                }),
+            );
         },
         onMessage: (event) => {
             try {
@@ -553,20 +596,28 @@ class Client {
                 this.realtime.lastMessage = message;
                 switch (message.type) {
                     case 'connected': {
-                        const messageData = <RealtimeResponseConnected>message.data;
+                        const messageData = <RealtimeResponseConnected>(
+                            message.data
+                        );
 
                         let session = this.config.session;
                         if (!session) {
-                            const cookie = JSONbig.parse(window.localStorage.getItem('cookieFallback') ?? '{}');
-                            session = cookie?.[`a_session_${this.config.project}`];
+                            const cookie = JSONbig.parse(
+                                window.localStorage.getItem('cookieFallback') ??
+                                    '{}',
+                            );
+                            session =
+                                cookie?.[`a_session_${this.config.project}`];
                         }
                         if (session && !messageData?.user) {
-                            this.realtime.socket?.send(JSONbig.stringify(<RealtimeRequest>{
-                                type: 'authentication',
-                                data: {
-                                    session
-                                }
-                            }));
+                            this.realtime.socket?.send(
+                                JSONbig.stringify(<RealtimeRequest>{
+                                    type: 'authentication',
+                                    data: {
+                                        session,
+                                    },
+                                }),
+                            );
                         }
 
                         this.realtime.sendSubscribeMessage();
@@ -574,44 +625,78 @@ class Client {
                     }
                     case 'response': {
                         const action = message.data as RealtimeResponseAction;
-                        if (action?.to !== 'subscribe' || !Array.isArray(action.subscriptions)) {
+                        if (
+                            action?.to !== 'subscribe' ||
+                            !Array.isArray(action.subscriptions)
+                        ) {
                             break;
                         }
 
                         action.subscriptions.forEach((subscription, index) => {
                             const subscriptionId = subscription?.subscriptionId;
-                            const slot = this.realtime.pendingSubscribeSlots[index];
+                            const slot =
+                                this.realtime.pendingSubscribeSlots[index];
                             if (!subscriptionId || slot === undefined) {
                                 return;
                             }
 
-                            this.realtime.slotToSubscriptionId.set(slot, subscriptionId);
-                            this.realtime.subscriptionIdToSlot.set(subscriptionId, slot);
+                            this.realtime.slotToSubscriptionId.set(
+                                slot,
+                                subscriptionId,
+                            );
+                            this.realtime.subscriptionIdToSlot.set(
+                                subscriptionId,
+                                slot,
+                            );
                         });
                         break;
                     }
-                    case 'event':
-                        const data = <RealtimeResponseEvent<unknown>>message.data;
+                    case 'event': {
+                        const data = <RealtimeResponseEvent<unknown>>(
+                            message.data
+                        );
                         if (data?.channels) {
-                            if (data.subscriptions && data.subscriptions.length > 0) {
+                            if (
+                                data.subscriptions &&
+                                data.subscriptions.length > 0
+                            ) {
                                 data.subscriptions.forEach((subscriptionId) => {
-                                    const slot = this.realtime.subscriptionIdToSlot.get(subscriptionId);
+                                    const slot =
+                                        this.realtime.subscriptionIdToSlot.get(
+                                            subscriptionId,
+                                        );
                                     if (slot !== undefined) {
-                                        const subscription = this.realtime.subscriptions.get(slot);
+                                        const subscription =
+                                            this.realtime.subscriptions.get(
+                                                slot,
+                                            );
                                         if (subscription) {
-                                            setTimeout(() => subscription.callback(data));
+                                            setTimeout(() =>
+                                                subscription.callback(data),
+                                            );
                                         }
                                     }
                                 });
                             } else {
-                                this.realtime.subscriptions.forEach(subscription => {
-                                    if (data.channels.some(channel => subscription.channels.includes(channel))) {
-                                        setTimeout(() => subscription.callback(data));
-                                    }
-                                });
+                                this.realtime.subscriptions.forEach(
+                                    (subscription) => {
+                                        if (
+                                            data.channels.some((channel) =>
+                                                subscription.channels.includes(
+                                                    channel,
+                                                ),
+                                            )
+                                        ) {
+                                            setTimeout(() =>
+                                                subscription.callback(data),
+                                            );
+                                        }
+                                    },
+                                );
                             }
                         }
                         break;
+                    }
                     case 'pong':
                         break; // Handle pong response if needed
                     case 'error':
@@ -622,15 +707,15 @@ class Client {
             } catch (e) {
                 console.error(e);
             }
-        }
-    }
+        },
+    };
 
     /**
      * Subscribes to Appwrite events and passes you the payload in realtime.
-     * 
-     * @param {string|string[]} channels 
+     *
+     * @param {string|string[]} channels
      * Channel to subscribe - pass a single channel as a string or multiple with an array of strings.
-     * 
+     *
      * Possible channels are:
      * - account
      * - collections
@@ -650,49 +735,59 @@ class Client {
      * @param {(payload: RealtimeMessage) => void} callback Is called on every realtime update.
      * @returns {() => void} Unsubscribes from events.
      */
-    subscribe<T extends unknown>(
+    subscribe<T>(
         channels: string | string[],
         callback: (payload: RealtimeResponseEvent<T>) => void,
-        queries: (string | Query)[] = []
+        queries: (string | Query)[] = [],
     ): () => void {
-        let channelArray = typeof channels === 'string' ? [channels] : channels;
+        const channelArray =
+            typeof channels === 'string' ? [channels] : channels;
 
-        const queryStrings = (queries ?? []).map(q => typeof q === 'string' ? q : q.toString());
+        const queryStrings = (queries ?? []).map((q) =>
+            typeof q === 'string' ? q : q.toString(),
+        );
 
         const counter = this.realtime.subscriptionsCounter++;
         this.realtime.subscriptions.set(counter, {
             channels: channelArray,
             queries: queryStrings,
-            callback
+            callback,
         });
 
         this.realtime.connect();
 
         return () => {
-            const subscriptionId = this.realtime.slotToSubscriptionId.get(counter);
+            const subscriptionId =
+                this.realtime.slotToSubscriptionId.get(counter);
             this.realtime.subscriptions.delete(counter);
             this.realtime.slotToSubscriptionId.delete(counter);
             if (subscriptionId) {
                 this.realtime.subscriptionIdToSlot.delete(subscriptionId);
             }
             this.realtime.connect();
-        }
+        };
     }
 
     async ping(): Promise<unknown> {
         return this.call('GET', new URL(this.config.endpoint + '/ping'), {
             'X-Appwrite-Project': this.config.project,
-            'accept': 'application/json',
+            accept: 'application/json',
         });
     }
 
-    async call(method: string, url: URL, headers: Headers = {}, params: Payload = {}, responseType = 'json'): Promise<any> {
+    async call(
+        method: string,
+        url: URL,
+        headers: Headers = {},
+        params: Payload = {},
+        responseType = 'json',
+    ): Promise<any> {
         method = method.toUpperCase();
 
         headers = Object.assign({}, this.headers, headers);
-        headers.Origin = `appwrite-${Platform.OS}://${this.config.platform}`
+        headers.Origin = `appwrite-${Platform.OS}://${this.config.platform}`;
 
-        let options: RequestInit = {
+        const options: RequestInit = {
             method,
             headers,
         };
@@ -702,7 +797,9 @@ class Client {
         }
 
         if (method === 'GET') {
-            for (const [key, value] of Object.entries(Service.flatten(params))) {
+            for (const [key, value] of Object.entries(
+                Service.flatten(params),
+            )) {
                 url.searchParams.append(key, value);
             }
         } else {
@@ -711,14 +808,14 @@ class Client {
                     options.body = JSONbig.stringify(params);
                     break;
 
-                case 'multipart/form-data':
-                    let formData = new FormData();
+                case 'multipart/form-data': {
+                    const formData = new FormData();
 
                     for (const key in params) {
                         if (Array.isArray(params[key])) {
                             params[key].forEach((value: any) => {
                                 formData.append(key + '[]', value);
-                            })
+                            });
                         } else {
                             formData.append(key, params[key]);
                         }
@@ -727,6 +824,7 @@ class Client {
                     options.body = formData;
                     delete headers['content-type'];
                     break;
+                }
             }
         }
 
@@ -737,33 +835,56 @@ class Client {
 
             const warnings = response.headers.get('x-appwrite-warning');
             if (warnings) {
-                warnings.split(';').forEach((warning: string) => console.warn('Warning: ' + warning));
+                warnings
+                    .split(';')
+                    .forEach((warning: string) =>
+                        console.warn('Warning: ' + warning),
+                    );
             }
 
-            if (response.headers.get('content-type')?.includes('application/json')) {
+            if (
+                response.headers
+                    .get('content-type')
+                    ?.includes('application/json')
+            ) {
                 data = JSONbig.parse(await response.text());
             } else if (responseType === 'arrayBuffer') {
                 data = await response.arrayBuffer();
             } else {
                 data = {
-                    message: await response.text()
+                    message: await response.text(),
                 };
             }
 
             if (400 <= response.status) {
                 let responseText = '';
-                if (response.headers.get('content-type')?.includes('application/json')) {
+                if (
+                    response.headers
+                        .get('content-type')
+                        ?.includes('application/json')
+                ) {
                     responseText = JSONbig.stringify(data);
                 } else {
                     responseText = data?.message;
                 }
-                throw new AppwriteException(data?.message, response.status, data?.type, responseText);
+                throw new AppwriteException(
+                    data?.message,
+                    response.status,
+                    data?.type,
+                    responseText,
+                );
             }
 
             const cookieFallback = response.headers.get('X-Fallback-Cookies');
 
-            if (typeof window !== 'undefined' && window.localStorage && cookieFallback) {
-                window.console.warn('Appwrite is using localStorage for session management. Increase your security by adding a custom domain as your API endpoint.');
+            if (
+                typeof window !== 'undefined' &&
+                window.localStorage &&
+                cookieFallback
+            ) {
+                window.console.warn(
+                    'Appwrite is using localStorage for session management. Increase your security by adding a custom domain as your API endpoint.',
+                );
                 window.localStorage.setItem('cookieFallback', cookieFallback);
             }
 

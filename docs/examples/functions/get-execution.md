@@ -1,5 +1,5 @@
 ```javascript
-import { Client, Functions } from "react-native-appwrite";
+import { Client, Functions } from 'react-native-appwrite';
 
 const client = new Client()
     .setEndpoint('https://<REGION>.cloud.appwrite.io/v1') // Your API Endpoint
@@ -9,7 +9,7 @@ const functions = new Functions(client);
 
 const result = await functions.getExecution({
     functionId: '<FUNCTION_ID>',
-    executionId: '<EXECUTION_ID>'
+    executionId: '<EXECUTION_ID>',
 });
 
 console.log(result);
