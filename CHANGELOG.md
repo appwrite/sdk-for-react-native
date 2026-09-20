@@ -11,7 +11,7 @@
 * Added: `Kakao` and `Tiktok` values to `OAuthProvider`
 * Added: `passwordPwned` field on `User` and `providerIdToken` field on `Identity`
 * Fixed: `Storage.createFile` uploads work with Expo fetch (Expo SDK 57+) as well as React Native fetch
-* Fixed: empty-string required parameters are rejected instead of sent to the API
+* Fixed: empty-string required path parameters are rejected instead of sent to the API
 * Updated: all JSON endpoints send an explicit `accept: application/json` header
 
 ## 0.35.0
