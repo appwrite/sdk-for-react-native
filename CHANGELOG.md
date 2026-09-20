@@ -1,5 +1,19 @@
 # Change log
 
+## 1.0.0
+
+* Stable: first stable release of the React Native SDK, out of beta
+* Breaking: removed `Account.listLogs` and the `Log`, `LogList` models
+* Breaking: removed `Client.setDevKey`
+* Breaking: SDK now targets Appwrite 2.2 (`X-Appwrite-Response-Format: 2.2.0`)
+* Added: `Account.createIdTokenSession` for native Apple and Google sign-in with `IdTokenProvider` enum
+* Added: `Account.createEmailVerificationOTP` and `Account.updateEmailVerificationOTP`
+* Added: `Kakao` and `Tiktok` values to `OAuthProvider`
+* Added: `passwordPwned` field on `User` and `providerIdToken` field on `Identity`
+* Fixed: `Storage.createFile` uploads work with Expo fetch (Expo SDK 57+) as well as React Native fetch
+* Fixed: empty-string required parameters are rejected instead of sent to the API
+* Updated: all JSON endpoints send an explicit `accept: application/json` header
+
 ## 0.35.0
 
 * Breaking: `Execution.functionId` replaced by `resourceId` and `resourceType`

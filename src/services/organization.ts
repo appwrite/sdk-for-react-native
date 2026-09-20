@@ -199,7 +199,7 @@ export class Organization extends Service {
 
         const installationId = params.installationId;
 
-        if (typeof installationId === 'undefined') {
+        if (typeof installationId === 'undefined' || installationId === '') {
             throw new AppwriteException(
                 'Missing required parameter: "installationId"',
             );
@@ -274,7 +274,7 @@ export class Organization extends Service {
         const installationId = params.installationId;
         const authorizationDetails = params.authorizationDetails;
 
-        if (typeof installationId === 'undefined') {
+        if (typeof installationId === 'undefined' || installationId === '') {
             throw new AppwriteException(
                 'Missing required parameter: "installationId"',
             );
@@ -339,7 +339,7 @@ export class Organization extends Service {
 
         const installationId = params.installationId;
 
-        if (typeof installationId === 'undefined') {
+        if (typeof installationId === 'undefined' || installationId === '') {
             throw new AppwriteException(
                 'Missing required parameter: "installationId"',
             );

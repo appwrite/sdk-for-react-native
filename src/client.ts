@@ -157,6 +157,19 @@ export type UploadProgress = {
     chunksUploaded: number;
 };
 
+/**
+ * A multipart file part that both React Native networking stacks understand.
+ *
+ * React Native's own fetch reads `uri` natively. Expo's fetch, the global
+ * fetch since Expo SDK 57, ignores `uri` and encodes the body from `bytes()`.
+ */
+export type FilePart = {
+    uri: string;
+    name: string;
+    type: string;
+    bytes: () => Promise<Uint8Array>;
+};
+
 class AppwriteException extends Error {
     code: number;
     response: string;
@@ -186,7 +199,6 @@ class Client {
         bearer: '',
         locale: '',
         session: '',
-        devkey: '',
         cookie: '',
         impersonateuserid: '',
         impersonateuseremail: '',
@@ -196,8 +208,8 @@ class Client {
         'x-sdk-name': 'React Native',
         'x-sdk-platform': 'client',
         'x-sdk-language': 'reactnative',
-        'x-sdk-version': '0.35.0',
-        'X-Appwrite-Response-Format': '2.0.0',
+        'x-sdk-version': '1.0.0',
+        'X-Appwrite-Response-Format': '2.2.0',
     };
 
     /**
@@ -349,21 +361,6 @@ class Client {
     setSession(value: string): this {
         this.headers['X-Appwrite-Session'] = value;
         this.config.session = value;
-        return this;
-    }
-
-    /**
-     * Set DevKey
-     *
-     * Your secret dev API key
-     *
-     * @param value string
-     *
-     * @return {this}
-     */
-    setDevKey(value: string): this {
-        this.headers['X-Appwrite-Dev-Key'] = value;
-        this.config.devkey = value;
         return this;
     }
 

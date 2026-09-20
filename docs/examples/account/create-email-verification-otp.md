@@ -7,9 +7,8 @@ const client = new Client()
 
 const account = new Account(client);
 
-const result = await account.listLogs({
-    queries: [], // optional
-    total: false, // optional
+const result = await account.createEmailVerificationOTP({
+    phrase: false, // optional
 });
 
 console.log(result);
