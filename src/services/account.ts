@@ -5,6 +5,7 @@ import type { Payload } from '../client';
 
 import { AuthenticatorType } from '../enums/authenticator-type';
 import { AuthenticationFactor } from '../enums/authentication-factor';
+import { IdTokenProvider } from '../enums/id-token-provider';
 import { OAuthProvider } from '../enums/o-auth-provider';
 export class Account extends Service {
     constructor(client: Client) {
@@ -264,7 +265,7 @@ export class Account extends Service {
 
         const consentId = params.consentId;
 
-        if (typeof consentId === 'undefined') {
+        if (typeof consentId === 'undefined' || consentId === '') {
             throw new AppwriteException(
                 'Missing required parameter: "consentId"',
             );
@@ -322,7 +323,7 @@ export class Account extends Service {
 
         const consentId = params.consentId;
 
-        if (typeof consentId === 'undefined') {
+        if (typeof consentId === 'undefined' || consentId === '') {
             throw new AppwriteException(
                 'Missing required parameter: "consentId"',
             );
@@ -405,7 +406,7 @@ export class Account extends Service {
         const queries = params.queries;
         const total = params.total;
 
-        if (typeof consentId === 'undefined') {
+        if (typeof consentId === 'undefined' || consentId === '') {
             throw new AppwriteException(
                 'Missing required parameter: "consentId"',
             );
@@ -487,13 +488,13 @@ export class Account extends Service {
         const consentId = params.consentId;
         const tokenId = params.tokenId;
 
-        if (typeof consentId === 'undefined') {
+        if (typeof consentId === 'undefined' || consentId === '') {
             throw new AppwriteException(
                 'Missing required parameter: "consentId"',
             );
         }
 
-        if (typeof tokenId === 'undefined') {
+        if (typeof tokenId === 'undefined' || tokenId === '') {
             throw new AppwriteException(
                 'Missing required parameter: "tokenId"',
             );
@@ -563,13 +564,13 @@ export class Account extends Service {
         const consentId = params.consentId;
         const tokenId = params.tokenId;
 
-        if (typeof consentId === 'undefined') {
+        if (typeof consentId === 'undefined' || consentId === '') {
             throw new AppwriteException(
                 'Missing required parameter: "consentId"',
             );
         }
 
-        if (typeof tokenId === 'undefined') {
+        if (typeof tokenId === 'undefined' || tokenId === '') {
             throw new AppwriteException(
                 'Missing required parameter: "tokenId"',
             );
@@ -794,7 +795,7 @@ export class Account extends Service {
 
         const identityId = params.identityId;
 
-        if (typeof identityId === 'undefined') {
+        if (typeof identityId === 'undefined' || identityId === '') {
             throw new AppwriteException(
                 'Missing required parameter: "identityId"',
             );
@@ -813,6 +814,7 @@ export class Account extends Service {
             {
                 'X-Appwrite-Project': this.client.config.project,
                 'content-type': 'application/json',
+                accept: 'application/json',
             },
             payload,
         );
@@ -869,77 +871,6 @@ export class Account extends Service {
             {
                 'X-Appwrite-Project': this.client.config.project,
                 'content-type': 'application/json',
-                accept: 'application/json',
-            },
-            payload,
-        );
-    }
-
-    /**
-     * Get the list of latest security activity logs for the currently logged in user. Each log returns user IP address, location and date and time of log.
-     *
-     * @param {string[]} params.queries - Array of query strings generated using the Query class provided by the SDK. [Learn more about queries](https://appwrite.io/docs/queries). Only supported methods are limit and offset
-     * @param {boolean} params.total - When set to false, the total count returned will be 0 and will not be calculated.
-     * @throws {AppwriteException}
-     * @returns {Promise}
-     */
-    listLogs(params?: {
-        queries?: string[];
-        total?: boolean;
-    }): Promise<Models.LogList>;
-    /**
-     * Get the list of latest security activity logs for the currently logged in user. Each log returns user IP address, location and date and time of log.
-     *
-     * @param {string[]} queries - Array of query strings generated using the Query class provided by the SDK. [Learn more about queries](https://appwrite.io/docs/queries). Only supported methods are limit and offset
-     * @param {boolean} total - When set to false, the total count returned will be 0 and will not be calculated.
-     * @throws {AppwriteException}
-     * @returns {Promise<Models.LogList>}
-     * @deprecated Use the object parameter style method for a better developer experience.
-     */
-    listLogs(queries?: string[], total?: boolean): Promise<Models.LogList>;
-    listLogs(
-        paramsOrFirst?: { queries?: string[]; total?: boolean } | string[],
-        ...rest: [boolean?]
-    ): Promise<Models.LogList> {
-        let params: { queries?: string[]; total?: boolean };
-
-        if (
-            (typeof paramsOrFirst === 'undefined' && rest.length === 0) ||
-            (paramsOrFirst &&
-                typeof paramsOrFirst === 'object' &&
-                !Array.isArray(paramsOrFirst))
-        ) {
-            params = (paramsOrFirst || {}) as {
-                queries?: string[];
-                total?: boolean;
-            };
-        } else {
-            params = {
-                queries: paramsOrFirst as string[],
-                total: rest[0] as boolean,
-            };
-        }
-
-        const queries = params.queries;
-        const total = params.total;
-
-        const apiPath = '/account/logs';
-        const payload: Payload = {};
-
-        if (typeof queries !== 'undefined') {
-            payload['queries'] = queries;
-        }
-
-        if (typeof total !== 'undefined') {
-            payload['total'] = total;
-        }
-
-        const uri = new URL(this.client.config.endpoint + apiPath);
-        return this.client.call(
-            'get',
-            uri,
-            {
-                'X-Appwrite-Project': this.client.config.project,
                 accept: 'application/json',
             },
             payload,
@@ -1365,6 +1296,7 @@ export class Account extends Service {
             {
                 'X-Appwrite-Project': this.client.config.project,
                 'content-type': 'application/json',
+                accept: 'application/json',
             },
             payload,
         );
@@ -1424,6 +1356,7 @@ export class Account extends Service {
             {
                 'X-Appwrite-Project': this.client.config.project,
                 'content-type': 'application/json',
+                accept: 'application/json',
             },
             payload,
         );
@@ -2464,6 +2397,7 @@ export class Account extends Service {
             {
                 'X-Appwrite-Project': this.client.config.project,
                 'content-type': 'application/json',
+                accept: 'application/json',
             },
             payload,
         );
@@ -2581,6 +2515,180 @@ export class Account extends Service {
     }
 
     /**
+     * Allow the user to login to their account using an OpenID Connect ID token obtained natively from the OAuth2 provider, for example via Google Credential Manager on Android or Sign in with Apple on iOS. No browser or redirect is involved: the ID token is verified against the provider's published signing keys and a session is created in a single request.
+     *
+     * Native sign-in is switched on per provider with its nativeEnabled setting. It is independent of the browser-based flow's enabled setting, which has no effect on this endpoint. The token's audience must match the provider's configured client ID or one of its native client IDs; tokens issued for any other client ID are rejected. For Sign in with Apple, register your app's bundle ID as a native client ID. For Google, the web client ID used by Credential Manager is usually the configured client ID; add your Android and iOS client IDs as native client IDs if your app requests tokens for them.
+     *
+     * Pass the raw nonce used when requesting the ID token so it can be validated against the token's nonce claim. When signing in with Apple, the nonce is required: hash it with SHA-256 before passing it to the Apple SDK, and send the raw value here - Apple tokens requested without a nonce are rejected. For Google the nonce is optional: it is validated whenever the token carries one, and ignored when the provider issued the token without one. Apple only returns the user's name on the first authorization, and never inside the ID token - capture it on the client and pass it via the name parameter.
+     *
+     * If there is already an active session, the new session will be attached to the logged-in account. If there are no active sessions, the server will attempt to look for a user with the same email address as the verified email received from the provider and attach the new session to the existing user. If no matching user is found - the server will create a new user.
+     *
+     * This flow does not return provider refresh tokens. You may pass an access token the provider handed your client, along with its lifetime, to store it on the session - but Appwrite cannot renew it once it expires. If your app needs long-lived access to provider APIs, use the browser-based OAuth2 flow instead.
+     *
+     * A user is limited to 10 active sessions at a time by default. [Learn more about session limits](https://appwrite.io/docs/authentication-security#limits).
+     *
+     *
+     * @param {IdTokenProvider} params.provider - OAuth2 provider that issued the ID token. Currently, supported providers are: apple, google.
+     * @param {string} params.idToken - OpenID Connect ID token (JWT) obtained natively from the provider, for example via Google Credential Manager or Sign in with Apple.
+     * @param {string} params.nonce - Raw nonce used when requesting the ID token. Required for Apple, and whenever the token carries a nonce claim, which must match it. Ignored when the provider issued the token without a nonce.
+     * @param {string} params.accessToken - Provider access token to store alongside the session for calling provider APIs. Never used for authentication.
+     * @param {number} params.accessTokenExpiry - Seconds until the provider access token expires, as reported by the provider. Stored so clients can tell when the stored token goes stale.
+     * @param {string} params.name - User name. Only used when creating a new user and the ID token has no name claim, such as on the first Sign in with Apple authorization.
+     * @throws {AppwriteException}
+     * @returns {Promise}
+     */
+    createIdTokenSession(params: {
+        provider: IdTokenProvider;
+        idToken: string;
+        nonce?: string;
+        accessToken?: string;
+        accessTokenExpiry?: number;
+        name?: string;
+    }): Promise<Models.Session>;
+    /**
+     * Allow the user to login to their account using an OpenID Connect ID token obtained natively from the OAuth2 provider, for example via Google Credential Manager on Android or Sign in with Apple on iOS. No browser or redirect is involved: the ID token is verified against the provider's published signing keys and a session is created in a single request.
+     *
+     * Native sign-in is switched on per provider with its nativeEnabled setting. It is independent of the browser-based flow's enabled setting, which has no effect on this endpoint. The token's audience must match the provider's configured client ID or one of its native client IDs; tokens issued for any other client ID are rejected. For Sign in with Apple, register your app's bundle ID as a native client ID. For Google, the web client ID used by Credential Manager is usually the configured client ID; add your Android and iOS client IDs as native client IDs if your app requests tokens for them.
+     *
+     * Pass the raw nonce used when requesting the ID token so it can be validated against the token's nonce claim. When signing in with Apple, the nonce is required: hash it with SHA-256 before passing it to the Apple SDK, and send the raw value here - Apple tokens requested without a nonce are rejected. For Google the nonce is optional: it is validated whenever the token carries one, and ignored when the provider issued the token without one. Apple only returns the user's name on the first authorization, and never inside the ID token - capture it on the client and pass it via the name parameter.
+     *
+     * If there is already an active session, the new session will be attached to the logged-in account. If there are no active sessions, the server will attempt to look for a user with the same email address as the verified email received from the provider and attach the new session to the existing user. If no matching user is found - the server will create a new user.
+     *
+     * This flow does not return provider refresh tokens. You may pass an access token the provider handed your client, along with its lifetime, to store it on the session - but Appwrite cannot renew it once it expires. If your app needs long-lived access to provider APIs, use the browser-based OAuth2 flow instead.
+     *
+     * A user is limited to 10 active sessions at a time by default. [Learn more about session limits](https://appwrite.io/docs/authentication-security#limits).
+     *
+     *
+     * @param {IdTokenProvider} provider - OAuth2 provider that issued the ID token. Currently, supported providers are: apple, google.
+     * @param {string} idToken - OpenID Connect ID token (JWT) obtained natively from the provider, for example via Google Credential Manager or Sign in with Apple.
+     * @param {string} nonce - Raw nonce used when requesting the ID token. Required for Apple, and whenever the token carries a nonce claim, which must match it. Ignored when the provider issued the token without a nonce.
+     * @param {string} accessToken - Provider access token to store alongside the session for calling provider APIs. Never used for authentication.
+     * @param {number} accessTokenExpiry - Seconds until the provider access token expires, as reported by the provider. Stored so clients can tell when the stored token goes stale.
+     * @param {string} name - User name. Only used when creating a new user and the ID token has no name claim, such as on the first Sign in with Apple authorization.
+     * @throws {AppwriteException}
+     * @returns {Promise<Models.Session>}
+     * @deprecated Use the object parameter style method for a better developer experience.
+     */
+    createIdTokenSession(
+        provider: IdTokenProvider,
+        idToken: string,
+        nonce?: string,
+        accessToken?: string,
+        accessTokenExpiry?: number,
+        name?: string,
+    ): Promise<Models.Session>;
+    createIdTokenSession(
+        paramsOrFirst:
+            | {
+                  provider: IdTokenProvider;
+                  idToken: string;
+                  nonce?: string;
+                  accessToken?: string;
+                  accessTokenExpiry?: number;
+                  name?: string;
+              }
+            | IdTokenProvider,
+        ...rest: [string?, string?, string?, number?, string?]
+    ): Promise<Models.Session> {
+        let params: {
+            provider: IdTokenProvider;
+            idToken: string;
+            nonce?: string;
+            accessToken?: string;
+            accessTokenExpiry?: number;
+            name?: string;
+        };
+
+        if (
+            paramsOrFirst &&
+            typeof paramsOrFirst === 'object' &&
+            !Array.isArray(paramsOrFirst) &&
+            ('provider' in paramsOrFirst ||
+                'idToken' in paramsOrFirst ||
+                'nonce' in paramsOrFirst ||
+                'accessToken' in paramsOrFirst ||
+                'accessTokenExpiry' in paramsOrFirst ||
+                'name' in paramsOrFirst)
+        ) {
+            params = (paramsOrFirst || {}) as {
+                provider: IdTokenProvider;
+                idToken: string;
+                nonce?: string;
+                accessToken?: string;
+                accessTokenExpiry?: number;
+                name?: string;
+            };
+        } else {
+            params = {
+                provider: paramsOrFirst as IdTokenProvider,
+                idToken: rest[0] as string,
+                nonce: rest[1] as string,
+                accessToken: rest[2] as string,
+                accessTokenExpiry: rest[3] as number,
+                name: rest[4] as string,
+            };
+        }
+
+        const provider = params.provider;
+        const idToken = params.idToken;
+        const nonce = params.nonce;
+        const accessToken = params.accessToken;
+        const accessTokenExpiry = params.accessTokenExpiry;
+        const name = params.name;
+
+        if (typeof provider === 'undefined') {
+            throw new AppwriteException(
+                'Missing required parameter: "provider"',
+            );
+        }
+
+        if (typeof idToken === 'undefined') {
+            throw new AppwriteException(
+                'Missing required parameter: "idToken"',
+            );
+        }
+
+        const apiPath = '/account/sessions/id-token';
+        const payload: Payload = {};
+
+        if (typeof provider !== 'undefined') {
+            payload['provider'] = provider;
+        }
+
+        if (typeof idToken !== 'undefined') {
+            payload['idToken'] = idToken;
+        }
+
+        if (typeof nonce !== 'undefined') {
+            payload['nonce'] = nonce;
+        }
+
+        if (typeof accessToken !== 'undefined') {
+            payload['accessToken'] = accessToken;
+        }
+
+        if (typeof accessTokenExpiry !== 'undefined') {
+            payload['accessTokenExpiry'] = accessTokenExpiry;
+        }
+
+        if (typeof name !== 'undefined') {
+            payload['name'] = name;
+        }
+
+        const uri = new URL(this.client.config.endpoint + apiPath);
+        return this.client.call(
+            'post',
+            uri,
+            {
+                'X-Appwrite-Project': this.client.config.project,
+                'content-type': 'application/json',
+                accept: 'application/json',
+            },
+            payload,
+        );
+    }
+
+    /**
      * Use this endpoint to create a session from token. Provide the **userId** and **secret** parameters from the successful response of authentication flows initiated by token creation. For example, magic URL and phone login.
      *
      * @param {string} params.userId - User ID. Choose a custom ID or generate a random ID with `ID.unique()`. Valid chars are a-z, A-Z, 0-9, period, hyphen, and underscore. Can't start with a special char. Max length is 36 chars.
@@ -2671,7 +2779,7 @@ export class Account extends Service {
      * A user is limited to 10 active sessions at a time by default. [Learn more about session limits](https://appwrite.io/docs/authentication-security#limits).
      *
      *
-     * @param {OAuthProvider} params.provider - OAuth2 Provider. Currently, supported providers are: amazon, apple, appwrite, auth0, authentik, autodesk, bitbucket, bitly, box, cloudflare, dailymotion, discord, disqus, dropbox, etsy, facebook, figma, fusionauth, github, gitlab, google, huggingface, keycloak, kick, linkedin, microsoft, notion, oidc, okta, paypal, paypalSandbox, podio, resend, salesforce, slack, spotify, stripe, tradeshift, tradeshiftBox, twitch, wordpress, x, yahoo, yammer, yandex, zoho, zoom.
+     * @param {OAuthProvider} params.provider - OAuth2 Provider. Currently, supported providers are: amazon, apple, appwrite, auth0, authentik, autodesk, bitbucket, bitly, box, cloudflare, dailymotion, discord, disqus, dropbox, etsy, facebook, figma, fusionauth, github, gitlab, google, huggingface, kakao, keycloak, kick, linkedin, microsoft, notion, oidc, okta, paypal, paypalSandbox, podio, resend, salesforce, slack, spotify, stripe, tiktok, tradeshift, tradeshiftBox, twitch, wordpress, x, yahoo, yammer, yandex, zoho, zoom.
      * @param {string} params.success - URL to redirect back to your app after a successful login attempt.  Only URLs from hostnames in your project's platform list are allowed. This requirement helps to prevent an [open redirect](https://cheatsheetseries.owasp.org/cheatsheets/Unvalidated_Redirects_and_Forwards_Cheat_Sheet.html) attack against your project API.
      * @param {string} params.failure - URL to redirect back to your app after a failed login attempt.  Only URLs from hostnames in your project's platform list are allowed. This requirement helps to prevent an [open redirect](https://cheatsheetseries.owasp.org/cheatsheets/Unvalidated_Redirects_and_Forwards_Cheat_Sheet.html) attack against your project API.
      * @param {string[]} params.scopes - A list of custom OAuth2 scopes. Check each provider internal docs for a list of supported scopes. Maximum of 100 scopes are allowed, each 4096 characters long.
@@ -2692,7 +2800,7 @@ export class Account extends Service {
      * A user is limited to 10 active sessions at a time by default. [Learn more about session limits](https://appwrite.io/docs/authentication-security#limits).
      *
      *
-     * @param {OAuthProvider} provider - OAuth2 Provider. Currently, supported providers are: amazon, apple, appwrite, auth0, authentik, autodesk, bitbucket, bitly, box, cloudflare, dailymotion, discord, disqus, dropbox, etsy, facebook, figma, fusionauth, github, gitlab, google, huggingface, keycloak, kick, linkedin, microsoft, notion, oidc, okta, paypal, paypalSandbox, podio, resend, salesforce, slack, spotify, stripe, tradeshift, tradeshiftBox, twitch, wordpress, x, yahoo, yammer, yandex, zoho, zoom.
+     * @param {OAuthProvider} provider - OAuth2 Provider. Currently, supported providers are: amazon, apple, appwrite, auth0, authentik, autodesk, bitbucket, bitly, box, cloudflare, dailymotion, discord, disqus, dropbox, etsy, facebook, figma, fusionauth, github, gitlab, google, huggingface, kakao, keycloak, kick, linkedin, microsoft, notion, oidc, okta, paypal, paypalSandbox, podio, resend, salesforce, slack, spotify, stripe, tiktok, tradeshift, tradeshiftBox, twitch, wordpress, x, yahoo, yammer, yandex, zoho, zoom.
      * @param {string} success - URL to redirect back to your app after a successful login attempt.  Only URLs from hostnames in your project's platform list are allowed. This requirement helps to prevent an [open redirect](https://cheatsheetseries.owasp.org/cheatsheets/Unvalidated_Redirects_and_Forwards_Cheat_Sheet.html) attack against your project API.
      * @param {string} failure - URL to redirect back to your app after a failed login attempt.  Only URLs from hostnames in your project's platform list are allowed. This requirement helps to prevent an [open redirect](https://cheatsheetseries.owasp.org/cheatsheets/Unvalidated_Redirects_and_Forwards_Cheat_Sheet.html) attack against your project API.
      * @param {string[]} scopes - A list of custom OAuth2 scopes. Check each provider internal docs for a list of supported scopes. Maximum of 100 scopes are allowed, each 4096 characters long.
@@ -2981,7 +3089,7 @@ export class Account extends Service {
 
         const sessionId = params.sessionId;
 
-        if (typeof sessionId === 'undefined') {
+        if (typeof sessionId === 'undefined' || sessionId === '') {
             throw new AppwriteException(
                 'Missing required parameter: "sessionId"',
             );
@@ -3041,7 +3149,7 @@ export class Account extends Service {
 
         const sessionId = params.sessionId;
 
-        if (typeof sessionId === 'undefined') {
+        if (typeof sessionId === 'undefined' || sessionId === '') {
             throw new AppwriteException(
                 'Missing required parameter: "sessionId"',
             );
@@ -3100,7 +3208,7 @@ export class Account extends Service {
 
         const sessionId = params.sessionId;
 
-        if (typeof sessionId === 'undefined') {
+        if (typeof sessionId === 'undefined' || sessionId === '') {
             throw new AppwriteException(
                 'Missing required parameter: "sessionId"',
             );
@@ -3119,6 +3227,7 @@ export class Account extends Service {
             {
                 'X-Appwrite-Project': this.client.config.project,
                 'content-type': 'application/json',
+                accept: 'application/json',
             },
             payload,
         );
@@ -3302,7 +3411,7 @@ export class Account extends Service {
         const targetId = params.targetId;
         const identifier = params.identifier;
 
-        if (typeof targetId === 'undefined') {
+        if (typeof targetId === 'undefined' || targetId === '') {
             throw new AppwriteException(
                 'Missing required parameter: "targetId"',
             );
@@ -3373,7 +3482,7 @@ export class Account extends Service {
 
         const targetId = params.targetId;
 
-        if (typeof targetId === 'undefined') {
+        if (typeof targetId === 'undefined' || targetId === '') {
             throw new AppwriteException(
                 'Missing required parameter: "targetId"',
             );
@@ -3392,6 +3501,7 @@ export class Account extends Service {
             {
                 'X-Appwrite-Project': this.client.config.project,
                 'content-type': 'application/json',
+                accept: 'application/json',
             },
             payload,
         );
@@ -3619,9 +3729,11 @@ export class Account extends Service {
      *
      * If authentication succeeds, `userId` and `secret` of a token will be appended to the success URL as query parameters. These can be used to create a new session using the [Create session](https://appwrite.io/docs/references/cloud/client-web/account#createSession) endpoint.
      *
+     * If there is already an active session, the OAuth2 identity is attached to the logged-in account and that session stays active until the token is exchanged for a new one.
+     *
      * A user is limited to 10 active sessions at a time by default. [Learn more about session limits](https://appwrite.io/docs/authentication-security#limits).
      *
-     * @param {OAuthProvider} params.provider - OAuth2 Provider. Currently, supported providers are: amazon, apple, appwrite, auth0, authentik, autodesk, bitbucket, bitly, box, cloudflare, dailymotion, discord, disqus, dropbox, etsy, facebook, figma, fusionauth, github, gitlab, google, huggingface, keycloak, kick, linkedin, microsoft, notion, oidc, okta, paypal, paypalSandbox, podio, resend, salesforce, slack, spotify, stripe, tradeshift, tradeshiftBox, twitch, wordpress, x, yahoo, yammer, yandex, zoho, zoom.
+     * @param {OAuthProvider} params.provider - OAuth2 Provider. Currently, supported providers are: amazon, apple, appwrite, auth0, authentik, autodesk, bitbucket, bitly, box, cloudflare, dailymotion, discord, disqus, dropbox, etsy, facebook, figma, fusionauth, github, gitlab, google, huggingface, kakao, keycloak, kick, linkedin, microsoft, notion, oidc, okta, paypal, paypalSandbox, podio, resend, salesforce, slack, spotify, stripe, tiktok, tradeshift, tradeshiftBox, twitch, wordpress, x, yahoo, yammer, yandex, zoho, zoom.
      * @param {string} params.success - URL to redirect back to your app after a successful login attempt.  Only URLs from hostnames in your project's platform list are allowed. This requirement helps to prevent an [open redirect](https://cheatsheetseries.owasp.org/cheatsheets/Unvalidated_Redirects_and_Forwards_Cheat_Sheet.html) attack against your project API.
      * @param {string} params.failure - URL to redirect back to your app after a failed login attempt.  Only URLs from hostnames in your project's platform list are allowed. This requirement helps to prevent an [open redirect](https://cheatsheetseries.owasp.org/cheatsheets/Unvalidated_Redirects_and_Forwards_Cheat_Sheet.html) attack against your project API.
      * @param {string[]} params.scopes - A list of custom OAuth2 scopes. Check each provider internal docs for a list of supported scopes. Maximum of 100 scopes are allowed, each 4096 characters long.
@@ -3639,9 +3751,11 @@ export class Account extends Service {
      *
      * If authentication succeeds, `userId` and `secret` of a token will be appended to the success URL as query parameters. These can be used to create a new session using the [Create session](https://appwrite.io/docs/references/cloud/client-web/account#createSession) endpoint.
      *
+     * If there is already an active session, the OAuth2 identity is attached to the logged-in account and that session stays active until the token is exchanged for a new one.
+     *
      * A user is limited to 10 active sessions at a time by default. [Learn more about session limits](https://appwrite.io/docs/authentication-security#limits).
      *
-     * @param {OAuthProvider} provider - OAuth2 Provider. Currently, supported providers are: amazon, apple, appwrite, auth0, authentik, autodesk, bitbucket, bitly, box, cloudflare, dailymotion, discord, disqus, dropbox, etsy, facebook, figma, fusionauth, github, gitlab, google, huggingface, keycloak, kick, linkedin, microsoft, notion, oidc, okta, paypal, paypalSandbox, podio, resend, salesforce, slack, spotify, stripe, tradeshift, tradeshiftBox, twitch, wordpress, x, yahoo, yammer, yandex, zoho, zoom.
+     * @param {OAuthProvider} provider - OAuth2 Provider. Currently, supported providers are: amazon, apple, appwrite, auth0, authentik, autodesk, bitbucket, bitly, box, cloudflare, dailymotion, discord, disqus, dropbox, etsy, facebook, figma, fusionauth, github, gitlab, google, huggingface, kakao, keycloak, kick, linkedin, microsoft, notion, oidc, okta, paypal, paypalSandbox, podio, resend, salesforce, slack, spotify, stripe, tiktok, tradeshift, tradeshiftBox, twitch, wordpress, x, yahoo, yammer, yandex, zoho, zoom.
      * @param {string} success - URL to redirect back to your app after a successful login attempt.  Only URLs from hostnames in your project's platform list are allowed. This requirement helps to prevent an [open redirect](https://cheatsheetseries.owasp.org/cheatsheets/Unvalidated_Redirects_and_Forwards_Cheat_Sheet.html) attack against your project API.
      * @param {string} failure - URL to redirect back to your app after a failed login attempt.  Only URLs from hostnames in your project's platform list are allowed. This requirement helps to prevent an [open redirect](https://cheatsheetseries.owasp.org/cheatsheets/Unvalidated_Redirects_and_Forwards_Cheat_Sheet.html) attack against your project API.
      * @param {string[]} scopes - A list of custom OAuth2 scopes. Check each provider internal docs for a list of supported scopes. Maximum of 100 scopes are allowed, each 4096 characters long.
@@ -4087,6 +4201,155 @@ export class Account extends Service {
         }
 
         const apiPath = '/account/verifications/email';
+        const payload: Payload = {};
+
+        if (typeof userId !== 'undefined') {
+            payload['userId'] = userId;
+        }
+
+        if (typeof secret !== 'undefined') {
+            payload['secret'] = secret;
+        }
+
+        const uri = new URL(this.client.config.endpoint + apiPath);
+        return this.client.call(
+            'put',
+            uri,
+            {
+                'X-Appwrite-Project': this.client.config.project,
+                'content-type': 'application/json',
+                accept: 'application/json',
+            },
+            payload,
+        );
+    }
+
+    /**
+     * Use this endpoint to send a 6-digit verification code to the currently logged in user's email address. Unlike [createEmailVerification](https://appwrite.io/docs/references/cloud/client-web/account#createEmailVerification), this method requires no redirect URL, which makes it suitable for mobile and desktop apps that cannot host a verification page. Learn more about how to [complete the verification process](https://appwrite.io/docs/references/cloud/client-web/account#updateEmailVerificationOTP). The code sent to the user's email address is valid for 15 minutes.
+     *
+     * Enable the **phrase** parameter to include a randomly generated security phrase in both the email and the response. Showing that phrase in your app lets the user confirm the email genuinely came from your request, which helps protect against phishing.
+     *
+     *
+     * @param {boolean} params.phrase - Toggle for security phrase. If enabled, email will be sent with a randomly generated phrase and the phrase will also be included in the response. Confirming phrases match increases the security of your authentication flow.
+     * @throws {AppwriteException}
+     * @returns {Promise}
+     */
+    createEmailVerificationOTP(params?: {
+        phrase?: boolean;
+    }): Promise<Models.Token>;
+    /**
+     * Use this endpoint to send a 6-digit verification code to the currently logged in user's email address. Unlike [createEmailVerification](https://appwrite.io/docs/references/cloud/client-web/account#createEmailVerification), this method requires no redirect URL, which makes it suitable for mobile and desktop apps that cannot host a verification page. Learn more about how to [complete the verification process](https://appwrite.io/docs/references/cloud/client-web/account#updateEmailVerificationOTP). The code sent to the user's email address is valid for 15 minutes.
+     *
+     * Enable the **phrase** parameter to include a randomly generated security phrase in both the email and the response. Showing that phrase in your app lets the user confirm the email genuinely came from your request, which helps protect against phishing.
+     *
+     *
+     * @param {boolean} phrase - Toggle for security phrase. If enabled, email will be sent with a randomly generated phrase and the phrase will also be included in the response. Confirming phrases match increases the security of your authentication flow.
+     * @throws {AppwriteException}
+     * @returns {Promise<Models.Token>}
+     * @deprecated Use the object parameter style method for a better developer experience.
+     */
+    createEmailVerificationOTP(phrase?: boolean): Promise<Models.Token>;
+    createEmailVerificationOTP(
+        paramsOrFirst?: { phrase?: boolean } | boolean,
+    ): Promise<Models.Token> {
+        let params: { phrase?: boolean };
+
+        if (
+            typeof paramsOrFirst === 'undefined' ||
+            (paramsOrFirst &&
+                typeof paramsOrFirst === 'object' &&
+                !Array.isArray(paramsOrFirst))
+        ) {
+            params = (paramsOrFirst || {}) as { phrase?: boolean };
+        } else {
+            params = {
+                phrase: paramsOrFirst as boolean,
+            };
+        }
+
+        const phrase = params.phrase;
+
+        const apiPath = '/account/verifications/email/otp';
+        const payload: Payload = {};
+
+        if (typeof phrase !== 'undefined') {
+            payload['phrase'] = phrase;
+        }
+
+        const uri = new URL(this.client.config.endpoint + apiPath);
+        return this.client.call(
+            'post',
+            uri,
+            {
+                'X-Appwrite-Project': this.client.config.project,
+                'content-type': 'application/json',
+                accept: 'application/json',
+            },
+            payload,
+        );
+    }
+
+    /**
+     * Use this endpoint to complete the user email verification process using the 6-digit code that was emailed by [createEmailVerificationOTP](https://appwrite.io/docs/references/cloud/client-web/account#createEmailVerificationOTP). Pass the **userId** of the user being verified along with the **secret** code from the email. If confirmed, this route will return a 200 status code and the code is consumed.
+     *
+     *
+     * @param {string} params.userId - User ID.
+     * @param {string} params.secret - Valid verification OTP code.
+     * @throws {AppwriteException}
+     * @returns {Promise}
+     */
+    updateEmailVerificationOTP(params: {
+        userId: string;
+        secret: string;
+    }): Promise<Models.Token>;
+    /**
+     * Use this endpoint to complete the user email verification process using the 6-digit code that was emailed by [createEmailVerificationOTP](https://appwrite.io/docs/references/cloud/client-web/account#createEmailVerificationOTP). Pass the **userId** of the user being verified along with the **secret** code from the email. If confirmed, this route will return a 200 status code and the code is consumed.
+     *
+     *
+     * @param {string} userId - User ID.
+     * @param {string} secret - Valid verification OTP code.
+     * @throws {AppwriteException}
+     * @returns {Promise<Models.Token>}
+     * @deprecated Use the object parameter style method for a better developer experience.
+     */
+    updateEmailVerificationOTP(
+        userId: string,
+        secret: string,
+    ): Promise<Models.Token>;
+    updateEmailVerificationOTP(
+        paramsOrFirst: { userId: string; secret: string } | string,
+        ...rest: [string?]
+    ): Promise<Models.Token> {
+        let params: { userId: string; secret: string };
+
+        if (
+            paramsOrFirst &&
+            typeof paramsOrFirst === 'object' &&
+            !Array.isArray(paramsOrFirst)
+        ) {
+            params = (paramsOrFirst || {}) as {
+                userId: string;
+                secret: string;
+            };
+        } else {
+            params = {
+                userId: paramsOrFirst as string,
+                secret: rest[0] as string,
+            };
+        }
+
+        const userId = params.userId;
+        const secret = params.secret;
+
+        if (typeof userId === 'undefined') {
+            throw new AppwriteException('Missing required parameter: "userId"');
+        }
+
+        if (typeof secret === 'undefined') {
+            throw new AppwriteException('Missing required parameter: "secret"');
+        }
+
+        const apiPath = '/account/verifications/email/otp';
         const payload: Payload = {};
 
         if (typeof userId !== 'undefined') {

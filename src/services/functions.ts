@@ -68,7 +68,7 @@ export class Functions extends Service {
         const queries = params.queries;
         const total = params.total;
 
-        if (typeof functionId === 'undefined') {
+        if (typeof functionId === 'undefined' || functionId === '') {
             throw new AppwriteException(
                 'Missing required parameter: "functionId"',
             );
@@ -210,7 +210,7 @@ export class Functions extends Service {
         const headers = params.headers;
         const scheduledAt = params.scheduledAt;
 
-        if (typeof functionId === 'undefined') {
+        if (typeof functionId === 'undefined' || functionId === '') {
             throw new AppwriteException(
                 'Missing required parameter: "functionId"',
             );
@@ -309,13 +309,13 @@ export class Functions extends Service {
         const functionId = params.functionId;
         const executionId = params.executionId;
 
-        if (typeof functionId === 'undefined') {
+        if (typeof functionId === 'undefined' || functionId === '') {
             throw new AppwriteException(
                 'Missing required parameter: "functionId"',
             );
         }
 
-        if (typeof executionId === 'undefined') {
+        if (typeof executionId === 'undefined' || executionId === '') {
             throw new AppwriteException(
                 'Missing required parameter: "executionId"',
             );

@@ -67,7 +67,7 @@ export class Messaging extends Service {
         const subscriberId = params.subscriberId;
         const targetId = params.targetId;
 
-        if (typeof topicId === 'undefined') {
+        if (typeof topicId === 'undefined' || topicId === '') {
             throw new AppwriteException(
                 'Missing required parameter: "topicId"',
             );
@@ -159,13 +159,13 @@ export class Messaging extends Service {
         const topicId = params.topicId;
         const subscriberId = params.subscriberId;
 
-        if (typeof topicId === 'undefined') {
+        if (typeof topicId === 'undefined' || topicId === '') {
             throw new AppwriteException(
                 'Missing required parameter: "topicId"',
             );
         }
 
-        if (typeof subscriberId === 'undefined') {
+        if (typeof subscriberId === 'undefined' || subscriberId === '') {
             throw new AppwriteException(
                 'Missing required parameter: "subscriberId"',
             );
@@ -186,6 +186,7 @@ export class Messaging extends Service {
             {
                 'X-Appwrite-Project': this.client.config.project,
                 'content-type': 'application/json',
+                accept: 'application/json',
             },
             payload,
         );

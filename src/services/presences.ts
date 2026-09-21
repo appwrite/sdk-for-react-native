@@ -134,7 +134,7 @@ export class Presences extends Service {
 
         const presenceId = params.presenceId;
 
-        if (typeof presenceId === 'undefined') {
+        if (typeof presenceId === 'undefined' || presenceId === '') {
             throw new AppwriteException(
                 'Missing required parameter: "presenceId"',
             );
@@ -245,7 +245,7 @@ export class Presences extends Service {
         const expiresAt = params.expiresAt;
         const metadata = params.metadata;
 
-        if (typeof presenceId === 'undefined') {
+        if (typeof presenceId === 'undefined' || presenceId === '') {
             throw new AppwriteException(
                 'Missing required parameter: "presenceId"',
             );
@@ -386,7 +386,7 @@ export class Presences extends Service {
         const permissions = params.permissions;
         const purge = params.purge;
 
-        if (typeof presenceId === 'undefined') {
+        if (typeof presenceId === 'undefined' || presenceId === '') {
             throw new AppwriteException(
                 'Missing required parameter: "presenceId"',
             );
@@ -467,7 +467,7 @@ export class Presences extends Service {
 
         const presenceId = params.presenceId;
 
-        if (typeof presenceId === 'undefined') {
+        if (typeof presenceId === 'undefined' || presenceId === '') {
             throw new AppwriteException(
                 'Missing required parameter: "presenceId"',
             );
@@ -486,6 +486,7 @@ export class Presences extends Service {
             {
                 'X-Appwrite-Project': this.client.config.project,
                 'content-type': 'application/json',
+                accept: 'application/json',
             },
             payload,
         );
