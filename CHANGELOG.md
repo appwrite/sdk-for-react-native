@@ -1,5 +1,11 @@
 # Change log
 
+## 1.1.0
+
+* Added: `Account.createRecoveryOTP` and `Account.updateRecoveryOTP` for code-based password recovery
+* Updated: SDK now targets Appwrite 2.3 (`X-Appwrite-Response-Format: 2.3.0`)
+* Updated: requests always send credentials now that dev keys are no longer supported
+
 ## 1.0.0
 
 * Stable: first stable release of the React Native SDK, out of beta

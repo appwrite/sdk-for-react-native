@@ -2359,6 +2359,189 @@ export class Account extends Service {
     }
 
     /**
+     * Use this endpoint to send a 6-digit password recovery code to the user's email address. Unlike [createRecovery](https://appwrite.io/docs/references/cloud/client-web/account#createRecovery), this method requires no redirect URL, which makes it suitable for mobile and desktop apps that cannot host a recovery page. Learn more about how to [complete the recovery process](https://appwrite.io/docs/references/cloud/client-web/account#updateRecoveryOTP). The code sent to the user's email address is valid for 15 minutes.
+     *
+     * Enable the **phrase** parameter to include a randomly generated security phrase in both the email and the response. Showing that phrase in your app lets the user confirm the email genuinely came from your request, which helps protect against phishing.
+     *
+     *
+     * @param {string} params.email - User email.
+     * @param {boolean} params.phrase - Toggle for security phrase. If enabled, email will be sent with a randomly generated phrase and the phrase will also be included in the response. Confirming phrases match increases the security of your authentication flow.
+     * @throws {AppwriteException}
+     * @returns {Promise}
+     */
+    createRecoveryOTP(params: {
+        email: string;
+        phrase?: boolean;
+    }): Promise<Models.Token>;
+    /**
+     * Use this endpoint to send a 6-digit password recovery code to the user's email address. Unlike [createRecovery](https://appwrite.io/docs/references/cloud/client-web/account#createRecovery), this method requires no redirect URL, which makes it suitable for mobile and desktop apps that cannot host a recovery page. Learn more about how to [complete the recovery process](https://appwrite.io/docs/references/cloud/client-web/account#updateRecoveryOTP). The code sent to the user's email address is valid for 15 minutes.
+     *
+     * Enable the **phrase** parameter to include a randomly generated security phrase in both the email and the response. Showing that phrase in your app lets the user confirm the email genuinely came from your request, which helps protect against phishing.
+     *
+     *
+     * @param {string} email - User email.
+     * @param {boolean} phrase - Toggle for security phrase. If enabled, email will be sent with a randomly generated phrase and the phrase will also be included in the response. Confirming phrases match increases the security of your authentication flow.
+     * @throws {AppwriteException}
+     * @returns {Promise<Models.Token>}
+     * @deprecated Use the object parameter style method for a better developer experience.
+     */
+    createRecoveryOTP(email: string, phrase?: boolean): Promise<Models.Token>;
+    createRecoveryOTP(
+        paramsOrFirst: { email: string; phrase?: boolean } | string,
+        ...rest: [boolean?]
+    ): Promise<Models.Token> {
+        let params: { email: string; phrase?: boolean };
+
+        if (
+            paramsOrFirst &&
+            typeof paramsOrFirst === 'object' &&
+            !Array.isArray(paramsOrFirst)
+        ) {
+            params = (paramsOrFirst || {}) as {
+                email: string;
+                phrase?: boolean;
+            };
+        } else {
+            params = {
+                email: paramsOrFirst as string,
+                phrase: rest[0] as boolean,
+            };
+        }
+
+        const email = params.email;
+        const phrase = params.phrase;
+
+        if (typeof email === 'undefined') {
+            throw new AppwriteException('Missing required parameter: "email"');
+        }
+
+        const apiPath = '/account/recovery/otp';
+        const payload: Payload = {};
+
+        if (typeof email !== 'undefined') {
+            payload['email'] = email;
+        }
+
+        if (typeof phrase !== 'undefined') {
+            payload['phrase'] = phrase;
+        }
+
+        const uri = new URL(this.client.config.endpoint + apiPath);
+        return this.client.call(
+            'post',
+            uri,
+            {
+                'X-Appwrite-Project': this.client.config.project,
+                'content-type': 'application/json',
+                accept: 'application/json',
+            },
+            payload,
+        );
+    }
+
+    /**
+     * Use this endpoint to complete the user password recovery process using the 6-digit code that was emailed by [createRecoveryOTP](https://appwrite.io/docs/references/cloud/client-web/account#createRecoveryOTP). Pass the **userId** of the user along with the **secret** code from the email and the new **password** to set. If confirmed, this route will return a 200 status code, the code is consumed and the user's password is updated.
+     *
+     *
+     * @param {string} params.userId - User ID.
+     * @param {string} params.secret - Valid recovery OTP code.
+     * @param {string} params.password - New user password. Must be between 8 and 256 chars.
+     * @throws {AppwriteException}
+     * @returns {Promise}
+     */
+    updateRecoveryOTP(params: {
+        userId: string;
+        secret: string;
+        password: string;
+    }): Promise<Models.Token>;
+    /**
+     * Use this endpoint to complete the user password recovery process using the 6-digit code that was emailed by [createRecoveryOTP](https://appwrite.io/docs/references/cloud/client-web/account#createRecoveryOTP). Pass the **userId** of the user along with the **secret** code from the email and the new **password** to set. If confirmed, this route will return a 200 status code, the code is consumed and the user's password is updated.
+     *
+     *
+     * @param {string} userId - User ID.
+     * @param {string} secret - Valid recovery OTP code.
+     * @param {string} password - New user password. Must be between 8 and 256 chars.
+     * @throws {AppwriteException}
+     * @returns {Promise<Models.Token>}
+     * @deprecated Use the object parameter style method for a better developer experience.
+     */
+    updateRecoveryOTP(
+        userId: string,
+        secret: string,
+        password: string,
+    ): Promise<Models.Token>;
+    updateRecoveryOTP(
+        paramsOrFirst:
+            { userId: string; secret: string; password: string } | string,
+        ...rest: [string?, string?]
+    ): Promise<Models.Token> {
+        let params: { userId: string; secret: string; password: string };
+
+        if (
+            paramsOrFirst &&
+            typeof paramsOrFirst === 'object' &&
+            !Array.isArray(paramsOrFirst)
+        ) {
+            params = (paramsOrFirst || {}) as {
+                userId: string;
+                secret: string;
+                password: string;
+            };
+        } else {
+            params = {
+                userId: paramsOrFirst as string,
+                secret: rest[0] as string,
+                password: rest[1] as string,
+            };
+        }
+
+        const userId = params.userId;
+        const secret = params.secret;
+        const password = params.password;
+
+        if (typeof userId === 'undefined') {
+            throw new AppwriteException('Missing required parameter: "userId"');
+        }
+
+        if (typeof secret === 'undefined') {
+            throw new AppwriteException('Missing required parameter: "secret"');
+        }
+
+        if (typeof password === 'undefined') {
+            throw new AppwriteException(
+                'Missing required parameter: "password"',
+            );
+        }
+
+        const apiPath = '/account/recovery/otp';
+        const payload: Payload = {};
+
+        if (typeof userId !== 'undefined') {
+            payload['userId'] = userId;
+        }
+
+        if (typeof secret !== 'undefined') {
+            payload['secret'] = secret;
+        }
+
+        if (typeof password !== 'undefined') {
+            payload['password'] = password;
+        }
+
+        const uri = new URL(this.client.config.endpoint + apiPath);
+        return this.client.call(
+            'put',
+            uri,
+            {
+                'X-Appwrite-Project': this.client.config.project,
+                'content-type': 'application/json',
+                accept: 'application/json',
+            },
+            payload,
+        );
+    }
+
+    /**
      * Get the list of active sessions across different devices for the currently logged in user.
      *
      * @throws {AppwriteException}
@@ -3259,7 +3442,7 @@ export class Account extends Service {
     }
 
     /**
-     * Use this endpoint to register a device for push notifications. Provide a target ID (custom or generated using ID.unique()), a device identifier (usually a device token), and optionally specify which provider should send notifications to this target. The target is automatically linked to the current session and includes device information like brand and model.
+     * Use this endpoint to register a device for push notifications. Provide a target ID (custom or generated using ID.unique()), a device identifier (usually a device token), and optionally specify which provider should send notifications to this target. The target is automatically linked to the current session and includes device information like brand and model. A session holds one push target per provider, so if one already exists this endpoint updates and returns that target instead of creating a second one, and a device that rotates its token is never notified twice.
      *
      * @param {string} params.targetId - Target ID. Choose a custom ID or generate a random ID with `ID.unique()`. Valid chars are a-z, A-Z, 0-9, period, hyphen, and underscore. Can't start with a special char. Max length is 36 chars.
      * @param {string} params.identifier - The target identifier (token, email, phone etc.)
@@ -3273,7 +3456,7 @@ export class Account extends Service {
         providerId?: string;
     }): Promise<Models.Target>;
     /**
-     * Use this endpoint to register a device for push notifications. Provide a target ID (custom or generated using ID.unique()), a device identifier (usually a device token), and optionally specify which provider should send notifications to this target. The target is automatically linked to the current session and includes device information like brand and model.
+     * Use this endpoint to register a device for push notifications. Provide a target ID (custom or generated using ID.unique()), a device identifier (usually a device token), and optionally specify which provider should send notifications to this target. The target is automatically linked to the current session and includes device information like brand and model. A session holds one push target per provider, so if one already exists this endpoint updates and returns that target instead of creating a second one, and a device that rotates its token is never notified twice.
      *
      * @param {string} targetId - Target ID. Choose a custom ID or generate a random ID with `ID.unique()`. Valid chars are a-z, A-Z, 0-9, period, hyphen, and underscore. Can't start with a special char. Max length is 36 chars.
      * @param {string} identifier - The target identifier (token, email, phone etc.)
