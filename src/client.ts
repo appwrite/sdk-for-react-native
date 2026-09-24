@@ -208,8 +208,8 @@ class Client {
         'x-sdk-name': 'React Native',
         'x-sdk-platform': 'client',
         'x-sdk-language': 'reactnative',
-        'x-sdk-version': '1.0.0',
-        'X-Appwrite-Response-Format': '2.2.0',
+        'x-sdk-version': '1.1.0',
+        'X-Appwrite-Response-Format': '2.3.0',
     };
 
     /**
@@ -787,11 +787,8 @@ class Client {
         const options: RequestInit = {
             method,
             headers,
+            credentials: 'include',
         };
-
-        if (headers['X-Appwrite-Dev-Key'] === undefined) {
-            options.credentials = 'include';
-        }
 
         if (method === 'GET') {
             for (const [key, value] of Object.entries(
