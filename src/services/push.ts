@@ -1345,19 +1345,20 @@ export class Push extends Service {
             qos: packet.qos,
         };
         const serverTitle = notificationContent(message).title;
-        const titles = new Set<string>();
+        let postedServerTitle = false;
         for (const sub of this.subscriptions.values()) {
             if (matches(sub.topic, message.topic)) {
                 await sub.callback(message);
                 // Notification is per-subscription: only subs that opted in post one, each
-                // with its own title. A title the server sent replaces theirs, so one posts.
-                if (sub.background) {
-                    titles.add(serverTitle ?? sub.title ?? message.topic);
+                // with its own title. A title the server sent replaces theirs, so it posts once.
+                if (sub.background && !postedServerTitle) {
+                    postedServerTitle = serverTitle !== undefined;
+                    await this.notify(
+                        message,
+                        serverTitle ?? sub.title ?? message.topic,
+                    );
                 }
             }
-        }
-        for (const title of titles) {
-            await this.notify(message, title);
         }
     }
 }

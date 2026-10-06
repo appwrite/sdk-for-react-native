@@ -30,8 +30,10 @@ import com.hivemq.client.mqtt.mqtt5.message.publish.Mqtt5Publish
 import io.appwrite.exceptions.AppwriteException
 import org.json.JSONArray
 import org.json.JSONObject
+import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.IOException
+import java.io.InputStream
 import java.net.HttpURLConnection
 import java.net.URL
 import java.util.UUID
@@ -116,6 +118,8 @@ internal object PushBackground {
     private const val HEARTBEAT_RESET_MS = 3 * 24 * 60 * 60 * 1_000L
     private const val REQUEST_TIMEOUT_SECONDS = 10L
     private const val IMAGE_TIMEOUT_MS = 5_000
+    private const val IMAGE_MAX_BYTES = 5 * 1024 * 1024
+    private const val IMAGE_MAX_PX = 1_024
     private const val CONNECT_TIMEOUT_SECONDS = 20L
 
     // How long a message waits for a listener that acknowledges it itself (the React Native and
@@ -746,7 +750,7 @@ internal object PushBackground {
         val connection = runCatching { URL(url).openConnection() as HttpURLConnection }.getOrNull() ?: return null
         connection.connectTimeout = IMAGE_TIMEOUT_MS
         connection.readTimeout = IMAGE_TIMEOUT_MS
-        val download = imageLoader.submit<Bitmap?> { connection.inputStream.use { BitmapFactory.decodeStream(it) } }
+        val download = imageLoader.submit<Bitmap?> { connection.inputStream.use { readLimited(it, IMAGE_MAX_BYTES) }?.let { decodeImage(it) } }
         return try {
             download.get(IMAGE_TIMEOUT_MS.toLong(), TimeUnit.MILLISECONDS)
         } catch (e: Exception) {
@@ -755,6 +759,37 @@ internal object PushBackground {
         } finally {
             connection.disconnect()
         }
+    }
+
+    // At most [limit] bytes of [input], or null when it holds more.
+    private fun readLimited(input: InputStream, limit: Int): ByteArray? {
+        val out = ByteArrayOutputStream()
+        val buffer = ByteArray(8_192)
+        while (true) {
+            val read = input.read(buffer)
+            if (read < 0) {
+                return out.toByteArray()
+            }
+            if (out.size() + read > limit) {
+                return null
+            }
+            out.write(buffer, 0, read)
+        }
+    }
+
+    // Decode [bytes] downsampled so neither side exceeds IMAGE_MAX_PX, so a large photo cannot
+    // exhaust memory while a notification is posted.
+    private fun decodeImage(bytes: ByteArray): Bitmap? {
+        val bounds = BitmapFactory.Options().apply { inJustDecodeBounds = true }
+        BitmapFactory.decodeByteArray(bytes, 0, bytes.size, bounds)
+        if (bounds.outWidth <= 0 || bounds.outHeight <= 0) {
+            return null
+        }
+        var sample = 1
+        while (bounds.outWidth / sample > IMAGE_MAX_PX || bounds.outHeight / sample > IMAGE_MAX_PX) {
+            sample *= 2
+        }
+        return BitmapFactory.decodeByteArray(bytes, 0, bytes.size, BitmapFactory.Options().apply { inSampleSize = sample })
     }
 
     /** The ongoing notification the foreground service shows, on its own quiet channel. */
