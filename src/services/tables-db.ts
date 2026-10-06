@@ -12,46 +12,62 @@ export class TablesDB extends Service {
      * List transactions across all databases.
      *
      * @param {string[]} params.queries - Array of query strings generated using the Query class provided by the SDK. [Learn more about queries](https://appwrite.io/docs/queries).
+     * @param {boolean} params.total - When set to false, the total count returned will be 0 and will not be calculated.
      * @throws {AppwriteException}
      * @returns {Promise}
      */
     listTransactions(params?: {
         queries?: string[];
+        total?: boolean;
     }): Promise<Models.TransactionList>;
     /**
      * List transactions across all databases.
      *
      * @param {string[]} queries - Array of query strings generated using the Query class provided by the SDK. [Learn more about queries](https://appwrite.io/docs/queries).
+     * @param {boolean} total - When set to false, the total count returned will be 0 and will not be calculated.
      * @throws {AppwriteException}
      * @returns {Promise<Models.TransactionList>}
      * @deprecated Use the object parameter style method for a better developer experience.
      */
-    listTransactions(queries?: string[]): Promise<Models.TransactionList>;
     listTransactions(
-        paramsOrFirst?: { queries?: string[] } | string[],
+        queries?: string[],
+        total?: boolean,
+    ): Promise<Models.TransactionList>;
+    listTransactions(
+        paramsOrFirst?: { queries?: string[]; total?: boolean } | string[],
+        ...rest: [boolean?]
     ): Promise<Models.TransactionList> {
-        let params: { queries?: string[] };
+        let params: { queries?: string[]; total?: boolean };
 
         if (
-            typeof paramsOrFirst === 'undefined' ||
+            (typeof paramsOrFirst === 'undefined' && rest.length === 0) ||
             (paramsOrFirst &&
                 typeof paramsOrFirst === 'object' &&
                 !Array.isArray(paramsOrFirst))
         ) {
-            params = (paramsOrFirst || {}) as { queries?: string[] };
+            params = (paramsOrFirst || {}) as {
+                queries?: string[];
+                total?: boolean;
+            };
         } else {
             params = {
                 queries: paramsOrFirst as string[],
+                total: rest[0] as boolean,
             };
         }
 
         const queries = params.queries;
+        const total = params.total;
 
         const apiPath = '/tablesdb/transactions';
-        const payload: Payload = {};
+        const apiPayload: Payload = {};
 
         if (typeof queries !== 'undefined') {
-            payload['queries'] = queries;
+            apiPayload['queries'] = queries;
+        }
+
+        if (typeof total !== 'undefined') {
+            apiPayload['total'] = total;
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
@@ -62,7 +78,7 @@ export class TablesDB extends Service {
                 'X-Appwrite-Project': this.client.config.project,
                 accept: 'application/json',
             },
-            payload,
+            apiPayload,
         );
     }
 
@@ -104,10 +120,10 @@ export class TablesDB extends Service {
         const ttl = params.ttl;
 
         const apiPath = '/tablesdb/transactions';
-        const payload: Payload = {};
+        const apiPayload: Payload = {};
 
         if (typeof ttl !== 'undefined') {
-            payload['ttl'] = ttl;
+            apiPayload['ttl'] = ttl;
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
@@ -119,7 +135,7 @@ export class TablesDB extends Service {
                 'content-type': 'application/json',
                 accept: 'application/json',
             },
-            payload,
+            apiPayload,
         );
     }
 
@@ -171,7 +187,7 @@ export class TablesDB extends Service {
             '{transactionId}',
             encodeURIComponent(String(transactionId)),
         );
-        const payload: Payload = {};
+        const apiPayload: Payload = {};
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call(
@@ -181,7 +197,7 @@ export class TablesDB extends Service {
                 'X-Appwrite-Project': this.client.config.project,
                 accept: 'application/json',
             },
-            payload,
+            apiPayload,
         );
     }
 
@@ -258,14 +274,14 @@ export class TablesDB extends Service {
             '{transactionId}',
             encodeURIComponent(String(transactionId)),
         );
-        const payload: Payload = {};
+        const apiPayload: Payload = {};
 
         if (typeof commit !== 'undefined') {
-            payload['commit'] = commit;
+            apiPayload['commit'] = commit;
         }
 
         if (typeof rollback !== 'undefined') {
-            payload['rollback'] = rollback;
+            apiPayload['rollback'] = rollback;
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
@@ -277,7 +293,7 @@ export class TablesDB extends Service {
                 'content-type': 'application/json',
                 accept: 'application/json',
             },
-            payload,
+            apiPayload,
         );
     }
 
@@ -327,7 +343,7 @@ export class TablesDB extends Service {
             '{transactionId}',
             encodeURIComponent(String(transactionId)),
         );
-        const payload: Payload = {};
+        const apiPayload: Payload = {};
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call(
@@ -338,7 +354,7 @@ export class TablesDB extends Service {
                 'content-type': 'application/json',
                 accept: 'application/json',
             },
-            payload,
+            apiPayload,
         );
     }
 
@@ -404,10 +420,10 @@ export class TablesDB extends Service {
                 '{transactionId}',
                 encodeURIComponent(String(transactionId)),
             );
-        const payload: Payload = {};
+        const apiPayload: Payload = {};
 
         if (typeof operations !== 'undefined') {
-            payload['operations'] = operations;
+            apiPayload['operations'] = operations;
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
@@ -419,7 +435,7 @@ export class TablesDB extends Service {
                 'content-type': 'application/json',
                 accept: 'application/json',
             },
-            payload,
+            apiPayload,
         );
     }
 
@@ -532,22 +548,22 @@ export class TablesDB extends Service {
         const apiPath = '/tablesdb/{databaseId}/tables/{tableId}/rows'
             .replace('{databaseId}', encodeURIComponent(String(databaseId)))
             .replace('{tableId}', encodeURIComponent(String(tableId)));
-        const payload: Payload = {};
+        const apiPayload: Payload = {};
 
         if (typeof queries !== 'undefined') {
-            payload['queries'] = queries;
+            apiPayload['queries'] = queries;
         }
 
         if (typeof transactionId !== 'undefined') {
-            payload['transactionId'] = transactionId;
+            apiPayload['transactionId'] = transactionId;
         }
 
         if (typeof total !== 'undefined') {
-            payload['total'] = total;
+            apiPayload['total'] = total;
         }
 
         if (typeof ttl !== 'undefined') {
-            payload['ttl'] = ttl;
+            apiPayload['ttl'] = ttl;
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
@@ -558,7 +574,7 @@ export class TablesDB extends Service {
                 'X-Appwrite-Project': this.client.config.project,
                 accept: 'application/json',
             },
-            payload,
+            apiPayload,
         );
     }
 
@@ -699,22 +715,22 @@ export class TablesDB extends Service {
         const apiPath = '/tablesdb/{databaseId}/tables/{tableId}/rows'
             .replace('{databaseId}', encodeURIComponent(String(databaseId)))
             .replace('{tableId}', encodeURIComponent(String(tableId)));
-        const payload: Payload = {};
+        const apiPayload: Payload = {};
 
         if (typeof rowId !== 'undefined') {
-            payload['rowId'] = rowId;
+            apiPayload['rowId'] = rowId;
         }
 
         if (typeof data !== 'undefined') {
-            payload['data'] = data;
+            apiPayload['data'] = data;
         }
 
         if (typeof permissions !== 'undefined') {
-            payload['permissions'] = permissions;
+            apiPayload['permissions'] = permissions;
         }
 
         if (typeof transactionId !== 'undefined') {
-            payload['transactionId'] = transactionId;
+            apiPayload['transactionId'] = transactionId;
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
@@ -726,7 +742,7 @@ export class TablesDB extends Service {
                 'content-type': 'application/json',
                 accept: 'application/json',
             },
-            payload,
+            apiPayload,
         );
     }
 
@@ -835,14 +851,14 @@ export class TablesDB extends Service {
             .replace('{databaseId}', encodeURIComponent(String(databaseId)))
             .replace('{tableId}', encodeURIComponent(String(tableId)))
             .replace('{rowId}', encodeURIComponent(String(rowId)));
-        const payload: Payload = {};
+        const apiPayload: Payload = {};
 
         if (typeof queries !== 'undefined') {
-            payload['queries'] = queries;
+            apiPayload['queries'] = queries;
         }
 
         if (typeof transactionId !== 'undefined') {
-            payload['transactionId'] = transactionId;
+            apiPayload['transactionId'] = transactionId;
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
@@ -853,7 +869,7 @@ export class TablesDB extends Service {
                 'X-Appwrite-Project': this.client.config.project,
                 accept: 'application/json',
             },
-            payload,
+            apiPayload,
         );
     }
 
@@ -994,18 +1010,18 @@ export class TablesDB extends Service {
             .replace('{databaseId}', encodeURIComponent(String(databaseId)))
             .replace('{tableId}', encodeURIComponent(String(tableId)))
             .replace('{rowId}', encodeURIComponent(String(rowId)));
-        const payload: Payload = {};
+        const apiPayload: Payload = {};
 
         if (typeof data !== 'undefined') {
-            payload['data'] = data;
+            apiPayload['data'] = data;
         }
 
         if (typeof permissions !== 'undefined') {
-            payload['permissions'] = permissions;
+            apiPayload['permissions'] = permissions;
         }
 
         if (typeof transactionId !== 'undefined') {
-            payload['transactionId'] = transactionId;
+            apiPayload['transactionId'] = transactionId;
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
@@ -1017,7 +1033,7 @@ export class TablesDB extends Service {
                 'content-type': 'application/json',
                 accept: 'application/json',
             },
-            payload,
+            apiPayload,
         );
     }
 
@@ -1158,18 +1174,18 @@ export class TablesDB extends Service {
             .replace('{databaseId}', encodeURIComponent(String(databaseId)))
             .replace('{tableId}', encodeURIComponent(String(tableId)))
             .replace('{rowId}', encodeURIComponent(String(rowId)));
-        const payload: Payload = {};
+        const apiPayload: Payload = {};
 
         if (typeof data !== 'undefined') {
-            payload['data'] = data;
+            apiPayload['data'] = data;
         }
 
         if (typeof permissions !== 'undefined') {
-            payload['permissions'] = permissions;
+            apiPayload['permissions'] = permissions;
         }
 
         if (typeof transactionId !== 'undefined') {
-            payload['transactionId'] = transactionId;
+            apiPayload['transactionId'] = transactionId;
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
@@ -1181,7 +1197,7 @@ export class TablesDB extends Service {
                 'content-type': 'application/json',
                 accept: 'application/json',
             },
-            payload,
+            apiPayload,
         );
     }
 
@@ -1281,10 +1297,10 @@ export class TablesDB extends Service {
             .replace('{databaseId}', encodeURIComponent(String(databaseId)))
             .replace('{tableId}', encodeURIComponent(String(tableId)))
             .replace('{rowId}', encodeURIComponent(String(rowId)));
-        const payload: Payload = {};
+        const apiPayload: Payload = {};
 
         if (typeof transactionId !== 'undefined') {
-            payload['transactionId'] = transactionId;
+            apiPayload['transactionId'] = transactionId;
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
@@ -1296,7 +1312,7 @@ export class TablesDB extends Service {
                 'content-type': 'application/json',
                 accept: 'application/json',
             },
-            payload,
+            apiPayload,
         );
     }
 
@@ -1429,18 +1445,18 @@ export class TablesDB extends Service {
                 .replace('{tableId}', encodeURIComponent(String(tableId)))
                 .replace('{rowId}', encodeURIComponent(String(rowId)))
                 .replace('{column}', encodeURIComponent(String(column)));
-        const payload: Payload = {};
+        const apiPayload: Payload = {};
 
         if (typeof value !== 'undefined') {
-            payload['value'] = value;
+            apiPayload['value'] = value;
         }
 
         if (typeof min !== 'undefined') {
-            payload['min'] = min;
+            apiPayload['min'] = min;
         }
 
         if (typeof transactionId !== 'undefined') {
-            payload['transactionId'] = transactionId;
+            apiPayload['transactionId'] = transactionId;
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
@@ -1452,7 +1468,7 @@ export class TablesDB extends Service {
                 'content-type': 'application/json',
                 accept: 'application/json',
             },
-            payload,
+            apiPayload,
         );
     }
 
@@ -1585,18 +1601,18 @@ export class TablesDB extends Service {
                 .replace('{tableId}', encodeURIComponent(String(tableId)))
                 .replace('{rowId}', encodeURIComponent(String(rowId)))
                 .replace('{column}', encodeURIComponent(String(column)));
-        const payload: Payload = {};
+        const apiPayload: Payload = {};
 
         if (typeof value !== 'undefined') {
-            payload['value'] = value;
+            apiPayload['value'] = value;
         }
 
         if (typeof max !== 'undefined') {
-            payload['max'] = max;
+            apiPayload['max'] = max;
         }
 
         if (typeof transactionId !== 'undefined') {
-            payload['transactionId'] = transactionId;
+            apiPayload['transactionId'] = transactionId;
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
@@ -1608,7 +1624,7 @@ export class TablesDB extends Service {
                 'content-type': 'application/json',
                 accept: 'application/json',
             },
-            payload,
+            apiPayload,
         );
     }
 }

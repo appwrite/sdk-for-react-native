@@ -78,14 +78,14 @@ export class Functions extends Service {
             '{functionId}',
             encodeURIComponent(String(functionId)),
         );
-        const payload: Payload = {};
+        const apiPayload: Payload = {};
 
         if (typeof queries !== 'undefined') {
-            payload['queries'] = queries;
+            apiPayload['queries'] = queries;
         }
 
         if (typeof total !== 'undefined') {
-            payload['total'] = total;
+            apiPayload['total'] = total;
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
@@ -96,7 +96,7 @@ export class Functions extends Service {
                 'X-Appwrite-Project': this.client.config.project,
                 accept: 'application/json',
             },
-            payload,
+            apiPayload,
         );
     }
 
@@ -220,30 +220,30 @@ export class Functions extends Service {
             '{functionId}',
             encodeURIComponent(String(functionId)),
         );
-        const payload: Payload = {};
+        const apiPayload: Payload = {};
 
         if (typeof body !== 'undefined') {
-            payload['body'] = body;
+            apiPayload['body'] = body;
         }
 
         if (typeof async !== 'undefined') {
-            payload['async'] = async;
+            apiPayload['async'] = async;
         }
 
         if (typeof xpath !== 'undefined') {
-            payload['path'] = xpath;
+            apiPayload['path'] = xpath;
         }
 
         if (typeof method !== 'undefined') {
-            payload['method'] = method;
+            apiPayload['method'] = method;
         }
 
         if (typeof headers !== 'undefined') {
-            payload['headers'] = headers;
+            apiPayload['headers'] = headers;
         }
 
         if (typeof scheduledAt !== 'undefined') {
-            payload['scheduledAt'] = scheduledAt;
+            apiPayload['scheduledAt'] = scheduledAt;
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
@@ -255,7 +255,7 @@ export class Functions extends Service {
                 'content-type': 'application/json',
                 accept: 'application/json',
             },
-            payload,
+            apiPayload,
         );
     }
 
@@ -324,7 +324,7 @@ export class Functions extends Service {
         const apiPath = '/functions/{functionId}/executions/{executionId}'
             .replace('{functionId}', encodeURIComponent(String(functionId)))
             .replace('{executionId}', encodeURIComponent(String(executionId)));
-        const payload: Payload = {};
+        const apiPayload: Payload = {};
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call(
@@ -334,7 +334,7 @@ export class Functions extends Service {
                 'X-Appwrite-Project': this.client.config.project,
                 accept: 'application/json',
             },
-            payload,
+            apiPayload,
         );
     }
 }
