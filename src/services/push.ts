@@ -735,6 +735,9 @@ export class Push extends Service {
         if (subscriptions.length === 0) {
             return;
         }
+        if ([...nativeHosts].some((push) => push.hasBackgroundSubs())) {
+            requestNotificationPermission();
+        }
         const { authMethod, credential } = this.credential();
         const config = {
             host: this.host,
@@ -1032,15 +1035,18 @@ export class Push extends Service {
     }
 
     /** Post a local notification for a message a background subscription matched. */
-    private async notify(message: PushMessage, title?: string): Promise<void> {
+    private async notify(message: PushMessage, title: string): Promise<void> {
         try {
             /* eslint-disable @typescript-eslint/no-require-imports */
             const notifications: typeof import('expo-notifications') = require('expo-notifications');
             /* eslint-enable @typescript-eslint/no-require-imports */
+            const content = notificationContent(message);
+            const raw = !content.present;
             await notifications.scheduleNotificationAsync({
                 content: {
-                    title: title ?? message.topic,
-                    body: message.data,
+                    title: content.title ?? title,
+                    body: content.body ?? (raw ? message.data : null),
+                    data: { topic: message.topic, payload: message.data },
                 },
                 trigger: null,
             });
@@ -1338,15 +1344,20 @@ export class Push extends Service {
             payload,
             qos: packet.qos,
         };
+        const serverTitle = notificationContent(message).title;
+        const titles = new Set<string>();
         for (const sub of this.subscriptions.values()) {
             if (matches(sub.topic, message.topic)) {
                 await sub.callback(message);
-                // Notification is per-subscription: only subs that opted in post one,
-                // each with its own title.
+                // Notification is per-subscription: only subs that opted in post one, each
+                // with its own title. A title the server sent replaces theirs, so one posts.
                 if (sub.background) {
-                    await this.notify(message, sub.title);
+                    titles.add(serverTitle ?? sub.title ?? message.topic);
                 }
             }
+        }
+        for (const title of titles) {
+            await this.notify(message, title);
         }
     }
 }
@@ -1384,6 +1395,67 @@ const nativeHosts = new Set<Push>();
 /** Every Push with live subscriptions, so the native host can take over their connections. */
 const livePushes = new Set<Push>();
 let nativeQueue: Promise<unknown> = Promise.resolve();
+
+let notificationPermissionRequested = false;
+
+/**
+ * Android 13+: ask once per run for the notification permission that background messages are
+ * posted with. It does not wait for the answer, and a denial only leaves notifications off.
+ */
+function requestNotificationPermission(): void {
+    if (
+        notificationPermissionRequested ||
+        Platform.OS !== 'android' ||
+        Number(Platform.Version) < 33
+    ) {
+        return;
+    }
+    notificationPermissionRequested = true;
+    // Required here rather than imported: react-native-web, which web builds alias, lacks it.
+    /* eslint-disable @typescript-eslint/no-require-imports */
+    const reactNative: typeof import('react-native') = require('react-native');
+    /* eslint-enable @typescript-eslint/no-require-imports */
+    const { PermissionsAndroid } = reactNative;
+    const permission = PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS;
+    PermissionsAndroid.check(permission)
+        .then((granted) =>
+            granted ? undefined : PermissionsAndroid.request(permission),
+        )
+        .catch(() => undefined);
+}
+
+/** What a message's `notification` block asks a background notification to show. */
+interface NotificationContent {
+    /** Whether the message has a `notification` block at all. */
+    present: boolean;
+    title?: string;
+    body?: string;
+    image?: string;
+}
+
+/** The server's `notification` block in a message; empty when the payload has none or is not JSON. */
+function notificationContent(message: PushMessage): NotificationContent {
+    let notification: unknown;
+    try {
+        notification = (JSON.parse(message.data) as { notification?: unknown })
+            ?.notification;
+    } catch {
+        return { present: false };
+    }
+    if (typeof notification !== 'object' || notification === null) {
+        return { present: false };
+    }
+    const field = (name: string): string | undefined => {
+        const value = (notification as Record<string, unknown>)[name];
+        return typeof value === 'string' && value !== '' ? value : undefined;
+    };
+    return {
+        present: true,
+        title: field('title'),
+        body: field('body'),
+        image: field('image'),
+    };
+}
 
 function enqueueNative<T>(op: () => Promise<T>): Promise<T> {
     const result = nativeQueue.then(op);
