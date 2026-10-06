@@ -20,6 +20,44 @@ To install
 npx expo install react-native-appwrite react-native-url-polyfill
 ```
 
+### Push
+
+`Push` connects over a raw TCP socket, so it needs `react-native-tcp-socket` and a development
+or standalone build (native modules do not run in Expo Go).
+
+On Expo SDK 52 and older, enable package exports in `metro.config.js` so `mqtt` resolves to its
+React Native build (Expo SDK 53 and later do this by default):
+
+```js
+config.resolver.unstable_enablePackageExports = true;
+```
+
+#### Background delivery on Android
+
+A subscription with `background: true` keeps delivering after the app is backgrounded, killed or
+the device restarts, until it is unsubscribed or `push.close()` is called (do this on sign-out).
+The SDK's native Android module (autolinked) saves the subscription, and a scheduled job and
+alarm wake the app every 15 to 60 seconds to reconnect; the broker replays what was sent in
+between (`retry: true`). Messages no in-app callback receives are posted as notifications that
+open the app. It reconnects with the credential saved at subscribe time, so use a session rather
+than a short-lived JWT.
+
+```js
+const sub = await push.subscribe('news', (message) => console.log(message.data), {
+    background: true,
+    title: 'News',
+});
+
+// Optional: immediate delivery even after a kill and during Doze, with a quiet ongoing
+// notification (call while the app is in the foreground).
+await push.setForeground(true);
+```
+
+Foreground mode runs a `remoteMessaging` foreground service, which Google Play asks apps to
+declare in the Play Console. Apps that never enable it can remove the service from their merged
+manifest with `tools:node="remove"` on `io.appwrite.services.PushService` and
+`android.permission.FOREGROUND_SERVICE_REMOTE_MESSAGING`.
+
 
 ## Getting Started
 

@@ -22,7 +22,7 @@ export class Account extends Service {
         Preferences extends Models.Preferences = Models.DefaultPreferences,
     >(): Promise<Models.User<Preferences>> {
         const apiPath = '/account';
-        const payload: Payload = {};
+        const apiPayload: Payload = {};
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call(
@@ -32,7 +32,7 @@ export class Account extends Service {
                 'X-Appwrite-Project': this.client.config.project,
                 accept: 'application/json',
             },
-            payload,
+            apiPayload,
         );
     }
 
@@ -124,22 +124,22 @@ export class Account extends Service {
         }
 
         const apiPath = '/account';
-        const payload: Payload = {};
+        const apiPayload: Payload = {};
 
         if (typeof userId !== 'undefined') {
-            payload['userId'] = userId;
+            apiPayload['userId'] = userId;
         }
 
         if (typeof email !== 'undefined') {
-            payload['email'] = email;
+            apiPayload['email'] = email;
         }
 
         if (typeof password !== 'undefined') {
-            payload['password'] = password;
+            apiPayload['password'] = password;
         }
 
         if (typeof name !== 'undefined') {
-            payload['name'] = name;
+            apiPayload['name'] = name;
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
@@ -151,7 +151,7 @@ export class Account extends Service {
                 'content-type': 'application/json',
                 accept: 'application/json',
             },
-            payload,
+            apiPayload,
         );
     }
 
@@ -207,14 +207,14 @@ export class Account extends Service {
         const total = params.total;
 
         const apiPath = '/account/consents';
-        const payload: Payload = {};
+        const apiPayload: Payload = {};
 
         if (typeof queries !== 'undefined') {
-            payload['queries'] = queries;
+            apiPayload['queries'] = queries;
         }
 
         if (typeof total !== 'undefined') {
-            payload['total'] = total;
+            apiPayload['total'] = total;
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
@@ -225,7 +225,7 @@ export class Account extends Service {
                 'X-Appwrite-Project': this.client.config.project,
                 accept: 'application/json',
             },
-            payload,
+            apiPayload,
         );
     }
 
@@ -275,7 +275,7 @@ export class Account extends Service {
             '{consentId}',
             encodeURIComponent(String(consentId)),
         );
-        const payload: Payload = {};
+        const apiPayload: Payload = {};
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call(
@@ -285,7 +285,7 @@ export class Account extends Service {
                 'X-Appwrite-Project': this.client.config.project,
                 accept: 'application/json',
             },
-            payload,
+            apiPayload,
         );
     }
 
@@ -333,7 +333,7 @@ export class Account extends Service {
             '{consentId}',
             encodeURIComponent(String(consentId)),
         );
-        const payload: Payload = {};
+        const apiPayload: Payload = {};
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call(
@@ -344,7 +344,7 @@ export class Account extends Service {
                 'content-type': 'application/json',
                 accept: 'application/json',
             },
-            payload,
+            apiPayload,
         );
     }
 
@@ -416,14 +416,14 @@ export class Account extends Service {
             '{consentId}',
             encodeURIComponent(String(consentId)),
         );
-        const payload: Payload = {};
+        const apiPayload: Payload = {};
 
         if (typeof queries !== 'undefined') {
-            payload['queries'] = queries;
+            apiPayload['queries'] = queries;
         }
 
         if (typeof total !== 'undefined') {
-            payload['total'] = total;
+            apiPayload['total'] = total;
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
@@ -434,7 +434,7 @@ export class Account extends Service {
                 'X-Appwrite-Project': this.client.config.project,
                 accept: 'application/json',
             },
-            payload,
+            apiPayload,
         );
     }
 
@@ -503,7 +503,7 @@ export class Account extends Service {
         const apiPath = '/account/consents/{consentId}/tokens/{tokenId}'
             .replace('{consentId}', encodeURIComponent(String(consentId)))
             .replace('{tokenId}', encodeURIComponent(String(tokenId)));
-        const payload: Payload = {};
+        const apiPayload: Payload = {};
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call(
@@ -513,7 +513,7 @@ export class Account extends Service {
                 'X-Appwrite-Project': this.client.config.project,
                 accept: 'application/json',
             },
-            payload,
+            apiPayload,
         );
     }
 
@@ -579,7 +579,7 @@ export class Account extends Service {
         const apiPath = '/account/consents/{consentId}/tokens/{tokenId}'
             .replace('{consentId}', encodeURIComponent(String(consentId)))
             .replace('{tokenId}', encodeURIComponent(String(tokenId)));
-        const payload: Payload = {};
+        const apiPayload: Payload = {};
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call(
@@ -590,7 +590,7 @@ export class Account extends Service {
                 'content-type': 'application/json',
                 accept: 'application/json',
             },
-            payload,
+            apiPayload,
         );
     }
 
@@ -662,14 +662,14 @@ export class Account extends Service {
         }
 
         const apiPath = '/account/email';
-        const payload: Payload = {};
+        const apiPayload: Payload = {};
 
         if (typeof email !== 'undefined') {
-            payload['email'] = email;
+            apiPayload['email'] = email;
         }
 
         if (typeof password !== 'undefined') {
-            payload['password'] = password;
+            apiPayload['password'] = password;
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
@@ -681,7 +681,7 @@ export class Account extends Service {
                 'content-type': 'application/json',
                 accept: 'application/json',
             },
-            payload,
+            apiPayload,
         );
     }
 
@@ -737,14 +737,14 @@ export class Account extends Service {
         const total = params.total;
 
         const apiPath = '/account/identities';
-        const payload: Payload = {};
+        const apiPayload: Payload = {};
 
         if (typeof queries !== 'undefined') {
-            payload['queries'] = queries;
+            apiPayload['queries'] = queries;
         }
 
         if (typeof total !== 'undefined') {
-            payload['total'] = total;
+            apiPayload['total'] = total;
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
@@ -755,7 +755,7 @@ export class Account extends Service {
                 'X-Appwrite-Project': this.client.config.project,
                 accept: 'application/json',
             },
-            payload,
+            apiPayload,
         );
     }
 
@@ -805,7 +805,7 @@ export class Account extends Service {
             '{identityId}',
             encodeURIComponent(String(identityId)),
         );
-        const payload: Payload = {};
+        const apiPayload: Payload = {};
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call(
@@ -816,7 +816,7 @@ export class Account extends Service {
                 'content-type': 'application/json',
                 accept: 'application/json',
             },
-            payload,
+            apiPayload,
         );
     }
 
@@ -858,10 +858,10 @@ export class Account extends Service {
         const duration = params.duration;
 
         const apiPath = '/account/jwts';
-        const payload: Payload = {};
+        const apiPayload: Payload = {};
 
         if (typeof duration !== 'undefined') {
-            payload['duration'] = duration;
+            apiPayload['duration'] = duration;
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
@@ -873,7 +873,7 @@ export class Account extends Service {
                 'content-type': 'application/json',
                 accept: 'application/json',
             },
-            payload,
+            apiPayload,
         );
     }
 
@@ -924,10 +924,10 @@ export class Account extends Service {
         }
 
         const apiPath = '/account/mfa';
-        const payload: Payload = {};
+        const apiPayload: Payload = {};
 
         if (typeof mfa !== 'undefined') {
-            payload['mfa'] = mfa;
+            apiPayload['mfa'] = mfa;
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
@@ -939,7 +939,7 @@ export class Account extends Service {
                 'content-type': 'application/json',
                 accept: 'application/json',
             },
-            payload,
+            apiPayload,
         );
     }
 
@@ -991,7 +991,7 @@ export class Account extends Service {
             '{type}',
             encodeURIComponent(String(type)),
         );
-        const payload: Payload = {};
+        const apiPayload: Payload = {};
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call(
@@ -1002,7 +1002,7 @@ export class Account extends Service {
                 'content-type': 'application/json',
                 accept: 'application/json',
             },
-            payload,
+            apiPayload,
         );
     }
 
@@ -1053,7 +1053,7 @@ export class Account extends Service {
             '{type}',
             encodeURIComponent(String(type)),
         );
-        const payload: Payload = {};
+        const apiPayload: Payload = {};
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call(
@@ -1064,7 +1064,7 @@ export class Account extends Service {
                 'content-type': 'application/json',
                 accept: 'application/json',
             },
-            payload,
+            apiPayload,
         );
     }
 
@@ -1136,10 +1136,10 @@ export class Account extends Service {
             '{type}',
             encodeURIComponent(String(type)),
         );
-        const payload: Payload = {};
+        const apiPayload: Payload = {};
 
         if (typeof otp !== 'undefined') {
-            payload['otp'] = otp;
+            apiPayload['otp'] = otp;
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
@@ -1151,7 +1151,7 @@ export class Account extends Service {
                 'content-type': 'application/json',
                 accept: 'application/json',
             },
-            payload,
+            apiPayload,
         );
     }
 
@@ -1222,10 +1222,10 @@ export class Account extends Service {
             '{type}',
             encodeURIComponent(String(type)),
         );
-        const payload: Payload = {};
+        const apiPayload: Payload = {};
 
         if (typeof otp !== 'undefined') {
-            payload['otp'] = otp;
+            apiPayload['otp'] = otp;
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
@@ -1237,7 +1237,7 @@ export class Account extends Service {
                 'content-type': 'application/json',
                 accept: 'application/json',
             },
-            payload,
+            apiPayload,
         );
     }
 
@@ -1287,7 +1287,7 @@ export class Account extends Service {
             '{type}',
             encodeURIComponent(String(type)),
         );
-        const payload: Payload = {};
+        const apiPayload: Payload = {};
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call(
@@ -1298,7 +1298,7 @@ export class Account extends Service {
                 'content-type': 'application/json',
                 accept: 'application/json',
             },
-            payload,
+            apiPayload,
         );
     }
 
@@ -1347,7 +1347,7 @@ export class Account extends Service {
             '{type}',
             encodeURIComponent(String(type)),
         );
-        const payload: Payload = {};
+        const apiPayload: Payload = {};
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call(
@@ -1358,7 +1358,7 @@ export class Account extends Service {
                 'content-type': 'application/json',
                 accept: 'application/json',
             },
-            payload,
+            apiPayload,
         );
     }
 
@@ -1409,10 +1409,10 @@ export class Account extends Service {
         }
 
         const apiPath = '/account/mfa/challenges';
-        const payload: Payload = {};
+        const apiPayload: Payload = {};
 
         if (typeof factor !== 'undefined') {
-            payload['factor'] = factor;
+            apiPayload['factor'] = factor;
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
@@ -1424,7 +1424,7 @@ export class Account extends Service {
                 'content-type': 'application/json',
                 accept: 'application/json',
             },
-            payload,
+            apiPayload,
         );
     }
 
@@ -1474,10 +1474,10 @@ export class Account extends Service {
         }
 
         const apiPath = '/account/mfa/challenges';
-        const payload: Payload = {};
+        const apiPayload: Payload = {};
 
         if (typeof factor !== 'undefined') {
-            payload['factor'] = factor;
+            apiPayload['factor'] = factor;
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
@@ -1489,7 +1489,7 @@ export class Account extends Service {
                 'content-type': 'application/json',
                 accept: 'application/json',
             },
-            payload,
+            apiPayload,
         );
     }
 
@@ -1555,14 +1555,14 @@ export class Account extends Service {
         }
 
         const apiPath = '/account/mfa/challenges';
-        const payload: Payload = {};
+        const apiPayload: Payload = {};
 
         if (typeof challengeId !== 'undefined') {
-            payload['challengeId'] = challengeId;
+            apiPayload['challengeId'] = challengeId;
         }
 
         if (typeof otp !== 'undefined') {
-            payload['otp'] = otp;
+            apiPayload['otp'] = otp;
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
@@ -1574,7 +1574,7 @@ export class Account extends Service {
                 'content-type': 'application/json',
                 accept: 'application/json',
             },
-            payload,
+            apiPayload,
         );
     }
 
@@ -1639,14 +1639,14 @@ export class Account extends Service {
         }
 
         const apiPath = '/account/mfa/challenges';
-        const payload: Payload = {};
+        const apiPayload: Payload = {};
 
         if (typeof challengeId !== 'undefined') {
-            payload['challengeId'] = challengeId;
+            apiPayload['challengeId'] = challengeId;
         }
 
         if (typeof otp !== 'undefined') {
-            payload['otp'] = otp;
+            apiPayload['otp'] = otp;
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
@@ -1658,7 +1658,7 @@ export class Account extends Service {
                 'content-type': 'application/json',
                 accept: 'application/json',
             },
-            payload,
+            apiPayload,
         );
     }
 
@@ -1671,7 +1671,7 @@ export class Account extends Service {
      */
     listMfaFactors(): Promise<Models.MfaFactors> {
         const apiPath = '/account/mfa/factors';
-        const payload: Payload = {};
+        const apiPayload: Payload = {};
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call(
@@ -1681,7 +1681,7 @@ export class Account extends Service {
                 'X-Appwrite-Project': this.client.config.project,
                 accept: 'application/json',
             },
-            payload,
+            apiPayload,
         );
     }
 
@@ -1693,7 +1693,7 @@ export class Account extends Service {
      */
     listMFAFactors(): Promise<Models.MfaFactors> {
         const apiPath = '/account/mfa/factors';
-        const payload: Payload = {};
+        const apiPayload: Payload = {};
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call(
@@ -1703,7 +1703,7 @@ export class Account extends Service {
                 'X-Appwrite-Project': this.client.config.project,
                 accept: 'application/json',
             },
-            payload,
+            apiPayload,
         );
     }
 
@@ -1716,7 +1716,7 @@ export class Account extends Service {
      */
     getMfaRecoveryCodes(): Promise<Models.MfaRecoveryCodes> {
         const apiPath = '/account/mfa/recovery-codes';
-        const payload: Payload = {};
+        const apiPayload: Payload = {};
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call(
@@ -1726,7 +1726,7 @@ export class Account extends Service {
                 'X-Appwrite-Project': this.client.config.project,
                 accept: 'application/json',
             },
-            payload,
+            apiPayload,
         );
     }
 
@@ -1738,7 +1738,7 @@ export class Account extends Service {
      */
     getMFARecoveryCodes(): Promise<Models.MfaRecoveryCodes> {
         const apiPath = '/account/mfa/recovery-codes';
-        const payload: Payload = {};
+        const apiPayload: Payload = {};
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call(
@@ -1748,7 +1748,7 @@ export class Account extends Service {
                 'X-Appwrite-Project': this.client.config.project,
                 accept: 'application/json',
             },
-            payload,
+            apiPayload,
         );
     }
 
@@ -1761,7 +1761,7 @@ export class Account extends Service {
      */
     createMfaRecoveryCodes(): Promise<Models.MfaRecoveryCodes> {
         const apiPath = '/account/mfa/recovery-codes';
-        const payload: Payload = {};
+        const apiPayload: Payload = {};
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call(
@@ -1772,7 +1772,7 @@ export class Account extends Service {
                 'content-type': 'application/json',
                 accept: 'application/json',
             },
-            payload,
+            apiPayload,
         );
     }
 
@@ -1784,7 +1784,7 @@ export class Account extends Service {
      */
     createMFARecoveryCodes(): Promise<Models.MfaRecoveryCodes> {
         const apiPath = '/account/mfa/recovery-codes';
-        const payload: Payload = {};
+        const apiPayload: Payload = {};
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call(
@@ -1795,7 +1795,7 @@ export class Account extends Service {
                 'content-type': 'application/json',
                 accept: 'application/json',
             },
-            payload,
+            apiPayload,
         );
     }
 
@@ -1808,7 +1808,7 @@ export class Account extends Service {
      */
     updateMfaRecoveryCodes(): Promise<Models.MfaRecoveryCodes> {
         const apiPath = '/account/mfa/recovery-codes';
-        const payload: Payload = {};
+        const apiPayload: Payload = {};
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call(
@@ -1819,7 +1819,7 @@ export class Account extends Service {
                 'content-type': 'application/json',
                 accept: 'application/json',
             },
-            payload,
+            apiPayload,
         );
     }
 
@@ -1831,7 +1831,7 @@ export class Account extends Service {
      */
     updateMFARecoveryCodes(): Promise<Models.MfaRecoveryCodes> {
         const apiPath = '/account/mfa/recovery-codes';
-        const payload: Payload = {};
+        const apiPayload: Payload = {};
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call(
@@ -1842,7 +1842,7 @@ export class Account extends Service {
                 'content-type': 'application/json',
                 accept: 'application/json',
             },
-            payload,
+            apiPayload,
         );
     }
 
@@ -1893,10 +1893,10 @@ export class Account extends Service {
         }
 
         const apiPath = '/account/name';
-        const payload: Payload = {};
+        const apiPayload: Payload = {};
 
         if (typeof name !== 'undefined') {
-            payload['name'] = name;
+            apiPayload['name'] = name;
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
@@ -1908,7 +1908,7 @@ export class Account extends Service {
                 'content-type': 'application/json',
                 accept: 'application/json',
             },
-            payload,
+            apiPayload,
         );
     }
 
@@ -1975,14 +1975,14 @@ export class Account extends Service {
         }
 
         const apiPath = '/account/password';
-        const payload: Payload = {};
+        const apiPayload: Payload = {};
 
         if (typeof password !== 'undefined') {
-            payload['password'] = password;
+            apiPayload['password'] = password;
         }
 
         if (typeof oldPassword !== 'undefined') {
-            payload['oldPassword'] = oldPassword;
+            apiPayload['oldPassword'] = oldPassword;
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
@@ -1994,7 +1994,7 @@ export class Account extends Service {
                 'content-type': 'application/json',
                 accept: 'application/json',
             },
-            payload,
+            apiPayload,
         );
     }
 
@@ -2062,14 +2062,14 @@ export class Account extends Service {
         }
 
         const apiPath = '/account/phone';
-        const payload: Payload = {};
+        const apiPayload: Payload = {};
 
         if (typeof phone !== 'undefined') {
-            payload['phone'] = phone;
+            apiPayload['phone'] = phone;
         }
 
         if (typeof password !== 'undefined') {
-            payload['password'] = password;
+            apiPayload['password'] = password;
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
@@ -2081,7 +2081,7 @@ export class Account extends Service {
                 'content-type': 'application/json',
                 accept: 'application/json',
             },
-            payload,
+            apiPayload,
         );
     }
 
@@ -2095,7 +2095,7 @@ export class Account extends Service {
         Preferences extends Models.Preferences = Models.DefaultPreferences,
     >(): Promise<Preferences> {
         const apiPath = '/account/prefs';
-        const payload: Payload = {};
+        const apiPayload: Payload = {};
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call(
@@ -2105,7 +2105,7 @@ export class Account extends Service {
                 'X-Appwrite-Project': this.client.config.project,
                 accept: 'application/json',
             },
-            payload,
+            apiPayload,
         );
     }
 
@@ -2159,10 +2159,10 @@ export class Account extends Service {
         }
 
         const apiPath = '/account/prefs';
-        const payload: Payload = {};
+        const apiPayload: Payload = {};
 
         if (typeof prefs !== 'undefined') {
-            payload['prefs'] = prefs;
+            apiPayload['prefs'] = prefs;
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
@@ -2174,7 +2174,7 @@ export class Account extends Service {
                 'content-type': 'application/json',
                 accept: 'application/json',
             },
-            payload,
+            apiPayload,
         );
     }
 
@@ -2231,14 +2231,14 @@ export class Account extends Service {
         }
 
         const apiPath = '/account/recovery';
-        const payload: Payload = {};
+        const apiPayload: Payload = {};
 
         if (typeof email !== 'undefined') {
-            payload['email'] = email;
+            apiPayload['email'] = email;
         }
 
         if (typeof url !== 'undefined') {
-            payload['url'] = url;
+            apiPayload['url'] = url;
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
@@ -2250,7 +2250,7 @@ export class Account extends Service {
                 'content-type': 'application/json',
                 accept: 'application/json',
             },
-            payload,
+            apiPayload,
         );
     }
 
@@ -2331,18 +2331,18 @@ export class Account extends Service {
         }
 
         const apiPath = '/account/recovery';
-        const payload: Payload = {};
+        const apiPayload: Payload = {};
 
         if (typeof userId !== 'undefined') {
-            payload['userId'] = userId;
+            apiPayload['userId'] = userId;
         }
 
         if (typeof secret !== 'undefined') {
-            payload['secret'] = secret;
+            apiPayload['secret'] = secret;
         }
 
         if (typeof password !== 'undefined') {
-            payload['password'] = password;
+            apiPayload['password'] = password;
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
@@ -2354,7 +2354,7 @@ export class Account extends Service {
                 'content-type': 'application/json',
                 accept: 'application/json',
             },
-            payload,
+            apiPayload,
         );
     }
 
@@ -2416,14 +2416,14 @@ export class Account extends Service {
         }
 
         const apiPath = '/account/recovery/otp';
-        const payload: Payload = {};
+        const apiPayload: Payload = {};
 
         if (typeof email !== 'undefined') {
-            payload['email'] = email;
+            apiPayload['email'] = email;
         }
 
         if (typeof phrase !== 'undefined') {
-            payload['phrase'] = phrase;
+            apiPayload['phrase'] = phrase;
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
@@ -2435,7 +2435,7 @@ export class Account extends Service {
                 'content-type': 'application/json',
                 accept: 'application/json',
             },
-            payload,
+            apiPayload,
         );
     }
 
@@ -2514,18 +2514,18 @@ export class Account extends Service {
         }
 
         const apiPath = '/account/recovery/otp';
-        const payload: Payload = {};
+        const apiPayload: Payload = {};
 
         if (typeof userId !== 'undefined') {
-            payload['userId'] = userId;
+            apiPayload['userId'] = userId;
         }
 
         if (typeof secret !== 'undefined') {
-            payload['secret'] = secret;
+            apiPayload['secret'] = secret;
         }
 
         if (typeof password !== 'undefined') {
-            payload['password'] = password;
+            apiPayload['password'] = password;
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
@@ -2537,19 +2537,53 @@ export class Account extends Service {
                 'content-type': 'application/json',
                 accept: 'application/json',
             },
-            payload,
+            apiPayload,
         );
     }
 
     /**
      * Get the list of active sessions across different devices for the currently logged in user.
      *
+     * @param {boolean} params.total - When set to false, the total count returned will be 0 and will not be calculated.
      * @throws {AppwriteException}
      * @returns {Promise}
      */
-    listSessions(): Promise<Models.SessionList> {
+    listSessions(params?: { total?: boolean }): Promise<Models.SessionList>;
+    /**
+     * Get the list of active sessions across different devices for the currently logged in user.
+     *
+     * @param {boolean} total - When set to false, the total count returned will be 0 and will not be calculated.
+     * @throws {AppwriteException}
+     * @returns {Promise<Models.SessionList>}
+     * @deprecated Use the object parameter style method for a better developer experience.
+     */
+    listSessions(total?: boolean): Promise<Models.SessionList>;
+    listSessions(
+        paramsOrFirst?: { total?: boolean } | boolean,
+    ): Promise<Models.SessionList> {
+        let params: { total?: boolean };
+
+        if (
+            typeof paramsOrFirst === 'undefined' ||
+            (paramsOrFirst &&
+                typeof paramsOrFirst === 'object' &&
+                !Array.isArray(paramsOrFirst))
+        ) {
+            params = (paramsOrFirst || {}) as { total?: boolean };
+        } else {
+            params = {
+                total: paramsOrFirst as boolean,
+            };
+        }
+
+        const total = params.total;
+
         const apiPath = '/account/sessions';
-        const payload: Payload = {};
+        const apiPayload: Payload = {};
+
+        if (typeof total !== 'undefined') {
+            apiPayload['total'] = total;
+        }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call(
@@ -2559,19 +2593,53 @@ export class Account extends Service {
                 'X-Appwrite-Project': this.client.config.project,
                 accept: 'application/json',
             },
-            payload,
+            apiPayload,
         );
     }
 
     /**
-     * Delete all sessions from the user account and remove any sessions cookies from the end client.
+     * Delete all sessions from the user account and remove any sessions cookies from the end client. Pass `current` as false to keep the session making the request and sign out of every other session.
      *
+     * @param {boolean} params.current - Delete the current session too. Use false to sign out of every other session while staying signed in on this one.
      * @throws {AppwriteException}
      * @returns {Promise}
      */
-    deleteSessions(): Promise<{}> {
+    deleteSessions(params?: { current?: boolean }): Promise<{}>;
+    /**
+     * Delete all sessions from the user account and remove any sessions cookies from the end client. Pass `current` as false to keep the session making the request and sign out of every other session.
+     *
+     * @param {boolean} current - Delete the current session too. Use false to sign out of every other session while staying signed in on this one.
+     * @throws {AppwriteException}
+     * @returns {Promise<{}>}
+     * @deprecated Use the object parameter style method for a better developer experience.
+     */
+    deleteSessions(current?: boolean): Promise<{}>;
+    deleteSessions(
+        paramsOrFirst?: { current?: boolean } | boolean,
+    ): Promise<{}> {
+        let params: { current?: boolean };
+
+        if (
+            typeof paramsOrFirst === 'undefined' ||
+            (paramsOrFirst &&
+                typeof paramsOrFirst === 'object' &&
+                !Array.isArray(paramsOrFirst))
+        ) {
+            params = (paramsOrFirst || {}) as { current?: boolean };
+        } else {
+            params = {
+                current: paramsOrFirst as boolean,
+            };
+        }
+
+        const current = params.current;
+
         const apiPath = '/account/sessions';
-        const payload: Payload = {};
+        const apiPayload: Payload = {};
+
+        if (typeof current !== 'undefined') {
+            apiPayload['current'] = current;
+        }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call(
@@ -2582,7 +2650,7 @@ export class Account extends Service {
                 'content-type': 'application/json',
                 accept: 'application/json',
             },
-            payload,
+            apiPayload,
         );
     }
 
@@ -2594,7 +2662,7 @@ export class Account extends Service {
      */
     createAnonymousSession(): Promise<Models.Session> {
         const apiPath = '/account/sessions/anonymous';
-        const payload: Payload = {};
+        const apiPayload: Payload = {};
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call(
@@ -2605,31 +2673,34 @@ export class Account extends Service {
                 'content-type': 'application/json',
                 accept: 'application/json',
             },
-            payload,
+            apiPayload,
         );
     }
 
     /**
-     * Allow the user to login into their account by providing a valid email and password combination. This route will create a new session for the user.
+     * Allow the user to login into their account by providing a valid email and password combination. This route will create a new session for the user. Use the optional `duration` parameter to create a shorter session, for example when the user doesn't choose "remember me". It must be at least 60 seconds and cannot exceed the project maximum session length.
      *
      * A user is limited to 10 active sessions at a time by default. [Learn more about session limits](https://appwrite.io/docs/authentication-security#limits).
      *
      * @param {string} params.email - User email.
      * @param {string} params.password - User password. Must be at least 8 chars.
+     * @param {number} params.duration - Session length in seconds. Minimum is 60 seconds, and it cannot exceed the project maximum session length. Defaults to the project maximum session length.
      * @throws {AppwriteException}
      * @returns {Promise}
      */
     createEmailPasswordSession(params: {
         email: string;
         password: string;
+        duration?: number;
     }): Promise<Models.Session>;
     /**
-     * Allow the user to login into their account by providing a valid email and password combination. This route will create a new session for the user.
+     * Allow the user to login into their account by providing a valid email and password combination. This route will create a new session for the user. Use the optional `duration` parameter to create a shorter session, for example when the user doesn't choose "remember me". It must be at least 60 seconds and cannot exceed the project maximum session length.
      *
      * A user is limited to 10 active sessions at a time by default. [Learn more about session limits](https://appwrite.io/docs/authentication-security#limits).
      *
      * @param {string} email - User email.
      * @param {string} password - User password. Must be at least 8 chars.
+     * @param {number} duration - Session length in seconds. Minimum is 60 seconds, and it cannot exceed the project maximum session length. Defaults to the project maximum session length.
      * @throws {AppwriteException}
      * @returns {Promise<Models.Session>}
      * @deprecated Use the object parameter style method for a better developer experience.
@@ -2637,12 +2708,14 @@ export class Account extends Service {
     createEmailPasswordSession(
         email: string,
         password: string,
+        duration?: number,
     ): Promise<Models.Session>;
     createEmailPasswordSession(
-        paramsOrFirst: { email: string; password: string } | string,
-        ...rest: [string?]
+        paramsOrFirst:
+            { email: string; password: string; duration?: number } | string,
+        ...rest: [string?, number?]
     ): Promise<Models.Session> {
-        let params: { email: string; password: string };
+        let params: { email: string; password: string; duration?: number };
 
         if (
             paramsOrFirst &&
@@ -2652,16 +2725,19 @@ export class Account extends Service {
             params = (paramsOrFirst || {}) as {
                 email: string;
                 password: string;
+                duration?: number;
             };
         } else {
             params = {
                 email: paramsOrFirst as string,
                 password: rest[0] as string,
+                duration: rest[1] as number,
             };
         }
 
         const email = params.email;
         const password = params.password;
+        const duration = params.duration;
 
         if (typeof email === 'undefined') {
             throw new AppwriteException('Missing required parameter: "email"');
@@ -2674,14 +2750,18 @@ export class Account extends Service {
         }
 
         const apiPath = '/account/sessions/email';
-        const payload: Payload = {};
+        const apiPayload: Payload = {};
 
         if (typeof email !== 'undefined') {
-            payload['email'] = email;
+            apiPayload['email'] = email;
         }
 
         if (typeof password !== 'undefined') {
-            payload['password'] = password;
+            apiPayload['password'] = password;
+        }
+
+        if (typeof duration !== 'undefined') {
+            apiPayload['duration'] = duration;
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
@@ -2693,7 +2773,7 @@ export class Account extends Service {
                 'content-type': 'application/json',
                 accept: 'application/json',
             },
-            payload,
+            apiPayload,
         );
     }
 
@@ -2832,30 +2912,30 @@ export class Account extends Service {
         }
 
         const apiPath = '/account/sessions/id-token';
-        const payload: Payload = {};
+        const apiPayload: Payload = {};
 
         if (typeof provider !== 'undefined') {
-            payload['provider'] = provider;
+            apiPayload['provider'] = provider;
         }
 
         if (typeof idToken !== 'undefined') {
-            payload['idToken'] = idToken;
+            apiPayload['idToken'] = idToken;
         }
 
         if (typeof nonce !== 'undefined') {
-            payload['nonce'] = nonce;
+            apiPayload['nonce'] = nonce;
         }
 
         if (typeof accessToken !== 'undefined') {
-            payload['accessToken'] = accessToken;
+            apiPayload['accessToken'] = accessToken;
         }
 
         if (typeof accessTokenExpiry !== 'undefined') {
-            payload['accessTokenExpiry'] = accessTokenExpiry;
+            apiPayload['accessTokenExpiry'] = accessTokenExpiry;
         }
 
         if (typeof name !== 'undefined') {
-            payload['name'] = name;
+            apiPayload['name'] = name;
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
@@ -2867,7 +2947,7 @@ export class Account extends Service {
                 'content-type': 'application/json',
                 accept: 'application/json',
             },
-            payload,
+            apiPayload,
         );
     }
 
@@ -2931,14 +3011,14 @@ export class Account extends Service {
         }
 
         const apiPath = '/account/sessions/magic-url';
-        const payload: Payload = {};
+        const apiPayload: Payload = {};
 
         if (typeof userId !== 'undefined') {
-            payload['userId'] = userId;
+            apiPayload['userId'] = userId;
         }
 
         if (typeof secret !== 'undefined') {
-            payload['secret'] = secret;
+            apiPayload['secret'] = secret;
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
@@ -2950,7 +3030,7 @@ export class Account extends Service {
                 'content-type': 'application/json',
                 accept: 'application/json',
             },
-            payload,
+            apiPayload,
         );
     }
 
@@ -2962,7 +3042,7 @@ export class Account extends Service {
      * A user is limited to 10 active sessions at a time by default. [Learn more about session limits](https://appwrite.io/docs/authentication-security#limits).
      *
      *
-     * @param {OAuthProvider} params.provider - OAuth2 Provider. Currently, supported providers are: amazon, apple, appwrite, auth0, authentik, autodesk, bitbucket, bitly, box, cloudflare, dailymotion, discord, disqus, dropbox, etsy, facebook, figma, fusionauth, github, gitlab, google, huggingface, kakao, keycloak, kick, linkedin, microsoft, notion, oidc, okta, paypal, paypalSandbox, podio, resend, salesforce, slack, spotify, stripe, tiktok, tradeshift, tradeshiftBox, twitch, wordpress, x, yahoo, yammer, yandex, zoho, zoom.
+     * @param {OAuthProvider} params.provider - OAuth2 Provider. Currently, supported providers are: amazon, apple, appwrite, auth0, authentik, autodesk, bitbucket, bitly, box, cloudflare, dailymotion, discord, disqus, dropbox, etsy, facebook, figma, fusionauth, github, gitlab, google, huggingface, kakao, keycloak, kick, linkedin, microsoft, notion, oidc, okta, paypal, paypalSandbox, podio, resend, salesforce, slack, spotify, stripe, tiktok, tradeshift, tradeshiftBox, twitch, webflow, wordpress, x, yahoo, yammer, yandex, zoho, zoom.
      * @param {string} params.success - URL to redirect back to your app after a successful login attempt.  Only URLs from hostnames in your project's platform list are allowed. This requirement helps to prevent an [open redirect](https://cheatsheetseries.owasp.org/cheatsheets/Unvalidated_Redirects_and_Forwards_Cheat_Sheet.html) attack against your project API.
      * @param {string} params.failure - URL to redirect back to your app after a failed login attempt.  Only URLs from hostnames in your project's platform list are allowed. This requirement helps to prevent an [open redirect](https://cheatsheetseries.owasp.org/cheatsheets/Unvalidated_Redirects_and_Forwards_Cheat_Sheet.html) attack against your project API.
      * @param {string[]} params.scopes - A list of custom OAuth2 scopes. Check each provider internal docs for a list of supported scopes. Maximum of 100 scopes are allowed, each 4096 characters long.
@@ -2983,7 +3063,7 @@ export class Account extends Service {
      * A user is limited to 10 active sessions at a time by default. [Learn more about session limits](https://appwrite.io/docs/authentication-security#limits).
      *
      *
-     * @param {OAuthProvider} provider - OAuth2 Provider. Currently, supported providers are: amazon, apple, appwrite, auth0, authentik, autodesk, bitbucket, bitly, box, cloudflare, dailymotion, discord, disqus, dropbox, etsy, facebook, figma, fusionauth, github, gitlab, google, huggingface, kakao, keycloak, kick, linkedin, microsoft, notion, oidc, okta, paypal, paypalSandbox, podio, resend, salesforce, slack, spotify, stripe, tiktok, tradeshift, tradeshiftBox, twitch, wordpress, x, yahoo, yammer, yandex, zoho, zoom.
+     * @param {OAuthProvider} provider - OAuth2 Provider. Currently, supported providers are: amazon, apple, appwrite, auth0, authentik, autodesk, bitbucket, bitly, box, cloudflare, dailymotion, discord, disqus, dropbox, etsy, facebook, figma, fusionauth, github, gitlab, google, huggingface, kakao, keycloak, kick, linkedin, microsoft, notion, oidc, okta, paypal, paypalSandbox, podio, resend, salesforce, slack, spotify, stripe, tiktok, tradeshift, tradeshiftBox, twitch, webflow, wordpress, x, yahoo, yammer, yandex, zoho, zoom.
      * @param {string} success - URL to redirect back to your app after a successful login attempt.  Only URLs from hostnames in your project's platform list are allowed. This requirement helps to prevent an [open redirect](https://cheatsheetseries.owasp.org/cheatsheets/Unvalidated_Redirects_and_Forwards_Cheat_Sheet.html) attack against your project API.
      * @param {string} failure - URL to redirect back to your app after a failed login attempt.  Only URLs from hostnames in your project's platform list are allowed. This requirement helps to prevent an [open redirect](https://cheatsheetseries.owasp.org/cheatsheets/Unvalidated_Redirects_and_Forwards_Cheat_Sheet.html) attack against your project API.
      * @param {string[]} scopes - A list of custom OAuth2 scopes. Check each provider internal docs for a list of supported scopes. Maximum of 100 scopes are allowed, each 4096 characters long.
@@ -3054,24 +3134,26 @@ export class Account extends Service {
             '{provider}',
             encodeURIComponent(String(provider)),
         );
-        const payload: Payload = {};
+        const apiPayload: Payload = {};
 
         if (typeof success !== 'undefined') {
-            payload['success'] = success;
+            apiPayload['success'] = success;
         }
 
         if (typeof failure !== 'undefined') {
-            payload['failure'] = failure;
+            apiPayload['failure'] = failure;
         }
 
         if (typeof scopes !== 'undefined') {
-            payload['scopes'] = scopes;
+            apiPayload['scopes'] = scopes;
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
-        payload['project'] = this.client.config.project;
+        apiPayload['project'] = this.client.config.project;
 
-        for (const [key, value] of Object.entries(Service.flatten(payload))) {
+        for (const [key, value] of Object.entries(
+            Service.flatten(apiPayload),
+        )) {
             uri.searchParams.append(key, value);
         }
         return uri;
@@ -3134,14 +3216,14 @@ export class Account extends Service {
         }
 
         const apiPath = '/account/sessions/phone';
-        const payload: Payload = {};
+        const apiPayload: Payload = {};
 
         if (typeof userId !== 'undefined') {
-            payload['userId'] = userId;
+            apiPayload['userId'] = userId;
         }
 
         if (typeof secret !== 'undefined') {
-            payload['secret'] = secret;
+            apiPayload['secret'] = secret;
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
@@ -3153,7 +3235,7 @@ export class Account extends Service {
                 'content-type': 'application/json',
                 accept: 'application/json',
             },
-            payload,
+            apiPayload,
         );
     }
 
@@ -3213,14 +3295,14 @@ export class Account extends Service {
         }
 
         const apiPath = '/account/sessions/token';
-        const payload: Payload = {};
+        const apiPayload: Payload = {};
 
         if (typeof userId !== 'undefined') {
-            payload['userId'] = userId;
+            apiPayload['userId'] = userId;
         }
 
         if (typeof secret !== 'undefined') {
-            payload['secret'] = secret;
+            apiPayload['secret'] = secret;
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
@@ -3232,7 +3314,7 @@ export class Account extends Service {
                 'content-type': 'application/json',
                 accept: 'application/json',
             },
-            payload,
+            apiPayload,
         );
     }
 
@@ -3282,7 +3364,7 @@ export class Account extends Service {
             '{sessionId}',
             encodeURIComponent(String(sessionId)),
         );
-        const payload: Payload = {};
+        const apiPayload: Payload = {};
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call(
@@ -3292,7 +3374,7 @@ export class Account extends Service {
                 'X-Appwrite-Project': this.client.config.project,
                 accept: 'application/json',
             },
-            payload,
+            apiPayload,
         );
     }
 
@@ -3342,7 +3424,7 @@ export class Account extends Service {
             '{sessionId}',
             encodeURIComponent(String(sessionId)),
         );
-        const payload: Payload = {};
+        const apiPayload: Payload = {};
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call(
@@ -3353,7 +3435,7 @@ export class Account extends Service {
                 'content-type': 'application/json',
                 accept: 'application/json',
             },
-            payload,
+            apiPayload,
         );
     }
 
@@ -3401,7 +3483,7 @@ export class Account extends Service {
             '{sessionId}',
             encodeURIComponent(String(sessionId)),
         );
-        const payload: Payload = {};
+        const apiPayload: Payload = {};
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call(
@@ -3412,7 +3494,7 @@ export class Account extends Service {
                 'content-type': 'application/json',
                 accept: 'application/json',
             },
-            payload,
+            apiPayload,
         );
     }
 
@@ -3426,7 +3508,7 @@ export class Account extends Service {
         Preferences extends Models.Preferences = Models.DefaultPreferences,
     >(): Promise<Models.User<Preferences>> {
         const apiPath = '/account/status';
-        const payload: Payload = {};
+        const apiPayload: Payload = {};
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call(
@@ -3437,7 +3519,7 @@ export class Account extends Service {
                 'content-type': 'application/json',
                 accept: 'application/json',
             },
-            payload,
+            apiPayload,
         );
     }
 
@@ -3517,18 +3599,18 @@ export class Account extends Service {
         }
 
         const apiPath = '/account/targets/push';
-        const payload: Payload = {};
+        const apiPayload: Payload = {};
 
         if (typeof targetId !== 'undefined') {
-            payload['targetId'] = targetId;
+            apiPayload['targetId'] = targetId;
         }
 
         if (typeof identifier !== 'undefined') {
-            payload['identifier'] = identifier;
+            apiPayload['identifier'] = identifier;
         }
 
         if (typeof providerId !== 'undefined') {
-            payload['providerId'] = providerId;
+            apiPayload['providerId'] = providerId;
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
@@ -3540,7 +3622,7 @@ export class Account extends Service {
                 'content-type': 'application/json',
                 accept: 'application/json',
             },
-            payload,
+            apiPayload,
         );
     }
 
@@ -3610,10 +3692,10 @@ export class Account extends Service {
             '{targetId}',
             encodeURIComponent(String(targetId)),
         );
-        const payload: Payload = {};
+        const apiPayload: Payload = {};
 
         if (typeof identifier !== 'undefined') {
-            payload['identifier'] = identifier;
+            apiPayload['identifier'] = identifier;
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
@@ -3625,7 +3707,7 @@ export class Account extends Service {
                 'content-type': 'application/json',
                 accept: 'application/json',
             },
-            payload,
+            apiPayload,
         );
     }
 
@@ -3675,7 +3757,7 @@ export class Account extends Service {
             '{targetId}',
             encodeURIComponent(String(targetId)),
         );
-        const payload: Payload = {};
+        const apiPayload: Payload = {};
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call(
@@ -3686,7 +3768,7 @@ export class Account extends Service {
                 'content-type': 'application/json',
                 accept: 'application/json',
             },
-            payload,
+            apiPayload,
         );
     }
 
@@ -3763,18 +3845,18 @@ export class Account extends Service {
         }
 
         const apiPath = '/account/tokens/email';
-        const payload: Payload = {};
+        const apiPayload: Payload = {};
 
         if (typeof userId !== 'undefined') {
-            payload['userId'] = userId;
+            apiPayload['userId'] = userId;
         }
 
         if (typeof email !== 'undefined') {
-            payload['email'] = email;
+            apiPayload['email'] = email;
         }
 
         if (typeof phrase !== 'undefined') {
-            payload['phrase'] = phrase;
+            apiPayload['phrase'] = phrase;
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
@@ -3786,7 +3868,7 @@ export class Account extends Service {
                 'content-type': 'application/json',
                 accept: 'application/json',
             },
-            payload,
+            apiPayload,
         );
     }
 
@@ -3876,22 +3958,22 @@ export class Account extends Service {
         }
 
         const apiPath = '/account/tokens/magic-url';
-        const payload: Payload = {};
+        const apiPayload: Payload = {};
 
         if (typeof userId !== 'undefined') {
-            payload['userId'] = userId;
+            apiPayload['userId'] = userId;
         }
 
         if (typeof email !== 'undefined') {
-            payload['email'] = email;
+            apiPayload['email'] = email;
         }
 
         if (typeof url !== 'undefined') {
-            payload['url'] = url;
+            apiPayload['url'] = url;
         }
 
         if (typeof phrase !== 'undefined') {
-            payload['phrase'] = phrase;
+            apiPayload['phrase'] = phrase;
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
@@ -3903,7 +3985,7 @@ export class Account extends Service {
                 'content-type': 'application/json',
                 accept: 'application/json',
             },
-            payload,
+            apiPayload,
         );
     }
 
@@ -3916,7 +3998,7 @@ export class Account extends Service {
      *
      * A user is limited to 10 active sessions at a time by default. [Learn more about session limits](https://appwrite.io/docs/authentication-security#limits).
      *
-     * @param {OAuthProvider} params.provider - OAuth2 Provider. Currently, supported providers are: amazon, apple, appwrite, auth0, authentik, autodesk, bitbucket, bitly, box, cloudflare, dailymotion, discord, disqus, dropbox, etsy, facebook, figma, fusionauth, github, gitlab, google, huggingface, kakao, keycloak, kick, linkedin, microsoft, notion, oidc, okta, paypal, paypalSandbox, podio, resend, salesforce, slack, spotify, stripe, tiktok, tradeshift, tradeshiftBox, twitch, wordpress, x, yahoo, yammer, yandex, zoho, zoom.
+     * @param {OAuthProvider} params.provider - OAuth2 Provider. Currently, supported providers are: amazon, apple, appwrite, auth0, authentik, autodesk, bitbucket, bitly, box, cloudflare, dailymotion, discord, disqus, dropbox, etsy, facebook, figma, fusionauth, github, gitlab, google, huggingface, kakao, keycloak, kick, linkedin, microsoft, notion, oidc, okta, paypal, paypalSandbox, podio, resend, salesforce, slack, spotify, stripe, tiktok, tradeshift, tradeshiftBox, twitch, webflow, wordpress, x, yahoo, yammer, yandex, zoho, zoom.
      * @param {string} params.success - URL to redirect back to your app after a successful login attempt.  Only URLs from hostnames in your project's platform list are allowed. This requirement helps to prevent an [open redirect](https://cheatsheetseries.owasp.org/cheatsheets/Unvalidated_Redirects_and_Forwards_Cheat_Sheet.html) attack against your project API.
      * @param {string} params.failure - URL to redirect back to your app after a failed login attempt.  Only URLs from hostnames in your project's platform list are allowed. This requirement helps to prevent an [open redirect](https://cheatsheetseries.owasp.org/cheatsheets/Unvalidated_Redirects_and_Forwards_Cheat_Sheet.html) attack against your project API.
      * @param {string[]} params.scopes - A list of custom OAuth2 scopes. Check each provider internal docs for a list of supported scopes. Maximum of 100 scopes are allowed, each 4096 characters long.
@@ -3938,7 +4020,7 @@ export class Account extends Service {
      *
      * A user is limited to 10 active sessions at a time by default. [Learn more about session limits](https://appwrite.io/docs/authentication-security#limits).
      *
-     * @param {OAuthProvider} provider - OAuth2 Provider. Currently, supported providers are: amazon, apple, appwrite, auth0, authentik, autodesk, bitbucket, bitly, box, cloudflare, dailymotion, discord, disqus, dropbox, etsy, facebook, figma, fusionauth, github, gitlab, google, huggingface, kakao, keycloak, kick, linkedin, microsoft, notion, oidc, okta, paypal, paypalSandbox, podio, resend, salesforce, slack, spotify, stripe, tiktok, tradeshift, tradeshiftBox, twitch, wordpress, x, yahoo, yammer, yandex, zoho, zoom.
+     * @param {OAuthProvider} provider - OAuth2 Provider. Currently, supported providers are: amazon, apple, appwrite, auth0, authentik, autodesk, bitbucket, bitly, box, cloudflare, dailymotion, discord, disqus, dropbox, etsy, facebook, figma, fusionauth, github, gitlab, google, huggingface, kakao, keycloak, kick, linkedin, microsoft, notion, oidc, okta, paypal, paypalSandbox, podio, resend, salesforce, slack, spotify, stripe, tiktok, tradeshift, tradeshiftBox, twitch, webflow, wordpress, x, yahoo, yammer, yandex, zoho, zoom.
      * @param {string} success - URL to redirect back to your app after a successful login attempt.  Only URLs from hostnames in your project's platform list are allowed. This requirement helps to prevent an [open redirect](https://cheatsheetseries.owasp.org/cheatsheets/Unvalidated_Redirects_and_Forwards_Cheat_Sheet.html) attack against your project API.
      * @param {string} failure - URL to redirect back to your app after a failed login attempt.  Only URLs from hostnames in your project's platform list are allowed. This requirement helps to prevent an [open redirect](https://cheatsheetseries.owasp.org/cheatsheets/Unvalidated_Redirects_and_Forwards_Cheat_Sheet.html) attack against your project API.
      * @param {string[]} scopes - A list of custom OAuth2 scopes. Check each provider internal docs for a list of supported scopes. Maximum of 100 scopes are allowed, each 4096 characters long.
@@ -4009,24 +4091,26 @@ export class Account extends Service {
             '{provider}',
             encodeURIComponent(String(provider)),
         );
-        const payload: Payload = {};
+        const apiPayload: Payload = {};
 
         if (typeof success !== 'undefined') {
-            payload['success'] = success;
+            apiPayload['success'] = success;
         }
 
         if (typeof failure !== 'undefined') {
-            payload['failure'] = failure;
+            apiPayload['failure'] = failure;
         }
 
         if (typeof scopes !== 'undefined') {
-            payload['scopes'] = scopes;
+            apiPayload['scopes'] = scopes;
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
-        payload['project'] = this.client.config.project;
+        apiPayload['project'] = this.client.config.project;
 
-        for (const [key, value] of Object.entries(Service.flatten(payload))) {
+        for (const [key, value] of Object.entries(
+            Service.flatten(apiPayload),
+        )) {
             uri.searchParams.append(key, value);
         }
         return uri;
@@ -4089,14 +4173,14 @@ export class Account extends Service {
         }
 
         const apiPath = '/account/tokens/phone';
-        const payload: Payload = {};
+        const apiPayload: Payload = {};
 
         if (typeof userId !== 'undefined') {
-            payload['userId'] = userId;
+            apiPayload['userId'] = userId;
         }
 
         if (typeof phone !== 'undefined') {
-            payload['phone'] = phone;
+            apiPayload['phone'] = phone;
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
@@ -4108,7 +4192,7 @@ export class Account extends Service {
                 'content-type': 'application/json',
                 accept: 'application/json',
             },
-            payload,
+            apiPayload,
         );
     }
 
@@ -4159,10 +4243,10 @@ export class Account extends Service {
         }
 
         const apiPath = '/account/verifications/email';
-        const payload: Payload = {};
+        const apiPayload: Payload = {};
 
         if (typeof url !== 'undefined') {
-            payload['url'] = url;
+            apiPayload['url'] = url;
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
@@ -4174,7 +4258,7 @@ export class Account extends Service {
                 'content-type': 'application/json',
                 accept: 'application/json',
             },
-            payload,
+            apiPayload,
         );
     }
 
@@ -4226,10 +4310,10 @@ export class Account extends Service {
         }
 
         const apiPath = '/account/verifications/email';
-        const payload: Payload = {};
+        const apiPayload: Payload = {};
 
         if (typeof url !== 'undefined') {
-            payload['url'] = url;
+            apiPayload['url'] = url;
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
@@ -4241,7 +4325,7 @@ export class Account extends Service {
                 'content-type': 'application/json',
                 accept: 'application/json',
             },
-            payload,
+            apiPayload,
         );
     }
 
@@ -4304,14 +4388,14 @@ export class Account extends Service {
         }
 
         const apiPath = '/account/verifications/email';
-        const payload: Payload = {};
+        const apiPayload: Payload = {};
 
         if (typeof userId !== 'undefined') {
-            payload['userId'] = userId;
+            apiPayload['userId'] = userId;
         }
 
         if (typeof secret !== 'undefined') {
-            payload['secret'] = secret;
+            apiPayload['secret'] = secret;
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
@@ -4323,7 +4407,7 @@ export class Account extends Service {
                 'content-type': 'application/json',
                 accept: 'application/json',
             },
-            payload,
+            apiPayload,
         );
     }
 
@@ -4384,14 +4468,14 @@ export class Account extends Service {
         }
 
         const apiPath = '/account/verifications/email';
-        const payload: Payload = {};
+        const apiPayload: Payload = {};
 
         if (typeof userId !== 'undefined') {
-            payload['userId'] = userId;
+            apiPayload['userId'] = userId;
         }
 
         if (typeof secret !== 'undefined') {
-            payload['secret'] = secret;
+            apiPayload['secret'] = secret;
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
@@ -4403,7 +4487,7 @@ export class Account extends Service {
                 'content-type': 'application/json',
                 accept: 'application/json',
             },
-            payload,
+            apiPayload,
         );
     }
 
@@ -4453,10 +4537,10 @@ export class Account extends Service {
         const phrase = params.phrase;
 
         const apiPath = '/account/verifications/email/otp';
-        const payload: Payload = {};
+        const apiPayload: Payload = {};
 
         if (typeof phrase !== 'undefined') {
-            payload['phrase'] = phrase;
+            apiPayload['phrase'] = phrase;
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
@@ -4468,7 +4552,7 @@ export class Account extends Service {
                 'content-type': 'application/json',
                 accept: 'application/json',
             },
-            payload,
+            apiPayload,
         );
     }
 
@@ -4533,14 +4617,14 @@ export class Account extends Service {
         }
 
         const apiPath = '/account/verifications/email/otp';
-        const payload: Payload = {};
+        const apiPayload: Payload = {};
 
         if (typeof userId !== 'undefined') {
-            payload['userId'] = userId;
+            apiPayload['userId'] = userId;
         }
 
         if (typeof secret !== 'undefined') {
-            payload['secret'] = secret;
+            apiPayload['secret'] = secret;
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
@@ -4552,7 +4636,7 @@ export class Account extends Service {
                 'content-type': 'application/json',
                 accept: 'application/json',
             },
-            payload,
+            apiPayload,
         );
     }
 
@@ -4564,7 +4648,7 @@ export class Account extends Service {
      */
     createPhoneVerification(): Promise<Models.Token> {
         const apiPath = '/account/verifications/phone';
-        const payload: Payload = {};
+        const apiPayload: Payload = {};
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call(
@@ -4575,7 +4659,7 @@ export class Account extends Service {
                 'content-type': 'application/json',
                 accept: 'application/json',
             },
-            payload,
+            apiPayload,
         );
     }
 
@@ -4638,14 +4722,14 @@ export class Account extends Service {
         }
 
         const apiPath = '/account/verifications/phone';
-        const payload: Payload = {};
+        const apiPayload: Payload = {};
 
         if (typeof userId !== 'undefined') {
-            payload['userId'] = userId;
+            apiPayload['userId'] = userId;
         }
 
         if (typeof secret !== 'undefined') {
-            payload['secret'] = secret;
+            apiPayload['secret'] = secret;
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
@@ -4657,7 +4741,7 @@ export class Account extends Service {
                 'content-type': 'application/json',
                 accept: 'application/json',
             },
-            payload,
+            apiPayload,
         );
     }
 }

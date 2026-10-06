@@ -1,0 +1,39 @@
+root = true
+
+[*.{kt,kts}]
+ktlint_code_style = ktlint_official
+ktlint_standard_annotation = disabled
+ktlint_standard_argument-list-wrapping = disabled
+ktlint_standard_blank-line-before-declaration = disabled
+ktlint_standard_blank-line-between-when-conditions = disabled
+ktlint_standard_chain-method-continuation = disabled
+ktlint_standard_class-signature = disabled
+ktlint_standard_function-expression-body = disabled
+ktlint_standard_function-signature = disabled
+ktlint_standard_function-start-of-body-spacing = disabled
+ktlint_standard_if-else-bracing = disabled
+ktlint_standard_if-else-wrapping = disabled
+ktlint_standard_max-line-length = disabled
+ktlint_standard_multiline-expression-wrapping = disabled
+ktlint_standard_multiline-if-else = disabled
+ktlint_standard_no-blank-line-before-rbrace = disabled
+ktlint_standard_no-blank-line-in-list = disabled
+ktlint_standard_no-empty-first-line-in-class-body = disabled
+ktlint_standard_no-line-break-before-assignment = disabled
+ktlint_standard_no-wildcard-imports = disabled
+ktlint_standard_parameter-list-wrapping = disabled
+ktlint_standard_spacing-between-declarations-with-annotations = disabled
+ktlint_standard_spacing-between-declarations-with-comments = disabled
+ktlint_standard_string-template = disabled
+ktlint_standard_trailing-comma-on-call-site = disabled
+ktlint_standard_trailing-comma-on-declaration-site = disabled
+ktlint_standard_when-entry-bracing = disabled
+ktlint_standard_wrapping = disabled
+
+[**/Channel.kt]
+# Marker types intentionally use leading underscores to distinguish channel states.
+ktlint_standard_class-naming = disabled
+
+[**/models/*.kt]
+# Model imports follow schema property order so generated declarations stay deterministic.
+ktlint_standard_import-ordering = disabled

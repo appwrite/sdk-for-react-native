@@ -10,7 +10,16 @@ const documentsDB = new DocumentsDB(client);
 const result = await documentsDB.createDocuments({
     databaseId: '<DATABASE_ID>',
     collectionId: '<COLLECTION_ID>',
-    documents: [],
+    documents: [
+        {
+            $id: 'example1',
+            username: 'walter.obrien',
+            email: 'walter.obrien@example.com',
+            fullName: "Walter O'Brien",
+            age: 30,
+            isAdmin: false,
+        },
+    ],
     transactionId: '<TRANSACTION_ID>', // optional
 });
 

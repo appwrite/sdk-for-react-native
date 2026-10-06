@@ -89,14 +89,14 @@ export class Messaging extends Service {
             '{topicId}',
             encodeURIComponent(String(topicId)),
         );
-        const payload: Payload = {};
+        const apiPayload: Payload = {};
 
         if (typeof subscriberId !== 'undefined') {
-            payload['subscriberId'] = subscriberId;
+            apiPayload['subscriberId'] = subscriberId;
         }
 
         if (typeof targetId !== 'undefined') {
-            payload['targetId'] = targetId;
+            apiPayload['targetId'] = targetId;
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
@@ -108,7 +108,7 @@ export class Messaging extends Service {
                 'content-type': 'application/json',
                 accept: 'application/json',
             },
-            payload,
+            apiPayload,
         );
     }
 
@@ -177,7 +177,7 @@ export class Messaging extends Service {
                 '{subscriberId}',
                 encodeURIComponent(String(subscriberId)),
             );
-        const payload: Payload = {};
+        const apiPayload: Payload = {};
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call(
@@ -188,7 +188,7 @@ export class Messaging extends Service {
                 'content-type': 'application/json',
                 accept: 'application/json',
             },
-            payload,
+            apiPayload,
         );
     }
 }

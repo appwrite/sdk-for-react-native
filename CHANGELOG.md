@@ -1,5 +1,15 @@
 # Change log
 
+## 1.2.0-rc.0
+
+* Added: `Apps` service to manage OAuth2 apps, keys, secrets, and installations
+* Added: `Oauth2` service for authorization, consent, device, PAR, and token flows
+* Added: `Push` service for MQTT realtime push with Android background delivery
+* Added: `Topic` builder and native TCP modules for push
+* Added: `Avatars.updatePhoto()` and `Avatars.deletePhoto()` methods
+* Added: `App`, `Oauth2*`, and `Account` models
+* Added: `Webflow` to the `OAuthProvider` enum
+
 ## 1.1.0
 
 * Added: `Account.createRecoveryOTP` and `Account.updateRecoveryOTP` for code-based password recovery

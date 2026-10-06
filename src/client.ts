@@ -170,6 +170,14 @@ export type FilePart = {
     bytes: () => Promise<Uint8Array>;
 };
 
+function isFilePart(value: any): boolean {
+    return (
+        typeof value.uri === 'string' &&
+        typeof value.name === 'string' &&
+        typeof value.type === 'string'
+    );
+}
+
 class AppwriteException extends Error {
     code: number;
     response: string;
@@ -193,6 +201,8 @@ class Client {
     config: { [key: string]: string } = {
         endpoint: 'https://cloud.appwrite.io/v1',
         endpointRealtime: '',
+        endpointPush: '',
+        pushClientId: '',
         platform: '',
         project: '',
         jwt: '',
@@ -208,7 +218,7 @@ class Client {
         'x-sdk-name': 'React Native',
         'x-sdk-platform': 'client',
         'x-sdk-language': 'reactnative',
-        'x-sdk-version': '1.1.0',
+        'x-sdk-version': '1.2.0-rc.0',
         'X-Appwrite-Response-Format': '2.3.0',
     };
 
@@ -275,6 +285,45 @@ class Client {
         }
 
         this.config.endpointRealtime = endpointRealtime;
+        return this;
+    }
+
+    /**
+     * Set Push Endpoint
+     *
+     * The MQTT broker URL the AppwritePush service connects to, e.g.
+     * `mqtt://host:1883` or `mqtts://host:8883`.
+     *
+     * @param {string} endpointPush
+     *
+     * @returns {this}
+     */
+    setPushEndpoint(endpointPush: string): this {
+        if (!endpointPush || typeof endpointPush !== 'string') {
+            throw new AppwriteException('Endpoint must be a valid string');
+        }
+
+        this.config.endpointPush = endpointPush;
+        return this;
+    }
+
+    /**
+     * Set Push Client Id
+     *
+     * A stable client id for the AppwritePush service. The broker keys its
+     * offline-replay cursor on this id, so pass a stable value to resume replay across
+     * app restarts. Defaults to a per-connection id when unset.
+     *
+     * @param {string} pushClientId
+     *
+     * @returns {this}
+     */
+    setPushClientId(pushClientId: string): this {
+        if (!pushClientId || typeof pushClientId !== 'string') {
+            throw new AppwriteException('Client id must be a valid string');
+        }
+
+        this.config.pushClientId = pushClientId;
         return this;
     }
 
@@ -810,6 +859,15 @@ class Client {
                             params[key].forEach((value: any) => {
                                 formData.append(key + '[]', value);
                             });
+                        } else if (
+                            params[key] !== null &&
+                            typeof params[key] === 'object' &&
+                            !isFilePart(params[key])
+                        ) {
+                            formData.append(
+                                key,
+                                JSONbig.stringify(params[key]),
+                            );
                         } else {
                             formData.append(key, params[key]);
                         }
@@ -836,7 +894,9 @@ class Client {
                     );
             }
 
-            if (
+            if (responseType === 'text' && response.status < 400) {
+                data = await response.text();
+            } else if (
                 response.headers
                     .get('content-type')
                     ?.includes('application/json')

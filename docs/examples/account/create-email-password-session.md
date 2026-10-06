@@ -10,6 +10,7 @@ const account = new Account(client);
 const result = await account.createEmailPasswordSession({
     email: 'email@example.com',
     password: 'password',
+    duration: 60, // optional
 });
 
 console.log(result);

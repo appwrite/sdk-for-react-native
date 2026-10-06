@@ -9,6 +9,7 @@ const databases = new Databases(client);
 
 const result = await databases.listTransactions({
     queries: [], // optional
+    total: false, // optional
 });
 
 console.log(result);
