@@ -42,17 +42,12 @@ between (`retry: true`). Messages no in-app callback receives are posted as noti
 open the app. It reconnects with the credential saved at subscribe time, so use a session rather
 than a short-lived JWT.
 
-On Android 13 and later, notifications only appear once the user grants the
-`POST_NOTIFICATIONS` runtime permission (the SDK declares it in its manifest). Without it, the
-subscription still delivers to your callback but posts no notification, so ask before subscribing:
+On Android 13 and later, the first background subscription asks the user for the
+`POST_NOTIFICATIONS` runtime permission. If they decline, the subscription still delivers to your
+callback but posts no notification. Notifications show the title, body and image sent with
+`createPush`, and fall back to the subscription's `title` and the raw payload for other messages.
 
 ```js
-import { PermissionsAndroid, Platform } from 'react-native';
-
-if (Platform.OS === 'android' && Platform.Version >= 33) {
-    await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS);
-}
-
 const sub = await push.subscribe('news', (message) => console.log(message.data), {
     background: true,
     title: 'News',

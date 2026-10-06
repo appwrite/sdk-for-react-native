@@ -1,6 +1,14 @@
 declare module 'react-native' {
     export const Platform: {
         readonly OS: string;
+        readonly Version: number | string;
+    };
+
+    // The slice of the permissions API Push uses to ask for POST_NOTIFICATIONS on Android 13+.
+    export const PermissionsAndroid: {
+        readonly PERMISSIONS: { readonly POST_NOTIFICATIONS: string };
+        check(permission: string): Promise<boolean>;
+        request(permission: string): Promise<string>;
     };
 
     // The slice of the native module API the Push service uses on Android.
@@ -100,7 +108,11 @@ declare module 'expo-notifications' {
         channel: { name: string; importance: number },
     ): Promise<unknown>;
     export function scheduleNotificationAsync(request: {
-        content: { title: string; body: string };
+        content: {
+            title: string;
+            body: string | null;
+            data?: Record<string, unknown>;
+        };
         trigger: null;
     }): Promise<string>;
 }

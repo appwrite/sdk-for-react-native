@@ -1,5 +1,13 @@
 # Change log
 
+## 1.2.0-rc.1
+
+* Added: background push notifications render the server `notification` title, body, and image
+* Added: Android shows notification images (BigPictureStyle) and long bodies (BigTextStyle)
+* Added: the SDK requests Android 13+ `POST_NOTIFICATIONS` itself on first background subscribe
+* Added: notification `data` now carries `topic` and `payload`
+* Fixed: a server-sent title dedupes to one notification per topic instead of one per subscription
+
 ## 1.2.0-rc.0
 
 * Added: `Apps` service to manage OAuth2 apps, keys, secrets, and installations

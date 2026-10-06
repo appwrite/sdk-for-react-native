@@ -10,6 +10,8 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.ConnectivityManager
 import android.net.Network
 import android.os.Build
@@ -30,6 +32,8 @@ import org.json.JSONArray
 import org.json.JSONObject
 import java.io.File
 import java.io.IOException
+import java.net.HttpURLConnection
+import java.net.URL
 import java.util.UUID
 import java.util.concurrent.CopyOnWriteArrayList
 import java.util.concurrent.ExecutionException
@@ -40,6 +44,9 @@ import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
 
 private const val LOG_TAG = "AppwritePush"
+
+/** What a message's `notification` block asks a background notification to show; [present] is false without one. */
+internal data class PushNotificationContent(val present: Boolean, val title: String?, val body: String?, val image: String?)
 
 /** A background subscription saved across restarts: its filter, QoS choice and notification title. */
 internal data class PushEntry(
@@ -108,6 +115,7 @@ internal object PushBackground {
     private const val HEARTBEAT_FAILURES = 3
     private const val HEARTBEAT_RESET_MS = 3 * 24 * 60 * 60 * 1_000L
     private const val REQUEST_TIMEOUT_SECONDS = 10L
+    private const val IMAGE_TIMEOUT_MS = 5_000
     private const val CONNECT_TIMEOUT_SECONDS = 20L
 
     // How long a message waits for a listener that acknowledges it itself (the React Native and
@@ -647,9 +655,11 @@ internal object PushBackground {
         try {
             // The app's PushReceiver gets only messages no live callback received.
             val handled = matching.isEmpty() && deliverToReceivers(context, message)
+            val content = notificationContent(message)
             val titles = matching.filter { it.background }.map { it.title ?: message.topic } +
                 if (handled) emptyList() else entries.map { it.title ?: message.topic }
-            titles.distinct().forEach { notify(context, message, it) }
+            // A title the server sent replaces every subscription's, so one notification is posted.
+            titles.map { content.title ?: it }.distinct().forEach { notify(context, message, it, content) }
         } finally {
             releaseWakeLock(wakeLock)
         }
@@ -679,19 +689,29 @@ internal object PushBackground {
         return handled
     }
 
-    /** Post a notification for [message] that opens the app, with the message in its extras. */
-    fun notify(context: Context, message: PushMessage, title: String) {
+    /**
+     * Post a notification for [message] that opens the app, with the message in its extras. It shows
+     * the server's title, body and image from [content], falling back to [title] and the raw payload.
+     */
+    fun notify(context: Context, message: PushMessage, title: String, content: PushNotificationContent = notificationContent(message)) {
         val manager = NotificationManagerCompat.from(context)
         if (!manager.areNotificationsEnabled()) {
             return
         }
         createChannels(context)
         val id = 31 * message.hashCode() + title.hashCode()
+        val body = content.body ?: message.data.takeIf { !content.present }
         val builder = NotificationCompat.Builder(context, CHANNEL_ID)
-            .setContentTitle(title)
-            .setContentText(message.data)
+            .setContentTitle(content.title ?: title)
             .setSmallIcon(notificationIcon(context))
             .setAutoCancel(true)
+        if (body != null) {
+            builder.setContentText(body).setStyle(NotificationCompat.BigTextStyle().bigText(body))
+        }
+        content.image?.let { loadImage(it) }?.let { image ->
+            builder.setLargeIcon(image)
+                .setStyle(NotificationCompat.BigPictureStyle().bigPicture(image).bigLargeIcon(null as Bitmap?).setSummaryText(body))
+        }
         context.packageManager.getLaunchIntentForPackage(context.packageName)?.let { launch ->
             launch.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP)
                 .putExtra(EXTRA_TOPIC, message.topic)
@@ -704,6 +724,36 @@ internal object PushBackground {
             manager.notify(id, builder.build())
         } catch (e: SecurityException) {
             // POST_NOTIFICATIONS not granted; nothing to show.
+        }
+    }
+
+    /** The server's `notification` block in [message]: nulls when the payload has none or is not JSON. */
+    fun notificationContent(message: PushMessage): PushNotificationContent {
+        val notification = runCatching { JSONObject(message.data) }.getOrNull()?.optJSONObject("notification")
+            ?: return PushNotificationContent(false, null, null, null)
+        fun field(name: String) = (notification.opt(name) as? String)?.takeIf { it.isNotEmpty() }
+        return PushNotificationContent(true, field("title"), field("body"), field("image"))
+    }
+
+    // Downloads notification images, so a slow one is abandoned without holding up delivery.
+    private val imageLoader = Executors.newCachedThreadPool { runnable ->
+        Thread(runnable, "AppwritePushImage").apply { isDaemon = true }
+    }
+
+    // Download a notification image, or null when it cannot be fetched and decoded within
+    // IMAGE_TIMEOUT_MS overall. On timeout the connection is closed, which ends a read in progress.
+    private fun loadImage(url: String): Bitmap? {
+        val connection = runCatching { URL(url).openConnection() as HttpURLConnection }.getOrNull() ?: return null
+        connection.connectTimeout = IMAGE_TIMEOUT_MS
+        connection.readTimeout = IMAGE_TIMEOUT_MS
+        val download = imageLoader.submit<Bitmap?> { connection.inputStream.use { BitmapFactory.decodeStream(it) } }
+        return try {
+            download.get(IMAGE_TIMEOUT_MS.toLong(), TimeUnit.MILLISECONDS)
+        } catch (e: Exception) {
+            download.cancel(true)
+            null
+        } finally {
+            connection.disconnect()
         }
     }
 
