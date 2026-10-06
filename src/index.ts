@@ -1,5 +1,6 @@
 export { Client, AppwriteException } from './client';
 export { Account } from './services/account';
+export { Apps } from './services/apps';
 export { Avatars } from './services/avatars';
 export { Databases } from './services/databases';
 export { DocumentsDB } from './services/documents-db';
@@ -7,6 +8,7 @@ export { Functions } from './services/functions';
 export { Graphql } from './services/graphql';
 export { Locale } from './services/locale';
 export { Messaging } from './services/messaging';
+export { Oauth2 } from './services/oauth-2';
 export { Organization } from './services/organization';
 export { Presences } from './services/presences';
 export { Storage } from './services/storage';
@@ -14,6 +16,13 @@ export { TablesDB } from './services/tables-db';
 export { Teams } from './services/teams';
 export { VectorsDB } from './services/vectors-db';
 export { Realtime } from './services/realtime';
+export { Push } from './services/push';
+export type {
+    PushMessage,
+    PushSubscription,
+    SubscribeOptions,
+    MessageCallback,
+} from './services/push';
 export type {
     Models,
     Payload,
@@ -26,6 +35,7 @@ export { Query } from './query';
 export { Permission } from './permission';
 export { Role } from './role';
 export { ID } from './id';
+export { Topic, ResolvedTopic } from './topic';
 export { Channel } from './channel';
 export { Operator, Condition } from './operator';
 export { AuthenticatorType } from './enums/authenticator-type';

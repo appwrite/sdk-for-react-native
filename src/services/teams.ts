@@ -70,18 +70,18 @@ export class Teams extends Service {
         const total = params.total;
 
         const apiPath = '/teams';
-        const payload: Payload = {};
+        const apiPayload: Payload = {};
 
         if (typeof queries !== 'undefined') {
-            payload['queries'] = queries;
+            apiPayload['queries'] = queries;
         }
 
         if (typeof search !== 'undefined') {
-            payload['search'] = search;
+            apiPayload['search'] = search;
         }
 
         if (typeof total !== 'undefined') {
-            payload['total'] = total;
+            apiPayload['total'] = total;
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
@@ -92,7 +92,7 @@ export class Teams extends Service {
                 'X-Appwrite-Project': this.client.config.project,
                 accept: 'application/json',
             },
-            payload,
+            apiPayload,
         );
     }
 
@@ -101,7 +101,7 @@ export class Teams extends Service {
      *
      * @param {string} params.teamId - Team ID. Choose a custom ID or generate a random ID with `ID.unique()`. Valid chars are a-z, A-Z, 0-9, period, hyphen, and underscore. Can't start with a special char. Max length is 36 chars.
      * @param {string} params.name - Team name. Max length: 128 chars.
-     * @param {string[]} params.roles - Array of strings. Use this param to set the roles in the team for the user who created it. The default role is **owner**. A role can be any string. Learn more about [roles and permissions](https://appwrite.io/docs/permissions). Maximum of 100 roles are allowed, each 32 characters long.
+     * @param {string[]} params.roles - Array of strings. Use this param to set the roles in the team for the user who created it. The default role is **owner**. A role can be any string. Learn more about [roles and permissions](https://appwrite.io/docs/permissions). Maximum of 100 roles are allowed, each 81 characters long.
      * @throws {AppwriteException}
      * @returns {Promise}
      */
@@ -117,7 +117,7 @@ export class Teams extends Service {
      *
      * @param {string} teamId - Team ID. Choose a custom ID or generate a random ID with `ID.unique()`. Valid chars are a-z, A-Z, 0-9, period, hyphen, and underscore. Can't start with a special char. Max length is 36 chars.
      * @param {string} name - Team name. Max length: 128 chars.
-     * @param {string[]} roles - Array of strings. Use this param to set the roles in the team for the user who created it. The default role is **owner**. A role can be any string. Learn more about [roles and permissions](https://appwrite.io/docs/permissions). Maximum of 100 roles are allowed, each 32 characters long.
+     * @param {string[]} roles - Array of strings. Use this param to set the roles in the team for the user who created it. The default role is **owner**. A role can be any string. Learn more about [roles and permissions](https://appwrite.io/docs/permissions). Maximum of 100 roles are allowed, each 81 characters long.
      * @throws {AppwriteException}
      * @returns {Promise<Models.Team<Preferences>>}
      * @deprecated Use the object parameter style method for a better developer experience.
@@ -165,18 +165,18 @@ export class Teams extends Service {
         }
 
         const apiPath = '/teams';
-        const payload: Payload = {};
+        const apiPayload: Payload = {};
 
         if (typeof teamId !== 'undefined') {
-            payload['teamId'] = teamId;
+            apiPayload['teamId'] = teamId;
         }
 
         if (typeof name !== 'undefined') {
-            payload['name'] = name;
+            apiPayload['name'] = name;
         }
 
         if (typeof roles !== 'undefined') {
-            payload['roles'] = roles;
+            apiPayload['roles'] = roles;
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
@@ -188,7 +188,7 @@ export class Teams extends Service {
                 'content-type': 'application/json',
                 accept: 'application/json',
             },
-            payload,
+            apiPayload,
         );
     }
 
@@ -240,7 +240,7 @@ export class Teams extends Service {
             '{teamId}',
             encodeURIComponent(String(teamId)),
         );
-        const payload: Payload = {};
+        const apiPayload: Payload = {};
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call(
@@ -250,7 +250,7 @@ export class Teams extends Service {
                 'X-Appwrite-Project': this.client.config.project,
                 accept: 'application/json',
             },
-            payload,
+            apiPayload,
         );
     }
 
@@ -316,10 +316,10 @@ export class Teams extends Service {
             '{teamId}',
             encodeURIComponent(String(teamId)),
         );
-        const payload: Payload = {};
+        const apiPayload: Payload = {};
 
         if (typeof name !== 'undefined') {
-            payload['name'] = name;
+            apiPayload['name'] = name;
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
@@ -331,7 +331,7 @@ export class Teams extends Service {
                 'content-type': 'application/json',
                 accept: 'application/json',
             },
-            payload,
+            apiPayload,
         );
     }
 
@@ -377,7 +377,7 @@ export class Teams extends Service {
             '{teamId}',
             encodeURIComponent(String(teamId)),
         );
-        const payload: Payload = {};
+        const apiPayload: Payload = {};
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call(
@@ -388,7 +388,7 @@ export class Teams extends Service {
                 'content-type': 'application/json',
                 accept: 'application/json',
             },
-            payload,
+            apiPayload,
         );
     }
 
@@ -458,14 +458,14 @@ export class Teams extends Service {
             '{teamId}',
             encodeURIComponent(String(teamId)),
         );
-        const payload: Payload = {};
+        const apiPayload: Payload = {};
 
         if (typeof queries !== 'undefined') {
-            payload['queries'] = queries;
+            apiPayload['queries'] = queries;
         }
 
         if (typeof total !== 'undefined') {
-            payload['total'] = total;
+            apiPayload['total'] = total;
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
@@ -476,7 +476,7 @@ export class Teams extends Service {
                 'X-Appwrite-Project': this.client.config.project,
                 accept: 'application/json',
             },
-            payload,
+            apiPayload,
         );
     }
 
@@ -555,14 +555,14 @@ export class Teams extends Service {
             '{teamId}',
             encodeURIComponent(String(teamId)),
         );
-        const payload: Payload = {};
+        const apiPayload: Payload = {};
 
         if (typeof appId !== 'undefined') {
-            payload['appId'] = appId;
+            apiPayload['appId'] = appId;
         }
 
         if (typeof authorizationDetails !== 'undefined') {
-            payload['authorizationDetails'] = authorizationDetails;
+            apiPayload['authorizationDetails'] = authorizationDetails;
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
@@ -574,7 +574,7 @@ export class Teams extends Service {
                 'content-type': 'application/json',
                 accept: 'application/json',
             },
-            payload,
+            apiPayload,
         );
     }
 
@@ -644,7 +644,7 @@ export class Teams extends Service {
                 '{installationId}',
                 encodeURIComponent(String(installationId)),
             );
-        const payload: Payload = {};
+        const apiPayload: Payload = {};
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call(
@@ -654,7 +654,7 @@ export class Teams extends Service {
                 'X-Appwrite-Project': this.client.config.project,
                 accept: 'application/json',
             },
-            payload,
+            apiPayload,
         );
     }
 
@@ -741,10 +741,10 @@ export class Teams extends Service {
                 '{installationId}',
                 encodeURIComponent(String(installationId)),
             );
-        const payload: Payload = {};
+        const apiPayload: Payload = {};
 
         if (typeof authorizationDetails !== 'undefined') {
-            payload['authorizationDetails'] = authorizationDetails;
+            apiPayload['authorizationDetails'] = authorizationDetails;
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
@@ -756,7 +756,7 @@ export class Teams extends Service {
                 'content-type': 'application/json',
                 accept: 'application/json',
             },
-            payload,
+            apiPayload,
         );
     }
 
@@ -823,7 +823,7 @@ export class Teams extends Service {
                 '{installationId}',
                 encodeURIComponent(String(installationId)),
             );
-        const payload: Payload = {};
+        const apiPayload: Payload = {};
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call(
@@ -834,7 +834,7 @@ export class Teams extends Service {
                 'content-type': 'application/json',
                 accept: 'application/json',
             },
-            payload,
+            apiPayload,
         );
     }
 
@@ -922,18 +922,18 @@ export class Teams extends Service {
             '{teamId}',
             encodeURIComponent(String(teamId)),
         );
-        const payload: Payload = {};
+        const apiPayload: Payload = {};
 
         if (typeof queries !== 'undefined') {
-            payload['queries'] = queries;
+            apiPayload['queries'] = queries;
         }
 
         if (typeof search !== 'undefined') {
-            payload['search'] = search;
+            apiPayload['search'] = search;
         }
 
         if (typeof total !== 'undefined') {
-            payload['total'] = total;
+            apiPayload['total'] = total;
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
@@ -944,7 +944,7 @@ export class Teams extends Service {
                 'X-Appwrite-Project': this.client.config.project,
                 accept: 'application/json',
             },
-            payload,
+            apiPayload,
         );
     }
 
@@ -1077,30 +1077,30 @@ export class Teams extends Service {
             '{teamId}',
             encodeURIComponent(String(teamId)),
         );
-        const payload: Payload = {};
+        const apiPayload: Payload = {};
 
         if (typeof email !== 'undefined') {
-            payload['email'] = email;
+            apiPayload['email'] = email;
         }
 
         if (typeof userId !== 'undefined') {
-            payload['userId'] = userId;
+            apiPayload['userId'] = userId;
         }
 
         if (typeof phone !== 'undefined') {
-            payload['phone'] = phone;
+            apiPayload['phone'] = phone;
         }
 
         if (typeof roles !== 'undefined') {
-            payload['roles'] = roles;
+            apiPayload['roles'] = roles;
         }
 
         if (typeof url !== 'undefined') {
-            payload['url'] = url;
+            apiPayload['url'] = url;
         }
 
         if (typeof name !== 'undefined') {
-            payload['name'] = name;
+            apiPayload['name'] = name;
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
@@ -1112,7 +1112,7 @@ export class Teams extends Service {
                 'content-type': 'application/json',
                 accept: 'application/json',
             },
-            payload,
+            apiPayload,
         );
     }
 
@@ -1182,7 +1182,7 @@ export class Teams extends Service {
                 '{membershipId}',
                 encodeURIComponent(String(membershipId)),
             );
-        const payload: Payload = {};
+        const apiPayload: Payload = {};
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call(
@@ -1192,7 +1192,7 @@ export class Teams extends Service {
                 'X-Appwrite-Project': this.client.config.project,
                 accept: 'application/json',
             },
-            payload,
+            apiPayload,
         );
     }
 
@@ -1276,10 +1276,10 @@ export class Teams extends Service {
                 '{membershipId}',
                 encodeURIComponent(String(membershipId)),
             );
-        const payload: Payload = {};
+        const apiPayload: Payload = {};
 
         if (typeof roles !== 'undefined') {
-            payload['roles'] = roles;
+            apiPayload['roles'] = roles;
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
@@ -1291,7 +1291,7 @@ export class Teams extends Service {
                 'content-type': 'application/json',
                 accept: 'application/json',
             },
-            payload,
+            apiPayload,
         );
     }
 
@@ -1358,7 +1358,7 @@ export class Teams extends Service {
                 '{membershipId}',
                 encodeURIComponent(String(membershipId)),
             );
-        const payload: Payload = {};
+        const apiPayload: Payload = {};
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call(
@@ -1369,7 +1369,7 @@ export class Teams extends Service {
                 'content-type': 'application/json',
                 accept: 'application/json',
             },
-            payload,
+            apiPayload,
         );
     }
 
@@ -1479,14 +1479,14 @@ export class Teams extends Service {
                 '{membershipId}',
                 encodeURIComponent(String(membershipId)),
             );
-        const payload: Payload = {};
+        const apiPayload: Payload = {};
 
         if (typeof userId !== 'undefined') {
-            payload['userId'] = userId;
+            apiPayload['userId'] = userId;
         }
 
         if (typeof secret !== 'undefined') {
-            payload['secret'] = secret;
+            apiPayload['secret'] = secret;
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
@@ -1498,7 +1498,7 @@ export class Teams extends Service {
                 'content-type': 'application/json',
                 accept: 'application/json',
             },
-            payload,
+            apiPayload,
         );
     }
 
@@ -1550,7 +1550,7 @@ export class Teams extends Service {
             '{teamId}',
             encodeURIComponent(String(teamId)),
         );
-        const payload: Payload = {};
+        const apiPayload: Payload = {};
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call(
@@ -1560,7 +1560,7 @@ export class Teams extends Service {
                 'X-Appwrite-Project': this.client.config.project,
                 accept: 'application/json',
             },
-            payload,
+            apiPayload,
         );
     }
 
@@ -1623,10 +1623,10 @@ export class Teams extends Service {
             '{teamId}',
             encodeURIComponent(String(teamId)),
         );
-        const payload: Payload = {};
+        const apiPayload: Payload = {};
 
         if (typeof prefs !== 'undefined') {
-            payload['prefs'] = prefs;
+            apiPayload['prefs'] = prefs;
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
@@ -1638,7 +1638,7 @@ export class Teams extends Service {
                 'content-type': 'application/json',
                 accept: 'application/json',
             },
-            payload,
+            apiPayload,
         );
     }
 }

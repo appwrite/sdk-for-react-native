@@ -9,6 +9,7 @@ const vectorsDB = new VectorsDB(client);
 
 const result = await vectorsDB.listTransactions({
     queries: [], // optional
+    total: false, // optional
 });
 
 console.log(result);

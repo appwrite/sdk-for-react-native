@@ -47,10 +47,10 @@ export class Graphql extends Service {
         }
 
         const apiPath = '/graphql';
-        const payload: Payload = {};
+        const apiPayload: Payload = {};
 
         if (typeof query !== 'undefined') {
-            payload['query'] = query;
+            apiPayload['query'] = query;
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
@@ -63,7 +63,7 @@ export class Graphql extends Service {
                 'content-type': 'application/json',
                 accept: 'application/json',
             },
-            payload,
+            apiPayload,
         );
     }
 
@@ -107,10 +107,10 @@ export class Graphql extends Service {
         }
 
         const apiPath = '/graphql/mutation';
-        const payload: Payload = {};
+        const apiPayload: Payload = {};
 
         if (typeof query !== 'undefined') {
-            payload['query'] = query;
+            apiPayload['query'] = query;
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
@@ -123,7 +123,7 @@ export class Graphql extends Service {
                 'content-type': 'application/json',
                 accept: 'application/json',
             },
-            payload,
+            apiPayload,
         );
     }
 }

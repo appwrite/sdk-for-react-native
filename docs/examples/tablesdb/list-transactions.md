@@ -9,6 +9,7 @@ const tablesDB = new TablesDB(client);
 
 const result = await tablesDB.listTransactions({
     queries: [], // optional
+    total: false, // optional
 });
 
 console.log(result);

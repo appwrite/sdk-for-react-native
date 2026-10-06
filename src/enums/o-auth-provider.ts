@@ -41,6 +41,7 @@ export enum OAuthProvider {
     Tradeshift = 'tradeshift',
     TradeshiftBox = 'tradeshiftBox',
     Twitch = 'twitch',
+    Webflow = 'webflow',
     Wordpress = 'wordpress',
     X = 'x',
     Yahoo = 'yahoo',

@@ -70,18 +70,18 @@ export class Presences extends Service {
         const ttl = params.ttl;
 
         const apiPath = '/presences';
-        const payload: Payload = {};
+        const apiPayload: Payload = {};
 
         if (typeof queries !== 'undefined') {
-            payload['queries'] = queries;
+            apiPayload['queries'] = queries;
         }
 
         if (typeof total !== 'undefined') {
-            payload['total'] = total;
+            apiPayload['total'] = total;
         }
 
         if (typeof ttl !== 'undefined') {
-            payload['ttl'] = ttl;
+            apiPayload['ttl'] = ttl;
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
@@ -92,7 +92,7 @@ export class Presences extends Service {
                 'X-Appwrite-Project': this.client.config.project,
                 accept: 'application/json',
             },
-            payload,
+            apiPayload,
         );
     }
 
@@ -144,7 +144,7 @@ export class Presences extends Service {
             '{presenceId}',
             encodeURIComponent(String(presenceId)),
         );
-        const payload: Payload = {};
+        const apiPayload: Payload = {};
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call(
@@ -154,7 +154,7 @@ export class Presences extends Service {
                 'X-Appwrite-Project': this.client.config.project,
                 accept: 'application/json',
             },
-            payload,
+            apiPayload,
         );
     }
 
@@ -259,22 +259,22 @@ export class Presences extends Service {
             '{presenceId}',
             encodeURIComponent(String(presenceId)),
         );
-        const payload: Payload = {};
+        const apiPayload: Payload = {};
 
         if (typeof status !== 'undefined') {
-            payload['status'] = status;
+            apiPayload['status'] = status;
         }
 
         if (typeof permissions !== 'undefined') {
-            payload['permissions'] = permissions;
+            apiPayload['permissions'] = permissions;
         }
 
         if (typeof expiresAt !== 'undefined') {
-            payload['expiresAt'] = expiresAt;
+            apiPayload['expiresAt'] = expiresAt;
         }
 
         if (typeof metadata !== 'undefined') {
-            payload['metadata'] = metadata;
+            apiPayload['metadata'] = metadata;
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
@@ -286,7 +286,7 @@ export class Presences extends Service {
                 'content-type': 'application/json',
                 accept: 'application/json',
             },
-            payload,
+            apiPayload,
         );
     }
 
@@ -396,26 +396,26 @@ export class Presences extends Service {
             '{presenceId}',
             encodeURIComponent(String(presenceId)),
         );
-        const payload: Payload = {};
+        const apiPayload: Payload = {};
 
         if (typeof status !== 'undefined') {
-            payload['status'] = status;
+            apiPayload['status'] = status;
         }
 
         if (typeof expiresAt !== 'undefined') {
-            payload['expiresAt'] = expiresAt;
+            apiPayload['expiresAt'] = expiresAt;
         }
 
         if (typeof metadata !== 'undefined') {
-            payload['metadata'] = metadata;
+            apiPayload['metadata'] = metadata;
         }
 
         if (typeof permissions !== 'undefined') {
-            payload['permissions'] = permissions;
+            apiPayload['permissions'] = permissions;
         }
 
         if (typeof purge !== 'undefined') {
-            payload['purge'] = purge;
+            apiPayload['purge'] = purge;
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
@@ -427,7 +427,7 @@ export class Presences extends Service {
                 'content-type': 'application/json',
                 accept: 'application/json',
             },
-            payload,
+            apiPayload,
         );
     }
 
@@ -477,7 +477,7 @@ export class Presences extends Service {
             '{presenceId}',
             encodeURIComponent(String(presenceId)),
         );
-        const payload: Payload = {};
+        const apiPayload: Payload = {};
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call(
@@ -488,7 +488,7 @@ export class Presences extends Service {
                 'content-type': 'application/json',
                 accept: 'application/json',
             },
-            payload,
+            apiPayload,
         );
     }
 }

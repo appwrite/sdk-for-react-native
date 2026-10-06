@@ -2,7 +2,7 @@
     "name": "react-native-appwrite",
     "homepage": "https://appwrite.io/support",
     "description": "Appwrite is an open-source self-hosted backend server that abstracts and simplifies complex and repetitive development tasks behind a very simple REST API",
-    "version": "1.1.0",
+    "version": "1.2.0-rc.0",
     "license": "BSD-3-Clause",
     "main": "dist/cjs/sdk.js",
     "exports": {
@@ -16,7 +16,12 @@
     "module": "dist/esm/sdk.js",
     "types": "types/index.d.ts",
     "files": [
+        "android",
+        "!android/build",
         "dist",
+        "ios",
+        "*.podspec",
+        "react-native.config.js",
         "types"
     ],
     "repository": {
@@ -41,6 +46,8 @@
         "eslint": "10.10.0",
         "@rollup/plugin-typescript": "12.3.0",
         "@types/json-bigint": "1.0.4",
+        "@types/node": "24.9.2",
+        "@types/readable-stream": "4.0.24",
         "playwright": "1.59.0",
         "prettier": "3.9.6",
         "rollup": "4.63.2",
@@ -50,19 +57,37 @@
         "typescript-eslint": "8.70.0"
     },
     "dependencies": {
+        "buffer": "6.0.3",
         "expo-file-system": "18.*.*",
-        "json-bigint": "1.0.0"
+        "json-bigint": "1.0.0",
+        "mqtt": "5.15.2",
+        "process": "0.11.10",
+        "readable-stream": "4.7.0"
     },
     "peerDependencies": {
         "expo": "*",
-        "react-native": ">=0.76.7 <1.0.0"
+        "expo-notifications": "*",
+        "react-native": ">=0.76.7 <1.0.0",
+        "react-native-background-actions": ">=4.0.0 <5.0.0",
+        "react-native-tcp-socket": ">=6.2.0 <7.0.0"
+    },
+    "peerDependenciesMeta": {
+        "expo-notifications": {
+            "optional": true
+        },
+        "react-native-background-actions": {
+            "optional": true
+        },
+        "react-native-tcp-socket": {
+            "optional": true
+        }
     },
     "overrides": {
         "glob": {
             ".": "^13.0.0",
-            "brace-expansion": "5.0.9"
+            "brace-expansion": "5.0.12"
         },
-        "brace-expansion": "5.0.9",
+        "brace-expansion": "5.0.12",
         "rimraf": "^6.0.0",
         "@xmldom/xmldom": "^0.9.10",
         "uuid": "^14.0.0",

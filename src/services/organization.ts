@@ -60,14 +60,14 @@ export class Organization extends Service {
         const total = params.total;
 
         const apiPath = '/organization/installations';
-        const payload: Payload = {};
+        const apiPayload: Payload = {};
 
         if (typeof queries !== 'undefined') {
-            payload['queries'] = queries;
+            apiPayload['queries'] = queries;
         }
 
         if (typeof total !== 'undefined') {
-            payload['total'] = total;
+            apiPayload['total'] = total;
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
@@ -78,7 +78,7 @@ export class Organization extends Service {
                 'X-Appwrite-Project': this.client.config.project,
                 accept: 'application/json',
             },
-            payload,
+            apiPayload,
         );
     }
 
@@ -138,14 +138,14 @@ export class Organization extends Service {
         }
 
         const apiPath = '/organization/installations';
-        const payload: Payload = {};
+        const apiPayload: Payload = {};
 
         if (typeof appId !== 'undefined') {
-            payload['appId'] = appId;
+            apiPayload['appId'] = appId;
         }
 
         if (typeof authorizationDetails !== 'undefined') {
-            payload['authorizationDetails'] = authorizationDetails;
+            apiPayload['authorizationDetails'] = authorizationDetails;
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
@@ -157,7 +157,7 @@ export class Organization extends Service {
                 'content-type': 'application/json',
                 accept: 'application/json',
             },
-            payload,
+            apiPayload,
         );
     }
 
@@ -209,7 +209,7 @@ export class Organization extends Service {
             '{installationId}',
             encodeURIComponent(String(installationId)),
         );
-        const payload: Payload = {};
+        const apiPayload: Payload = {};
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call(
@@ -219,7 +219,7 @@ export class Organization extends Service {
                 'X-Appwrite-Project': this.client.config.project,
                 accept: 'application/json',
             },
-            payload,
+            apiPayload,
         );
     }
 
@@ -284,10 +284,10 @@ export class Organization extends Service {
             '{installationId}',
             encodeURIComponent(String(installationId)),
         );
-        const payload: Payload = {};
+        const apiPayload: Payload = {};
 
         if (typeof authorizationDetails !== 'undefined') {
-            payload['authorizationDetails'] = authorizationDetails;
+            apiPayload['authorizationDetails'] = authorizationDetails;
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
@@ -299,7 +299,7 @@ export class Organization extends Service {
                 'content-type': 'application/json',
                 accept: 'application/json',
             },
-            payload,
+            apiPayload,
         );
     }
 
@@ -349,7 +349,7 @@ export class Organization extends Service {
             '{installationId}',
             encodeURIComponent(String(installationId)),
         );
-        const payload: Payload = {};
+        const apiPayload: Payload = {};
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call(
@@ -360,7 +360,7 @@ export class Organization extends Service {
                 'content-type': 'application/json',
                 accept: 'application/json',
             },
-            payload,
+            apiPayload,
         );
     }
 }

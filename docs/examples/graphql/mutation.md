@@ -8,7 +8,9 @@ const client = new Client()
 const graphql = new Graphql(client);
 
 const result = await graphql.mutation({
-    query: {},
+    query: {
+        query: 'mutation { accountUpdateName(name: "Walter") { name } }',
+    },
 });
 
 console.log(result);

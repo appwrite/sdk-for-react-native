@@ -10,7 +10,7 @@ const teams = new Teams(client);
 const result = await teams.updateMembership({
     teamId: '<TEAM_ID>',
     membershipId: '<MEMBERSHIP_ID>',
-    roles: [],
+    roles: ['editor'],
 });
 
 console.log(result);

@@ -9,6 +9,7 @@ const documentsDB = new DocumentsDB(client);
 
 const result = await documentsDB.listTransactions({
     queries: [], // optional
+    total: false, // optional
 });
 
 console.log(result);
