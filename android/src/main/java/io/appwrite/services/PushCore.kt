@@ -12,6 +12,7 @@ import com.hivemq.client.mqtt.mqtt5.Mqtt5ClientConfig
 import com.hivemq.client.mqtt.mqtt5.auth.Mqtt5EnhancedAuthMechanism
 import com.hivemq.client.mqtt.mqtt5.exceptions.Mqtt5ConnAckException
 import com.hivemq.client.mqtt.mqtt5.exceptions.Mqtt5DisconnectException
+import com.hivemq.client.mqtt.mqtt5.lifecycle.Mqtt5ClientReconnector
 import com.hivemq.client.mqtt.mqtt5.message.auth.Mqtt5Auth
 import com.hivemq.client.mqtt.mqtt5.message.auth.Mqtt5AuthBuilder
 import com.hivemq.client.mqtt.mqtt5.message.auth.Mqtt5EnhancedAuthBuilder
@@ -30,6 +31,7 @@ import java.util.concurrent.CompletableFuture
 import java.util.concurrent.ExecutionException
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
+import java.util.concurrent.atomic.AtomicReference
 import javax.net.ssl.ManagerFactoryParameters
 import javax.net.ssl.TrustManager
 import javax.net.ssl.TrustManagerFactory
@@ -49,6 +51,24 @@ data class PushMessage(
         get() = String(payload, Charsets.UTF_8)
 }
 
+/**
+ * What background delivery can rely on. Without exact alarms, the scheduled wake-ups are inexact
+ * and Doze can defer them, so delivery is [bestEffort] unless foreground mode keeps the
+ * connection open.
+ */
+data class PushBackgroundStatus(
+    /** The app may schedule exact alarms (`SCHEDULE_EXACT_ALARM`, granted). */
+    val exactAlarms: Boolean,
+    /** The app is exempt from battery optimisation. */
+    val ignoringBatteryOptimizations: Boolean,
+    /** Foreground mode (`setForeground(true)`) keeps the connection open in a service. */
+    val foregroundService: Boolean,
+) {
+    /** Wake-ups may be deferred by Doze, so messages can arrive late while the app is closed. */
+    val bestEffort: Boolean
+        get() = !exactAlarms && !foregroundService
+}
+
 /** Connection parameters shared between the in-process client and the foreground service. */
 internal data class PushConfig(
     val host: String,
@@ -60,6 +80,10 @@ internal data class PushConfig(
     val authMethod: String,
     val credential: String,
     val project: String,
+    // The endpoint whose `a_session_<project>` cookie in the WebView cookie store holds the app's
+    // session, when its credential comes from there (React Native). Background runs read it, so
+    // they keep up with a rotated session while no app code runs.
+    val sessionCookieUrl: String? = null,
 )
 
 /**
@@ -110,6 +134,8 @@ internal fun buildPushClient(
     onDisconnected: (() -> Unit)? = null,
     onError: ((Throwable) -> Unit)? = null,
     onAuthRefused: ((Throwable) -> Unit)? = null,
+    credential: () -> String? = { config.credential },
+    retired: AtomicBoolean? = null,
 ): Mqtt5AsyncClient {
     // config.clientId is stable per user (see buildConfig), so a reconnect rebuild reuses it
     // and resumes the same session.
@@ -130,11 +156,25 @@ internal fun buildPushClient(
 
     // Whether this client has connected yet: until it has, a refused CONNECT is final.
     val connected = AtomicBoolean(false)
+    val client = AtomicReference<Mqtt5AsyncClient>()
     builder = builder.addConnectedListener {
+        // A reconnect that was already under way when the client was retired disconnects at once,
+        // so it never competes with its replacement for the broker session.
+        if (retired?.get() == true) {
+            client.get()?.disconnect()
+            return@addConnectedListener
+        }
         connected.set(true)
         onConnected?.invoke()
     }
     builder = builder.addDisconnectedListener { context ->
+        // A client its owner replaced or closed ([retired]) never reconnects: one still retrying
+        // in the background would otherwise come back as a second connection for the same id.
+        if (retired?.get() == true) {
+            context.reconnector.reconnect(false)
+            onDisconnected?.invoke()
+            return@addDisconnectedListener
+        }
         // A refused first CONNECT (bad credential, rate limit) is final: stop the automatic
         // reconnect so pushConnect fails with the broker's reason instead of retrying forever.
         val refused = !connected.get() && context.cause is Mqtt5ConnAckException
@@ -142,8 +182,16 @@ internal fun buildPushClient(
         // re-auth) is final too, instead of being retried with the same credential forever.
         val authRefused = onAuthRefused != null && connected.get() &&
             context.source != MqttDisconnectSource.USER && isAuthRefusal(context.cause)
-        if (refused || authRefused) {
+        // Authentication was aborted because the app has no current credential (signed out): there
+        // is nothing to reconnect with, so the attempt fails now instead of retrying until timeout.
+        val noCredential = generateSequence(context.cause) { it.cause }.any { it is PushNoCredentialException }
+        if (refused || authRefused || noCredential) {
             context.reconnector.reconnect(false)
+        } else if (context.reconnector.isReconnect) {
+            // HiveMQ's automatic reconnect sends a CONNECT it builds itself, without user
+            // properties: the broker then misses the project and refuses the credential. Reconnect
+            // with the same CONNECT this client connects with instead.
+            (context.reconnector as? Mqtt5ClientReconnector)?.connect(pushConnectMessage(config, credential))
         }
         onDisconnected?.invoke()
         if (!refused) {
@@ -168,7 +216,7 @@ internal fun buildPushClient(
         }
     }
 
-    return builder.buildAsync()
+    return builder.buildAsync().also { client.set(it) }
 }
 
 /**
@@ -207,10 +255,31 @@ internal fun isAuthRefusal(error: Throwable?): Boolean = when (error) {
     else -> false
 }
 
-/** Send the CONNECT and wait for the CONNACK, at most [timeoutSeconds] when given. */
-internal fun Mqtt5AsyncClient.sendPushConnect(config: PushConfig, timeoutSeconds: Long? = null) {
-    val connAck = connectWith()
-        .enhancedAuth(PushAuthMechanism(config.authMethod, config.credential))
+/**
+ * Send the CONNECT and wait for the CONNACK, at most [timeoutSeconds] when given. [credential]
+ * supplies the credential each time one is sent, including on the client's automatic reconnects
+ * and re-auths, so they can use a session rotated since this CONNECT; null aborts the attempt.
+ */
+internal fun Mqtt5AsyncClient.sendPushConnect(
+    config: PushConfig,
+    timeoutSeconds: Long? = null,
+    credential: () -> String? = { config.credential },
+) {
+    val connAck = connect(pushConnectMessage(config, credential))
+    if (timeoutSeconds == null) {
+        connAck.get()
+    } else {
+        connAck.get(timeoutSeconds, TimeUnit.SECONDS)
+    }
+}
+
+/**
+ * The CONNECT for [config]: enhanced auth with the credential from [credential], and the project
+ * as a user property, which the broker resolves the credential against.
+ */
+internal fun pushConnectMessage(config: PushConfig, credential: () -> String?): Mqtt5Connect =
+    Mqtt5Connect.builder()
+        .enhancedAuth(PushAuthMechanism(config.authMethod, config.project, credential))
         // Clean start is always off, so the broker keeps this client's session and can
         // redeliver missed messages to QoS-1 subscriptions on reconnect.
         .cleanStart(false)
@@ -218,13 +287,7 @@ internal fun Mqtt5AsyncClient.sendPushConnect(config: PushConfig, timeoutSeconds
         .userProperties()
         .add("projectId", config.project)
         .applyUserProperties()
-        .send()
-    if (timeoutSeconds == null) {
-        connAck.get()
-    } else {
-        connAck.get(timeoutSeconds, TimeUnit.SECONDS)
-    }
-}
+        .build()
 
 /**
  * The error a lost connection reports, or null when it is not an error (a disconnect the app
@@ -266,11 +329,14 @@ internal fun Mqtt5Publish.toPushMessage(): PushMessage =
 
 /**
  * Single-step MQTT 5 enhanced auth: the method and credential are placed in the CONNECT
- * packet and the broker accepts them in the CONNACK, with no AUTH round-trip.
+ * packet and the broker accepts them in the CONNACK, with no AUTH round-trip. The credential is
+ * read from [credential] each time, so an automatic reconnect or re-auth sends the current one;
+ * when it has none, the attempt fails instead of sending a credential known to be stale.
  */
 internal class PushAuthMechanism(
     private val method: String,
-    private val credential: String,
+    private val project: String,
+    private val credential: () -> String?,
 ) : Mqtt5EnhancedAuthMechanism {
 
     override fun getMethod(): MqttUtf8String = MqttUtf8String.of(method)
@@ -282,7 +348,8 @@ internal class PushAuthMechanism(
         connect: Mqtt5Connect,
         authBuilder: Mqtt5EnhancedAuthBuilder,
     ): CompletableFuture<Void> {
-        authBuilder.data(credential.toByteArray(Charsets.UTF_8))
+        val current = credential() ?: return failedAuth()
+        authBuilder.data(current.toByteArray(Charsets.UTF_8))
         return CompletableFuture.completedFuture(null)
     }
 
@@ -290,7 +357,12 @@ internal class PushAuthMechanism(
         clientConfig: Mqtt5ClientConfig,
         authBuilder: Mqtt5AuthBuilder,
     ): CompletableFuture<Void> {
-        authBuilder.data(credential.toByteArray(Charsets.UTF_8))
+        val current = credential() ?: return failedAuth()
+        // The broker resolves a re-auth against the project in its user properties too.
+        authBuilder.data(current.toByteArray(Charsets.UTF_8))
+            .userProperties()
+            .add("projectId", project)
+            .applyUserProperties()
         return CompletableFuture.completedFuture(null)
     }
 
@@ -317,7 +389,13 @@ internal class PushAuthMechanism(
     override fun onAuthError(clientConfig: Mqtt5ClientConfig, cause: Throwable) = Unit
 
     override fun onReAuthError(clientConfig: Mqtt5ClientConfig, cause: Throwable) = Unit
+
+    private fun failedAuth(): CompletableFuture<Void> =
+        CompletableFuture<Void>().apply { completeExceptionally(PushNoCredentialException()) }
 }
+
+/** Authentication aborted because there is no current credential to send (the app signed out). */
+internal class PushNoCredentialException : IllegalStateException("No current credential to authenticate with")
 
 /**
  * A [TrustManagerFactory] that accepts any certificate — used when `tlsInsecure` is set
@@ -353,6 +431,8 @@ internal class PushListener(
     // Called instead of [callback] when set, with the acknowledgement to run once the message was
     // handled: the React Native and Flutter bridges acknowledge after their callback has run.
     val acknowledgingCallback: ((PushMessage, () -> Unit) -> Unit)? = null,
+    // Also post a background notification while the app is visible.
+    val notifyInForeground: Boolean = false,
 )
 
 /** MQTT topic-filter match with '+' (single level) and '#' (multi level). */

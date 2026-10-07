@@ -12,7 +12,12 @@ import mqtt, {
     type IPublishPacket,
     type MqttClient,
 } from 'mqtt';
-import { NativeEventEmitter, NativeModules, Platform } from 'react-native';
+import {
+    AppState,
+    NativeEventEmitter,
+    NativeModules,
+    Platform,
+} from 'react-native';
 
 import { Client } from '../client';
 import { createTcpStream } from '../lib/tcp-stream';
@@ -30,6 +35,26 @@ export interface PushMessage {
 }
 
 export type MessageCallback = (message: PushMessage) => void | Promise<void>;
+
+/** What Android background delivery can rely on; see {@link Push.backgroundStatus}. */
+export interface PushBackgroundStatus {
+    /** The app may schedule exact alarms (`SCHEDULE_EXACT_ALARM`, granted). */
+    exactAlarms: boolean;
+    /** The app is exempt from battery optimisation. */
+    ignoringBatteryOptimizations: boolean;
+    /** Foreground mode ({@link Push.setForeground}) keeps the connection open in a service. */
+    foregroundService: boolean;
+    /** Wake-ups may be deferred by Doze, so messages can arrive late while the app is closed. */
+    bestEffort: boolean;
+}
+
+/** A background notification the user tapped. */
+export interface PushNotificationOpened {
+    /** The topic the message was published to. */
+    topic: string;
+    /** The `data` sent with the message (e.g. `createPush`), parsed; `{}` when it had none. */
+    data: Record<string, unknown>;
+}
 
 /** Per-subscription options passed to `subscribe` and `PushSubscription.update`. */
 export interface SubscribeOptions {
@@ -52,6 +77,12 @@ export interface SubscribeOptions {
     background?: boolean;
     /** Notification title for this subscription's messages. Defaults to the message topic. */
     title?: string;
+    /**
+     * Also post the background notification while the app is on screen. Defaults to false:
+     * while the app is visible it shows the message itself through the callback, so
+     * notifications are posted only while it is backgrounded or closed.
+     */
+    notifyInForeground?: boolean;
     /**
      * Retry delivery of messages missed while disconnected. `true` (the default) subscribes
      * at QoS 1 so the broker holds this topic's messages and redelivers them on reconnect;
@@ -152,6 +183,7 @@ export class Push extends Service {
             callback: MessageCallback;
             background: boolean;
             title?: string;
+            notifyInForeground: boolean;
             qos: 0 | 1;
         }
     >();
@@ -201,8 +233,12 @@ export class Push extends Service {
         this.tlsInsecure = endpointInsecure;
 
         // Resume background delivery saved by an earlier run now, instead of at its next
-        // scheduled wake-up.
-        this.native?.resume().catch((err) => this.report(err));
+        // scheduled wake-up, with the current session: a rotated session of the same user
+        // replaces the saved one, and signed out (no session cookie) drops the saved
+        // subscriptions.
+        if (this.native) {
+            this.resumeNative(this.native).catch((err) => this.report(err));
+        }
     }
 
     // The broker subscription for a filter uses the highest QoS any local subscription on
@@ -253,6 +289,109 @@ export class Push extends Service {
      */
     async setForeground(enabled: boolean): Promise<void> {
         await this.native?.setForeground(enabled);
+    }
+
+    /**
+     * Android: what background delivery can rely on. When `bestEffort` is true the scheduled
+     * wake-ups are inexact and Doze can defer them, so messages may arrive late while the app is
+     * closed; explain why, then ask with {@link requestExactAlarms} or
+     * {@link requestIgnoreBatteryOptimizations}. Null elsewhere.
+     */
+    async backgroundStatus(): Promise<PushBackgroundStatus | null> {
+        const json = await this.native?.backgroundStatus();
+        return json ? (JSON.parse(json) as PushBackgroundStatus) : null;
+    }
+
+    /**
+     * Android 12+: open the system screen where the user allows exact alarms, for punctual
+     * background wake-ups. Call it from a user action, never on its own. Resolves false when
+     * there is nothing to ask: already allowed, older Android, the app does not declare
+     * `SCHEDULE_EXACT_ALARM`, or not Android.
+     */
+    async requestExactAlarms(): Promise<boolean> {
+        return (await this.native?.requestExactAlarms()) ?? false;
+    }
+
+    /**
+     * Android: ask the user to exempt the app from battery optimisation. Call it from a user
+     * action. Resolves false when there is nothing to ask: already exempt, the app does not
+     * declare `REQUEST_IGNORE_BATTERY_OPTIMIZATIONS`, or not Android.
+     */
+    async requestIgnoreBatteryOptimizations(): Promise<boolean> {
+        return (
+            (await this.native?.requestIgnoreBatteryOptimizations()) ?? false
+        );
+    }
+
+    /**
+     * The background notification whose tap launched the app, or null. Call it once at startup:
+     * on Android a tap is reported only once. Elsewhere it reads `expo-notifications`.
+     *
+     * ```ts
+     * const opened = await push.getInitialNotification();
+     * if (opened) openSale(opened.data.saleId);
+     * ```
+     */
+    async getInitialNotification(): Promise<PushNotificationOpened | null> {
+        if (Platform.OS === 'android') {
+            const json = await this.native?.getInitialNotification();
+            if (!json) {
+                return null;
+            }
+            const opened = JSON.parse(json) as NativeOpened;
+            return toOpened(opened.topic, opened.payload);
+        }
+        const notifications = expoNotifications();
+        if (!notifications) {
+            return null;
+        }
+        const response = await notifications.getLastNotificationResponseAsync();
+        const opened = response ? openedFromExpo(response) : null;
+        if (opened) {
+            await notifications.clearLastNotificationResponseAsync?.();
+        }
+        return opened;
+    }
+
+    /**
+     * Call [callback] each time the user taps a background notification while the app is
+     * running, including in the background. Returns a function that stops listening. The tap
+     * that launched the app comes from `getInitialNotification()` instead.
+     *
+     * ```ts
+     * const stop = push.onNotificationOpened(({ data }) => openSale(data.saleId));
+     * ```
+     */
+    onNotificationOpened(
+        callback: (opened: PushNotificationOpened) => void,
+    ): () => void {
+        if (Platform.OS === 'android') {
+            if (!this.native) {
+                return () => undefined;
+            }
+            const emitter = new NativeEventEmitter(this.native);
+            const subscription = emitter.addListener(
+                'AppwritePushOpened',
+                (event: NativeOpened) =>
+                    callback(toOpened(event.topic, event.payload)),
+            );
+            return () => subscription.remove();
+        }
+        const notifications = expoNotifications();
+        if (!notifications) {
+            return () => undefined;
+        }
+        const listener = (
+            response: import('expo-notifications').NotificationResponse,
+        ): void => {
+            const opened = openedFromExpo(response);
+            if (opened) {
+                callback(opened);
+            }
+        };
+        const subscription =
+            notifications.addNotificationResponseReceivedListener(listener);
+        return () => subscription.remove();
     }
 
     /**
@@ -436,6 +575,7 @@ export class Push extends Service {
                     callback,
                     background,
                     title: options.title,
+                    notifyInForeground: options.notifyInForeground ?? false,
                     qos,
                 });
                 return id;
@@ -487,6 +627,7 @@ export class Push extends Service {
                 callback,
                 background,
                 title: options.title,
+                notifyInForeground: options.notifyInForeground ?? false,
                 qos,
             });
             acks.push(
@@ -616,6 +757,9 @@ export class Push extends Service {
             if (next.title !== undefined) {
                 entry.title = next.title;
             }
+            if (next.notifyInForeground !== undefined) {
+                entry.notifyInForeground = next.notifyInForeground;
+            }
             if (next.retry !== undefined) {
                 const q: 0 | 1 = next.retry ? 1 : 0;
                 if (q !== entry.qos) {
@@ -669,6 +813,9 @@ export class Push extends Service {
             }
             if (next.title !== undefined) {
                 entry.title = next.title;
+            }
+            if (next.notifyInForeground !== undefined) {
+                entry.notifyInForeground = next.notifyInForeground;
             }
             if (next.retry !== undefined) {
                 entry.qos = next.retry ? 1 : 0;
@@ -748,6 +895,12 @@ export class Push extends Service {
             authMethod,
             credential,
             project: this.client.config.project ?? '',
+            // A session from the cookie store: background runs re-read it there, so they follow
+            // a rotated session while no JS runs.
+            sessionCookieUrl:
+                credential === this.cookieSession && !this.client.config.jwt
+                    ? (this.client.config.endpoint ?? '')
+                    : '',
         };
         await native.setErrorCallback(
             [...nativeHosts].some((push) => push.onErrorCb !== undefined),
@@ -807,6 +960,7 @@ export class Push extends Service {
             background: sub.background,
             title: sub.title ?? null,
             retry: sub.qos === 1,
+            notifyInForeground: sub.notifyInForeground,
         }));
     }
 
@@ -1111,12 +1265,45 @@ export class Push extends Service {
         return this.connecting.then(() => this.mqtt!);
     }
 
+    /**
+     * Resume saved native delivery with the current credential. Only a cookie lookup that
+     * succeeded and found no session counts as signed out; a failed or impossible lookup keeps
+     * the saved subscriptions.
+     */
+    private async resumeNative(native: NativePush): Promise<void> {
+        const { jwt, session, endpoint, project } = this.client.config;
+        let signedOut = false;
+        if (!jwt && !session) {
+            const lookup = await lookupSessionCookie(endpoint, project);
+            this.cookieSession = lookup.session;
+            signedOut = lookup.found === false;
+        }
+        const current = this.currentCredential();
+        await native.resume(
+            current?.authMethod ?? null,
+            current?.credential ?? null,
+            signedOut,
+        );
+    }
+
     private async loadCookieSession(): Promise<void> {
         const { jwt, session, endpoint, project } = this.client.config;
         if (jwt || session) {
             return;
         }
         this.cookieSession = await sessionCookie(endpoint, project);
+    }
+
+    /** The credential the connection would use, or null when there is none. */
+    private currentCredential(): {
+        authMethod: AuthMethod;
+        credential: string;
+    } | null {
+        try {
+            return this.credential();
+        } catch {
+            return null;
+        }
     }
 
     /** The credential set on the client (via Client.setJWT / setSession). */
@@ -1345,19 +1532,27 @@ export class Push extends Service {
             qos: packet.qos,
         };
         const serverTitle = notificationContent(message).title;
-        const titles = new Set<string>();
+        let postedServerTitle = false;
+        // While the app is on screen it shows the message itself: only subscriptions that
+        // opted in with notifyInForeground also post a notification then.
+        const foreground = AppState.currentState === 'active';
         for (const sub of this.subscriptions.values()) {
             if (matches(sub.topic, message.topic)) {
                 await sub.callback(message);
                 // Notification is per-subscription: only subs that opted in post one, each
-                // with its own title. A title the server sent replaces theirs, so one posts.
-                if (sub.background) {
-                    titles.add(serverTitle ?? sub.title ?? message.topic);
+                // with its own title. A title the server sent replaces theirs, so it posts once.
+                if (
+                    sub.background &&
+                    (!foreground || sub.notifyInForeground) &&
+                    !postedServerTitle
+                ) {
+                    postedServerTitle = serverTitle !== undefined;
+                    await this.notify(
+                        message,
+                        serverTitle ?? sub.title ?? message.topic,
+                    );
                 }
             }
-        }
-        for (const title of titles) {
-            await this.notify(message, title);
         }
     }
 }
@@ -1370,11 +1565,27 @@ interface NativePush {
     stop(): Promise<void>;
     setForeground(enabled: boolean): Promise<void>;
     hasSaved(): Promise<boolean>;
-    resume(): Promise<void>;
+    resume(
+        authMethod: string | null,
+        credential: string | null,
+        signedOutWhenMissing: boolean,
+    ): Promise<void>;
+    /** {@link PushBackgroundStatus} as JSON. */
+    backgroundStatus(): Promise<string>;
+    requestExactAlarms(): Promise<boolean>;
+    requestIgnoreBatteryOptimizations(): Promise<boolean>;
     setErrorCallback(registered: boolean): Promise<string | null>;
     defaultClientId(authMethod: string, credential: string): Promise<string>;
+    /** The tapped notification that launched the app, as {@link NativeOpened} JSON. */
+    getInitialNotification(): Promise<string | null>;
     addListener(eventName: string): void;
     removeListeners(count: number): void;
+}
+
+/** A tapped notification the native module reports: its topic and raw payload. */
+interface NativeOpened {
+    topic: string;
+    payload: string;
 }
 
 /** A message the native module delivers for a hosted subscription. */
@@ -1422,6 +1633,44 @@ function requestNotificationPermission(): void {
             granted ? undefined : PermissionsAndroid.request(permission),
         )
         .catch(() => undefined);
+}
+
+/** A tapped notification's topic and message `data`, parsed from its payload. */
+function toOpened(topic: string, payload: string): PushNotificationOpened {
+    let data: unknown;
+    try {
+        data = (JSON.parse(payload) as { data?: unknown })?.data;
+    } catch {
+        data = undefined;
+    }
+    return {
+        topic,
+        data:
+            typeof data === 'object' && data !== null && !Array.isArray(data)
+                ? (data as Record<string, unknown>)
+                : {},
+    };
+}
+
+/** A tap on a notification this SDK posted through expo-notifications, else null. */
+function openedFromExpo(
+    response: import('expo-notifications').NotificationResponse,
+): PushNotificationOpened | null {
+    const data = response.notification.request.content.data;
+    return typeof data?.topic === 'string' && typeof data.payload === 'string'
+        ? toOpened(data.topic, data.payload)
+        : null;
+}
+
+/** expo-notifications when the app has installed it, else null. */
+function expoNotifications(): typeof import('expo-notifications') | null {
+    try {
+        /* eslint-disable @typescript-eslint/no-require-imports */
+        return require('expo-notifications');
+        /* eslint-enable @typescript-eslint/no-require-imports */
+    } catch {
+        return null;
+    }
 }
 
 /** What a message's `notification` block asks a background notification to show. */
@@ -1544,15 +1793,29 @@ async function sessionCookie(
     endpoint: string | undefined,
     project: string | undefined,
 ): Promise<string> {
+    return (await lookupSessionCookie(endpoint, project)).session;
+}
+
+/**
+ * Look up the session cookie. `found` is false only when the lookup succeeded and there is no
+ * session, and null when it could not be looked up (no cookie module, endpoint or project, or
+ * the lookup failed).
+ */
+async function lookupSessionCookie(
+    endpoint: string | undefined,
+    project: string | undefined,
+): Promise<{ found: boolean | null; session: string }> {
     const cookies = NativeModules?.AppwriteCookies as NativeCookies | undefined;
     if (!cookies || !endpoint || !project) {
-        return '';
+        return { found: null, session: '' };
     }
     try {
         const value = await cookies.session(endpoint, project);
-        return value ? decodeURIComponent(value) : '';
+        return value
+            ? { found: true, session: decodeURIComponent(value) }
+            : { found: false, session: '' };
     } catch {
-        return '';
+        return { found: null, session: '' };
     }
 }
 

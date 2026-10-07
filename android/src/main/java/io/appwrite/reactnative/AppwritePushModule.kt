@@ -1,5 +1,6 @@
 package io.appwrite.reactnative
 
+import android.content.Intent
 import android.util.Base64
 import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.Promise
@@ -7,12 +8,15 @@ import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReactContextBaseJavaModule
 import com.facebook.react.bridge.ReactMethod
 import com.facebook.react.modules.core.DeviceEventManagerModule
+import io.appwrite.services.PushBackground
 import io.appwrite.services.PushBridge
 import io.appwrite.services.PushMessage
+import org.json.JSONObject
 
 /**
  * The React Native side of [PushBridge]: the SDK's `Push` hosts its background subscriptions
- * here on Android, and receives their messages and errors as events.
+ * here on Android, and receives their messages and errors as events. It also reports taps on the
+ * notifications they post: the one that launched the app, and later ones as events.
  *
  * [emit] sends an event to JS; tests replace it to observe what JS would receive.
  */
@@ -48,7 +52,27 @@ class AppwritePushModule internal constructor(
         },
     )
 
+    private val intents = AppwritePushIntentListener { intent ->
+        opened(intent)?.let { emit(OPENED_EVENT, it) }
+    }
+
+    init {
+        reactContext.addActivityEventListener(intents)
+    }
+
     override fun getName(): String = NAME
+
+    // Resolves with the tapped notification that launched the app as JSON (topic and payload),
+    // once, or null.
+    @ReactMethod
+    fun getInitialNotification(promise: Promise) = settle(promise) {
+        reactContext.currentActivity?.intent?.let { opened(it) }?.let { JSONObject(it).toString() }
+    }
+
+    override fun invalidate() {
+        reactContext.removeActivityEventListener(intents)
+        super.invalidate()
+    }
 
     // Resolves once the connection is up and every filter is subscribed, or rejects with why not.
     @ReactMethod
@@ -91,10 +115,19 @@ class AppwritePushModule internal constructor(
     fun hasSaved(promise: Promise) = settle(promise) { bridge.hasSaved() }
 
     @ReactMethod
-    fun resume(promise: Promise) = settle(promise) {
-        bridge.resume()
+    fun resume(authMethod: String?, credential: String?, signedOutWhenMissing: Boolean, promise: Promise) = settle(promise) {
+        bridge.resume(authMethod, credential, signedOutWhenMissing)
         null
     }
+
+    @ReactMethod
+    fun backgroundStatus(promise: Promise) = settle(promise) { bridge.backgroundStatus() }
+
+    @ReactMethod
+    fun requestExactAlarms(promise: Promise) = settle(promise) { bridge.requestExactAlarms() }
+
+    @ReactMethod
+    fun requestIgnoreBatteryOptimizations(promise: Promise) = settle(promise) { bridge.requestIgnoreBatteryOptimizations() }
 
     @ReactMethod
     fun setErrorCallback(registered: Boolean, promise: Promise) = settle(promise) { bridge.setErrorCallback(registered) }
@@ -110,6 +143,15 @@ class AppwritePushModule internal constructor(
     @ReactMethod
     fun removeListeners(count: Double) = Unit
 
+    // The tapped notification's topic and payload, taken off [intent] so the tap is reported once.
+    private fun opened(intent: Intent): Map<String, Any?>? {
+        val topic = intent.getStringExtra(PushBackground.EXTRA_TOPIC) ?: return null
+        val payload = intent.getStringExtra(PushBackground.EXTRA_PAYLOAD) ?: return null
+        intent.removeExtra(PushBackground.EXTRA_TOPIC)
+        intent.removeExtra(PushBackground.EXTRA_PAYLOAD)
+        return mapOf("topic" to topic, "payload" to payload)
+    }
+
     private fun settle(promise: Promise, block: () -> Any?) {
         try {
             promise.resolve(block())
@@ -122,6 +164,7 @@ class AppwritePushModule internal constructor(
         const val NAME = "AppwritePush"
         const val MESSAGE_EVENT = "AppwritePushMessage"
         const val ERROR_EVENT = "AppwritePushError"
+        const val OPENED_EVENT = "AppwritePushOpened"
         private const val ERROR_CODE = "appwrite_push"
     }
 }

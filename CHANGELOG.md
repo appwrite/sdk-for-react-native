@@ -1,5 +1,17 @@
 # Change log
 
+## 1.2.0-rc.2
+
+* Added: `Push.getInitialNotification()` returns the notification whose tap launched the app
+* Added: `Push.onNotificationOpened(callback)` fires on each notification tap
+* Added: `Push.backgroundStatus()` reports Android exact-alarm, battery, and foreground-service state
+* Added: `Push.requestExactAlarms()` and `Push.requestIgnoreBatteryOptimizations()` helpers
+* Added: `SubscribeOptions.notifyInForeground` to post notifications while the app is visible
+* Added: `PushBackgroundStatus` and `PushNotificationOpened` exported types
+* Fixed: reliable Android background wake-ups via a periodic watchdog and alternating jobs
+* Fixed: `resume` keeps subscriptions only for the same signed-in user
+* Fixed: notification images are size-capped to prevent out-of-memory crashes
+
 ## 1.2.0-rc.1
 
 * Added: background push notifications render the server `notification` title, body, and image

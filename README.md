@@ -38,8 +38,8 @@ A subscription with `background: true` keeps delivering after the app is backgro
 the device restarts, until it is unsubscribed or `push.close()` is called (do this on sign-out).
 The SDK's native Android module (autolinked) saves the subscription, and a scheduled job and
 alarm wake the app every 15 to 60 seconds to reconnect; the broker replays what was sent in
-between (`retry: true`). Messages no in-app callback receives are posted as notifications that
-open the app. It reconnects with the credential saved at subscribe time, so use a session rather
+between (`retry: true`). While the app is not on screen, each message is posted as a
+notification that opens the app. It reconnects with the credential saved at subscribe time, so use a session rather
 than a short-lived JWT.
 
 On Android 13 and later, the first background subscription asks the user for the
@@ -57,6 +57,86 @@ const sub = await push.subscribe('news', (message) => console.log(message.data),
 // notification (call while the app is in the foreground).
 await push.setForeground(true);
 ```
+
+Notifications are posted while the app is backgrounded or closed. While it is on screen your
+callback shows the message, so none is posted unless the subscription passes
+`notifyInForeground: true`.
+
+#### Delivery while the app is closed
+
+Messages sent while the app is closed arrive at the next scheduled wake-up. While the device is
+awake that is about every 15 seconds, or about every 60 seconds once exact alarms are allowed;
+without exact alarms the wake-ups are inexact, so battery saver can defer them further. In Doze
+(screen off and idle for a while) Android limits background alarms, exact ones included, to about
+one every nine minutes, so a closed app can take several minutes to receive a message: allowing
+exact alarms makes wake-ups punctual, it does not lift Doze. For immediate delivery, also in
+Doze, use `push.setForeground(true)` (see above).
+
+The SDK uses exact alarms on its own whenever the app may schedule them. To allow it:
+
+1. Declare the permissions in your app's `AndroidManifest.xml`. Both are optional and subject to
+   Google Play policy: `SCHEDULE_EXACT_ALARM` needs a declaration in the Play Console, and
+   `USE_EXACT_ALARM` is reserved for alarm, clock and calendar apps (the SDK does not use it).
+
+   ```xml
+   <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+   <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
+   ```
+
+With Expo, list them under `android.permissions` in `app.json` instead.
+
+2. On Android 13 and later the user has to allow exact alarms, under Settings > Apps > Special app
+   access > Alarms & reminders. Android 12 grants a declared `SCHEDULE_EXACT_ALARM`
+   automatically, and older versions need nothing. Check with `await push.backgroundStatus()`: when `bestEffort` is
+   true, explain why to the user, then from a user action open that screen with `push.requestExactAlarms()`, or
+   ask for the battery-optimisation exemption with `push.requestIgnoreBatteryOptimizations()`. Both return false when there is
+   nothing to ask, including when the permission is not declared. The SDK never opens these
+   screens on its own.
+
+If the user force-stops the app (Settings > Force stop, and on some devices swiping it away from
+recents), Android cancels its alarms and jobs: nothing is delivered until the app is opened
+again, and the broker then replays what was sent meanwhile.
+
+Set the notification icon with
+`<meta-data android:name="io.appwrite.push.notification_icon" android:resource="@drawable/..." />` in your
+`<application>`; without it a generic icon is used.
+
+```js
+const status = await push.backgroundStatus(); // null outside Android
+if (status?.bestEffort) {
+    // Explain why, then from a button press:
+    await push.requestExactAlarms();
+}
+```
+
+Saved background delivery follows the app's current session, also while the app is closed: each
+background run re-reads the session cookie, so a rotated session of the same user replaces the
+saved one, and signing out (no session) or signing in as someone else stops background delivery.
+If the broker still refuses the credential, delivery stops and `onError` reports it the next time
+the app registers one. Still call `push.close()` on sign-out.
+
+#### Upgrading from an earlier release candidate
+
+The Expo config plugin is gone: the native module now declares everything background delivery
+needs. Remove `"react-native-appwrite"` from the `plugins` list in `app.json`, or `expo config`
+fails to load it.
+
+#### Opening a tapped notification
+
+Read the `data` sent with `createPush` when the user taps a background notification:
+
+```js
+// The tap that launched the app (reported once, so call it at startup).
+const opened = await push.getInitialNotification();
+if (opened) {
+    openSale(opened.data.saleId);
+}
+
+// Taps while the app is running, including in the background.
+const stop = push.onNotificationOpened(({ topic, data }) => openSale(data.saleId));
+```
+
+On Android the SDK's native module reports the taps. Elsewhere they come from `expo-notifications`.
 
 Foreground mode runs a `remoteMessaging` foreground service, which Google Play asks apps to
 declare in the Play Console. Apps that never enable it can remove the service from their merged
