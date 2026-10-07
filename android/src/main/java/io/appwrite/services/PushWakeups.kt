@@ -12,11 +12,15 @@ import android.content.Intent
  */
 class PushJobService : JobService() {
     override fun onStartJob(params: JobParameters): Boolean {
-        PushBackground.tick(this) { jobFinished(params, false) }
+        // A chained job arms the next under the other chained id; the watchdog and an expedited
+        // run (handed over by the alarm) only run once. Each stays up while missed messages arrive.
+        val chained = params.jobId.takeIf { it == PushBackground.JOB_ID || it == PushBackground.NEXT_JOB_ID }
+        PushBackground.tick(this, chained, PushBackground.JOB_DRAIN_MS) { jobFinished(params, false) }
         return true
     }
 
-    // The run re-arms the next one itself, so a stopped run needs no retry.
+    // The run re-arms the next one itself, and the watchdog repeats on its own, so a stopped run
+    // needs no retry.
     override fun onStopJob(params: JobParameters): Boolean = false
 }
 
@@ -29,8 +33,13 @@ class PushAlarmReceiver : BroadcastReceiver() {
         if (intent.action != PushBackground.ACTION_TICK) {
             return
         }
+        // On Android 12+ the run goes to an expedited job, which keeps the process runnable while it
+        // connects and the broker replays; it runs here when the system refuses one.
+        if (PushBackground.runExpedited(context)) {
+            return
+        }
         val pending = goAsync()
-        PushBackground.tick(context) { pending.finish() }
+        PushBackground.tick(context, drainMs = PushBackground.RECEIVER_DRAIN_MS) { pending.finish() }
     }
 }
 
