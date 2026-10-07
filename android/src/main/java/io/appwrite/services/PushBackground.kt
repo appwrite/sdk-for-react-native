@@ -1,5 +1,7 @@
 package io.appwrite.services
 
+import android.Manifest
+import android.app.ActivityManager
 import android.app.AlarmManager
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -14,11 +16,14 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.ConnectivityManager
 import android.net.Network
+import android.net.Uri
 import android.os.Build
 import android.os.PowerManager
 import android.os.SystemClock
+import android.provider.Settings
 import android.util.AtomicFile
 import android.util.Log
+import android.webkit.CookieManager
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
@@ -30,8 +35,10 @@ import com.hivemq.client.mqtt.mqtt5.message.publish.Mqtt5Publish
 import io.appwrite.exceptions.AppwriteException
 import org.json.JSONArray
 import org.json.JSONObject
+import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.IOException
+import java.io.InputStream
 import java.net.HttpURLConnection
 import java.net.URL
 import java.util.UUID
@@ -53,6 +60,7 @@ internal data class PushEntry(
     val filter: String,
     val retry: Boolean,
     val title: String?,
+    val notifyInForeground: Boolean = false,
 )
 
 /**
@@ -96,7 +104,11 @@ internal object PushBackground {
     const val EXTRA_PAYLOAD = "io.appwrite.push.PAYLOAD"
 
     private const val SERVICE_CHANNEL_ID = "appwrite-push-service"
-    private const val JOB_ID = 0x50555348
+    const val JOB_ID = 0x50555348
+    const val NEXT_JOB_ID = 0x5055534A
+    const val EXPEDITED_JOB_ID = 0x5055534B
+    const val WATCHDOG_JOB_ID = 0x50555349
+    private const val WATCHDOG_INTERVAL_MS = 15 * 60 * 1_000L
     private const val INTERVAL_MS = 15_000L
     private const val PRIVILEGED_INTERVAL_MS = 60_000L
     private const val RESTART_DELAY_MS = 3_000L
@@ -116,6 +128,15 @@ internal object PushBackground {
     private const val HEARTBEAT_RESET_MS = 3 * 24 * 60 * 60 * 1_000L
     private const val REQUEST_TIMEOUT_SECONDS = 10L
     private const val IMAGE_TIMEOUT_MS = 5_000
+
+    // How long a scheduled run stays up after connecting so the broker can replay what was missed:
+    // until nothing arrived for DRAIN_QUIET_MS and nothing is being delivered, at most the run's cap.
+    const val JOB_DRAIN_MS = 15_000L
+    const val RECEIVER_DRAIN_MS = 5_000L
+    private const val DRAIN_QUIET_MS = 2_000L
+    private const val DRAIN_POLL_MS = 200L
+    private const val IMAGE_MAX_BYTES = 5 * 1024 * 1024
+    private const val IMAGE_MAX_PX = 1_024
     private const val CONNECT_TIMEOUT_SECONDS = 20L
 
     // How long a message waits for a listener that acknowledges it itself (the React Native and
@@ -138,6 +159,11 @@ internal object PushBackground {
     // app's onError received the error (false when it registered none).
     @Volatile
     var errorHandler: ((Throwable) -> Boolean)? = null
+
+    // Tells the Push instance that hosts its subscriptions here when the connection opens (true)
+    // or closes (false).
+    @Volatile
+    var connectionHandler: ((Boolean) -> Unit)? = null
 
     @Volatile
     var serviceRunning = false
@@ -164,6 +190,15 @@ internal object PushBackground {
         Thread(runnable, "AppwritePushBackground").apply { isDaemon = true }
     }
     private var mqtt: Mqtt5AsyncClient? = null
+
+    // Set when [mqtt] is replaced or closed, so that client stops reconnecting and delivering.
+    private var mqttRetired: AtomicBoolean? = null
+
+    // Messages being delivered, and when one last arrived or finished, for a run's drain window.
+    private val delivering = AtomicInteger(0)
+
+    @Volatile
+    private var lastDelivery = 0L
     private var connectedConfig: PushConfig? = null
     private var connectedNetwork: Network? = null
     private var lastHeartbeat = 0L
@@ -264,23 +299,120 @@ internal object PushBackground {
         }
     }
 
-    /** Resume saved background delivery when the app starts, without waiting for the next run. */
-    fun resume(context: Context) {
+    /**
+     * Resume saved background delivery when the app starts, without waiting for the next run, with
+     * the app's current credential. A rotated session of the same user replaces the saved one; a
+     * different user drops the saved subscriptions, as does no credential when
+     * [signedOutWhenMissing] (the caller read the session store, so none means signed out).
+     * While a live Push hosts subscriptions here, it does nothing: that Push owns the connection.
+     */
+    fun resume(context: Context, authMethod: String? = null, credential: String? = null, signedOutWhenMissing: Boolean = false) {
         val app = context.applicationContext
-        val active = synchronized(lock) {
+        val resume = synchronized(lock) {
             load(app)
-            isActive()
+            val current = config
+            when {
+                !isActive() || current == null -> null
+                // A live Push hosts here and owns the connection and its credential; resuming only
+                // reconciles saved delivery, so it leaves a live host alone.
+                listeners.isNotEmpty() -> null
+                // No credential: signed out when the caller can tell, else possibly not set yet.
+                authMethod == null || credential == null -> if (signedOutWhenMissing) false else null
+                current.authMethod == authMethod && current.credential == credential -> true
+                // A new credential for the same user (a rotated session) replaces the saved one,
+                // so the stale one is never sent and refused.
+                sameUser(current.authMethod, current.credential, authMethod, credential) -> {
+                    config = current.copy(authMethod = authMethod, credential = credential)
+                    persist(app)
+                    true
+                }
+                // Another user signed in: the saved subscriptions were not theirs.
+                else -> false
+            }
         }
-        if (active) {
-            tick(app) {}
+        when (resume) {
+            true -> tick(app) {}
+            false -> stop(app)
+            null -> Unit
         }
+    }
+
+    private enum class CredentialRefresh { UNCHANGED, CHANGED, GONE }
+
+    // Bring the saved credential up to date with the session cookie the app
+    // signs in with, when it comes from one (see [PushConfig.sessionCookieUrl]): a rotated session of
+    // the same user replaces it, and no session or another user's is GONE. UNCHANGED when there is
+    // no cookie source or it cannot be read.
+    private fun refreshCredential(context: Context): CredentialRefresh {
+        val current = synchronized(lock) { config } ?: return CredentialRefresh.UNCHANGED
+        val url = current.sessionCookieUrl ?: return CredentialRefresh.UNCHANGED
+        val session = readSessionCookie(url, current.project) ?: return CredentialRefresh.UNCHANGED
+        return when {
+            session.isEmpty() -> CredentialRefresh.GONE
+            current.authMethod == "appwrite-session" && session == current.credential -> CredentialRefresh.UNCHANGED
+            sameUser(current.authMethod, current.credential, "appwrite-session", session) -> {
+                synchronized(lock) {
+                    config = current.copy(authMethod = "appwrite-session", credential = session)
+                    persist(context.applicationContext)
+                }
+                CredentialRefresh.CHANGED
+            }
+            else -> CredentialRefresh.GONE
+        }
+    }
+
+    // The credential to send for a connection made with [connected]: the session re-read from the
+    // cookie store when one backs it (so an automatic reconnect uses a rotated session), else the
+    // one it connected with. Only a newer credential of the same user, for the same connection
+    // (broker, client id, project), is borrowed: a connection being replaced by [host] keeps its
+    // own. Null when the app signed out or another user signed in: authentication is aborted and
+    // delivery stops.
+    private fun currentCredential(context: Context, connected: PushConfig): String? {
+        if (refreshCredential(context) == CredentialRefresh.GONE) {
+            worker.execute { stop(context) }
+            return null
+        }
+        val current = synchronized(lock) { config } ?: return connected.credential
+        val sameConnection = current.host == connected.host && current.port == connected.port &&
+            current.clientId == connected.clientId && current.project == connected.project &&
+            current.authMethod == connected.authMethod
+        return if (sameConnection && sameUser(connected.authMethod, connected.credential, current.authMethod, current.credential)) {
+            current.credential
+        } else {
+            connected.credential
+        }
+    }
+
+    // The `a_session_<project>` cookie for [url] in the WebView cookie store, decoded; "" when there
+    // is none, and null when the store cannot be read.
+    private fun readSessionCookie(url: String, project: String): String? = runCatching {
+        val name = "a_session_$project"
+        CookieManager.getInstance().getCookie(url)
+            ?.split(";")
+            ?.map { it.trim() }
+            ?.firstOrNull { it.substringBefore("=") == name }
+            ?.substringAfter("=")
+            ?.let { Uri.decode(it) }
+            ?: ""
+    }.getOrNull()
+
+    private fun sameUser(savedMethod: String, saved: String, method: String, credential: String): Boolean {
+        fun userId(method: String, credential: String) =
+            if (method == "appwrite-session") userIdFromSession(credential) else userIdFromJwt(credential)
+        val user = userId(method, credential)
+        return user.isNotEmpty() && user == userId(savedMethod, saved)
     }
 
     /**
      * One scheduled run: under a wakelock, reconnect if needed, send a heartbeat when one is due,
      * re-arm the next run, and call [done] once finished. Shuts down when nothing is saved.
+     *
+     * A run of a chained job ([jobId]) arms the next run under the other chained id: scheduling the
+     * id that is running would stop the run in progress. With [drainMs], the run stays up after
+     * connecting while the broker replays what was missed (at most that long), so a process woken
+     * from the background is not cached and frozen before the messages are delivered.
      */
-    fun tick(context: Context, done: () -> Unit) {
+    fun tick(context: Context, jobId: Int? = null, drainMs: Long = 0, done: () -> Unit) {
         val app = context.applicationContext
         val wakeLock = acquireWakeLock(app)
         worker.execute {
@@ -291,12 +423,17 @@ internal object PushBackground {
                 }
                 if (active) {
                     // Arm the next run first, so a run cut short (killed, or a slow broker outlasting
-                    // the wakelock) still leaves the chain armed. A refused credential in converge()
-                    // shuts down, cancelling it again.
-                    schedule(app, INTERVAL_MS)
+                    // the wakelock) still leaves the chain armed; the watchdog job restarts a chain
+                    // that was dropped anyway. A refused credential in converge() shuts down,
+                    // cancelling them again.
+                    schedule(app, INTERVAL_MS, runningJobId = jobId)
+                    ensureWatchdog(app)
                     ensureService(app)
                     registerNetworkCallback(app)
                     converge(app, heartbeat = true)
+                    if (drainMs > 0 && mqtt != null) {
+                        awaitDeliveries(drainMs)
+                    }
                 } else {
                     shutdown(app)
                 }
@@ -309,9 +446,49 @@ internal object PushBackground {
         }
     }
 
+    // Worker thread only. Wait until no message arrived for DRAIN_QUIET_MS and none is being
+    // delivered, at most [maxMs]. Timed with the real monotonic clock ([nowMs]), which keeps moving
+    // while this thread sleeps.
+    private fun awaitDeliveries(maxMs: Long) {
+        val start = nowMs()
+        if (lastDelivery < start) {
+            lastDelivery = start
+        }
+        while (nowMs() - start < maxMs) {
+            if (delivering.get() == 0 && nowMs() - lastDelivery >= DRAIN_QUIET_MS) {
+                return
+            }
+            Thread.sleep(DRAIN_POLL_MS)
+        }
+    }
+
+    private fun nowMs(): Long = System.nanoTime() / 1_000_000
+
+    /**
+     * Android 12+: hand a run to an expedited job, which starts at once with network access and
+     * keeps the process runnable until it finishes. A broadcast receiver woken in a cached process
+     * runs at background priority and can be frozen before it connects. Returns false when the
+     * job cannot be scheduled (older Android, or the expedited quota is used up), so the caller
+     * runs the tick itself.
+     */
+    fun runExpedited(context: Context): Boolean {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
+            return false
+        }
+        return try {
+            val job = JobInfo.Builder(EXPEDITED_JOB_ID, ComponentName(context, PushJobService::class.java))
+                .setExpedited(true)
+                .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
+                .build()
+            context.getSystemService(JobScheduler::class.java)?.schedule(job) == JobScheduler.RESULT_SUCCESS
+        } catch (e: Exception) {
+            false
+        }
+    }
+
     /** Run once more shortly after the task was removed, so an OEM kill that follows is undone. */
     fun scheduleRestart(context: Context) {
-        schedule(context.applicationContext, RESTART_DELAY_MS, jobToo = false)
+        schedule(context.applicationContext, RESTART_DELAY_MS, alarmOnly = true)
     }
 
     /**
@@ -326,6 +503,7 @@ internal object PushBackground {
             loaded = false
         }
         errorHandler = null
+        connectionHandler = null
         unregisterNetworkCallback(context.applicationContext)
         worker.submit { disconnect() }.get()
     }
@@ -361,9 +539,14 @@ internal object PushBackground {
     // Must hold [lock]. Every background subscription, live or saved, one per filter and title.
     // Subscriptions sharing a filter and title are saved once, with QoS 1 when any of them wants it.
     private fun entries(): List<PushEntry> =
-        (saved + listeners.filter { it.background }.flatMap { listener -> listener.topics.map { PushEntry(it, listener.retry, listener.title) } })
+        (saved + liveEntries())
             .groupBy { it.filter to it.title }
-            .map { (key, group) -> PushEntry(key.first, group.any { it.retry }, key.second) }
+            .map { (key, group) -> PushEntry(key.first, group.any { it.retry }, key.second, group.any { it.notifyInForeground }) }
+
+    // Must hold [lock].
+    private fun liveEntries(): List<PushEntry> = listeners.filter { it.background }.flatMap { listener ->
+        listener.topics.map { PushEntry(it, listener.retry, listener.title, listener.notifyInForeground) }
+    }
 
     // Must hold [lock].
     private fun persist(context: Context) {
@@ -397,6 +580,7 @@ internal object PushBackground {
     private fun activate(context: Context, done: ((Throwable?) -> Unit)? = null) {
         registerNetworkCallback(context)
         schedule(context, INTERVAL_MS)
+        ensureWatchdog(context)
         ensureService(context)
         worker.execute { converge(context, heartbeat = false, done) }
     }
@@ -437,6 +621,11 @@ internal object PushBackground {
     }
 
     private fun convergeOnce(context: Context, heartbeat: Boolean) {
+        // Signed out, or signed in as someone else, since the subscriptions were saved.
+        if (refreshCredential(context) == CredentialRefresh.GONE) {
+            stop(context)
+            return
+        }
         val (current, wanted) = synchronized(lock) { config to wanted() }
         if (current == null || wanted.isEmpty()) {
             disconnect()
@@ -477,24 +666,44 @@ internal object PushBackground {
         // A failed first connect of a waited-for converge goes to the waiting caller only.
         val quiet = waiting
         val connected = AtomicBoolean(false)
+        val retired = AtomicBoolean(false)
         val client = buildPushClient(
             config.copy(keepAlive = KEEP_ALIVE_SECONDS),
+            onConnected = { connectionHandler?.invoke(true) },
+            onDisconnected = {
+                if (!retired.get()) {
+                    connectionHandler?.invoke(false)
+                }
+            },
             onError = { error ->
                 if (!quiet || connected.get()) {
                     report(error)
                 }
             },
             onAuthRefused = { error -> worker.execute { refused(context, error) } },
+            credential = { currentCredential(context, config) },
+            retired = retired,
         )
         // Registered before connecting, so the backlog the broker replays right after each
         // SUBSCRIBE reaches the app however the subscription was made (including the ones the
         // client restores itself after an automatic reconnect). Acknowledged by hand, once the
         // message was delivered (see [deliver]).
-        client.publishes(MqttGlobalPublishFilter.ALL, { publish -> deliver(context, publish) }, true)
+        client.publishes(
+            MqttGlobalPublishFilter.ALL,
+            { publish ->
+                if (!retired.get()) {
+                    deliver(context, publish)
+                }
+            },
+            true,
+        )
         try {
-            client.sendPushConnect(config.copy(keepAlive = KEEP_ALIVE_SECONDS), CONNECT_TIMEOUT_SECONDS)
+            client.sendPushConnect(config.copy(keepAlive = KEEP_ALIVE_SECONDS), CONNECT_TIMEOUT_SECONDS) {
+                currentCredential(context, config)
+            }
         } catch (e: Exception) {
             val cause = (e as? ExecutionException)?.cause ?: e
+            retired.set(true)
             client.disconnect()
             val error = connectError(cause)
             when {
@@ -508,6 +717,7 @@ internal object PushBackground {
         }
         connected.set(true)
         mqtt = client
+        mqttRetired = retired
         connectedConfig = config
         connectedNetwork = activeNetwork(context)
         lastHeartbeat = SystemClock.elapsedRealtime()
@@ -575,6 +785,8 @@ internal object PushBackground {
 
     // Worker thread only.
     private fun disconnect() {
+        mqttRetired?.set(true)
+        mqttRetired = null
         mqtt?.disconnect()
         mqtt = null
         connectedConfig = null
@@ -586,6 +798,21 @@ internal object PushBackground {
     // registered the message is also saved, and the next onError registration receives it. A
     // waiting caller receives it instead.
     private fun refused(context: Context, error: Throwable) {
+        // The saved credential may be a session the app has since rotated: retry once with the
+        // current one. Refused again, it is unchanged and delivery stops below.
+        if (!waiting) {
+            when (refreshCredential(context)) {
+                CredentialRefresh.CHANGED -> {
+                    converge(context, heartbeat = false)
+                    return
+                }
+                CredentialRefresh.GONE -> {
+                    stop(context)
+                    return
+                }
+                CredentialRefresh.UNCHANGED -> Unit
+            }
+        }
         if (waiting) {
             fail(error)
         } else if (!report(error)) {
@@ -596,11 +823,24 @@ internal object PushBackground {
 
     // Deliver a message, then acknowledge it: right away, or once every listener that acknowledges
     // messages itself has done so (at most ACK_TIMEOUT_SECONDS later).
+    // A message counts as being delivered until it is acknowledged: for the React Native and Flutter
+    // bridges, once their callback has run (or the acknowledgement times out), not when the event is
+    // handed over, so a run's drain window waits for it.
     private fun deliver(context: Context, publish: Mqtt5Publish) {
+        delivering.incrementAndGet()
+        lastDelivery = nowMs()
+        deliverAcknowledged(context, publish) {
+            lastDelivery = nowMs()
+            delivering.decrementAndGet()
+        }
+    }
+
+    private fun deliverAcknowledged(context: Context, publish: Mqtt5Publish, settled: () -> Unit) {
         val acknowledged = AtomicBoolean(false)
         val acknowledge = {
             if (acknowledged.compareAndSet(false, true)) {
                 runCatching { publish.acknowledge() }
+                settled()
             }
         }
         val pending = AtomicInteger(1)
@@ -624,7 +864,7 @@ internal object PushBackground {
             settle()
         }
         if (!acknowledged.get()) {
-            worker.schedule({ acknowledge() }, ACK_TIMEOUT_SECONDS, TimeUnit.SECONDS)
+            ackTimer.schedule({ acknowledge() }, ACK_TIMEOUT_SECONDS, TimeUnit.SECONDS)
         }
     }
 
@@ -656,8 +896,13 @@ internal object PushBackground {
             // The app's PushReceiver gets only messages no live callback received.
             val handled = matching.isEmpty() && deliverToReceivers(context, message)
             val content = notificationContent(message)
-            val titles = matching.filter { it.background }.map { it.title ?: message.topic } +
-                if (handled) emptyList() else entries.map { it.title ?: message.topic }
+            // Background subscriptions notify while the app is not visible; on screen, only those
+            // that opted in with notifyInForeground do, since the app shows the message itself. A
+            // message no live callback received still notifies, as the app has not shown it.
+            val foreground = appInForeground()
+            val shown = foreground && matching.isNotEmpty()
+            val titles = matching.filter { it.background && (!foreground || it.notifyInForeground) }.map { it.title ?: message.topic } +
+                if (handled) emptyList() else entries.filter { !shown || it.notifyInForeground }.map { it.title ?: message.topic }
             // A title the server sent replaces every subscription's, so one notification is posted.
             titles.map { content.title ?: it }.distinct().forEach { notify(context, message, it, content) }
         } finally {
@@ -712,20 +957,24 @@ internal object PushBackground {
             builder.setLargeIcon(image)
                 .setStyle(NotificationCompat.BigPictureStyle().bigPicture(image).bigLargeIcon(null as Bitmap?).setSummaryText(body))
         }
-        context.packageManager.getLaunchIntentForPackage(context.packageName)?.let { launch ->
-            launch.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP)
-                .putExtra(EXTRA_TOPIC, message.topic)
-                .putExtra(EXTRA_PAYLOAD, message.data)
-            builder.setContentIntent(
-                PendingIntent.getActivity(context, id, launch, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE),
-            )
-        }
+        val open = Intent(context, PushOpenActivity::class.java)
+            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_NO_ANIMATION)
+            .putExtra(EXTRA_TOPIC, message.topic)
+            .putExtra(EXTRA_PAYLOAD, message.data)
+        builder.setContentIntent(
+            PendingIntent.getActivity(context, id, open, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE),
+        )
         try {
             manager.notify(id, builder.build())
         } catch (e: SecurityException) {
             // POST_NOTIFICATIONS not granted; nothing to show.
         }
     }
+
+    // Whether one of the app's activities is visible: a foreground service alone does not count.
+    private fun appInForeground(): Boolean = ActivityManager.RunningAppProcessInfo()
+        .also { ActivityManager.getMyMemoryState(it) }
+        .importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND
 
     /** The server's `notification` block in [message]: nulls when the payload has none or is not JSON. */
     fun notificationContent(message: PushMessage): PushNotificationContent {
@@ -736,6 +985,11 @@ internal object PushBackground {
     }
 
     // Downloads notification images, so a slow one is abandoned without holding up delivery.
+    // Acknowledgement timeouts, apart from [worker] so they fire while a run's drain window holds it.
+    private val ackTimer = Executors.newSingleThreadScheduledExecutor { runnable ->
+        Thread(runnable, "AppwritePushAck").apply { isDaemon = true }
+    }
+
     private val imageLoader = Executors.newCachedThreadPool { runnable ->
         Thread(runnable, "AppwritePushImage").apply { isDaemon = true }
     }
@@ -746,7 +1000,7 @@ internal object PushBackground {
         val connection = runCatching { URL(url).openConnection() as HttpURLConnection }.getOrNull() ?: return null
         connection.connectTimeout = IMAGE_TIMEOUT_MS
         connection.readTimeout = IMAGE_TIMEOUT_MS
-        val download = imageLoader.submit<Bitmap?> { connection.inputStream.use { BitmapFactory.decodeStream(it) } }
+        val download = imageLoader.submit<Bitmap?> { connection.inputStream.use { readLimited(it, IMAGE_MAX_BYTES) }?.let { decodeImage(it) } }
         return try {
             download.get(IMAGE_TIMEOUT_MS.toLong(), TimeUnit.MILLISECONDS)
         } catch (e: Exception) {
@@ -755,6 +1009,37 @@ internal object PushBackground {
         } finally {
             connection.disconnect()
         }
+    }
+
+    // At most [limit] bytes of [input], or null when it holds more.
+    private fun readLimited(input: InputStream, limit: Int): ByteArray? {
+        val out = ByteArrayOutputStream()
+        val buffer = ByteArray(8_192)
+        while (true) {
+            val read = input.read(buffer)
+            if (read < 0) {
+                return out.toByteArray()
+            }
+            if (out.size() + read > limit) {
+                return null
+            }
+            out.write(buffer, 0, read)
+        }
+    }
+
+    // Decode [bytes] downsampled so neither side exceeds IMAGE_MAX_PX, so a large photo cannot
+    // exhaust memory while a notification is posted.
+    private fun decodeImage(bytes: ByteArray): Bitmap? {
+        val bounds = BitmapFactory.Options().apply { inJustDecodeBounds = true }
+        BitmapFactory.decodeByteArray(bytes, 0, bytes.size, bounds)
+        if (bounds.outWidth <= 0 || bounds.outHeight <= 0) {
+            return null
+        }
+        var sample = 1
+        while (bounds.outWidth / sample > IMAGE_MAX_PX || bounds.outHeight / sample > IMAGE_MAX_PX) {
+            sample *= 2
+        }
+        return BitmapFactory.decodeByteArray(bytes, 0, bytes.size, BitmapFactory.Options().apply { inSampleSize = sample })
     }
 
     /** The ongoing notification the foreground service shows, on its own quiet channel. */
@@ -815,19 +1100,16 @@ internal object PushBackground {
     }
 
     // Arm the next run in [delayMs]: the job, and an alarm just after it in case the job is late.
-    private fun schedule(context: Context, delayMs: Long, jobToo: Boolean = true) {
-        val interval = if (delayMs == INTERVAL_MS && privileged(context)) PRIVILEGED_INTERVAL_MS else delayMs
-        if (jobToo) {
-            try {
-                val job = JobInfo.Builder(JOB_ID, ComponentName(context, PushJobService::class.java))
-                    .setMinimumLatency(interval)
-                    .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
-                    .setPersisted(true)
-                    .build()
-                context.getSystemService(JobScheduler::class.java)?.schedule(job)
-            } catch (e: Exception) {
-                report(e)
+    // The chained job alternates between two ids, so a run ([runningJobId]) never schedules its
+    // own id, which would stop it; the other id is cancelled only when it is not the one running.
+    private fun schedule(context: Context, delayMs: Long, alarmOnly: Boolean = false, runningJobId: Int? = null) {
+        val interval = interval(context, delayMs)
+        if (!alarmOnly) {
+            val next = if (runningJobId == JOB_ID) NEXT_JOB_ID else JOB_ID
+            if (runningJobId == null) {
+                context.getSystemService(JobScheduler::class.java)?.cancel(if (next == JOB_ID) NEXT_JOB_ID else JOB_ID)
             }
+            scheduleJob(context, delayMs, next)
         }
         val alarms = context.getSystemService(AlarmManager::class.java) ?: return
         val at = SystemClock.elapsedRealtime() + interval + 1_000L
@@ -843,8 +1125,48 @@ internal object PushBackground {
         }
     }
 
+    private fun interval(context: Context, delayMs: Long): Long =
+        if (delayMs == INTERVAL_MS && privileged(context)) PRIVILEGED_INTERVAL_MS else delayMs
+
+    private fun scheduleJob(context: Context, delayMs: Long, id: Int) {
+        try {
+            val job = JobInfo.Builder(id, ComponentName(context, PushJobService::class.java))
+                .setMinimumLatency(interval(context, delayMs))
+                .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
+                .setPersisted(true)
+                .build()
+            context.getSystemService(JobScheduler::class.java)?.schedule(job)
+        } catch (e: Exception) {
+            report(e)
+        }
+    }
+
+    // A periodic job, independent of the chain of runs, that restarts the chain when a run was
+    // dropped (the process killed between runs, a deferred alarm, a throttled job). Scheduled once,
+    // so its period is not reset by every run.
+    private fun ensureWatchdog(context: Context) {
+        val jobs = context.getSystemService(JobScheduler::class.java) ?: return
+        try {
+            if (jobs.allPendingJobs.any { it.id == WATCHDOG_JOB_ID }) {
+                return
+            }
+            jobs.schedule(
+                JobInfo.Builder(WATCHDOG_JOB_ID, ComponentName(context, PushJobService::class.java))
+                    .setPeriodic(WATCHDOG_INTERVAL_MS)
+                    .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
+                    .setPersisted(true)
+                    .build(),
+            )
+        } catch (e: Exception) {
+            report(e)
+        }
+    }
+
     private fun cancelSchedule(context: Context) {
         context.getSystemService(JobScheduler::class.java)?.cancel(JOB_ID)
+        context.getSystemService(JobScheduler::class.java)?.cancel(NEXT_JOB_ID)
+        context.getSystemService(JobScheduler::class.java)?.cancel(EXPEDITED_JOB_ID)
+        context.getSystemService(JobScheduler::class.java)?.cancel(WATCHDOG_JOB_ID)
         context.getSystemService(AlarmManager::class.java)?.cancel(tickIntent(context))
     }
 
@@ -854,6 +1176,63 @@ internal object PushBackground {
         Intent(context, PushAlarmReceiver::class.java).setAction(ACTION_TICK),
         PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
     )
+
+    /** What background delivery can rely on now; see [PushBackgroundStatus]. */
+    fun backgroundStatus(context: Context): PushBackgroundStatus {
+        val app = context.applicationContext
+        return PushBackgroundStatus(
+            exactAlarms = Build.VERSION.SDK_INT < Build.VERSION_CODES.S ||
+                app.getSystemService(AlarmManager::class.java)?.canScheduleExactAlarms() == true,
+            ignoringBatteryOptimizations = app.getSystemService(PowerManager::class.java)?.isIgnoringBatteryOptimizations(app.packageName) == true,
+            foregroundService = PushStore.foreground(app),
+        )
+    }
+
+    /**
+     * Open the system screen where the user allows exact alarms (Android 12+). Returns false when
+     * there is nothing to ask: already allowed, older Android, or the app does not declare
+     * `SCHEDULE_EXACT_ALARM`.
+     */
+    fun requestExactAlarms(context: Context): Boolean {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S || backgroundStatus(context).exactAlarms) {
+            return false
+        }
+        return openSettings(context, Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM, Manifest.permission.SCHEDULE_EXACT_ALARM)
+    }
+
+    /**
+     * Ask the user to exempt the app from battery optimisation. Returns false when there is
+     * nothing to ask: already exempt, or the app does not declare
+     * `REQUEST_IGNORE_BATTERY_OPTIMIZATIONS`.
+     */
+    fun requestIgnoreBatteryOptimizations(context: Context): Boolean {
+        if (backgroundStatus(context).ignoringBatteryOptimizations) {
+            return false
+        }
+        return openSettings(
+            context,
+            Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS,
+            Manifest.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS,
+        )
+    }
+
+    // Open a settings screen for this package when the app declares [permission].
+    private fun openSettings(context: Context, action: String, permission: String): Boolean {
+        val app = context.applicationContext
+        val declared = runCatching {
+            @Suppress("DEPRECATION")
+            app.packageManager.getPackageInfo(app.packageName, PackageManager.GET_PERMISSIONS).requestedPermissions
+        }.getOrNull()?.contains(permission) == true
+        if (!declared) {
+            return false
+        }
+        return try {
+            app.startActivity(Intent(action, Uri.parse("package:${app.packageName}")).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+            true
+        } catch (e: Exception) {
+            false
+        }
+    }
 
     // Allowed exact alarms or exempt from battery optimisation: the alarm is reliable, so the
     // runs can be spaced further apart.
@@ -945,6 +1324,7 @@ internal object PushStore {
                     authMethod = it.getString("authMethod"),
                     credential = it.getString("credential"),
                     project = it.getString("project"),
+                    sessionCookieUrl = if (it.isNull("sessionCookieUrl")) null else it.optString("sessionCookieUrl").ifEmpty { null },
                 )
             }
             val list = json.getJSONArray("entries")
@@ -954,6 +1334,7 @@ internal object PushStore {
                     filter = entry.getString("filter"),
                     retry = entry.getBoolean("retry"),
                     title = if (entry.isNull("title")) null else entry.getString("title"),
+                    notifyInForeground = entry.optBoolean("notifyInForeground", false),
                 )
             }
             config to entries
@@ -973,11 +1354,12 @@ internal object PushStore {
                     .put("keepAlive", config.keepAlive)
                     .put("authMethod", config.authMethod)
                     .put("credential", config.credential)
-                    .put("project", config.project),
+                    .put("project", config.project)
+                    .put("sessionCookieUrl", config.sessionCookieUrl ?: JSONObject.NULL),
             )
             .put(
                 "entries",
-                JSONArray(entries.map { JSONObject().put("filter", it.filter).put("retry", it.retry).put("title", it.title ?: JSONObject.NULL) }),
+                JSONArray(entries.map { JSONObject().put("filter", it.filter).put("retry", it.retry).put("title", it.title ?: JSONObject.NULL).put("notifyInForeground", it.notifyInForeground) }),
             )
         write(context, STATE_FILE, json)
     }

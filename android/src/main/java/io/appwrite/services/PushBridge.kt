@@ -24,6 +24,8 @@ class PushBridge(context: Context, private val events: Events) {
         fun onMessage(subscriptionId: String, message: PushMessage, ackToken: String)
 
         fun onError(message: String)
+
+        fun onConnection(connected: Boolean)
     }
 
     private val appContext = context.applicationContext
@@ -37,13 +39,17 @@ class PushBridge(context: Context, private val events: Events) {
     @Volatile
     private var errorCallback = false
 
+    private var connected: Boolean? = null
+
     /**
      * Host the subscriptions in [subscriptionsJson] on the background connection described by
      * [configJson].
      *
      * Config: `{"host", "port", "tls", "tlsInsecure", "clientId" (optional; per user and install
-     * when empty), "authMethod", "credential", "project"}`. Subscriptions: an array of
-     * `{"id", "topic", "background", "title" (optional), "retry"}`.
+     * when empty), "authMethod", "credential", "project", "sessionCookieUrl" (optional: the endpoint
+     * whose session cookie in the WebView cookie store holds the credential, so background runs
+     * follow a rotated session)}`. Subscriptions: an array of
+     * `{"id", "topic", "background", "title" (optional), "retry", "notifyInForeground" (optional)}`.
      *
      * [done] is called once the connection is up and every filter is subscribed, or with the
      * failure's message; the SDK rejects its subscribe with it and reports it itself.
@@ -62,6 +68,7 @@ class PushBridge(context: Context, private val events: Events) {
             authMethod = authMethod,
             credential = credential,
             project = json.optString("project"),
+            sessionCookieUrl = if (json.isNull("sessionCookieUrl")) null else json.optString("sessionCookieUrl").ifEmpty { null },
         )
         val list = JSONArray(subscriptionsJson)
         val listeners = (0 until list.length()).map { index ->
@@ -80,6 +87,7 @@ class PushBridge(context: Context, private val events: Events) {
                 background = subscription.optBoolean("background", false),
                 title = if (subscription.isNull("title")) null else subscription.optString("title").ifEmpty { null },
                 retry = subscription.optBoolean("retry", true),
+                notifyInForeground = subscription.optBoolean("notifyInForeground", false),
             )
         }
         PushBackground.errorHandler = { error ->
@@ -88,9 +96,23 @@ class PushBridge(context: Context, private val events: Events) {
             }
             errorCallback
         }
+        PushBackground.connectionHandler = { connection(it) }
         PushBackground.host(appContext, config, listeners) { error ->
+            if (error == null) {
+                connection(true)
+            }
             done(error?.let { it.message ?: it.toString() })
         }
+    }
+
+    private fun connection(open: Boolean) {
+        synchronized(this) {
+            if (connected == open) {
+                return
+            }
+            connected = open
+        }
+        events.onConnection(open)
     }
 
     /** Acknowledge a message once the SDK's callback for it has run. */
@@ -99,10 +121,23 @@ class PushBridge(context: Context, private val events: Events) {
     }
 
     /** Stop hosting the live subscriptions, keeping the ones saved by an earlier run. */
-    fun release() = PushBackground.release(appContext)
+    fun release() {
+        forgetConnection()
+        PushBackground.release(appContext)
+    }
 
     /** Stop background delivery and forget every saved subscription (sign-out). */
-    fun stop() = PushBackground.stop(appContext)
+    fun stop() {
+        forgetConnection()
+        PushBackground.stop(appContext)
+    }
+
+    private fun forgetConnection() {
+        PushBackground.connectionHandler = null
+        synchronized(this) {
+            connected = null
+        }
+    }
 
     /** Run background delivery in a foreground service; saved across restarts. */
     fun setForeground(enabled: Boolean) = PushBackground.setForeground(appContext, enabled)
@@ -110,8 +145,14 @@ class PushBridge(context: Context, private val events: Events) {
     /** Whether an earlier run saved background subscriptions that are still delivered. */
     fun hasSaved(): Boolean = PushBackground.hasSaved(appContext)
 
-    /** Resume saved background delivery now instead of at the next scheduled run. */
-    fun resume() = PushBackground.resume(appContext)
+    /**
+     * Resume saved background delivery now instead of at the next scheduled run, with the app's
+     * current credential (null when it has none). A rotated session of the same user replaces
+     * the saved one; another user, or none when [signedOutWhenMissing], drops the saved
+     * subscriptions without reporting an error.
+     */
+    fun resume(authMethod: String?, credential: String?, signedOutWhenMissing: Boolean) =
+        PushBackground.resume(appContext, authMethod, credential, signedOutWhenMissing)
 
     /**
      * Record whether the app has an onError callback. Returns the refusal that stopped background
@@ -121,6 +162,22 @@ class PushBridge(context: Context, private val events: Events) {
         errorCallback = registered
         return if (registered) PushStore.takeStoppedError(appContext) else null
     }
+
+    /** What background delivery can rely on, as `{"exactAlarms", "ignoringBatteryOptimizations", "foregroundService", "bestEffort"}`. */
+    fun backgroundStatus(): String = PushBackground.backgroundStatus(appContext).let {
+        JSONObject()
+            .put("exactAlarms", it.exactAlarms)
+            .put("ignoringBatteryOptimizations", it.ignoringBatteryOptimizations)
+            .put("foregroundService", it.foregroundService)
+            .put("bestEffort", it.bestEffort)
+            .toString()
+    }
+
+    /** Open the system screen that allows exact alarms; false when there is nothing to ask. */
+    fun requestExactAlarms(): Boolean = PushBackground.requestExactAlarms(appContext)
+
+    /** Ask to exempt the app from battery optimisation; false when there is nothing to ask. */
+    fun requestIgnoreBatteryOptimizations(): Boolean = PushBackground.requestIgnoreBatteryOptimizations(appContext)
 
     /** The default client id for a credential, so a foreground connection shares its session. */
     fun defaultClientId(authMethod: String, credential: String): String =
