@@ -18,7 +18,9 @@ export { VectorsDB } from './services/vectors-db';
 export { Realtime } from './services/realtime';
 export { Push } from './services/push';
 export type {
+    PushBackgroundStatus,
     PushMessage,
+    PushNotificationOpened,
     PushSubscription,
     SubscribeOptions,
     MessageCallback,

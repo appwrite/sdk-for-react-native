@@ -1,4 +1,8 @@
 declare module 'react-native' {
+    export const AppState: {
+        readonly currentState: string | null;
+    };
+
     export const Platform: {
         readonly OS: string;
         readonly Version: number | string;
@@ -107,6 +111,19 @@ declare module 'expo-notifications' {
         channelId: string,
         channel: { name: string; importance: number },
     ): Promise<unknown>;
+    export interface NotificationResponse {
+        notification: {
+            request: { content: { data?: Record<string, unknown> | null } };
+        };
+    }
+
+    export function getLastNotificationResponseAsync(): Promise<NotificationResponse | null>;
+    // Missing from older expo-notifications versions.
+    export const clearLastNotificationResponseAsync:
+        (() => Promise<void>) | undefined;
+    export function addNotificationResponseReceivedListener(
+        listener: (response: NotificationResponse) => void,
+    ): { remove(): void };
     export function scheduleNotificationAsync(request: {
         content: {
             title: string;

@@ -1,5 +1,32 @@
 # Change log
 
+## 1.2.0-rc.4
+
+* Fixed: `host()` resolves with the live connection state instead of always `null`
+* Fixed: `onConnection(false)` fires when a retired or background connection closes
+* Fixed: notification taps are recorded after launching the app, so tap-opened screens land on top
+* Fixed: `host()` reports `false` when there was nothing to subscribe instead of a spurious open
+
+## 1.2.0-rc.3
+
+* Added: `getInitialNotification()`, `onNotificationOpened()`, and the `PushNotificationOpened` type (topic + data)
+* Added: live push connection open/close events surfaced via `onOpen`/`onClose`
+* Fixed: notification taps delivered reliably once, via a `PushTaps` queue
+* Fixed: foreground notifications de-duplicated per title
+* Updated: `resume` leaves a live Push host's connection untouched
+
+## 1.2.0-rc.2
+
+* Added: `Push.getInitialNotification()` returns the notification whose tap launched the app
+* Added: `Push.onNotificationOpened(callback)` fires on each notification tap
+* Added: `Push.backgroundStatus()` reports Android exact-alarm, battery, and foreground-service state
+* Added: `Push.requestExactAlarms()` and `Push.requestIgnoreBatteryOptimizations()` helpers
+* Added: `SubscribeOptions.notifyInForeground` to post notifications while the app is visible
+* Added: `PushBackgroundStatus` and `PushNotificationOpened` exported types
+* Fixed: reliable Android background wake-ups via a periodic watchdog and alternating jobs
+* Fixed: `resume` keeps subscriptions only for the same signed-in user
+* Fixed: notification images are size-capped to prevent out-of-memory crashes
+
 ## 1.2.0-rc.1
 
 * Added: background push notifications render the server `notification` title, body, and image
