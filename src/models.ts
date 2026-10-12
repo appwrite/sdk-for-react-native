@@ -1382,6 +1382,102 @@ export namespace Models {
     };
 
     /**
+     * Token Secret
+     */
+    export type TokenSecret = {
+        /**
+         * Token ID.
+         */
+        $id: string;
+        /**
+         * Token creation date in ISO 8601 format.
+         */
+        $createdAt: string;
+        /**
+         * User ID.
+         */
+        userId: string;
+        /**
+         * Token secret key. Exchange it for a session with the create session endpoint.
+         */
+        secret: string;
+        /**
+         * Token expiration date in ISO 8601 format.
+         */
+        expire: string;
+        /**
+         * Security phrase of a token. Empty if security phrase was not requested when creating a token. It includes randomly generated phrase which is also sent in the external resource such as email.
+         */
+        phrase: string;
+    };
+
+    /**
+     * Passkey
+     */
+    export type Passkey = {
+        /**
+         * Passkey ID.
+         */
+        $id: string;
+        /**
+         * Passkey creation date in ISO 8601 format.
+         */
+        $createdAt: string;
+        /**
+         * Passkey update date in ISO 8601 format.
+         */
+        $updatedAt: string;
+        /**
+         * Passkey name.
+         */
+        name: string;
+        /**
+         * Most recent sign-in with this passkey in ISO 8601 format. Empty until the passkey is used to sign in.
+         */
+        accessedAt: string;
+    };
+
+    /**
+     * Passkey Challenge
+     */
+    export type PasskeyChallenge = {
+        /**
+         * Challenge ID. When signing in, pass it back with the credential to receive a token.
+         */
+        $id: string;
+        /**
+         * Challenge creation date in ISO 8601 format.
+         */
+        $createdAt: string;
+        /**
+         * ID of the passkey being registered. Empty for sign-in challenges.
+         */
+        passkeyId: string;
+        /**
+         * Challenge expiration date in ISO 8601 format.
+         */
+        expire: string;
+        /**
+         * WebAuthn options in JSON form. Pass them to `PublicKeyCredential.parseCreationOptionsFromJSON()` when registering, or `PublicKeyCredential.parseRequestOptionsFromJSON()` when signing in.
+         */
+        publicKey: object;
+    };
+
+    /**
+     * Passkeys List
+     */
+    export type PasskeyList = {
+        /**
+         * Total number of passkeys that matched your query.
+         */
+        total: number;
+        /**
+         * List of passkeys.
+         */
+        passkeys: Passkey[];
+    };
+
+    /**
      * MFA Recovery Codes
      */
     export type MfaRecoveryCodes = {

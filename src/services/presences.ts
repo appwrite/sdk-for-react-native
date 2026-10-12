@@ -1,5 +1,5 @@
 import { Service } from '../service';
-import { AppwriteException, Client } from '../client';
+import { AppwriteException, Client, applyDefaults } from '../client';
 import type { Models } from '../models';
 import type { Payload } from '../client';
 
@@ -85,7 +85,7 @@ export class Presences extends Service {
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
-        return this.client.call(
+        const request = this.client.call(
             'get',
             uri,
             {
@@ -94,6 +94,32 @@ export class Presences extends Service {
             },
             apiPayload,
         );
+        const defaults = {
+            root: 'presenceList',
+            models: {
+                presenceList: {
+                    defaults: {
+                        total: 0,
+                    },
+                    properties: {
+                        presences: {
+                            items: 'presence',
+                        },
+                    },
+                },
+                presence: {
+                    defaults: {
+                        $id: '',
+                        $createdAt: '',
+                        $updatedAt: '',
+                        userId: '',
+                        source: '',
+                    },
+                },
+            },
+        };
+
+        return request.then((response) => applyDefaults(response, defaults));
     }
 
     /**
@@ -147,7 +173,7 @@ export class Presences extends Service {
         const apiPayload: Payload = {};
 
         const uri = new URL(this.client.config.endpoint + apiPath);
-        return this.client.call(
+        const request = this.client.call(
             'get',
             uri,
             {
@@ -156,6 +182,22 @@ export class Presences extends Service {
             },
             apiPayload,
         );
+        const defaults = {
+            root: 'presence',
+            models: {
+                presence: {
+                    defaults: {
+                        $id: '',
+                        $createdAt: '',
+                        $updatedAt: '',
+                        userId: '',
+                        source: '',
+                    },
+                },
+            },
+        };
+
+        return request.then((response) => applyDefaults(response, defaults));
     }
 
     /**
@@ -278,7 +320,7 @@ export class Presences extends Service {
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
-        return this.client.call(
+        const request = this.client.call(
             'put',
             uri,
             {
@@ -288,6 +330,22 @@ export class Presences extends Service {
             },
             apiPayload,
         );
+        const defaults = {
+            root: 'presence',
+            models: {
+                presence: {
+                    defaults: {
+                        $id: '',
+                        $createdAt: '',
+                        $updatedAt: '',
+                        userId: '',
+                        source: '',
+                    },
+                },
+            },
+        };
+
+        return request.then((response) => applyDefaults(response, defaults));
     }
 
     /**
@@ -419,7 +477,7 @@ export class Presences extends Service {
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
-        return this.client.call(
+        const request = this.client.call(
             'patch',
             uri,
             {
@@ -429,6 +487,22 @@ export class Presences extends Service {
             },
             apiPayload,
         );
+        const defaults = {
+            root: 'presence',
+            models: {
+                presence: {
+                    defaults: {
+                        $id: '',
+                        $createdAt: '',
+                        $updatedAt: '',
+                        userId: '',
+                        source: '',
+                    },
+                },
+            },
+        };
+
+        return request.then((response) => applyDefaults(response, defaults));
     }
 
     /**
