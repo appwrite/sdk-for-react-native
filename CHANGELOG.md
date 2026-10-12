@@ -1,5 +1,11 @@
 # Change log
 
+## 1.2.0
+
+* Added: `account` passkey methods `listPasskeys`, `createPasskey`, `getPasskey`, `updatePasskey`, `deletePasskey` and `updatePasskeyVerification`
+* Added: `account.createPasskeyToken` and `account.updatePasskeyToken` for passkey sign-in
+* Added: `Passkey`, `PasskeyList`, `PasskeyChallenge` and `TokenSecret` models
+
 ## 1.1.0
 
 * Added: `Account.createRecoveryOTP` and `Account.updateRecoveryOTP` for code-based password recovery
