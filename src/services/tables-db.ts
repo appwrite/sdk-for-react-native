@@ -1,5 +1,5 @@
 import { Service } from '../service';
-import { AppwriteException, Client, applyDefaults } from '../client';
+import { AppwriteException, Client } from '../client';
 import type { Models } from '../models';
 import type { Payload } from '../client';
 
@@ -71,7 +71,7 @@ export class TablesDB extends Service {
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
-        const request = this.client.call(
+        return this.client.call(
             'get',
             uri,
             {
@@ -80,33 +80,6 @@ export class TablesDB extends Service {
             },
             apiPayload,
         );
-        const defaults = {
-            root: 'transactionList',
-            models: {
-                transactionList: {
-                    defaults: {
-                        total: 0,
-                    },
-                    properties: {
-                        transactions: {
-                            items: 'transaction',
-                        },
-                    },
-                },
-                transaction: {
-                    defaults: {
-                        $id: '',
-                        $createdAt: '',
-                        $updatedAt: '',
-                        status: 'pending',
-                        operations: 0,
-                        expiresAt: '',
-                    },
-                },
-            },
-        };
-
-        return request.then((response) => applyDefaults(response, defaults));
     }
 
     /**
@@ -154,7 +127,7 @@ export class TablesDB extends Service {
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
-        const request = this.client.call(
+        return this.client.call(
             'post',
             uri,
             {
@@ -164,23 +137,6 @@ export class TablesDB extends Service {
             },
             apiPayload,
         );
-        const defaults = {
-            root: 'transaction',
-            models: {
-                transaction: {
-                    defaults: {
-                        $id: '',
-                        $createdAt: '',
-                        $updatedAt: '',
-                        status: 'pending',
-                        operations: 0,
-                        expiresAt: '',
-                    },
-                },
-            },
-        };
-
-        return request.then((response) => applyDefaults(response, defaults));
     }
 
     /**
@@ -234,7 +190,7 @@ export class TablesDB extends Service {
         const apiPayload: Payload = {};
 
         const uri = new URL(this.client.config.endpoint + apiPath);
-        const request = this.client.call(
+        return this.client.call(
             'get',
             uri,
             {
@@ -243,23 +199,6 @@ export class TablesDB extends Service {
             },
             apiPayload,
         );
-        const defaults = {
-            root: 'transaction',
-            models: {
-                transaction: {
-                    defaults: {
-                        $id: '',
-                        $createdAt: '',
-                        $updatedAt: '',
-                        status: 'pending',
-                        operations: 0,
-                        expiresAt: '',
-                    },
-                },
-            },
-        };
-
-        return request.then((response) => applyDefaults(response, defaults));
     }
 
     /**
@@ -346,7 +285,7 @@ export class TablesDB extends Service {
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
-        const request = this.client.call(
+        return this.client.call(
             'patch',
             uri,
             {
@@ -356,23 +295,6 @@ export class TablesDB extends Service {
             },
             apiPayload,
         );
-        const defaults = {
-            root: 'transaction',
-            models: {
-                transaction: {
-                    defaults: {
-                        $id: '',
-                        $createdAt: '',
-                        $updatedAt: '',
-                        status: 'pending',
-                        operations: 0,
-                        expiresAt: '',
-                    },
-                },
-            },
-        };
-
-        return request.then((response) => applyDefaults(response, defaults));
     }
 
     /**
@@ -505,7 +427,7 @@ export class TablesDB extends Service {
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
-        const request = this.client.call(
+        return this.client.call(
             'post',
             uri,
             {
@@ -515,23 +437,6 @@ export class TablesDB extends Service {
             },
             apiPayload,
         );
-        const defaults = {
-            root: 'transaction',
-            models: {
-                transaction: {
-                    defaults: {
-                        $id: '',
-                        $createdAt: '',
-                        $updatedAt: '',
-                        status: 'pending',
-                        operations: 0,
-                        expiresAt: '',
-                    },
-                },
-            },
-        };
-
-        return request.then((response) => applyDefaults(response, defaults));
     }
 
     /**
@@ -662,7 +567,7 @@ export class TablesDB extends Service {
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
-        const request = this.client.call(
+        return this.client.call(
             'get',
             uri,
             {
@@ -671,33 +576,6 @@ export class TablesDB extends Service {
             },
             apiPayload,
         );
-        const defaults = {
-            root: 'rowList',
-            models: {
-                rowList: {
-                    defaults: {
-                        total: 0,
-                    },
-                    properties: {
-                        rows: {
-                            items: 'row',
-                        },
-                    },
-                },
-                row: {
-                    defaults: {
-                        $id: '',
-                        $sequence: '',
-                        $tableId: '',
-                        $databaseId: '',
-                        $createdAt: '',
-                        $updatedAt: '',
-                    },
-                },
-            },
-        };
-
-        return request.then((response) => applyDefaults(response, defaults));
     }
 
     /**
@@ -856,7 +734,7 @@ export class TablesDB extends Service {
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
-        const request = this.client.call(
+        return this.client.call(
             'post',
             uri,
             {
@@ -866,23 +744,6 @@ export class TablesDB extends Service {
             },
             apiPayload,
         );
-        const defaults = {
-            root: 'row',
-            models: {
-                row: {
-                    defaults: {
-                        $id: '',
-                        $sequence: '',
-                        $tableId: '',
-                        $databaseId: '',
-                        $createdAt: '',
-                        $updatedAt: '',
-                    },
-                },
-            },
-        };
-
-        return request.then((response) => applyDefaults(response, defaults));
     }
 
     /**
@@ -1001,7 +862,7 @@ export class TablesDB extends Service {
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
-        const request = this.client.call(
+        return this.client.call(
             'get',
             uri,
             {
@@ -1010,23 +871,6 @@ export class TablesDB extends Service {
             },
             apiPayload,
         );
-        const defaults = {
-            root: 'row',
-            models: {
-                row: {
-                    defaults: {
-                        $id: '',
-                        $sequence: '',
-                        $tableId: '',
-                        $databaseId: '',
-                        $createdAt: '',
-                        $updatedAt: '',
-                    },
-                },
-            },
-        };
-
-        return request.then((response) => applyDefaults(response, defaults));
     }
 
     /**
@@ -1181,7 +1025,7 @@ export class TablesDB extends Service {
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
-        const request = this.client.call(
+        return this.client.call(
             'put',
             uri,
             {
@@ -1191,23 +1035,6 @@ export class TablesDB extends Service {
             },
             apiPayload,
         );
-        const defaults = {
-            root: 'row',
-            models: {
-                row: {
-                    defaults: {
-                        $id: '',
-                        $sequence: '',
-                        $tableId: '',
-                        $databaseId: '',
-                        $createdAt: '',
-                        $updatedAt: '',
-                    },
-                },
-            },
-        };
-
-        return request.then((response) => applyDefaults(response, defaults));
     }
 
     /**
@@ -1362,7 +1189,7 @@ export class TablesDB extends Service {
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
-        const request = this.client.call(
+        return this.client.call(
             'patch',
             uri,
             {
@@ -1372,23 +1199,6 @@ export class TablesDB extends Service {
             },
             apiPayload,
         );
-        const defaults = {
-            root: 'row',
-            models: {
-                row: {
-                    defaults: {
-                        $id: '',
-                        $sequence: '',
-                        $tableId: '',
-                        $databaseId: '',
-                        $createdAt: '',
-                        $updatedAt: '',
-                    },
-                },
-            },
-        };
-
-        return request.then((response) => applyDefaults(response, defaults));
     }
 
     /**
@@ -1650,7 +1460,7 @@ export class TablesDB extends Service {
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
-        const request = this.client.call(
+        return this.client.call(
             'patch',
             uri,
             {
@@ -1660,23 +1470,6 @@ export class TablesDB extends Service {
             },
             apiPayload,
         );
-        const defaults = {
-            root: 'row',
-            models: {
-                row: {
-                    defaults: {
-                        $id: '',
-                        $sequence: '',
-                        $tableId: '',
-                        $databaseId: '',
-                        $createdAt: '',
-                        $updatedAt: '',
-                    },
-                },
-            },
-        };
-
-        return request.then((response) => applyDefaults(response, defaults));
     }
 
     /**
@@ -1823,7 +1616,7 @@ export class TablesDB extends Service {
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
-        const request = this.client.call(
+        return this.client.call(
             'patch',
             uri,
             {
@@ -1833,22 +1626,5 @@ export class TablesDB extends Service {
             },
             apiPayload,
         );
-        const defaults = {
-            root: 'row',
-            models: {
-                row: {
-                    defaults: {
-                        $id: '',
-                        $sequence: '',
-                        $tableId: '',
-                        $databaseId: '',
-                        $createdAt: '',
-                        $updatedAt: '',
-                    },
-                },
-            },
-        };
-
-        return request.then((response) => applyDefaults(response, defaults));
     }
 }

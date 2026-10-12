@@ -1,5 +1,5 @@
 import { Service } from '../service';
-import { AppwriteException, Client, applyDefaults } from '../client';
+import { AppwriteException, Client } from '../client';
 import type { Models } from '../models';
 import type { Payload } from '../client';
 
@@ -96,7 +96,7 @@ export class Oauth2 extends Service {
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
-        const request = this.client.call(
+        return this.client.call(
             'post',
             uri,
             {
@@ -105,18 +105,6 @@ export class Oauth2 extends Service {
             },
             apiPayload,
         );
-        const defaults = {
-            root: 'oauth2Approve',
-            models: {
-                oauth2Approve: {
-                    defaults: {
-                        redirectUrl: '',
-                    },
-                },
-            },
-        };
-
-        return request.then((response) => applyDefaults(response, defaults));
     }
 
     /**
@@ -133,7 +121,7 @@ export class Oauth2 extends Service {
      * @param {string} params.prompt - OIDC prompt parameter for customization of consent screen. Space-separated list of: none, login, consent, select_account.
      * @param {number} params.maxAge - OIDC max_age paraleter for customization of consent screen. Maximum allowable elapsed time in seconds since the user last authenticated. If exceeded, re-authentication is required.
      * @param {string} params.authorizationDetails - Rich authorization request. JSON array of objects, each with a `type` and project-defined fields
-     * @param {string[]} params.resource - RFC 8707 resource indicator URI or URI list. Each value must be an absolute URI without a fragment.
+     * @param {string} params.resource - RFC 8707 resource indicator URI or URI list. Each value must be an absolute URI without a fragment.
      * @param {string} params.audience - Compatibility alias for a single OAuth2 resource indicator URI.
      * @param {string} params.requestUri - OAuth2 authorization request handle returned by the pushed authorization request endpoint.
      * @throws {AppwriteException}
@@ -151,7 +139,7 @@ export class Oauth2 extends Service {
         prompt?: string;
         maxAge?: number;
         authorizationDetails?: string;
-        resource?: string[];
+        resource?: string;
         audience?: string;
         requestUri?: string;
     }): Promise<Models.Oauth2Authorize>;
@@ -169,7 +157,7 @@ export class Oauth2 extends Service {
      * @param {string} prompt - OIDC prompt parameter for customization of consent screen. Space-separated list of: none, login, consent, select_account.
      * @param {number} maxAge - OIDC max_age paraleter for customization of consent screen. Maximum allowable elapsed time in seconds since the user last authenticated. If exceeded, re-authentication is required.
      * @param {string} authorizationDetails - Rich authorization request. JSON array of objects, each with a `type` and project-defined fields
-     * @param {string[]} resource - RFC 8707 resource indicator URI or URI list. Each value must be an absolute URI without a fragment.
+     * @param {string} resource - RFC 8707 resource indicator URI or URI list. Each value must be an absolute URI without a fragment.
      * @param {string} audience - Compatibility alias for a single OAuth2 resource indicator URI.
      * @param {string} requestUri - OAuth2 authorization request handle returned by the pushed authorization request endpoint.
      * @throws {AppwriteException}
@@ -188,7 +176,7 @@ export class Oauth2 extends Service {
         prompt?: string,
         maxAge?: number,
         authorizationDetails?: string,
-        resource?: string[],
+        resource?: string,
         audience?: string,
         requestUri?: string,
     ): Promise<Models.Oauth2Authorize>;
@@ -206,7 +194,7 @@ export class Oauth2 extends Service {
                   prompt?: string;
                   maxAge?: number;
                   authorizationDetails?: string;
-                  resource?: string[];
+                  resource?: string;
                   audience?: string;
                   requestUri?: string;
               }
@@ -222,7 +210,7 @@ export class Oauth2 extends Service {
             string?,
             number?,
             string?,
-            string[]?,
+            string?,
             string?,
             string?,
         ]
@@ -239,7 +227,7 @@ export class Oauth2 extends Service {
             prompt?: string;
             maxAge?: number;
             authorizationDetails?: string;
-            resource?: string[];
+            resource?: string;
             audience?: string;
             requestUri?: string;
         };
@@ -262,7 +250,7 @@ export class Oauth2 extends Service {
                 prompt?: string;
                 maxAge?: number;
                 authorizationDetails?: string;
-                resource?: string[];
+                resource?: string;
                 audience?: string;
                 requestUri?: string;
             };
@@ -279,7 +267,7 @@ export class Oauth2 extends Service {
                 prompt: rest[7] as string,
                 maxAge: rest[8] as number,
                 authorizationDetails: rest[9] as string,
-                resource: rest[10] as string[],
+                resource: rest[10] as string,
                 audience: rest[11] as string,
                 requestUri: rest[12] as string,
             };
@@ -363,7 +351,7 @@ export class Oauth2 extends Service {
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
-        const request = this.client.call(
+        return this.client.call(
             'get',
             uri,
             {
@@ -371,19 +359,6 @@ export class Oauth2 extends Service {
             },
             apiPayload,
         );
-        const defaults = {
-            root: 'oauth2Authorize',
-            models: {
-                oauth2Authorize: {
-                    defaults: {
-                        grantId: '',
-                        redirectUrl: '',
-                    },
-                },
-            },
-        };
-
-        return request.then((response) => applyDefaults(response, defaults));
     }
 
     /**
@@ -400,7 +375,7 @@ export class Oauth2 extends Service {
      * @param {string} params.prompt - OIDC prompt parameter for customization of consent screen. Space-separated list of: none, login, consent, select_account.
      * @param {number} params.maxAge - OIDC max_age paraleter for customization of consent screen. Maximum allowable elapsed time in seconds since the user last authenticated. If exceeded, re-authentication is required.
      * @param {string} params.authorizationDetails - Rich authorization request. JSON array of objects, each with a `type` and project-defined fields
-     * @param {string[]} params.resource - RFC 8707 resource indicator URI or URI list. Each value must be an absolute URI without a fragment.
+     * @param {string} params.resource - RFC 8707 resource indicator URI or URI list. Each value must be an absolute URI without a fragment.
      * @param {string} params.audience - Compatibility alias for a single OAuth2 resource indicator URI.
      * @param {string} params.requestUri - OAuth2 authorization request handle returned by the pushed authorization request endpoint.
      * @throws {AppwriteException}
@@ -418,7 +393,7 @@ export class Oauth2 extends Service {
         prompt?: string;
         maxAge?: number;
         authorizationDetails?: string;
-        resource?: string[];
+        resource?: string;
         audience?: string;
         requestUri?: string;
     }): Promise<Models.Oauth2Authorize>;
@@ -436,7 +411,7 @@ export class Oauth2 extends Service {
      * @param {string} prompt - OIDC prompt parameter for customization of consent screen. Space-separated list of: none, login, consent, select_account.
      * @param {number} maxAge - OIDC max_age paraleter for customization of consent screen. Maximum allowable elapsed time in seconds since the user last authenticated. If exceeded, re-authentication is required.
      * @param {string} authorizationDetails - Rich authorization request. JSON array of objects, each with a `type` and project-defined fields
-     * @param {string[]} resource - RFC 8707 resource indicator URI or URI list. Each value must be an absolute URI without a fragment.
+     * @param {string} resource - RFC 8707 resource indicator URI or URI list. Each value must be an absolute URI without a fragment.
      * @param {string} audience - Compatibility alias for a single OAuth2 resource indicator URI.
      * @param {string} requestUri - OAuth2 authorization request handle returned by the pushed authorization request endpoint.
      * @throws {AppwriteException}
@@ -455,7 +430,7 @@ export class Oauth2 extends Service {
         prompt?: string,
         maxAge?: number,
         authorizationDetails?: string,
-        resource?: string[],
+        resource?: string,
         audience?: string,
         requestUri?: string,
     ): Promise<Models.Oauth2Authorize>;
@@ -473,7 +448,7 @@ export class Oauth2 extends Service {
                   prompt?: string;
                   maxAge?: number;
                   authorizationDetails?: string;
-                  resource?: string[];
+                  resource?: string;
                   audience?: string;
                   requestUri?: string;
               }
@@ -489,7 +464,7 @@ export class Oauth2 extends Service {
             string?,
             number?,
             string?,
-            string[]?,
+            string?,
             string?,
             string?,
         ]
@@ -506,7 +481,7 @@ export class Oauth2 extends Service {
             prompt?: string;
             maxAge?: number;
             authorizationDetails?: string;
-            resource?: string[];
+            resource?: string;
             audience?: string;
             requestUri?: string;
         };
@@ -529,7 +504,7 @@ export class Oauth2 extends Service {
                 prompt?: string;
                 maxAge?: number;
                 authorizationDetails?: string;
-                resource?: string[];
+                resource?: string;
                 audience?: string;
                 requestUri?: string;
             };
@@ -546,7 +521,7 @@ export class Oauth2 extends Service {
                 prompt: rest[7] as string,
                 maxAge: rest[8] as number,
                 authorizationDetails: rest[9] as string,
-                resource: rest[10] as string[],
+                resource: rest[10] as string,
                 audience: rest[11] as string,
                 requestUri: rest[12] as string,
             };
@@ -630,7 +605,7 @@ export class Oauth2 extends Service {
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
-        const request = this.client.call(
+        return this.client.call(
             'post',
             uri,
             {
@@ -639,19 +614,6 @@ export class Oauth2 extends Service {
             },
             apiPayload,
         );
-        const defaults = {
-            root: 'oauth2Authorize',
-            models: {
-                oauth2Authorize: {
-                    defaults: {
-                        grantId: '',
-                        redirectUrl: '',
-                    },
-                },
-            },
-        };
-
-        return request.then((response) => applyDefaults(response, defaults));
     }
 
     /**
@@ -660,7 +622,7 @@ export class Oauth2 extends Service {
      * @param {string} params.clientId - OAuth2 client ID. Either a registered app ID or an HTTPS client ID metadata document URL.
      * @param {string} params.scope - Space-separated OAuth2 scopes. Can include project scopes, and built-in scopes: `openid`, `email`, `profile`.
      * @param {string} params.authorizationDetails - Rich authorization request. JSON array of objects, each with a `type` and project-defined fields
-     * @param {string[]} params.resource - RFC 8707 resource indicator URI or URI list. Each value must be an absolute URI without a fragment.
+     * @param {string} params.resource - RFC 8707 resource indicator URI or URI list. Each value must be an absolute URI without a fragment.
      * @param {string} params.audience - Compatibility alias for a single OAuth2 resource indicator URI.
      * @throws {AppwriteException}
      * @returns {Promise}
@@ -669,7 +631,7 @@ export class Oauth2 extends Service {
         clientId?: string;
         scope?: string;
         authorizationDetails?: string;
-        resource?: string[];
+        resource?: string;
         audience?: string;
     }): Promise<Models.Oauth2DeviceAuthorization>;
     /**
@@ -678,7 +640,7 @@ export class Oauth2 extends Service {
      * @param {string} clientId - OAuth2 client ID. Either a registered app ID or an HTTPS client ID metadata document URL.
      * @param {string} scope - Space-separated OAuth2 scopes. Can include project scopes, and built-in scopes: `openid`, `email`, `profile`.
      * @param {string} authorizationDetails - Rich authorization request. JSON array of objects, each with a `type` and project-defined fields
-     * @param {string[]} resource - RFC 8707 resource indicator URI or URI list. Each value must be an absolute URI without a fragment.
+     * @param {string} resource - RFC 8707 resource indicator URI or URI list. Each value must be an absolute URI without a fragment.
      * @param {string} audience - Compatibility alias for a single OAuth2 resource indicator URI.
      * @throws {AppwriteException}
      * @returns {Promise<Models.Oauth2DeviceAuthorization>}
@@ -688,7 +650,7 @@ export class Oauth2 extends Service {
         clientId?: string,
         scope?: string,
         authorizationDetails?: string,
-        resource?: string[],
+        resource?: string,
         audience?: string,
     ): Promise<Models.Oauth2DeviceAuthorization>;
     createDeviceAuthorization(
@@ -697,17 +659,17 @@ export class Oauth2 extends Service {
                   clientId?: string;
                   scope?: string;
                   authorizationDetails?: string;
-                  resource?: string[];
+                  resource?: string;
                   audience?: string;
               }
             | string,
-        ...rest: [string?, string?, string[]?, string?]
+        ...rest: [string?, string?, string?, string?]
     ): Promise<Models.Oauth2DeviceAuthorization> {
         let params: {
             clientId?: string;
             scope?: string;
             authorizationDetails?: string;
-            resource?: string[];
+            resource?: string;
             audience?: string;
         };
 
@@ -721,7 +683,7 @@ export class Oauth2 extends Service {
                 clientId?: string;
                 scope?: string;
                 authorizationDetails?: string;
-                resource?: string[];
+                resource?: string;
                 audience?: string;
             };
         } else {
@@ -729,7 +691,7 @@ export class Oauth2 extends Service {
                 clientId: paramsOrFirst as string,
                 scope: rest[0] as string,
                 authorizationDetails: rest[1] as string,
-                resource: rest[2] as string[],
+                resource: rest[2] as string,
                 audience: rest[3] as string,
             };
         }
@@ -767,7 +729,7 @@ export class Oauth2 extends Service {
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
-        const request = this.client.call(
+        return this.client.call(
             'post',
             uri,
             {
@@ -776,23 +738,6 @@ export class Oauth2 extends Service {
             },
             apiPayload,
         );
-        const defaults = {
-            root: 'oauth2DeviceAuthorization',
-            models: {
-                oauth2DeviceAuthorization: {
-                    defaults: {
-                        device_code: '',
-                        user_code: '',
-                        verification_uri: '',
-                        verification_uri_complete: '',
-                        expires_in: 0,
-                        interval: 0,
-                    },
-                },
-            },
-        };
-
-        return request.then((response) => applyDefaults(response, defaults));
     }
 
     /**
@@ -848,7 +793,7 @@ export class Oauth2 extends Service {
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
-        const request = this.client.call(
+        return this.client.call(
             'post',
             uri,
             {
@@ -857,29 +802,6 @@ export class Oauth2 extends Service {
             },
             apiPayload,
         );
-        const defaults = {
-            root: 'oauth2Grant',
-            models: {
-                oauth2Grant: {
-                    defaults: {
-                        $id: '',
-                        $createdAt: '',
-                        $updatedAt: '',
-                        userId: '',
-                        appId: '',
-                        scopes: [],
-                        resources: [],
-                        authorizationDetails: '[]',
-                        prompt: '',
-                        redirectUri: '',
-                        authTime: 0,
-                        expire: '',
-                    },
-                },
-            },
-        };
-
-        return request.then((response) => applyDefaults(response, defaults));
     }
 
     /**
@@ -933,7 +855,7 @@ export class Oauth2 extends Service {
         const apiPayload: Payload = {};
 
         const uri = new URL(this.client.config.endpoint + apiPath);
-        const request = this.client.call(
+        return this.client.call(
             'get',
             uri,
             {
@@ -941,29 +863,6 @@ export class Oauth2 extends Service {
             },
             apiPayload,
         );
-        const defaults = {
-            root: 'oauth2Grant',
-            models: {
-                oauth2Grant: {
-                    defaults: {
-                        $id: '',
-                        $createdAt: '',
-                        $updatedAt: '',
-                        userId: '',
-                        appId: '',
-                        scopes: [],
-                        resources: [],
-                        authorizationDetails: '[]',
-                        prompt: '',
-                        redirectUri: '',
-                        authTime: 0,
-                        expire: '',
-                    },
-                },
-            },
-        };
-
-        return request.then((response) => applyDefaults(response, defaults));
     }
 
     /**
@@ -1317,7 +1216,7 @@ export class Oauth2 extends Service {
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
-        const request = this.client.call(
+        return this.client.call(
             'get',
             uri,
             {
@@ -1325,28 +1224,6 @@ export class Oauth2 extends Service {
             },
             apiPayload,
         );
-        const defaults = {
-            root: 'oauth2OrganizationList',
-            models: {
-                oauth2OrganizationList: {
-                    defaults: {
-                        total: 0,
-                    },
-                    properties: {
-                        organizations: {
-                            items: 'oauth2Organization',
-                        },
-                    },
-                },
-                oauth2Organization: {
-                    defaults: {
-                        $id: '',
-                    },
-                },
-            },
-        };
-
-        return request.then((response) => applyDefaults(response, defaults));
     }
 
     /**
@@ -1363,7 +1240,7 @@ export class Oauth2 extends Service {
      * @param {string} params.prompt - OIDC prompt parameter for customization of consent screen. Space-separated list of: none, login, consent, select_account.
      * @param {number} params.maxAge - OIDC max_age parameter for customization of consent screen.
      * @param {string} params.authorizationDetails - Rich authorization request. JSON array of objects, each with a `type` and project-defined fields
-     * @param {string[]} params.resource - RFC 8707 resource indicator URI or URI list. Each value must be an absolute URI without a fragment.
+     * @param {string} params.resource - RFC 8707 resource indicator URI or URI list. Each value must be an absolute URI without a fragment.
      * @param {string} params.audience - Compatibility alias for a single OAuth2 resource indicator URI.
      * @throws {AppwriteException}
      * @returns {Promise}
@@ -1380,7 +1257,7 @@ export class Oauth2 extends Service {
         prompt?: string;
         maxAge?: number;
         authorizationDetails?: string;
-        resource?: string[];
+        resource?: string;
         audience?: string;
     }): Promise<Models.Oauth2PAR>;
     /**
@@ -1397,7 +1274,7 @@ export class Oauth2 extends Service {
      * @param {string} prompt - OIDC prompt parameter for customization of consent screen. Space-separated list of: none, login, consent, select_account.
      * @param {number} maxAge - OIDC max_age parameter for customization of consent screen.
      * @param {string} authorizationDetails - Rich authorization request. JSON array of objects, each with a `type` and project-defined fields
-     * @param {string[]} resource - RFC 8707 resource indicator URI or URI list. Each value must be an absolute URI without a fragment.
+     * @param {string} resource - RFC 8707 resource indicator URI or URI list. Each value must be an absolute URI without a fragment.
      * @param {string} audience - Compatibility alias for a single OAuth2 resource indicator URI.
      * @throws {AppwriteException}
      * @returns {Promise<Models.Oauth2PAR>}
@@ -1415,7 +1292,7 @@ export class Oauth2 extends Service {
         prompt?: string,
         maxAge?: number,
         authorizationDetails?: string,
-        resource?: string[],
+        resource?: string,
         audience?: string,
     ): Promise<Models.Oauth2PAR>;
     createPAR(
@@ -1432,7 +1309,7 @@ export class Oauth2 extends Service {
                   prompt?: string;
                   maxAge?: number;
                   authorizationDetails?: string;
-                  resource?: string[];
+                  resource?: string;
                   audience?: string;
               }
             | string,
@@ -1447,7 +1324,7 @@ export class Oauth2 extends Service {
             string?,
             number?,
             string?,
-            string[]?,
+            string?,
             string?,
         ]
     ): Promise<Models.Oauth2PAR> {
@@ -1463,7 +1340,7 @@ export class Oauth2 extends Service {
             prompt?: string;
             maxAge?: number;
             authorizationDetails?: string;
-            resource?: string[];
+            resource?: string;
             audience?: string;
         };
 
@@ -1484,7 +1361,7 @@ export class Oauth2 extends Service {
                 prompt?: string;
                 maxAge?: number;
                 authorizationDetails?: string;
-                resource?: string[];
+                resource?: string;
                 audience?: string;
             };
         } else {
@@ -1500,7 +1377,7 @@ export class Oauth2 extends Service {
                 prompt: rest[7] as string,
                 maxAge: rest[8] as number,
                 authorizationDetails: rest[9] as string,
-                resource: rest[10] as string[],
+                resource: rest[10] as string,
                 audience: rest[11] as string,
             };
         }
@@ -1596,7 +1473,7 @@ export class Oauth2 extends Service {
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
-        const request = this.client.call(
+        return this.client.call(
             'post',
             uri,
             {
@@ -1605,19 +1482,6 @@ export class Oauth2 extends Service {
             },
             apiPayload,
         );
-        const defaults = {
-            root: 'oauth2PAR',
-            models: {
-                oauth2PAR: {
-                    defaults: {
-                        request_uri: '',
-                        expires_in: 0,
-                    },
-                },
-            },
-        };
-
-        return request.then((response) => applyDefaults(response, defaults));
     }
 
     /**
@@ -1698,7 +1562,7 @@ export class Oauth2 extends Service {
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
-        const request = this.client.call(
+        return this.client.call(
             'get',
             uri,
             {
@@ -1706,30 +1570,6 @@ export class Oauth2 extends Service {
             },
             apiPayload,
         );
-        const defaults = {
-            root: 'oauth2ProjectList',
-            models: {
-                oauth2ProjectList: {
-                    defaults: {
-                        total: 0,
-                    },
-                    properties: {
-                        projects: {
-                            items: 'oauth2Project',
-                        },
-                    },
-                },
-                oauth2Project: {
-                    defaults: {
-                        $id: '',
-                        region: '',
-                        endpoint: '',
-                    },
-                },
-            },
-        };
-
-        return request.then((response) => applyDefaults(response, defaults));
     }
 
     /**
@@ -1785,7 +1625,7 @@ export class Oauth2 extends Service {
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
-        const request = this.client.call(
+        return this.client.call(
             'post',
             uri,
             {
@@ -1794,18 +1634,6 @@ export class Oauth2 extends Service {
             },
             apiPayload,
         );
-        const defaults = {
-            root: 'oauth2Reject',
-            models: {
-                oauth2Reject: {
-                    defaults: {
-                        redirectUrl: '',
-                    },
-                },
-            },
-        };
-
-        return request.then((response) => applyDefaults(response, defaults));
     }
 
     /**
@@ -1933,7 +1761,7 @@ export class Oauth2 extends Service {
      * @param {string} params.clientSecret - OAuth2 client secret. Required for confidential apps.
      * @param {string} params.codeVerifier - PKCE code verifier. Required for public apps.
      * @param {string} params.redirectUri - Redirect URI. Required for `authorization_code` grant type.
-     * @param {string[]} params.resource - RFC 8707 resource indicator URI or URI list. Each value must be an absolute URI without a fragment.
+     * @param {string} params.resource - RFC 8707 resource indicator URI or URI list. Each value must be an absolute URI without a fragment.
      * @param {string} params.audience - Compatibility alias for a single OAuth2 resource indicator URI.
      * @throws {AppwriteException}
      * @returns {Promise}
@@ -1947,7 +1775,7 @@ export class Oauth2 extends Service {
         clientSecret?: string;
         codeVerifier?: string;
         redirectUri?: string;
-        resource?: string[];
+        resource?: string;
         audience?: string;
     }): Promise<Models.Oauth2Token>;
     /**
@@ -1961,7 +1789,7 @@ export class Oauth2 extends Service {
      * @param {string} clientSecret - OAuth2 client secret. Required for confidential apps.
      * @param {string} codeVerifier - PKCE code verifier. Required for public apps.
      * @param {string} redirectUri - Redirect URI. Required for `authorization_code` grant type.
-     * @param {string[]} resource - RFC 8707 resource indicator URI or URI list. Each value must be an absolute URI without a fragment.
+     * @param {string} resource - RFC 8707 resource indicator URI or URI list. Each value must be an absolute URI without a fragment.
      * @param {string} audience - Compatibility alias for a single OAuth2 resource indicator URI.
      * @throws {AppwriteException}
      * @returns {Promise<Models.Oauth2Token>}
@@ -1976,7 +1804,7 @@ export class Oauth2 extends Service {
         clientSecret?: string,
         codeVerifier?: string,
         redirectUri?: string,
-        resource?: string[],
+        resource?: string,
         audience?: string,
     ): Promise<Models.Oauth2Token>;
     createToken(
@@ -1990,7 +1818,7 @@ export class Oauth2 extends Service {
                   clientSecret?: string;
                   codeVerifier?: string;
                   redirectUri?: string;
-                  resource?: string[];
+                  resource?: string;
                   audience?: string;
               }
             | string,
@@ -2002,7 +1830,7 @@ export class Oauth2 extends Service {
             string?,
             string?,
             string?,
-            string[]?,
+            string?,
             string?,
         ]
     ): Promise<Models.Oauth2Token> {
@@ -2015,7 +1843,7 @@ export class Oauth2 extends Service {
             clientSecret?: string;
             codeVerifier?: string;
             redirectUri?: string;
-            resource?: string[];
+            resource?: string;
             audience?: string;
         };
 
@@ -2033,7 +1861,7 @@ export class Oauth2 extends Service {
                 clientSecret?: string;
                 codeVerifier?: string;
                 redirectUri?: string;
-                resource?: string[];
+                resource?: string;
                 audience?: string;
             };
         } else {
@@ -2046,7 +1874,7 @@ export class Oauth2 extends Service {
                 clientSecret: rest[4] as string,
                 codeVerifier: rest[5] as string,
                 redirectUri: rest[6] as string,
-                resource: rest[7] as string[],
+                resource: rest[7] as string,
                 audience: rest[8] as string,
             };
         }
@@ -2115,7 +1943,7 @@ export class Oauth2 extends Service {
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
-        const request = this.client.call(
+        return this.client.call(
             'post',
             uri,
             {
@@ -2124,21 +1952,5 @@ export class Oauth2 extends Service {
             },
             apiPayload,
         );
-        const defaults = {
-            root: 'oauth2Token',
-            models: {
-                oauth2Token: {
-                    defaults: {
-                        access_token: '',
-                        token_type: 'Bearer',
-                        expires_in: 0,
-                        refresh_token: '',
-                        scope: '',
-                    },
-                },
-            },
-        };
-
-        return request.then((response) => applyDefaults(response, defaults));
     }
 }

@@ -1,5 +1,5 @@
 import { Service } from '../service';
-import { AppwriteException, Client, applyDefaults } from '../client';
+import { AppwriteException, Client } from '../client';
 import type { Models } from '../models';
 import type { UploadProgress, Payload } from '../client';
 import * as FileSystem from 'expo-file-system';
@@ -113,7 +113,7 @@ export class Storage extends Service {
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
-        const request = this.client.call(
+        return this.client.call(
             'get',
             uri,
             {
@@ -122,43 +122,6 @@ export class Storage extends Service {
             },
             apiPayload,
         );
-        const defaults = {
-            root: 'fileList',
-            models: {
-                fileList: {
-                    defaults: {
-                        total: 0,
-                    },
-                    properties: {
-                        files: {
-                            items: 'file',
-                        },
-                    },
-                },
-                file: {
-                    defaults: {
-                        $id: '',
-                        bucketId: '',
-                        $createdAt: '',
-                        $updatedAt: '',
-                        $permissions: [],
-                        name: '',
-                        folder: '',
-                        key: '',
-                        signature: '',
-                        mimeType: '',
-                        sizeOriginal: 0,
-                        sizeActual: 0,
-                        chunksTotal: 0,
-                        chunksUploaded: 0,
-                        encryption: false,
-                        compression: 'none',
-                    },
-                },
-            },
-        };
-
-        return request.then((response) => applyDefaults(response, defaults));
     }
 
     /**
@@ -600,7 +563,7 @@ export class Storage extends Service {
         const apiPayload: Payload = {};
 
         const uri = new URL(this.client.config.endpoint + apiPath);
-        const request = this.client.call(
+        return this.client.call(
             'get',
             uri,
             {
@@ -609,33 +572,6 @@ export class Storage extends Service {
             },
             apiPayload,
         );
-        const defaults = {
-            root: 'file',
-            models: {
-                file: {
-                    defaults: {
-                        $id: '',
-                        bucketId: '',
-                        $createdAt: '',
-                        $updatedAt: '',
-                        $permissions: [],
-                        name: '',
-                        folder: '',
-                        key: '',
-                        signature: '',
-                        mimeType: '',
-                        sizeOriginal: 0,
-                        sizeActual: 0,
-                        chunksTotal: 0,
-                        chunksUploaded: 0,
-                        encryption: false,
-                        compression: 'none',
-                    },
-                },
-            },
-        };
-
-        return request.then((response) => applyDefaults(response, defaults));
     }
 
     /**
@@ -738,7 +674,7 @@ export class Storage extends Service {
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
-        const request = this.client.call(
+        return this.client.call(
             'put',
             uri,
             {
@@ -748,33 +684,6 @@ export class Storage extends Service {
             },
             apiPayload,
         );
-        const defaults = {
-            root: 'file',
-            models: {
-                file: {
-                    defaults: {
-                        $id: '',
-                        bucketId: '',
-                        $createdAt: '',
-                        $updatedAt: '',
-                        $permissions: [],
-                        name: '',
-                        folder: '',
-                        key: '',
-                        signature: '',
-                        mimeType: '',
-                        sizeOriginal: 0,
-                        sizeActual: 0,
-                        chunksTotal: 0,
-                        chunksUploaded: 0,
-                        encryption: false,
-                        compression: 'none',
-                    },
-                },
-            },
-        };
-
-        return request.then((response) => applyDefaults(response, defaults));
     }
 
     /**

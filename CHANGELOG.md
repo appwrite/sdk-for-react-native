@@ -1,31 +1,49 @@
 # Change log
 
-## 2.0.0
+## 1.2.0-rc.4
 
-* Breaking: `Teams.createMembership` takes `membershipId` after `roles`; positional callers must update
-* Added: `Account.listPasskeys`, `createPasskey`, `getPasskey`, `updatePasskey` and `deletePasskey`
-* Added: `Account.updatePasskeyVerification` to finish registering a passkey
-* Added: `Account.createPasskeyToken` and `Account.updatePasskeyToken` for passkey sign-in
-* Added: `Passkey`, `PasskeyList`, `PasskeyChallenge` and `TokenSecret` models
-* Added: `Push` service for MQTT realtime push with Android background delivery
-* Added: `Topic` builder, `Client.setPushEndpoint()` and `Client.setPushClientId()`
-* Added: background push notifications render the server `notification` title, body, and image
-* Added: `getInitialNotification()`, `onNotificationOpened()` and the `PushNotificationOpened` type
-* Added: `onOpen`/`onClose` events for live push connections
-* Added: `Push.backgroundStatus()`, `requestExactAlarms()` and `requestIgnoreBatteryOptimizations()` for Android
+* Fixed: `host()` resolves with the live connection state instead of always `null`
+* Fixed: `onConnection(false)` fires when a retired or background connection closes
+* Fixed: notification taps are recorded after launching the app, so tap-opened screens land on top
+* Fixed: `host()` reports `false` when there was nothing to subscribe instead of a spurious open
+
+## 1.2.0-rc.3
+
+* Added: `getInitialNotification()`, `onNotificationOpened()`, and the `PushNotificationOpened` type (topic + data)
+* Added: live push connection open/close events surfaced via `onOpen`/`onClose`
+* Fixed: notification taps delivered reliably once, via a `PushTaps` queue
+* Fixed: foreground notifications de-duplicated per title
+* Updated: `resume` leaves a live Push host's connection untouched
+
+## 1.2.0-rc.2
+
+* Added: `Push.getInitialNotification()` returns the notification whose tap launched the app
+* Added: `Push.onNotificationOpened(callback)` fires on each notification tap
+* Added: `Push.backgroundStatus()` reports Android exact-alarm, battery, and foreground-service state
+* Added: `Push.requestExactAlarms()` and `Push.requestIgnoreBatteryOptimizations()` helpers
 * Added: `SubscribeOptions.notifyInForeground` to post notifications while the app is visible
-* Added: the SDK requests Android 13+ `POST_NOTIFICATIONS` on first background subscribe
-* Added: `Analytics` service with `createEvent`
+* Added: `PushBackgroundStatus` and `PushNotificationOpened` exported types
+* Fixed: reliable Android background wake-ups via a periodic watchdog and alternating jobs
+* Fixed: `resume` keeps subscriptions only for the same signed-in user
+* Fixed: notification images are size-capped to prevent out-of-memory crashes
+
+## 1.2.0-rc.1
+
+* Added: background push notifications render the server `notification` title, body, and image
+* Added: Android shows notification images (BigPictureStyle) and long bodies (BigTextStyle)
+* Added: the SDK requests Android 13+ `POST_NOTIFICATIONS` itself on first background subscribe
+* Added: notification `data` now carries `topic` and `payload`
+* Fixed: a server-sent title dedupes to one notification per topic instead of one per subscription
+
+## 1.2.0-rc.0
+
 * Added: `Apps` service to manage OAuth2 apps, keys, secrets, and installations
 * Added: `Oauth2` service for authorization, consent, device, PAR, and token flows
+* Added: `Push` service for MQTT realtime push with Android background delivery
+* Added: `Topic` builder and native TCP modules for push
 * Added: `Avatars.updatePhoto()` and `Avatars.deletePhoto()` methods
 * Added: `App`, `Oauth2*`, and `Account` models
-* Added: `state` parameter to `Account.createOAuth2Session` and `Account.createOAuth2Token`
-* Added: `duration` on `createEmailPasswordSession` and `current` on `deleteSessions`
-* Added: `total` parameter to `Account.listSessions`, `Locale` list methods and `listTransactions`
 * Added: `Webflow` to the `OAuthProvider` enum
-* Fixed: response models fill missing fields from spec defaults instead of throwing
-* Updated: SDK now targets Appwrite 2.4 (`X-Appwrite-Response-Format: 2.4.0`)
 * Fixed: cookie session fallback is guarded to Expo web where `localStorage` exists
 
 ## 1.1.0

@@ -1,5 +1,5 @@
 import { Service } from '../service';
-import { AppwriteException, Client, applyDefaults } from '../client';
+import { AppwriteException, Client } from '../client';
 import type { Models } from '../models';
 import type { Payload } from '../client';
 
@@ -71,7 +71,7 @@ export class Organization extends Service {
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
-        const request = this.client.call(
+        return this.client.call(
             'get',
             uri,
             {
@@ -80,36 +80,6 @@ export class Organization extends Service {
             },
             apiPayload,
         );
-        const defaults = {
-            root: 'appInstallationList',
-            models: {
-                appInstallationList: {
-                    defaults: {
-                        total: 0,
-                    },
-                    properties: {
-                        installations: {
-                            items: 'appInstallation',
-                        },
-                    },
-                },
-                appInstallation: {
-                    defaults: {
-                        $id: '',
-                        $createdAt: '',
-                        $updatedAt: '',
-                        appId: '',
-                        teamId: '',
-                        scopes: [],
-                        authorizationDetails: [],
-                        createdById: '',
-                        createdByName: '',
-                    },
-                },
-            },
-        };
-
-        return request.then((response) => applyDefaults(response, defaults));
     }
 
     /**
@@ -179,7 +149,7 @@ export class Organization extends Service {
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
-        const request = this.client.call(
+        return this.client.call(
             'post',
             uri,
             {
@@ -189,26 +159,6 @@ export class Organization extends Service {
             },
             apiPayload,
         );
-        const defaults = {
-            root: 'appInstallation',
-            models: {
-                appInstallation: {
-                    defaults: {
-                        $id: '',
-                        $createdAt: '',
-                        $updatedAt: '',
-                        appId: '',
-                        teamId: '',
-                        scopes: [],
-                        authorizationDetails: [],
-                        createdById: '',
-                        createdByName: '',
-                    },
-                },
-            },
-        };
-
-        return request.then((response) => applyDefaults(response, defaults));
     }
 
     /**
@@ -262,7 +212,7 @@ export class Organization extends Service {
         const apiPayload: Payload = {};
 
         const uri = new URL(this.client.config.endpoint + apiPath);
-        const request = this.client.call(
+        return this.client.call(
             'get',
             uri,
             {
@@ -271,26 +221,6 @@ export class Organization extends Service {
             },
             apiPayload,
         );
-        const defaults = {
-            root: 'appInstallation',
-            models: {
-                appInstallation: {
-                    defaults: {
-                        $id: '',
-                        $createdAt: '',
-                        $updatedAt: '',
-                        appId: '',
-                        teamId: '',
-                        scopes: [],
-                        authorizationDetails: [],
-                        createdById: '',
-                        createdByName: '',
-                    },
-                },
-            },
-        };
-
-        return request.then((response) => applyDefaults(response, defaults));
     }
 
     /**
@@ -361,7 +291,7 @@ export class Organization extends Service {
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
-        const request = this.client.call(
+        return this.client.call(
             'put',
             uri,
             {
@@ -371,26 +301,6 @@ export class Organization extends Service {
             },
             apiPayload,
         );
-        const defaults = {
-            root: 'appInstallation',
-            models: {
-                appInstallation: {
-                    defaults: {
-                        $id: '',
-                        $createdAt: '',
-                        $updatedAt: '',
-                        appId: '',
-                        teamId: '',
-                        scopes: [],
-                        authorizationDetails: [],
-                        createdById: '',
-                        createdByName: '',
-                    },
-                },
-            },
-        };
-
-        return request.then((response) => applyDefaults(response, defaults));
     }
 
     /**

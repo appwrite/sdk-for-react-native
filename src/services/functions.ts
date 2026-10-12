@@ -1,5 +1,5 @@
 import { Service } from '../service';
-import { AppwriteException, Client, applyDefaults } from '../client';
+import { AppwriteException, Client } from '../client';
 import type { Models } from '../models';
 import type { Payload } from '../client';
 
@@ -89,7 +89,7 @@ export class Functions extends Service {
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
-        const request = this.client.call(
+        return this.client.call(
             'get',
             uri,
             {
@@ -98,54 +98,6 @@ export class Functions extends Service {
             },
             apiPayload,
         );
-        const defaults = {
-            root: 'executionList',
-            models: {
-                executionList: {
-                    defaults: {
-                        total: 0,
-                    },
-                    properties: {
-                        executions: {
-                            items: 'execution',
-                        },
-                    },
-                },
-                execution: {
-                    defaults: {
-                        $id: '',
-                        $createdAt: '',
-                        $updatedAt: '',
-                        resourceId: '',
-                        resourceType: 'functions',
-                        deploymentId: '',
-                        requestMethod: '',
-                        requestPath: '',
-                        responseStatusCode: 0,
-                        responseBody: '',
-                        logs: '',
-                        errors: '',
-                        duration: 0,
-                    },
-                    properties: {
-                        requestHeaders: {
-                            items: 'headers',
-                        },
-                        responseHeaders: {
-                            items: 'headers',
-                        },
-                    },
-                },
-                headers: {
-                    defaults: {
-                        name: '',
-                        value: '',
-                    },
-                },
-            },
-        };
-
-        return request.then((response) => applyDefaults(response, defaults));
     }
 
     /**
@@ -295,7 +247,7 @@ export class Functions extends Service {
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
-        const request = this.client.call(
+        return this.client.call(
             'post',
             uri,
             {
@@ -305,44 +257,6 @@ export class Functions extends Service {
             },
             apiPayload,
         );
-        const defaults = {
-            root: 'execution',
-            models: {
-                execution: {
-                    defaults: {
-                        $id: '',
-                        $createdAt: '',
-                        $updatedAt: '',
-                        resourceId: '',
-                        resourceType: 'functions',
-                        deploymentId: '',
-                        requestMethod: '',
-                        requestPath: '',
-                        responseStatusCode: 0,
-                        responseBody: '',
-                        logs: '',
-                        errors: '',
-                        duration: 0,
-                    },
-                    properties: {
-                        requestHeaders: {
-                            items: 'headers',
-                        },
-                        responseHeaders: {
-                            items: 'headers',
-                        },
-                    },
-                },
-                headers: {
-                    defaults: {
-                        name: '',
-                        value: '',
-                    },
-                },
-            },
-        };
-
-        return request.then((response) => applyDefaults(response, defaults));
     }
 
     /**
@@ -413,7 +327,7 @@ export class Functions extends Service {
         const apiPayload: Payload = {};
 
         const uri = new URL(this.client.config.endpoint + apiPath);
-        const request = this.client.call(
+        return this.client.call(
             'get',
             uri,
             {
@@ -422,43 +336,5 @@ export class Functions extends Service {
             },
             apiPayload,
         );
-        const defaults = {
-            root: 'execution',
-            models: {
-                execution: {
-                    defaults: {
-                        $id: '',
-                        $createdAt: '',
-                        $updatedAt: '',
-                        resourceId: '',
-                        resourceType: 'functions',
-                        deploymentId: '',
-                        requestMethod: '',
-                        requestPath: '',
-                        responseStatusCode: 0,
-                        responseBody: '',
-                        logs: '',
-                        errors: '',
-                        duration: 0,
-                    },
-                    properties: {
-                        requestHeaders: {
-                            items: 'headers',
-                        },
-                        responseHeaders: {
-                            items: 'headers',
-                        },
-                    },
-                },
-                headers: {
-                    defaults: {
-                        name: '',
-                        value: '',
-                    },
-                },
-            },
-        };
-
-        return request.then((response) => applyDefaults(response, defaults));
     }
 }
