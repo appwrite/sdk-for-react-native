@@ -1913,6 +1913,439 @@ export class Account extends Service {
     }
 
     /**
+     * Get the list of verified passkeys registered by the currently logged in user.
+     *
+     * @param {string[]} params.queries - Array of query strings generated using the Query class provided by the SDK. [Learn more about queries](https://appwrite.io/docs/queries). Maximum of 100 queries are allowed, each 4096 characters long. You may filter and order on the following attributes: $id, $createdAt, $updatedAt, name, accessedAt
+     * @param {boolean} params.total - When set to false, the total count returned will be 0 and will not be calculated.
+     * @throws {AppwriteException}
+     * @returns {Promise}
+     */
+    listPasskeys(params?: {
+        queries?: string[];
+        total?: boolean;
+    }): Promise<Models.PasskeyList>;
+    /**
+     * Get the list of verified passkeys registered by the currently logged in user.
+     *
+     * @param {string[]} queries - Array of query strings generated using the Query class provided by the SDK. [Learn more about queries](https://appwrite.io/docs/queries). Maximum of 100 queries are allowed, each 4096 characters long. You may filter and order on the following attributes: $id, $createdAt, $updatedAt, name, accessedAt
+     * @param {boolean} total - When set to false, the total count returned will be 0 and will not be calculated.
+     * @throws {AppwriteException}
+     * @returns {Promise<Models.PasskeyList>}
+     * @deprecated Use the object parameter style method for a better developer experience.
+     */
+    listPasskeys(
+        queries?: string[],
+        total?: boolean,
+    ): Promise<Models.PasskeyList>;
+    listPasskeys(
+        paramsOrFirst?: { queries?: string[]; total?: boolean } | string[],
+        ...rest: [boolean?]
+    ): Promise<Models.PasskeyList> {
+        let params: { queries?: string[]; total?: boolean };
+
+        if (
+            (typeof paramsOrFirst === 'undefined' && rest.length === 0) ||
+            (paramsOrFirst &&
+                typeof paramsOrFirst === 'object' &&
+                !Array.isArray(paramsOrFirst))
+        ) {
+            params = (paramsOrFirst || {}) as {
+                queries?: string[];
+                total?: boolean;
+            };
+        } else {
+            params = {
+                queries: paramsOrFirst as string[],
+                total: rest[0] as boolean,
+            };
+        }
+
+        const queries = params.queries;
+        const total = params.total;
+
+        const apiPath = '/account/passkeys';
+        const apiPayload: Payload = {};
+
+        if (typeof queries !== 'undefined') {
+            apiPayload['queries'] = queries;
+        }
+
+        if (typeof total !== 'undefined') {
+            apiPayload['total'] = total;
+        }
+
+        const uri = new URL(this.client.config.endpoint + apiPath);
+        return this.client.call(
+            'get',
+            uri,
+            {
+                'X-Appwrite-Project': this.client.config.project,
+                accept: 'application/json',
+            },
+            apiPayload,
+        );
+    }
+
+    /**
+     * Start registering a passkey for the currently logged in user. The session must have signed in or completed an MFA challenge within the last 10 minutes. Pass the returned `publicKey` options to `navigator.credentials.create()`, then complete the registration with [Update passkey verification](/docs/references/cloud/client-web/account#updatePasskeyVerification). The passkey stays pending until verified, and the challenge expires after 5 minutes.
+     *
+     * @param {string} params.passkeyId - Passkey ID. Choose a custom ID or generate a random ID with `ID.unique()`. Valid chars are a-z, A-Z, 0-9, period, hyphen, and underscore. Can't start with a special char. Max length is 36 chars.
+     * @param {string} params.name - Passkey name, shown when listing passkeys. Max length: 128 chars.
+     * @throws {AppwriteException}
+     * @returns {Promise}
+     */
+    createPasskey(params?: {
+        passkeyId?: string;
+        name?: string;
+    }): Promise<Models.PasskeyChallenge>;
+    /**
+     * Start registering a passkey for the currently logged in user. The session must have signed in or completed an MFA challenge within the last 10 minutes. Pass the returned `publicKey` options to `navigator.credentials.create()`, then complete the registration with [Update passkey verification](/docs/references/cloud/client-web/account#updatePasskeyVerification). The passkey stays pending until verified, and the challenge expires after 5 minutes.
+     *
+     * @param {string} passkeyId - Passkey ID. Choose a custom ID or generate a random ID with `ID.unique()`. Valid chars are a-z, A-Z, 0-9, period, hyphen, and underscore. Can't start with a special char. Max length is 36 chars.
+     * @param {string} name - Passkey name, shown when listing passkeys. Max length: 128 chars.
+     * @throws {AppwriteException}
+     * @returns {Promise<Models.PasskeyChallenge>}
+     * @deprecated Use the object parameter style method for a better developer experience.
+     */
+    createPasskey(
+        passkeyId?: string,
+        name?: string,
+    ): Promise<Models.PasskeyChallenge>;
+    createPasskey(
+        paramsOrFirst?: { passkeyId?: string; name?: string } | string,
+        ...rest: [string?]
+    ): Promise<Models.PasskeyChallenge> {
+        let params: { passkeyId?: string; name?: string };
+
+        if (
+            (typeof paramsOrFirst === 'undefined' && rest.length === 0) ||
+            (paramsOrFirst &&
+                typeof paramsOrFirst === 'object' &&
+                !Array.isArray(paramsOrFirst))
+        ) {
+            params = (paramsOrFirst || {}) as {
+                passkeyId?: string;
+                name?: string;
+            };
+        } else {
+            params = {
+                passkeyId: paramsOrFirst as string,
+                name: rest[0] as string,
+            };
+        }
+
+        const passkeyId = params.passkeyId;
+        const name = params.name;
+
+        const apiPath = '/account/passkeys';
+        const apiPayload: Payload = {};
+
+        if (typeof passkeyId !== 'undefined') {
+            apiPayload['passkeyId'] = passkeyId;
+        }
+
+        if (typeof name !== 'undefined') {
+            apiPayload['name'] = name;
+        }
+
+        const uri = new URL(this.client.config.endpoint + apiPath);
+        return this.client.call(
+            'post',
+            uri,
+            {
+                'X-Appwrite-Project': this.client.config.project,
+                'content-type': 'application/json',
+                accept: 'application/json',
+            },
+            apiPayload,
+        );
+    }
+
+    /**
+     * Get a verified passkey of the currently logged in user by its unique ID.
+     *
+     * @param {string} params.passkeyId - Passkey ID.
+     * @throws {AppwriteException}
+     * @returns {Promise}
+     */
+    getPasskey(params: { passkeyId: string }): Promise<Models.Passkey>;
+    /**
+     * Get a verified passkey of the currently logged in user by its unique ID.
+     *
+     * @param {string} passkeyId - Passkey ID.
+     * @throws {AppwriteException}
+     * @returns {Promise<Models.Passkey>}
+     * @deprecated Use the object parameter style method for a better developer experience.
+     */
+    getPasskey(passkeyId: string): Promise<Models.Passkey>;
+    getPasskey(
+        paramsOrFirst: { passkeyId: string } | string,
+    ): Promise<Models.Passkey> {
+        let params: { passkeyId: string };
+
+        if (
+            paramsOrFirst &&
+            typeof paramsOrFirst === 'object' &&
+            !Array.isArray(paramsOrFirst)
+        ) {
+            params = (paramsOrFirst || {}) as { passkeyId: string };
+        } else {
+            params = {
+                passkeyId: paramsOrFirst as string,
+            };
+        }
+
+        const passkeyId = params.passkeyId;
+
+        if (typeof passkeyId === 'undefined' || passkeyId === '') {
+            throw new AppwriteException(
+                'Missing required parameter: "passkeyId"',
+            );
+        }
+
+        const apiPath = '/account/passkeys/{passkeyId}'.replace(
+            '{passkeyId}',
+            encodeURIComponent(String(passkeyId)),
+        );
+        const apiPayload: Payload = {};
+
+        const uri = new URL(this.client.config.endpoint + apiPath);
+        return this.client.call(
+            'get',
+            uri,
+            {
+                'X-Appwrite-Project': this.client.config.project,
+                accept: 'application/json',
+            },
+            apiPayload,
+        );
+    }
+
+    /**
+     * Rename a passkey of the currently logged in user.
+     *
+     * @param {string} params.passkeyId - Passkey ID.
+     * @param {string} params.name - Passkey name. Max length: 128 chars.
+     * @throws {AppwriteException}
+     * @returns {Promise}
+     */
+    updatePasskey(params: {
+        passkeyId: string;
+        name: string;
+    }): Promise<Models.Passkey>;
+    /**
+     * Rename a passkey of the currently logged in user.
+     *
+     * @param {string} passkeyId - Passkey ID.
+     * @param {string} name - Passkey name. Max length: 128 chars.
+     * @throws {AppwriteException}
+     * @returns {Promise<Models.Passkey>}
+     * @deprecated Use the object parameter style method for a better developer experience.
+     */
+    updatePasskey(passkeyId: string, name: string): Promise<Models.Passkey>;
+    updatePasskey(
+        paramsOrFirst: { passkeyId: string; name: string } | string,
+        ...rest: [string?]
+    ): Promise<Models.Passkey> {
+        let params: { passkeyId: string; name: string };
+
+        if (
+            paramsOrFirst &&
+            typeof paramsOrFirst === 'object' &&
+            !Array.isArray(paramsOrFirst)
+        ) {
+            params = (paramsOrFirst || {}) as {
+                passkeyId: string;
+                name: string;
+            };
+        } else {
+            params = {
+                passkeyId: paramsOrFirst as string,
+                name: rest[0] as string,
+            };
+        }
+
+        const passkeyId = params.passkeyId;
+        const name = params.name;
+
+        if (typeof passkeyId === 'undefined' || passkeyId === '') {
+            throw new AppwriteException(
+                'Missing required parameter: "passkeyId"',
+            );
+        }
+
+        if (typeof name === 'undefined') {
+            throw new AppwriteException('Missing required parameter: "name"');
+        }
+
+        const apiPath = '/account/passkeys/{passkeyId}'.replace(
+            '{passkeyId}',
+            encodeURIComponent(String(passkeyId)),
+        );
+        const apiPayload: Payload = {};
+
+        if (typeof name !== 'undefined') {
+            apiPayload['name'] = name;
+        }
+
+        const uri = new URL(this.client.config.endpoint + apiPath);
+        return this.client.call(
+            'patch',
+            uri,
+            {
+                'X-Appwrite-Project': this.client.config.project,
+                'content-type': 'application/json',
+                accept: 'application/json',
+            },
+            apiPayload,
+        );
+    }
+
+    /**
+     * Delete a passkey from the currently logged in user. The passkey can no longer be used to sign in, although it may remain stored on the user's device. The session must have signed in or completed an MFA challenge within the last 10 minutes.
+     *
+     * @param {string} params.passkeyId - Passkey ID.
+     * @throws {AppwriteException}
+     * @returns {Promise}
+     */
+    deletePasskey(params: { passkeyId: string }): Promise<{}>;
+    /**
+     * Delete a passkey from the currently logged in user. The passkey can no longer be used to sign in, although it may remain stored on the user's device. The session must have signed in or completed an MFA challenge within the last 10 minutes.
+     *
+     * @param {string} passkeyId - Passkey ID.
+     * @throws {AppwriteException}
+     * @returns {Promise<{}>}
+     * @deprecated Use the object parameter style method for a better developer experience.
+     */
+    deletePasskey(passkeyId: string): Promise<{}>;
+    deletePasskey(paramsOrFirst: { passkeyId: string } | string): Promise<{}> {
+        let params: { passkeyId: string };
+
+        if (
+            paramsOrFirst &&
+            typeof paramsOrFirst === 'object' &&
+            !Array.isArray(paramsOrFirst)
+        ) {
+            params = (paramsOrFirst || {}) as { passkeyId: string };
+        } else {
+            params = {
+                passkeyId: paramsOrFirst as string,
+            };
+        }
+
+        const passkeyId = params.passkeyId;
+
+        if (typeof passkeyId === 'undefined' || passkeyId === '') {
+            throw new AppwriteException(
+                'Missing required parameter: "passkeyId"',
+            );
+        }
+
+        const apiPath = '/account/passkeys/{passkeyId}'.replace(
+            '{passkeyId}',
+            encodeURIComponent(String(passkeyId)),
+        );
+        const apiPayload: Payload = {};
+
+        const uri = new URL(this.client.config.endpoint + apiPath);
+        return this.client.call(
+            'delete',
+            uri,
+            {
+                'X-Appwrite-Project': this.client.config.project,
+                'content-type': 'application/json',
+                accept: 'application/json',
+            },
+            apiPayload,
+        );
+    }
+
+    /**
+     * Complete a passkey registration started with [Create passkey](/docs/references/cloud/client-web/account#createPasskey). Pass the JSON form of the credential returned by `navigator.credentials.create()`, for example `credential.toJSON()`. Each registration can be verified once; a failed attempt requires starting it again.
+     *
+     * @param {string} params.passkeyId - Passkey ID.
+     * @param {object} params.credential - Registration credential returned by the authenticator, in the JSON form produced by `PublicKeyCredential.toJSON()`.
+     * @throws {AppwriteException}
+     * @returns {Promise}
+     */
+    updatePasskeyVerification(params: {
+        passkeyId: string;
+        credential: object;
+    }): Promise<Models.Passkey>;
+    /**
+     * Complete a passkey registration started with [Create passkey](/docs/references/cloud/client-web/account#createPasskey). Pass the JSON form of the credential returned by `navigator.credentials.create()`, for example `credential.toJSON()`. Each registration can be verified once; a failed attempt requires starting it again.
+     *
+     * @param {string} passkeyId - Passkey ID.
+     * @param {object} credential - Registration credential returned by the authenticator, in the JSON form produced by `PublicKeyCredential.toJSON()`.
+     * @throws {AppwriteException}
+     * @returns {Promise<Models.Passkey>}
+     * @deprecated Use the object parameter style method for a better developer experience.
+     */
+    updatePasskeyVerification(
+        passkeyId: string,
+        credential: object,
+    ): Promise<Models.Passkey>;
+    updatePasskeyVerification(
+        paramsOrFirst: { passkeyId: string; credential: object } | string,
+        ...rest: [object?]
+    ): Promise<Models.Passkey> {
+        let params: { passkeyId: string; credential: object };
+
+        if (
+            paramsOrFirst &&
+            typeof paramsOrFirst === 'object' &&
+            !Array.isArray(paramsOrFirst)
+        ) {
+            params = (paramsOrFirst || {}) as {
+                passkeyId: string;
+                credential: object;
+            };
+        } else {
+            params = {
+                passkeyId: paramsOrFirst as string,
+                credential: rest[0] as object,
+            };
+        }
+
+        const passkeyId = params.passkeyId;
+        const credential = params.credential;
+
+        if (typeof passkeyId === 'undefined' || passkeyId === '') {
+            throw new AppwriteException(
+                'Missing required parameter: "passkeyId"',
+            );
+        }
+
+        if (typeof credential === 'undefined') {
+            throw new AppwriteException(
+                'Missing required parameter: "credential"',
+            );
+        }
+
+        const apiPath = '/account/passkeys/{passkeyId}/verification'.replace(
+            '{passkeyId}',
+            encodeURIComponent(String(passkeyId)),
+        );
+        const apiPayload: Payload = {};
+
+        if (typeof credential !== 'undefined') {
+            apiPayload['credential'] = credential;
+        }
+
+        const uri = new URL(this.client.config.endpoint + apiPath);
+        return this.client.call(
+            'put',
+            uri,
+            {
+                'X-Appwrite-Project': this.client.config.project,
+                'content-type': 'application/json',
+                accept: 'application/json',
+            },
+            apiPayload,
+        );
+    }
+
+    /**
      * Update currently logged in user password. For validation, user is required to pass in the new password, and the old password. For users created with OAuth, Team Invites and Magic URL, oldPassword is optional.
      *
      * @param {string} params.password - New user password. Must be at least 8 chars.
@@ -4030,6 +4463,115 @@ export class Account extends Service {
             uri.searchParams.append(key, value);
         }
         return uri;
+    }
+
+    /**
+     * Start signing in with a passkey. No email or user ID is needed: pass the returned `publicKey` options to `navigator.credentials.get()` and the user picks one of their passkeys. Then call [Update passkey token](/docs/references/cloud/client-web/account#updatePasskeyToken) with the credential to receive a token, and exchange it with [Create session](/docs/references/cloud/client-web/account#createSession). The challenge expires after 5 minutes.
+     *
+     * @throws {AppwriteException}
+     * @returns {Promise}
+     */
+    createPasskeyToken(): Promise<Models.PasskeyChallenge> {
+        const apiPath = '/account/tokens/passkey';
+        const apiPayload: Payload = {};
+
+        const uri = new URL(this.client.config.endpoint + apiPath);
+        return this.client.call(
+            'post',
+            uri,
+            {
+                'X-Appwrite-Project': this.client.config.project,
+                'content-type': 'application/json',
+                accept: 'application/json',
+            },
+            apiPayload,
+        );
+    }
+
+    /**
+     * Complete a passkey sign-in started with [Create passkey token](/docs/references/cloud/client-web/account#createPasskeyToken). Pass the challenge ID and the JSON form of the credential returned by `navigator.credentials.get()`, for example `credential.toJSON()`. The returned token includes its secret and expires after 1 minute: exchange it for a session with [Create session](/docs/references/cloud/client-web/account#createSession). Passkeys require user verification, so the session also satisfies MFA. Each challenge can only be used once.
+     *
+     * @param {string} params.challengeId - Challenge ID returned by createPasskeyToken.
+     * @param {object} params.credential - Authentication credential returned by the authenticator, in the JSON form produced by `PublicKeyCredential.toJSON()`.
+     * @throws {AppwriteException}
+     * @returns {Promise}
+     */
+    updatePasskeyToken(params: {
+        challengeId: string;
+        credential: object;
+    }): Promise<Models.TokenSecret>;
+    /**
+     * Complete a passkey sign-in started with [Create passkey token](/docs/references/cloud/client-web/account#createPasskeyToken). Pass the challenge ID and the JSON form of the credential returned by `navigator.credentials.get()`, for example `credential.toJSON()`. The returned token includes its secret and expires after 1 minute: exchange it for a session with [Create session](/docs/references/cloud/client-web/account#createSession). Passkeys require user verification, so the session also satisfies MFA. Each challenge can only be used once.
+     *
+     * @param {string} challengeId - Challenge ID returned by createPasskeyToken.
+     * @param {object} credential - Authentication credential returned by the authenticator, in the JSON form produced by `PublicKeyCredential.toJSON()`.
+     * @throws {AppwriteException}
+     * @returns {Promise<Models.TokenSecret>}
+     * @deprecated Use the object parameter style method for a better developer experience.
+     */
+    updatePasskeyToken(
+        challengeId: string,
+        credential: object,
+    ): Promise<Models.TokenSecret>;
+    updatePasskeyToken(
+        paramsOrFirst: { challengeId: string; credential: object } | string,
+        ...rest: [object?]
+    ): Promise<Models.TokenSecret> {
+        let params: { challengeId: string; credential: object };
+
+        if (
+            paramsOrFirst &&
+            typeof paramsOrFirst === 'object' &&
+            !Array.isArray(paramsOrFirst)
+        ) {
+            params = (paramsOrFirst || {}) as {
+                challengeId: string;
+                credential: object;
+            };
+        } else {
+            params = {
+                challengeId: paramsOrFirst as string,
+                credential: rest[0] as object,
+            };
+        }
+
+        const challengeId = params.challengeId;
+        const credential = params.credential;
+
+        if (typeof challengeId === 'undefined') {
+            throw new AppwriteException(
+                'Missing required parameter: "challengeId"',
+            );
+        }
+
+        if (typeof credential === 'undefined') {
+            throw new AppwriteException(
+                'Missing required parameter: "credential"',
+            );
+        }
+
+        const apiPath = '/account/tokens/passkey';
+        const apiPayload: Payload = {};
+
+        if (typeof challengeId !== 'undefined') {
+            apiPayload['challengeId'] = challengeId;
+        }
+
+        if (typeof credential !== 'undefined') {
+            apiPayload['credential'] = credential;
+        }
+
+        const uri = new URL(this.client.config.endpoint + apiPath);
+        return this.client.call(
+            'put',
+            uri,
+            {
+                'X-Appwrite-Project': this.client.config.project,
+                'content-type': 'application/json',
+                accept: 'application/json',
+            },
+            apiPayload,
+        );
     }
 
     /**
