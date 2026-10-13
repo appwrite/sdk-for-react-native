@@ -7,7 +7,9 @@ const client = new Client()
 
 const account = new Account(client);
 
-const result = await account.deleteSessions();
+const result = await account.deleteSessions({
+    current: false, // optional
+});
 
 console.log(result);
 ```

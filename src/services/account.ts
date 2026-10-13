@@ -2977,12 +2977,46 @@ export class Account extends Service {
     /**
      * Get the list of active sessions across different devices for the currently logged in user.
      *
+     * @param {boolean} params.total - When set to false, the total count returned will be 0 and will not be calculated.
      * @throws {AppwriteException}
      * @returns {Promise}
      */
-    listSessions(): Promise<Models.SessionList> {
+    listSessions(params?: { total?: boolean }): Promise<Models.SessionList>;
+    /**
+     * Get the list of active sessions across different devices for the currently logged in user.
+     *
+     * @param {boolean} total - When set to false, the total count returned will be 0 and will not be calculated.
+     * @throws {AppwriteException}
+     * @returns {Promise<Models.SessionList>}
+     * @deprecated Use the object parameter style method for a better developer experience.
+     */
+    listSessions(total?: boolean): Promise<Models.SessionList>;
+    listSessions(
+        paramsOrFirst?: { total?: boolean } | boolean,
+    ): Promise<Models.SessionList> {
+        let params: { total?: boolean };
+
+        if (
+            typeof paramsOrFirst === 'undefined' ||
+            (paramsOrFirst &&
+                typeof paramsOrFirst === 'object' &&
+                !Array.isArray(paramsOrFirst))
+        ) {
+            params = (paramsOrFirst || {}) as { total?: boolean };
+        } else {
+            params = {
+                total: paramsOrFirst as boolean,
+            };
+        }
+
+        const total = params.total;
+
         const apiPath = '/account/sessions';
         const payload: Payload = {};
+
+        if (typeof total !== 'undefined') {
+            payload['total'] = total;
+        }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call(
@@ -2999,12 +3033,46 @@ export class Account extends Service {
     /**
      * Delete all sessions from the user account and remove any sessions cookies from the end client.
      *
+     * @param {boolean} params.current - Delete the current session too. Use false to sign out of every other session while staying signed in on this one.
      * @throws {AppwriteException}
      * @returns {Promise}
      */
-    deleteSessions(): Promise<{}> {
+    deleteSessions(params?: { current?: boolean }): Promise<{}>;
+    /**
+     * Delete all sessions from the user account and remove any sessions cookies from the end client. Pass `current` as false to keep the session making the request and sign out of every other session.
+     *
+     * @param {boolean} current - Delete the current session too. Use false to sign out of every other session while staying signed in on this one.
+     * @throws {AppwriteException}
+     * @returns {Promise<{}>}
+     * @deprecated Use the object parameter style method for a better developer experience.
+     */
+    deleteSessions(current?: boolean): Promise<{}>;
+    deleteSessions(
+        paramsOrFirst?: { current?: boolean } | boolean,
+    ): Promise<{}> {
+        let params: { current?: boolean };
+
+        if (
+            typeof paramsOrFirst === 'undefined' ||
+            (paramsOrFirst &&
+                typeof paramsOrFirst === 'object' &&
+                !Array.isArray(paramsOrFirst))
+        ) {
+            params = (paramsOrFirst || {}) as { current?: boolean };
+        } else {
+            params = {
+                current: paramsOrFirst as boolean,
+            };
+        }
+
+        const current = params.current;
+
         const apiPath = '/account/sessions';
         const payload: Payload = {};
+
+        if (typeof current !== 'undefined') {
+            payload['current'] = current;
+        }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         return this.client.call(
@@ -3049,12 +3117,14 @@ export class Account extends Service {
      *
      * @param {string} params.email - User email.
      * @param {string} params.password - User password. Must be at least 8 chars.
+     * @param {number} params.duration - Session length in seconds. Minimum is 60 seconds, and it cannot exceed the project maximum session length. Defaults to the project maximum session length.
      * @throws {AppwriteException}
      * @returns {Promise}
      */
     createEmailPasswordSession(params: {
         email: string;
         password: string;
+        duration?: number;
     }): Promise<Models.Session>;
     /**
      * Allow the user to login into their account by providing a valid email and password combination. This route will create a new session for the user.
@@ -3063,6 +3133,7 @@ export class Account extends Service {
      *
      * @param {string} email - User email.
      * @param {string} password - User password. Must be at least 8 chars.
+     * @param {number} duration - Session length in seconds. Minimum is 60 seconds, and it cannot exceed the project maximum session length. Defaults to the project maximum session length.
      * @throws {AppwriteException}
      * @returns {Promise<Models.Session>}
      * @deprecated Use the object parameter style method for a better developer experience.
@@ -3070,12 +3141,14 @@ export class Account extends Service {
     createEmailPasswordSession(
         email: string,
         password: string,
+        duration?: number,
     ): Promise<Models.Session>;
     createEmailPasswordSession(
-        paramsOrFirst: { email: string; password: string } | string,
-        ...rest: [string?]
+        paramsOrFirst:
+            { email: string; password: string; duration?: number } | string,
+        ...rest: [string?, number?]
     ): Promise<Models.Session> {
-        let params: { email: string; password: string };
+        let params: { email: string; password: string; duration?: number };
 
         if (
             paramsOrFirst &&
@@ -3085,16 +3158,19 @@ export class Account extends Service {
             params = (paramsOrFirst || {}) as {
                 email: string;
                 password: string;
+                duration?: number;
             };
         } else {
             params = {
                 email: paramsOrFirst as string,
                 password: rest[0] as string,
+                duration: rest[1] as number,
             };
         }
 
         const email = params.email;
         const password = params.password;
+        const duration = params.duration;
 
         if (typeof email === 'undefined') {
             throw new AppwriteException('Missing required parameter: "email"');
@@ -3115,6 +3191,10 @@ export class Account extends Service {
 
         if (typeof password !== 'undefined') {
             payload['password'] = password;
+        }
+
+        if (typeof duration !== 'undefined') {
+            payload['duration'] = duration;
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
@@ -3395,10 +3475,11 @@ export class Account extends Service {
      * A user is limited to 10 active sessions at a time by default. [Learn more about session limits](https://appwrite.io/docs/authentication-security#limits).
      *
      *
-     * @param {OAuthProvider} params.provider - OAuth2 Provider. Currently, supported providers are: amazon, apple, appwrite, auth0, authentik, autodesk, bitbucket, bitly, box, cloudflare, dailymotion, discord, disqus, dropbox, etsy, facebook, figma, fusionauth, github, gitlab, google, huggingface, kakao, keycloak, kick, linkedin, microsoft, notion, oidc, okta, paypal, paypalSandbox, podio, resend, salesforce, slack, spotify, stripe, tiktok, tradeshift, tradeshiftBox, twitch, wordpress, x, yahoo, yammer, yandex, zoho, zoom.
+     * @param {OAuthProvider} params.provider - OAuth2 Provider. Currently, supported providers are: amazon, apple, appwrite, auth0, authentik, autodesk, bitbucket, bitly, box, cloudflare, dailymotion, discord, disqus, dropbox, etsy, facebook, figma, fusionauth, github, gitlab, google, huggingface, kakao, keycloak, kick, linkedin, microsoft, notion, oidc, okta, paypal, paypalSandbox, podio, resend, salesforce, slack, spotify, stripe, tiktok, tradeshift, tradeshiftBox, twitch, webflow, wordpress, x, yahoo, yammer, yandex, zoho, zoom.
      * @param {string} params.success - URL to redirect back to your app after a successful login attempt.  Only URLs from hostnames in your project's platform list are allowed. This requirement helps to prevent an [open redirect](https://cheatsheetseries.owasp.org/cheatsheets/Unvalidated_Redirects_and_Forwards_Cheat_Sheet.html) attack against your project API.
      * @param {string} params.failure - URL to redirect back to your app after a failed login attempt.  Only URLs from hostnames in your project's platform list are allowed. This requirement helps to prevent an [open redirect](https://cheatsheetseries.owasp.org/cheatsheets/Unvalidated_Redirects_and_Forwards_Cheat_Sheet.html) attack against your project API.
      * @param {string[]} params.scopes - A list of custom OAuth2 scopes. Check each provider internal docs for a list of supported scopes. Maximum of 100 scopes are allowed, each 4096 characters long.
+     * @param {string} params.state - An opaque value your app generates and keeps, for example in a cookie. It is returned unchanged as the `state` query parameter on the success and failure URLs, so your app can check that the sign-in it receives is one it started. Printable ASCII only (RFC 6749 Appendix A.5). Max length: 256 chars.
      * @throws {AppwriteException}
      * @returns {void|string}
      */
@@ -3407,6 +3488,7 @@ export class Account extends Service {
         success?: string;
         failure?: string;
         scopes?: string[];
+        state?: string;
     }): void | URL;
     /**
      * Allow the user to login to their account using the OAuth2 provider of their choice. Each OAuth2 provider should be enabled from the Appwrite console first. Use the success and failure arguments to provide a redirect URL's back to your app when login is completed.
@@ -3416,10 +3498,11 @@ export class Account extends Service {
      * A user is limited to 10 active sessions at a time by default. [Learn more about session limits](https://appwrite.io/docs/authentication-security#limits).
      *
      *
-     * @param {OAuthProvider} provider - OAuth2 Provider. Currently, supported providers are: amazon, apple, appwrite, auth0, authentik, autodesk, bitbucket, bitly, box, cloudflare, dailymotion, discord, disqus, dropbox, etsy, facebook, figma, fusionauth, github, gitlab, google, huggingface, kakao, keycloak, kick, linkedin, microsoft, notion, oidc, okta, paypal, paypalSandbox, podio, resend, salesforce, slack, spotify, stripe, tiktok, tradeshift, tradeshiftBox, twitch, wordpress, x, yahoo, yammer, yandex, zoho, zoom.
+     * @param {OAuthProvider} provider - OAuth2 Provider. Currently, supported providers are: amazon, apple, appwrite, auth0, authentik, autodesk, bitbucket, bitly, box, cloudflare, dailymotion, discord, disqus, dropbox, etsy, facebook, figma, fusionauth, github, gitlab, google, huggingface, kakao, keycloak, kick, linkedin, microsoft, notion, oidc, okta, paypal, paypalSandbox, podio, resend, salesforce, slack, spotify, stripe, tiktok, tradeshift, tradeshiftBox, twitch, webflow, wordpress, x, yahoo, yammer, yandex, zoho, zoom.
      * @param {string} success - URL to redirect back to your app after a successful login attempt.  Only URLs from hostnames in your project's platform list are allowed. This requirement helps to prevent an [open redirect](https://cheatsheetseries.owasp.org/cheatsheets/Unvalidated_Redirects_and_Forwards_Cheat_Sheet.html) attack against your project API.
      * @param {string} failure - URL to redirect back to your app after a failed login attempt.  Only URLs from hostnames in your project's platform list are allowed. This requirement helps to prevent an [open redirect](https://cheatsheetseries.owasp.org/cheatsheets/Unvalidated_Redirects_and_Forwards_Cheat_Sheet.html) attack against your project API.
      * @param {string[]} scopes - A list of custom OAuth2 scopes. Check each provider internal docs for a list of supported scopes. Maximum of 100 scopes are allowed, each 4096 characters long.
+     * @param {string} state - An opaque value your app generates and keeps, for example in a cookie. It is returned unchanged as the `state` query parameter on the success and failure URLs, so your app can check that the sign-in it receives is one it started. Printable ASCII only (RFC 6749 Appendix A.5). Max length: 256 chars.
      * @throws {AppwriteException}
      * @returns {void | URL}
      * @deprecated Use the object parameter style method for a better developer experience.
@@ -3429,6 +3512,7 @@ export class Account extends Service {
         success?: string,
         failure?: string,
         scopes?: string[],
+        state?: string,
     ): void | URL;
     createOAuth2Session(
         paramsOrFirst:
@@ -3437,15 +3521,17 @@ export class Account extends Service {
                   success?: string;
                   failure?: string;
                   scopes?: string[];
+                  state?: string;
               }
             | OAuthProvider,
-        ...rest: [string?, string?, string[]?]
+        ...rest: [string?, string?, string[]?, string?]
     ): void | URL {
         let params: {
             provider: OAuthProvider;
             success?: string;
             failure?: string;
             scopes?: string[];
+            state?: string;
         };
 
         if (
@@ -3455,13 +3541,15 @@ export class Account extends Service {
             ('provider' in paramsOrFirst ||
                 'success' in paramsOrFirst ||
                 'failure' in paramsOrFirst ||
-                'scopes' in paramsOrFirst)
+                'scopes' in paramsOrFirst ||
+                'state' in paramsOrFirst)
         ) {
             params = (paramsOrFirst || {}) as {
                 provider: OAuthProvider;
                 success?: string;
                 failure?: string;
                 scopes?: string[];
+                state?: string;
             };
         } else {
             params = {
@@ -3469,6 +3557,7 @@ export class Account extends Service {
                 success: rest[0] as string,
                 failure: rest[1] as string,
                 scopes: rest[2] as string[],
+                state: rest[3] as string,
             };
         }
 
@@ -3476,6 +3565,7 @@ export class Account extends Service {
         const success = params.success;
         const failure = params.failure;
         const scopes = params.scopes;
+        const state = params.state;
 
         if (typeof provider === 'undefined') {
             throw new AppwriteException(
@@ -3499,6 +3589,10 @@ export class Account extends Service {
 
         if (typeof scopes !== 'undefined') {
             payload['scopes'] = scopes;
+        }
+
+        if (typeof state !== 'undefined') {
+            payload['state'] = state;
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
@@ -4349,10 +4443,11 @@ export class Account extends Service {
      *
      * A user is limited to 10 active sessions at a time by default. [Learn more about session limits](https://appwrite.io/docs/authentication-security#limits).
      *
-     * @param {OAuthProvider} params.provider - OAuth2 Provider. Currently, supported providers are: amazon, apple, appwrite, auth0, authentik, autodesk, bitbucket, bitly, box, cloudflare, dailymotion, discord, disqus, dropbox, etsy, facebook, figma, fusionauth, github, gitlab, google, huggingface, kakao, keycloak, kick, linkedin, microsoft, notion, oidc, okta, paypal, paypalSandbox, podio, resend, salesforce, slack, spotify, stripe, tiktok, tradeshift, tradeshiftBox, twitch, wordpress, x, yahoo, yammer, yandex, zoho, zoom.
+     * @param {OAuthProvider} params.provider - OAuth2 Provider. Currently, supported providers are: amazon, apple, appwrite, auth0, authentik, autodesk, bitbucket, bitly, box, cloudflare, dailymotion, discord, disqus, dropbox, etsy, facebook, figma, fusionauth, github, gitlab, google, huggingface, kakao, keycloak, kick, linkedin, microsoft, notion, oidc, okta, paypal, paypalSandbox, podio, resend, salesforce, slack, spotify, stripe, tiktok, tradeshift, tradeshiftBox, twitch, webflow, wordpress, x, yahoo, yammer, yandex, zoho, zoom.
      * @param {string} params.success - URL to redirect back to your app after a successful login attempt.  Only URLs from hostnames in your project's platform list are allowed. This requirement helps to prevent an [open redirect](https://cheatsheetseries.owasp.org/cheatsheets/Unvalidated_Redirects_and_Forwards_Cheat_Sheet.html) attack against your project API.
      * @param {string} params.failure - URL to redirect back to your app after a failed login attempt.  Only URLs from hostnames in your project's platform list are allowed. This requirement helps to prevent an [open redirect](https://cheatsheetseries.owasp.org/cheatsheets/Unvalidated_Redirects_and_Forwards_Cheat_Sheet.html) attack against your project API.
      * @param {string[]} params.scopes - A list of custom OAuth2 scopes. Check each provider internal docs for a list of supported scopes. Maximum of 100 scopes are allowed, each 4096 characters long.
+     * @param {string} params.state - An opaque value your app generates and keeps, for example in a cookie. It is returned unchanged as the `state` query parameter on the success and failure URLs, so your app can check that the sign-in it receives is one it started. Printable ASCII only (RFC 6749 Appendix A.5). Max length: 256 chars.
      * @throws {AppwriteException}
      * @returns {void|string}
      */
@@ -4361,6 +4456,7 @@ export class Account extends Service {
         success?: string;
         failure?: string;
         scopes?: string[];
+        state?: string;
     }): void | URL;
     /**
      * Allow the user to login to their account using the OAuth2 provider of their choice. Each OAuth2 provider should be enabled from the Appwrite console first. Use the success and failure arguments to provide a redirect URL's back to your app when login is completed.
@@ -4371,10 +4467,11 @@ export class Account extends Service {
      *
      * A user is limited to 10 active sessions at a time by default. [Learn more about session limits](https://appwrite.io/docs/authentication-security#limits).
      *
-     * @param {OAuthProvider} provider - OAuth2 Provider. Currently, supported providers are: amazon, apple, appwrite, auth0, authentik, autodesk, bitbucket, bitly, box, cloudflare, dailymotion, discord, disqus, dropbox, etsy, facebook, figma, fusionauth, github, gitlab, google, huggingface, kakao, keycloak, kick, linkedin, microsoft, notion, oidc, okta, paypal, paypalSandbox, podio, resend, salesforce, slack, spotify, stripe, tiktok, tradeshift, tradeshiftBox, twitch, wordpress, x, yahoo, yammer, yandex, zoho, zoom.
+     * @param {OAuthProvider} provider - OAuth2 Provider. Currently, supported providers are: amazon, apple, appwrite, auth0, authentik, autodesk, bitbucket, bitly, box, cloudflare, dailymotion, discord, disqus, dropbox, etsy, facebook, figma, fusionauth, github, gitlab, google, huggingface, kakao, keycloak, kick, linkedin, microsoft, notion, oidc, okta, paypal, paypalSandbox, podio, resend, salesforce, slack, spotify, stripe, tiktok, tradeshift, tradeshiftBox, twitch, webflow, wordpress, x, yahoo, yammer, yandex, zoho, zoom.
      * @param {string} success - URL to redirect back to your app after a successful login attempt.  Only URLs from hostnames in your project's platform list are allowed. This requirement helps to prevent an [open redirect](https://cheatsheetseries.owasp.org/cheatsheets/Unvalidated_Redirects_and_Forwards_Cheat_Sheet.html) attack against your project API.
      * @param {string} failure - URL to redirect back to your app after a failed login attempt.  Only URLs from hostnames in your project's platform list are allowed. This requirement helps to prevent an [open redirect](https://cheatsheetseries.owasp.org/cheatsheets/Unvalidated_Redirects_and_Forwards_Cheat_Sheet.html) attack against your project API.
      * @param {string[]} scopes - A list of custom OAuth2 scopes. Check each provider internal docs for a list of supported scopes. Maximum of 100 scopes are allowed, each 4096 characters long.
+     * @param {string} state - An opaque value your app generates and keeps, for example in a cookie. It is returned unchanged as the `state` query parameter on the success and failure URLs, so your app can check that the sign-in it receives is one it started. Printable ASCII only (RFC 6749 Appendix A.5). Max length: 256 chars.
      * @throws {AppwriteException}
      * @returns {void | URL}
      * @deprecated Use the object parameter style method for a better developer experience.
@@ -4384,6 +4481,7 @@ export class Account extends Service {
         success?: string,
         failure?: string,
         scopes?: string[],
+        state?: string,
     ): void | URL;
     createOAuth2Token(
         paramsOrFirst:
@@ -4392,15 +4490,17 @@ export class Account extends Service {
                   success?: string;
                   failure?: string;
                   scopes?: string[];
+                  state?: string;
               }
             | OAuthProvider,
-        ...rest: [string?, string?, string[]?]
+        ...rest: [string?, string?, string[]?, string?]
     ): void | URL {
         let params: {
             provider: OAuthProvider;
             success?: string;
             failure?: string;
             scopes?: string[];
+            state?: string;
         };
 
         if (
@@ -4410,13 +4510,15 @@ export class Account extends Service {
             ('provider' in paramsOrFirst ||
                 'success' in paramsOrFirst ||
                 'failure' in paramsOrFirst ||
-                'scopes' in paramsOrFirst)
+                'scopes' in paramsOrFirst ||
+                'state' in paramsOrFirst)
         ) {
             params = (paramsOrFirst || {}) as {
                 provider: OAuthProvider;
                 success?: string;
                 failure?: string;
                 scopes?: string[];
+                state?: string;
             };
         } else {
             params = {
@@ -4424,6 +4526,7 @@ export class Account extends Service {
                 success: rest[0] as string,
                 failure: rest[1] as string,
                 scopes: rest[2] as string[],
+                state: rest[3] as string,
             };
         }
 
@@ -4431,6 +4534,7 @@ export class Account extends Service {
         const success = params.success;
         const failure = params.failure;
         const scopes = params.scopes;
+        const state = params.state;
 
         if (typeof provider === 'undefined') {
             throw new AppwriteException(
@@ -4454,6 +4558,10 @@ export class Account extends Service {
 
         if (typeof scopes !== 'undefined') {
             payload['scopes'] = scopes;
+        }
+
+        if (typeof state !== 'undefined') {
+            payload['state'] = state;
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);

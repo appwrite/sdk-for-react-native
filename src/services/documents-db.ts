@@ -12,46 +12,62 @@ export class DocumentsDB extends Service {
      * List transactions across all databases.
      *
      * @param {string[]} params.queries - Array of query strings generated using the Query class provided by the SDK. [Learn more about queries](https://appwrite.io/docs/queries).
+     * @param {boolean} params.total - When set to false, the total count returned will be 0 and will not be calculated.
      * @throws {AppwriteException}
      * @returns {Promise}
      */
     listTransactions(params?: {
         queries?: string[];
+        total?: boolean;
     }): Promise<Models.TransactionList>;
     /**
      * List transactions across all databases.
      *
      * @param {string[]} queries - Array of query strings generated using the Query class provided by the SDK. [Learn more about queries](https://appwrite.io/docs/queries).
+     * @param {boolean} total - When set to false, the total count returned will be 0 and will not be calculated.
      * @throws {AppwriteException}
      * @returns {Promise<Models.TransactionList>}
      * @deprecated Use the object parameter style method for a better developer experience.
      */
-    listTransactions(queries?: string[]): Promise<Models.TransactionList>;
     listTransactions(
-        paramsOrFirst?: { queries?: string[] } | string[],
+        queries?: string[],
+        total?: boolean,
+    ): Promise<Models.TransactionList>;
+    listTransactions(
+        paramsOrFirst?: { queries?: string[]; total?: boolean } | string[],
+        ...rest: [boolean?]
     ): Promise<Models.TransactionList> {
-        let params: { queries?: string[] };
+        let params: { queries?: string[]; total?: boolean };
 
         if (
-            typeof paramsOrFirst === 'undefined' ||
+            (typeof paramsOrFirst === 'undefined' && rest.length === 0) ||
             (paramsOrFirst &&
                 typeof paramsOrFirst === 'object' &&
                 !Array.isArray(paramsOrFirst))
         ) {
-            params = (paramsOrFirst || {}) as { queries?: string[] };
+            params = (paramsOrFirst || {}) as {
+                queries?: string[];
+                total?: boolean;
+            };
         } else {
             params = {
                 queries: paramsOrFirst as string[],
+                total: rest[0] as boolean,
             };
         }
 
         const queries = params.queries;
+        const total = params.total;
 
         const apiPath = '/documentsdb/transactions';
         const payload: Payload = {};
 
         if (typeof queries !== 'undefined') {
             payload['queries'] = queries;
+        }
+
+        if (typeof total !== 'undefined') {
+            payload['total'] = total;
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);

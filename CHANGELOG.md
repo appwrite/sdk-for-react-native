@@ -1,5 +1,16 @@
 # Change log
 
+## 1.3.0
+
+* Added: `analytics.createEvent` in a new `Analytics` service to send tracking events
+* Added: `avatars.updatePhoto` and `avatars.deletePhoto` to manage the user's custom profile photo, and the `Account` model
+* Added: `Webflow` to the `OAuthProvider` enum
+* Added: optional `state` on `account.createOAuth2Session` and `account.createOAuth2Token`, returned unchanged on the success and failure URLs
+* Added: optional `duration` on `account.createEmailPasswordSession` to set the session length
+* Added: optional `current` on `account.deleteSessions` to keep the current session signed in
+* Added: optional `membershipId` on `teams.createMembership`
+* Added: optional `total` on `account.listSessions`, the `locale` list methods and `listTransactions`
+
 ## 1.2.0
 
 * Added: `account` passkey methods `listPasskeys`, `createPasskey`, `getPasskey`, `updatePasskey`, `deletePasskey` and `updatePasskeyVerification`

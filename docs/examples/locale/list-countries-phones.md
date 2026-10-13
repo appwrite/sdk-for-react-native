@@ -7,7 +7,9 @@ const client = new Client()
 
 const locale = new Locale(client);
 
-const result = await locale.listCountriesPhones();
+const result = await locale.listCountriesPhones({
+    total: false, // optional
+});
 
 console.log(result);
 ```
