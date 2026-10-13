@@ -481,6 +481,110 @@ export namespace Models {
     };
 
     /**
+     * Account
+     */
+    export type Account<
+        Preferences extends Models.Preferences = Models.DefaultPreferences,
+    > = {
+        /**
+         * User ID.
+         */
+        $id: string;
+        /**
+         * User creation date in ISO 8601 format.
+         */
+        $createdAt: string;
+        /**
+         * User update date in ISO 8601 format.
+         */
+        $updatedAt: string;
+        /**
+         * User name.
+         */
+        name: string;
+        /**
+         * User registration date in ISO 8601 format.
+         */
+        registration: string;
+        /**
+         * User status. Pass `true` for enabled and `false` for disabled.
+         */
+        status: boolean;
+        /**
+         * Labels for the user.
+         */
+        labels: string[];
+        /**
+         * Password update time in ISO 8601 format.
+         */
+        passwordUpdate: string;
+        /**
+         * User email address.
+         */
+        email: string;
+        /**
+         * User phone number in E.164 format.
+         */
+        phone: string;
+        /**
+         * Email verification status.
+         */
+        emailVerification: boolean;
+        /**
+         * Canonical form of the user email address.
+         */
+        emailCanonical?: string;
+        /**
+         * Whether the user email is from a free email provider.
+         */
+        emailIsFree?: boolean;
+        /**
+         * Whether the user email is from a disposable email provider.
+         */
+        emailIsDisposable?: boolean;
+        /**
+         * Whether the user email is from a corporate domain.
+         */
+        emailIsCorporate?: boolean;
+        /**
+         * Whether the user email is in its canonical form.
+         */
+        emailIsCanonical?: boolean;
+        /**
+         * Whether the password was found in a known data breach the last time it was checked. Null when the password has never been checked.
+         */
+        passwordPwned?: boolean;
+        /**
+         * Phone verification status.
+         */
+        phoneVerification: boolean;
+        /**
+         * Multi factor authentication status.
+         */
+        mfa: boolean;
+        /**
+         * User preferences as a key-value object
+         */
+        prefs: Preferences;
+        /**
+         * A user-owned message receiver. A single user may have multiple e.g. emails, phones, and a browser. Each target is registered with a single provider.
+         */
+        targets: Target[];
+        /**
+         * Most recent access date in ISO 8601 format. This attribute is only updated again after 24 hours.
+         */
+        accessedAt: string;
+        /**
+         * Whether the user can impersonate other users.
+         */
+        impersonator?: boolean;
+        /**
+         * ID of the original actor performing the impersonation. Present only when the current request is impersonating another user. Internal audit logs attribute the action to this user, while the impersonated target is recorded only in internal audit payload data.
+         */
+        impersonatorUserId?: string;
+    };
+
+    /**
      * Preferences
      */
     export type Preferences = {};

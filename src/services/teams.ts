@@ -965,6 +965,7 @@ export class Teams extends Service {
      * @param {string} params.phone - Phone number. Format this number with a leading '+' and a country code, e.g., +16175551212.
      * @param {string} params.url - URL to redirect the user back to your app from the invitation email. This parameter is not required when an API key is supplied. Only URLs from hostnames in your project platform list are allowed. This requirement helps to prevent an [open redirect](https://cheatsheetseries.owasp.org/cheatsheets/Unvalidated_Redirects_and_Forwards_Cheat_Sheet.html) attack against your project API.
      * @param {string} params.name - Name of the new team member. Max length: 128 chars.
+     * @param {string} params.membershipId - Membership ID. Choose a custom ID or generate a random ID with `ID.unique()`. Valid chars are a-z, A-Z, 0-9, period, hyphen, and underscore. Can't start with a special char. Max length is 36 chars.
      * @throws {AppwriteException}
      * @returns {Promise}
      */
@@ -976,6 +977,7 @@ export class Teams extends Service {
         phone?: string;
         url?: string;
         name?: string;
+        membershipId?: string;
     }): Promise<Models.Membership>;
     /**
      * Invite a new member to join your team. Provide an ID for existing users, or invite unregistered users using an email or phone number. If initiated from a Client SDK, Appwrite will send an email or sms with a link to join the team to the invited user, and an account will be created for them if one doesn't exist. If initiated from a Server SDK, the new member will be added automatically to the team.
@@ -994,6 +996,7 @@ export class Teams extends Service {
      * @param {string} phone - Phone number. Format this number with a leading '+' and a country code, e.g., +16175551212.
      * @param {string} url - URL to redirect the user back to your app from the invitation email. This parameter is not required when an API key is supplied. Only URLs from hostnames in your project platform list are allowed. This requirement helps to prevent an [open redirect](https://cheatsheetseries.owasp.org/cheatsheets/Unvalidated_Redirects_and_Forwards_Cheat_Sheet.html) attack against your project API.
      * @param {string} name - Name of the new team member. Max length: 128 chars.
+     * @param {string} membershipId - Membership ID. Choose a custom ID or generate a random ID with `ID.unique()`. Valid chars are a-z, A-Z, 0-9, period, hyphen, and underscore. Can't start with a special char. Max length is 36 chars.
      * @throws {AppwriteException}
      * @returns {Promise<Models.Membership>}
      * @deprecated Use the object parameter style method for a better developer experience.
@@ -1006,6 +1009,7 @@ export class Teams extends Service {
         phone?: string,
         url?: string,
         name?: string,
+        membershipId?: string,
     ): Promise<Models.Membership>;
     createMembership(
         paramsOrFirst:
@@ -1017,9 +1021,18 @@ export class Teams extends Service {
                   phone?: string;
                   url?: string;
                   name?: string;
+                  membershipId?: string;
               }
             | string,
-        ...rest: [string[]?, string?, string?, string?, string?, string?]
+        ...rest: [
+            string[]?,
+            string?,
+            string?,
+            string?,
+            string?,
+            string?,
+            string?,
+        ]
     ): Promise<Models.Membership> {
         let params: {
             teamId: string;
@@ -1029,6 +1042,7 @@ export class Teams extends Service {
             phone?: string;
             url?: string;
             name?: string;
+            membershipId?: string;
         };
 
         if (
@@ -1044,6 +1058,7 @@ export class Teams extends Service {
                 phone?: string;
                 url?: string;
                 name?: string;
+                membershipId?: string;
             };
         } else {
             params = {
@@ -1054,6 +1069,7 @@ export class Teams extends Service {
                 phone: rest[3] as string,
                 url: rest[4] as string,
                 name: rest[5] as string,
+                membershipId: rest[6] as string,
             };
         }
 
@@ -1064,6 +1080,7 @@ export class Teams extends Service {
         const phone = params.phone;
         const url = params.url;
         const name = params.name;
+        const membershipId = params.membershipId;
 
         if (typeof teamId === 'undefined' || teamId === '') {
             throw new AppwriteException('Missing required parameter: "teamId"');
@@ -1101,6 +1118,10 @@ export class Teams extends Service {
 
         if (typeof name !== 'undefined') {
             payload['name'] = name;
+        }
+
+        if (typeof membershipId !== 'undefined') {
+            payload['membershipId'] = membershipId;
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);

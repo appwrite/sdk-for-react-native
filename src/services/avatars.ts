@@ -1,6 +1,9 @@
 import { Service } from '../service';
 import { AppwriteException, Client } from '../client';
-import type { Payload } from '../client';
+import type { Models } from '../models';
+import type { UploadProgress, Payload } from '../client';
+import * as FileSystem from 'expo-file-system';
+import { Platform as RNPlatform } from 'react-native';
 
 import { Browser } from '../enums/browser';
 import { CreditCard } from '../enums/credit-card';
@@ -860,6 +863,316 @@ export class Avatars extends Service {
             },
             payload,
             'arrayBuffer',
+        );
+    }
+
+    /**
+     * Update the profile photo of the currently authenticated user. The uploaded image takes priority over every other photo source, including OAuth2 identity photos, Gravatar, and Libravatar. Updating an already customized photo replaces it. The image must be at most 5MB and is sent in a single request.
+     *
+     * @param {{ name: string; type: string; size: number; uri: string }} params.file - Binary image file of at most 5MB. Allowed file types are png, jpg, jpeg, and webp.
+     * @throws {AppwriteException}
+     * @returns {Promise}
+     */
+    async updatePhoto<
+        Preferences extends Models.Preferences = Models.DefaultPreferences,
+    >(params: {
+        file: { name: string; type: string; size: number; uri: string };
+        onProgress?: (progress: UploadProgress) => void;
+    }): Promise<Models.Account<Preferences>>;
+    /**
+     * Update the profile photo of the currently authenticated user. The uploaded image takes priority over every other photo source, including OAuth2 identity photos, Gravatar, and Libravatar. Updating an already customized photo replaces it. The image must be at most 5MB and is sent in a single request.
+     *
+     * @param {{ name: string; type: string; size: number; uri: string }} file - Binary image file of at most 5MB. Allowed file types are png, jpg, jpeg, and webp.
+     * @throws {AppwriteException}
+     * @returns {Promise<Models.Account<Preferences>>}
+     * @deprecated Use the object parameter style method for a better developer experience.
+     */
+    async updatePhoto<
+        Preferences extends Models.Preferences = Models.DefaultPreferences,
+    >(
+        file: { name: string; type: string; size: number; uri: string },
+        onProgress?: (progress: UploadProgress) => void,
+    ): Promise<Models.Account<Preferences>>;
+    async updatePhoto<
+        Preferences extends Models.Preferences = Models.DefaultPreferences,
+    >(
+        paramsOrFirst:
+            | {
+                  file: {
+                      name: string;
+                      type: string;
+                      size: number;
+                      uri: string;
+                  };
+                  onProgress?: (progress: UploadProgress) => void;
+              }
+            | { name: string; type: string; size: number; uri: string },
+        ...rest: [((progress: UploadProgress) => void)?]
+    ): Promise<Models.Account<Preferences>> {
+        let params: {
+            file: { name: string; type: string; size: number; uri: string };
+        };
+        let onProgress: (progress: UploadProgress) => void;
+
+        if (
+            paramsOrFirst &&
+            typeof paramsOrFirst === 'object' &&
+            !Array.isArray(paramsOrFirst) &&
+            ('file' in paramsOrFirst || 'onProgress' in paramsOrFirst)
+        ) {
+            params = (paramsOrFirst || {}) as {
+                file: { name: string; type: string; size: number; uri: string };
+            };
+            onProgress = paramsOrFirst?.onProgress as (
+                progress: UploadProgress,
+            ) => void;
+        } else {
+            params = {
+                file: paramsOrFirst as {
+                    name: string;
+                    type: string;
+                    size: number;
+                    uri: string;
+                },
+            };
+            onProgress = rest[0] as (progress: UploadProgress) => void;
+        }
+
+        const file = params.file;
+
+        if (typeof file === 'undefined') {
+            throw new AppwriteException('Missing required parameter: "file"');
+        }
+
+        const apiPath = '/avatars/photo';
+        const apiPayload: Payload = {};
+
+        if (typeof file !== 'undefined') {
+            apiPayload['file'] = file;
+        }
+
+        const uri = new URL(this.client.config.endpoint + apiPath);
+
+        const apiHeaders: { [header: string]: string } = {
+            'X-Appwrite-Project': this.client.config.project,
+            'content-type': 'multipart/form-data',
+            accept: 'application/json',
+        };
+
+        const size = file.size;
+
+        if (size <= Service.CHUNK_SIZE) {
+            apiPayload['file'] = Service.filePart(
+                file.uri,
+                file.name,
+                file.type,
+                () =>
+                    FileSystem.readAsStringAsync(file.uri, {
+                        encoding: FileSystem.EncodingType.Base64,
+                    }),
+            );
+
+            return this.client.call('put', uri, apiHeaders, apiPayload);
+        }
+
+        let offset = 0;
+        let response = undefined;
+
+        const totalChunks = Math.ceil(size / Service.CHUNK_SIZE);
+
+        // Upload first chunk alone to get the upload ID
+        if (offset === 0) {
+            const firstChunkEnd = Math.min(Service.CHUNK_SIZE, size);
+            const firstChunkHeaders = {
+                ...apiHeaders,
+                'content-range': 'bytes 0-' + (firstChunkEnd - 1) + '/' + size,
+            };
+
+            const firstChunk = await FileSystem.readAsStringAsync(file.uri, {
+                encoding: FileSystem.EncodingType.Base64,
+                position: 0,
+                length: Service.CHUNK_SIZE,
+            });
+            let firstPath = `data:${file.type};base64,${firstChunk}`;
+            if (RNPlatform.OS.toLowerCase() === 'android') {
+                firstPath =
+                    FileSystem.cacheDirectory +
+                    '/tmp_chunk_' +
+                    new Date().getTime();
+                await FileSystem.writeAsStringAsync(firstPath, firstChunk, {
+                    encoding: FileSystem.EncodingType.Base64,
+                });
+            }
+
+            apiPayload['file'] = Service.filePart(
+                firstPath,
+                file.name,
+                file.type,
+                async () => firstChunk,
+            );
+
+            response = await this.client.call(
+                'put',
+                uri,
+                firstChunkHeaders,
+                apiPayload,
+            );
+            offset = firstChunkEnd;
+
+            if (onProgress) {
+                onProgress({
+                    $id: response.$id,
+                    progress: (offset / size) * 100,
+                    sizeUploaded: offset,
+                    chunksTotal: totalChunks,
+                    chunksUploaded: 1,
+                });
+            }
+        }
+
+        if (offset >= size) {
+            return response;
+        }
+
+        const uploadId = response?.$id;
+        const chunks: { index: number; start: number; end: number }[] = [];
+        const startChunkIndex = Math.ceil(offset / Service.CHUNK_SIZE);
+        for (let i = startChunkIndex; i < totalChunks; i++) {
+            const start = i * Service.CHUNK_SIZE;
+            const end = Math.min(start + Service.CHUNK_SIZE, size);
+            chunks.push({ index: i, start, end });
+        }
+
+        // Upload remaining chunks with max concurrency of 8
+        const CONCURRENCY = 8;
+        let completedCount = startChunkIndex;
+        let uploadedBytes = offset;
+        let finalResponse = null;
+        let failed = false;
+
+        const isUploadComplete = (chunkResponse: any) => {
+            const chunksUploaded = chunkResponse?.chunksUploaded;
+            const chunksTotal = chunkResponse?.chunksTotal ?? totalChunks;
+            return (
+                typeof chunksUploaded === 'number' &&
+                typeof chunksTotal === 'number' &&
+                chunksUploaded >= chunksTotal
+            );
+        };
+
+        const uploadChunk = async (chunk: (typeof chunks)[0]) => {
+            const chunkHeaders = { ...apiHeaders };
+            if (uploadId) {
+                chunkHeaders['x-appwrite-id'] = uploadId;
+            }
+            chunkHeaders['content-range'] =
+                'bytes ' + chunk.start + '-' + (chunk.end - 1) + '/' + size;
+
+            const chunkData = await FileSystem.readAsStringAsync(file.uri, {
+                encoding: FileSystem.EncodingType.Base64,
+                position: chunk.start,
+                length: chunk.end - chunk.start,
+            });
+
+            let chunkPath = `data:${file.type};base64,${chunkData}`;
+            if (RNPlatform.OS.toLowerCase() === 'android') {
+                chunkPath =
+                    FileSystem.cacheDirectory +
+                    '/tmp_chunk_' +
+                    new Date().getTime() +
+                    '_' +
+                    chunk.index;
+                await FileSystem.writeAsStringAsync(chunkPath, chunkData, {
+                    encoding: FileSystem.EncodingType.Base64,
+                });
+            }
+
+            const chunkPayload = { ...apiPayload };
+            chunkPayload['file'] = Service.filePart(
+                chunkPath,
+                file.name,
+                file.type,
+                async () => chunkData,
+            );
+
+            const chunkResponse = await this.client.call(
+                'put',
+                uri,
+                chunkHeaders,
+                chunkPayload,
+            );
+
+            if (failed) {
+                return chunkResponse;
+            }
+
+            completedCount++;
+            uploadedBytes += chunk.end - chunk.start;
+
+            response = chunkResponse;
+            if (isUploadComplete(chunkResponse)) {
+                finalResponse = chunkResponse;
+            }
+
+            if (onProgress) {
+                onProgress({
+                    $id: uploadId,
+                    progress: (uploadedBytes / size) * 100,
+                    sizeUploaded: uploadedBytes,
+                    chunksTotal: totalChunks,
+                    chunksUploaded: completedCount,
+                });
+            }
+
+            return chunkResponse;
+        };
+
+        // Process with limited concurrency using a worker pool
+        const queue = [...chunks];
+        const workers: Promise<void>[] = [];
+        const workerCount = Math.min(CONCURRENCY, queue.length);
+
+        for (let i = 0; i < workerCount; i++) {
+            workers.push(
+                (async () => {
+                    while (!failed && queue.length > 0) {
+                        const chunk = queue.shift()!;
+                        try {
+                            await uploadChunk(chunk);
+                        } catch (error) {
+                            failed = true;
+                            throw error;
+                        }
+                    }
+                })(),
+            );
+        }
+
+        await Promise.all(workers);
+
+        return finalResponse ?? response;
+    }
+
+    /**
+     * Delete the profile photo of the currently authenticated user and store the built-in static placeholder in its place. The placeholder is the user's photo from then on, so it takes priority over every other photo source — OAuth2 identity photos, Gravatar, Libravatar, and initials — until a new photo is uploaded with avatars.updatePhoto.
+     *
+     * @throws {AppwriteException}
+     * @returns {Promise}
+     */
+    deletePhoto(): Promise<{}> {
+        const apiPath = '/avatars/photo';
+        const apiPayload: Payload = {};
+
+        const uri = new URL(this.client.config.endpoint + apiPath);
+        return this.client.call(
+            'delete',
+            uri,
+            {
+                'X-Appwrite-Project': this.client.config.project,
+                'content-type': 'application/json',
+                accept: 'application/json',
+            },
+            apiPayload,
         );
     }
 

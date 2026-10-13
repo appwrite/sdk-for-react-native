@@ -7,7 +7,9 @@ const client = new Client()
 
 const account = new Account(client);
 
-const result = await account.listSessions();
+const result = await account.listSessions({
+    total: false, // optional
+});
 
 console.log(result);
 ```
