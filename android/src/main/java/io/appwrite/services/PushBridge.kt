@@ -169,12 +169,13 @@ class PushBridge(context: Context, private val events: Events) {
         return if (registered) PushStore.takeStoppedError(appContext) else null
     }
 
-    /** What background delivery can rely on, as `{"exactAlarms", "ignoringBatteryOptimizations", "foregroundService", "bestEffort"}`. */
+    /** What background delivery can rely on, as `{"exactAlarms", "ignoringBatteryOptimizations", "foregroundService", "backgroundRestricted", "bestEffort"}`. */
     fun backgroundStatus(): String = PushBackground.backgroundStatus(appContext).let {
         JSONObject()
             .put("exactAlarms", it.exactAlarms)
             .put("ignoringBatteryOptimizations", it.ignoringBatteryOptimizations)
             .put("foregroundService", it.foregroundService)
+            .put("backgroundRestricted", it.backgroundRestricted)
             .put("bestEffort", it.bestEffort)
             .toString()
     }

@@ -1,5 +1,6 @@
 export { Client, AppwriteException } from './client';
 export { Account } from './services/account';
+export { Analytics } from './services/analytics';
 export { Apps } from './services/apps';
 export { Avatars } from './services/avatars';
 export { Databases } from './services/databases';

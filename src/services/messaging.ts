@@ -1,5 +1,5 @@
 import { Service } from '../service';
-import { AppwriteException, Client } from '../client';
+import { AppwriteException, Client, applyDefaults } from '../client';
 import type { Models } from '../models';
 import type { Payload } from '../client';
 
@@ -100,7 +100,7 @@ export class Messaging extends Service {
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
-        return this.client.call(
+        const request = this.client.call(
             'post',
             uri,
             {
@@ -110,6 +110,25 @@ export class Messaging extends Service {
             },
             apiPayload,
         );
+        const defaults = {
+            root: 'subscriber',
+            models: {
+                subscriber: {
+                    defaults: {
+                        $id: '',
+                        $createdAt: '',
+                        $updatedAt: '',
+                        targetId: '',
+                        userId: '',
+                        userName: '',
+                        topicId: '',
+                        providerType: '',
+                    },
+                },
+            },
+        };
+
+        return request.then((response) => applyDefaults(response, defaults));
     }
 
     /**

@@ -1,5 +1,5 @@
 import { Service } from '../service';
-import { AppwriteException, Client } from '../client';
+import { AppwriteException, Client, applyDefaults } from '../client';
 import type { Models } from '../models';
 import type { Payload } from '../client';
 
@@ -71,7 +71,7 @@ export class Organization extends Service {
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
-        return this.client.call(
+        const request = this.client.call(
             'get',
             uri,
             {
@@ -80,6 +80,37 @@ export class Organization extends Service {
             },
             apiPayload,
         );
+        const defaults = {
+            root: 'appInstallationList',
+            models: {
+                appInstallationList: {
+                    defaults: {
+                        total: 0,
+                        installations: [],
+                    },
+                    properties: {
+                        installations: {
+                            items: 'appInstallation',
+                        },
+                    },
+                },
+                appInstallation: {
+                    defaults: {
+                        $id: '',
+                        $createdAt: '',
+                        $updatedAt: '',
+                        appId: '',
+                        teamId: '',
+                        scopes: [],
+                        authorizationDetails: [],
+                        createdById: '',
+                        createdByName: '',
+                    },
+                },
+            },
+        };
+
+        return request.then((response) => applyDefaults(response, defaults));
     }
 
     /**
@@ -149,7 +180,7 @@ export class Organization extends Service {
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
-        return this.client.call(
+        const request = this.client.call(
             'post',
             uri,
             {
@@ -159,6 +190,26 @@ export class Organization extends Service {
             },
             apiPayload,
         );
+        const defaults = {
+            root: 'appInstallation',
+            models: {
+                appInstallation: {
+                    defaults: {
+                        $id: '',
+                        $createdAt: '',
+                        $updatedAt: '',
+                        appId: '',
+                        teamId: '',
+                        scopes: [],
+                        authorizationDetails: [],
+                        createdById: '',
+                        createdByName: '',
+                    },
+                },
+            },
+        };
+
+        return request.then((response) => applyDefaults(response, defaults));
     }
 
     /**
@@ -212,7 +263,7 @@ export class Organization extends Service {
         const apiPayload: Payload = {};
 
         const uri = new URL(this.client.config.endpoint + apiPath);
-        return this.client.call(
+        const request = this.client.call(
             'get',
             uri,
             {
@@ -221,39 +272,63 @@ export class Organization extends Service {
             },
             apiPayload,
         );
+        const defaults = {
+            root: 'appInstallation',
+            models: {
+                appInstallation: {
+                    defaults: {
+                        $id: '',
+                        $createdAt: '',
+                        $updatedAt: '',
+                        appId: '',
+                        teamId: '',
+                        scopes: [],
+                        authorizationDetails: [],
+                        createdById: '',
+                        createdByName: '',
+                    },
+                },
+            },
+        };
+
+        return request.then((response) => applyDefaults(response, defaults));
     }
 
     /**
      * Update an app installation on the organization. Only organization members with the owner role can update installations. The installation's granted scopes are refreshed to the scopes the app currently requests; previously issued installation access tokens are revoked.
      *
      * @param {string} params.installationId - Installation unique ID.
-     * @param {string} params.authorizationDetails - Authorization details granted to the installation as a JSON array of objects, each with a `type` and app-defined fields. Omit to keep the current value.
+     * @param {string | null} params.authorizationDetails - Authorization details granted to the installation as a JSON array of objects, each with a `type` and app-defined fields. Omit to keep the current value.
      * @throws {AppwriteException}
      * @returns {Promise}
      */
     updateInstallation(params: {
         installationId: string;
-        authorizationDetails?: string;
+        authorizationDetails?: string | null;
     }): Promise<Models.AppInstallation>;
     /**
      * Update an app installation on the organization. Only organization members with the owner role can update installations. The installation's granted scopes are refreshed to the scopes the app currently requests; previously issued installation access tokens are revoked.
      *
      * @param {string} installationId - Installation unique ID.
-     * @param {string} authorizationDetails - Authorization details granted to the installation as a JSON array of objects, each with a `type` and app-defined fields. Omit to keep the current value.
+     * @param {string | null} authorizationDetails - Authorization details granted to the installation as a JSON array of objects, each with a `type` and app-defined fields. Omit to keep the current value.
      * @throws {AppwriteException}
      * @returns {Promise<Models.AppInstallation>}
      * @deprecated Use the object parameter style method for a better developer experience.
      */
     updateInstallation(
         installationId: string,
-        authorizationDetails?: string,
+        authorizationDetails?: string | null,
     ): Promise<Models.AppInstallation>;
     updateInstallation(
         paramsOrFirst:
-            { installationId: string; authorizationDetails?: string } | string,
-        ...rest: [string?]
+            | { installationId: string; authorizationDetails?: string | null }
+            | string,
+        ...rest: [(string | null)?]
     ): Promise<Models.AppInstallation> {
-        let params: { installationId: string; authorizationDetails?: string };
+        let params: {
+            installationId: string;
+            authorizationDetails?: string | null;
+        };
 
         if (
             paramsOrFirst &&
@@ -262,12 +337,12 @@ export class Organization extends Service {
         ) {
             params = (paramsOrFirst || {}) as {
                 installationId: string;
-                authorizationDetails?: string;
+                authorizationDetails?: string | null;
             };
         } else {
             params = {
                 installationId: paramsOrFirst as string,
-                authorizationDetails: rest[0] as string,
+                authorizationDetails: rest[0] as string | null,
             };
         }
 
@@ -291,7 +366,7 @@ export class Organization extends Service {
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
-        return this.client.call(
+        const request = this.client.call(
             'put',
             uri,
             {
@@ -301,6 +376,26 @@ export class Organization extends Service {
             },
             apiPayload,
         );
+        const defaults = {
+            root: 'appInstallation',
+            models: {
+                appInstallation: {
+                    defaults: {
+                        $id: '',
+                        $createdAt: '',
+                        $updatedAt: '',
+                        appId: '',
+                        teamId: '',
+                        scopes: [],
+                        authorizationDetails: [],
+                        createdById: '',
+                        createdByName: '',
+                    },
+                },
+            },
+        };
+
+        return request.then((response) => applyDefaults(response, defaults));
     }
 
     /**

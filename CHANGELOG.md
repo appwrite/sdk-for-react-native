@@ -1,50 +1,32 @@
 # Change log
 
-## 1.2.0-rc.4
+## 2.0.0
 
-* Fixed: `host()` resolves with the live connection state instead of always `null`
-* Fixed: `onConnection(false)` fires when a retired or background connection closes
-* Fixed: notification taps are recorded after launching the app, so tap-opened screens land on top
-* Fixed: `host()` reports `false` when there was nothing to subscribe instead of a spurious open
+* Breaking: requests send `X-Appwrite-Response-Format: 2.5.0`; responses follow the 2.5 shapes
+* Breaking: missing response fields are filled with their documented defaults
+* Breaking: nullable model fields are typed `T | null`, such as `Locale.city` and `Presence.status`
+* Breaking: the package ships native Android and iOS modules, so apps need a native rebuild and do not run in Expo Go
+* Added: `Apps` service to manage apps, installations, keys and secrets
+* Added: `Oauth2` service for the OAuth2 authorize, token, device and grant flows
+* Added: `Push` service, with optional peers `expo-notifications`, `react-native-background-actions` and `react-native-tcp-socket`
+* Added: `Topic` helper
 
-## 1.2.0-rc.3
+## 1.3.0
 
-* Added: `getInitialNotification()`, `onNotificationOpened()`, and the `PushNotificationOpened` type (topic + data)
-* Added: live push connection open/close events surfaced via `onOpen`/`onClose`
-* Fixed: notification taps delivered reliably once, via a `PushTaps` queue
-* Fixed: foreground notifications de-duplicated per title
-* Updated: `resume` leaves a live Push host's connection untouched
-
-## 1.2.0-rc.2
-
-* Added: `Push.getInitialNotification()` returns the notification whose tap launched the app
-* Added: `Push.onNotificationOpened(callback)` fires on each notification tap
-* Added: `Push.backgroundStatus()` reports Android exact-alarm, battery, and foreground-service state
-* Added: `Push.requestExactAlarms()` and `Push.requestIgnoreBatteryOptimizations()` helpers
-* Added: `SubscribeOptions.notifyInForeground` to post notifications while the app is visible
-* Added: `PushBackgroundStatus` and `PushNotificationOpened` exported types
-* Fixed: reliable Android background wake-ups via a periodic watchdog and alternating jobs
-* Fixed: `resume` keeps subscriptions only for the same signed-in user
-* Fixed: notification images are size-capped to prevent out-of-memory crashes
-
-## 1.2.0-rc.1
-
-* Added: background push notifications render the server `notification` title, body, and image
-* Added: Android shows notification images (BigPictureStyle) and long bodies (BigTextStyle)
-* Added: the SDK requests Android 13+ `POST_NOTIFICATIONS` itself on first background subscribe
-* Added: notification `data` now carries `topic` and `payload`
-* Fixed: a server-sent title dedupes to one notification per topic instead of one per subscription
-
-## 1.2.0-rc.0
-
-* Added: `Apps` service to manage OAuth2 apps, keys, secrets, and installations
-* Added: `Oauth2` service for authorization, consent, device, PAR, and token flows
-* Added: `Push` service for MQTT realtime push with Android background delivery
-* Added: `Topic` builder and native TCP modules for push
-* Added: `Avatars.updatePhoto()` and `Avatars.deletePhoto()` methods
-* Added: `App`, `Oauth2*`, and `Account` models
+* Added: `analytics.createEvent` in a new `Analytics` service to send tracking events
+* Added: `avatars.updatePhoto` and `avatars.deletePhoto` to manage the user's custom profile photo, and the `Account` model
 * Added: `Webflow` to the `OAuthProvider` enum
-* Fixed: cookie session fallback is guarded to Expo web where `localStorage` exists
+* Added: optional `state` on `account.createOAuth2Session` and `account.createOAuth2Token`, returned unchanged on the success and failure URLs
+* Added: optional `duration` on `account.createEmailPasswordSession` to set the session length
+* Added: optional `current` on `account.deleteSessions` to keep the current session signed in
+* Added: optional `membershipId` on `teams.createMembership`
+* Added: optional `total` on `account.listSessions`, the `locale` list methods and `listTransactions`
+
+## 1.2.0
+
+* Added: `account` passkey methods `listPasskeys`, `createPasskey`, `getPasskey`, `updatePasskey`, `deletePasskey` and `updatePasskeyVerification`
+* Added: `account.createPasskeyToken` and `account.updatePasskeyToken` for passkey sign-in
+* Added: `Passkey`, `PasskeyList`, `PasskeyChallenge` and `TokenSecret` models
 
 ## 1.1.0
 

@@ -44,8 +44,20 @@ export interface PushBackgroundStatus {
     ignoringBatteryOptimizations: boolean;
     /** Foreground mode ({@link Push.setForeground}) keeps the connection open in a service. */
     foregroundService: boolean;
-    /** Wake-ups may be deferred by Doze, so messages can arrive late while the app is closed. */
+    /**
+     * Messages can arrive late, or not until the app is opened, while the app is closed: background
+     * usage is restricted without a battery optimisation exemption, or wake-ups may be deferred by
+     * Doze without exact alarms or foreground mode.
+     */
     bestEffort: boolean;
+    /**
+     * The user restricted the app's background usage in the app's battery settings (Settings >
+     * Apps > your app > Battery), Android 9+. Android may then hold its alarms, jobs and foreground
+     * service while it is closed, so messages can wait until the app is opened. The battery
+     * optimisation exemption lets the alarms and jobs run again, but foreground mode still stops
+     * once the app leaves the screen. False below Android 9.
+     */
+    backgroundRestricted: boolean;
 }
 
 /** A background notification the user tapped. */
@@ -293,9 +305,12 @@ export class Push extends Service {
     }
 
     /**
-     * Android: what background delivery can rely on. When `bestEffort` is true the scheduled
-     * wake-ups are inexact and Doze can defer them, so messages may arrive late while the app is
-     * closed; explain why, then ask with {@link requestExactAlarms} or
+     * Android: what background delivery can rely on. When `bestEffort` is true messages may arrive
+     * late, or not until the app is opened, while the app is closed, so explain why, then ask. If
+     * `backgroundRestricted` is true and the app is not `ignoringBatteryOptimizations`, ask the user
+     * to choose Unrestricted in the app's battery settings (Settings > Apps > your app > Battery),
+     * or ask with {@link requestIgnoreBatteryOptimizations}; otherwise the scheduled wake-ups are
+     * inexact and Doze can defer them, so ask with {@link requestExactAlarms} or
      * {@link requestIgnoreBatteryOptimizations}. Null elsewhere.
      */
     async backgroundStatus(): Promise<PushBackgroundStatus | null> {
@@ -1231,18 +1246,26 @@ export class Push extends Service {
         }
     }
 
-    /** Post a local notification for a message a background subscription matched. */
-    private async notify(message: PushMessage, title: string): Promise<void> {
+    /**
+     * Post a local notification for a message a background subscription matched. A data-only
+     * message, an envelope without a notification title or body, posts none.
+     */
+    private async notify(
+        message: PushMessage,
+        title: string,
+        content: NotificationContent = notificationContent(message),
+    ): Promise<void> {
+        if (!content.visible) {
+            return;
+        }
         try {
             /* eslint-disable @typescript-eslint/no-require-imports */
             const notifications: typeof import('expo-notifications') = require('expo-notifications');
             /* eslint-enable @typescript-eslint/no-require-imports */
-            const content = notificationContent(message);
-            const raw = !content.present;
             await notifications.scheduleNotificationAsync({
                 content: {
                     title: content.title ?? title,
-                    body: content.body ?? (raw ? message.data : null),
+                    body: content.body ?? (content.raw ? message.data : null),
                     data: { topic: message.topic, payload: message.data },
                 },
                 trigger: null,
@@ -1574,7 +1597,7 @@ export class Push extends Service {
             payload,
             qos: packet.qos,
         };
-        const serverTitle = notificationContent(message).title;
+        const content = notificationContent(message);
         const postedTitles = new Set<string>();
         // While the app is on screen it shows the message itself: only subscriptions that
         // opted in with notifyInForeground also post a notification then.
@@ -1584,14 +1607,14 @@ export class Push extends Service {
                 await sub.callback(message);
                 // Notification is per-subscription: only subs that opted in post one, each
                 // title once. A title the server sent replaces theirs, so it posts once.
-                const title = serverTitle ?? sub.title ?? message.topic;
+                const title = content.title ?? sub.title ?? message.topic;
                 if (
                     sub.background &&
                     (!foreground || sub.notifyInForeground) &&
                     !postedTitles.has(title)
                 ) {
                     postedTitles.add(title);
-                    await this.notify(message, title);
+                    await this.notify(message, title, content);
                 }
             }
         }
@@ -1718,33 +1741,51 @@ function expoNotifications(): typeof import('expo-notifications') | null {
 
 /** What a message's `notification` block asks a background notification to show. */
 interface NotificationContent {
-    /** Whether the message has a `notification` block at all. */
-    present: boolean;
+    /** Whether the payload is not a JSON object, so it is shown as it is. */
+    raw: boolean;
+    /** Whether a notification is posted: raw, or an envelope with a title or body. */
+    visible: boolean;
     title?: string;
     body?: string;
     image?: string;
 }
 
-/** The server's `notification` block in a message; empty when the payload has none or is not JSON. */
-function notificationContent(message: PushMessage): NotificationContent {
-    let notification: unknown;
+/** The server's `notification` block in a payload, or null when the payload is not a JSON object. */
+function notificationBlock(data: string): Record<string, unknown> | null {
+    let envelope: unknown;
     try {
-        notification = (JSON.parse(message.data) as { notification?: unknown })
-            ?.notification;
+        envelope = JSON.parse(data);
     } catch {
-        return { present: false };
+        return null;
     }
-    if (typeof notification !== 'object' || notification === null) {
-        return { present: false };
+    if (
+        typeof envelope !== 'object' ||
+        envelope === null ||
+        Array.isArray(envelope)
+    ) {
+        return null;
     }
+    const notification = (envelope as { notification?: unknown }).notification;
+    return typeof notification === 'object' && notification !== null
+        ? (notification as Record<string, unknown>)
+        : {};
+}
+
+/** What a message asks a background notification to show; raw when it is not a JSON object. */
+function notificationContent(message: PushMessage): NotificationContent {
+    const block = notificationBlock(message.data);
+    const raw = block === null;
     const field = (name: string): string | undefined => {
-        const value = (notification as Record<string, unknown>)[name];
+        const value = block?.[name];
         return typeof value === 'string' && value !== '' ? value : undefined;
     };
+    const title = field('title');
+    const body = field('body');
     return {
-        present: true,
-        title: field('title'),
-        body: field('body'),
+        raw,
+        visible: raw || title !== undefined || body !== undefined,
+        title,
+        body,
         image: field('image'),
     };
 }

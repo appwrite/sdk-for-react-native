@@ -54,19 +54,36 @@ data class PushMessage(
 /**
  * What background delivery can rely on. Without exact alarms, the scheduled wake-ups are inexact
  * and Doze can defer them, so delivery is [bestEffort] unless foreground mode keeps the
- * connection open.
+ * connection open. When the user restricted background usage, delivery is [bestEffort] unless the
+ * app is also exempt from battery optimisation, and foreground mode no longer counts: Android stops
+ * a restricted app's foreground service once it leaves the screen, exemption or not.
  */
-data class PushBackgroundStatus(
+data class PushBackgroundStatus @JvmOverloads constructor(
     /** The app may schedule exact alarms (`SCHEDULE_EXACT_ALARM`, granted). */
     val exactAlarms: Boolean,
     /** The app is exempt from battery optimisation. */
     val ignoringBatteryOptimizations: Boolean,
     /** Foreground mode (`setForeground(true)`) keeps the connection open in a service. */
     val foregroundService: Boolean,
+    /**
+     * The user restricted the app's background usage in its battery settings (Android 9+). Android
+     * may then hold its alarms, jobs and foreground service while it is closed, so messages can
+     * wait until the app is opened. The battery-optimisation exemption lets the alarms and jobs
+     * run again, but foreground mode still stops once the app leaves the screen.
+     */
+    val backgroundRestricted: Boolean = false,
 ) {
-    /** Wake-ups may be deferred by Doze, so messages can arrive late while the app is closed. */
+    /**
+     * Messages can arrive late, or not until the app is opened, while the app is closed: background
+     * usage is restricted without the battery-optimisation exemption, or wake-ups may be deferred
+     * by Doze.
+     */
     val bestEffort: Boolean
-        get() = !exactAlarms && !foregroundService
+        get() {
+            val held = backgroundRestricted && !ignoringBatteryOptimizations
+            val foreground = foregroundService && !backgroundRestricted
+            return held || (!exactAlarms && !foreground)
+        }
 }
 
 /** Connection parameters shared between the in-process client and the foreground service. */

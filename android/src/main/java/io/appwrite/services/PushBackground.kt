@@ -52,8 +52,15 @@ import java.util.concurrent.atomic.AtomicInteger
 
 private const val LOG_TAG = "AppwritePush"
 
-/** What a message's `notification` block asks a background notification to show; [present] is false without one. */
-internal data class PushNotificationContent(val present: Boolean, val title: String?, val body: String?, val image: String?)
+/**
+ * What a message asks a background notification to show. A [raw] payload, one that is not a JSON
+ * object, is shown as the body under the subscription's title; an envelope is [visible] only with a
+ * title or body in its `notification`.
+ */
+internal data class PushNotificationContent(val raw: Boolean, val title: String?, val body: String?, val image: String?) {
+    val visible: Boolean
+        get() = raw || title != null || body != null
+}
 
 /** A background subscription saved across restarts: its filter, QoS choice and notification title. */
 internal data class PushEntry(
@@ -887,7 +894,7 @@ internal object PushBackground {
     // Deliver a message to the matching live callbacks; with none, to the declared PushReceiver
     // and/or a notification per saved subscription that matches it. [deferAck] hands a listener
     // that acknowledges messages itself its acknowledgement.
-    private fun deliverMessage(context: Context, message: PushMessage, deferAck: () -> () -> Unit) {
+    internal fun deliverMessage(context: Context, message: PushMessage, deferAck: () -> () -> Unit) {
         val matching = listeners.filter { listener -> listener.topics.any { matchesTopic(it, message.topic) } }
         // Saved background subscriptions no live one has taken over; they deliver even when a live
         // foreground-only subscription on an overlapping filter received the message too.
@@ -952,16 +959,21 @@ internal object PushBackground {
 
     /**
      * Post a notification for [message] that opens the app, with the message in its extras. It shows
-     * the server's title, body and image from [content], falling back to [title] and the raw payload.
+     * the server's title, body and image from [content], falling back to [title], and to the payload
+     * as the body when it is not a JSON object. An envelope with neither a title nor a body, such as
+     * a data-only push, posts nothing.
      */
     fun notify(context: Context, message: PushMessage, title: String, content: PushNotificationContent = notificationContent(message)) {
+        if (!content.visible) {
+            return
+        }
         val manager = NotificationManagerCompat.from(context)
         if (!manager.areNotificationsEnabled()) {
             return
         }
         createChannels(context)
         val id = 31 * message.hashCode() + title.hashCode()
-        val body = content.body ?: message.data.takeIf { !content.present }
+        val body = content.body ?: message.data.takeIf { content.raw }
         val builder = NotificationCompat.Builder(context, CHANNEL_ID)
             .setContentTitle(content.title ?: title)
             .setSmallIcon(notificationIcon(context))
@@ -992,12 +1004,13 @@ internal object PushBackground {
         .also { ActivityManager.getMyMemoryState(it) }
         .importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND
 
-    /** The server's `notification` block in [message]: nulls when the payload has none or is not JSON. */
+    /** The server's `notification` block in [message], [PushNotificationContent.raw] when the payload is not a JSON object. */
     fun notificationContent(message: PushMessage): PushNotificationContent {
-        val notification = runCatching { JSONObject(message.data) }.getOrNull()?.optJSONObject("notification")
-            ?: return PushNotificationContent(false, null, null, null)
-        fun field(name: String) = (notification.opt(name) as? String)?.takeIf { it.isNotEmpty() }
-        return PushNotificationContent(true, field("title"), field("body"), field("image"))
+        val envelope = runCatching { JSONObject(message.data) }.getOrNull()
+            ?: return PushNotificationContent(true, null, null, null)
+        val notification = envelope.optJSONObject("notification")
+        fun field(name: String) = (notification?.opt(name) as? String)?.takeIf { it.isNotEmpty() }
+        return PushNotificationContent(false, field("title"), field("body"), field("image"))
     }
 
     // Downloads notification images, so a slow one is abandoned without holding up delivery.
@@ -1201,6 +1214,8 @@ internal object PushBackground {
                 app.getSystemService(AlarmManager::class.java)?.canScheduleExactAlarms() == true,
             ignoringBatteryOptimizations = app.getSystemService(PowerManager::class.java)?.isIgnoringBatteryOptimizations(app.packageName) == true,
             foregroundService = PushStore.foreground(app),
+            backgroundRestricted = Build.VERSION.SDK_INT >= Build.VERSION_CODES.P &&
+                app.getSystemService(ActivityManager::class.java)?.isBackgroundRestricted == true,
         )
     }
 
