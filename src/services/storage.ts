@@ -1,5 +1,5 @@
 import { Service } from '../service';
-import { AppwriteException, Client } from '../client';
+import { AppwriteException, Client, applyDefaults } from '../client';
 import type { Models } from '../models';
 import type { UploadProgress, Payload } from '../client';
 import * as FileSystem from 'expo-file-system';
@@ -113,7 +113,7 @@ export class Storage extends Service {
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
-        return this.client.call(
+        const request = this.client.call(
             'get',
             uri,
             {
@@ -122,6 +122,44 @@ export class Storage extends Service {
             },
             apiPayload,
         );
+        const defaults = {
+            root: 'fileList',
+            models: {
+                fileList: {
+                    defaults: {
+                        total: 0,
+                        files: [],
+                    },
+                    properties: {
+                        files: {
+                            items: 'file',
+                        },
+                    },
+                },
+                file: {
+                    defaults: {
+                        $id: '',
+                        bucketId: '',
+                        $createdAt: '',
+                        $updatedAt: '',
+                        $permissions: [],
+                        name: '',
+                        folder: '',
+                        key: '',
+                        signature: '',
+                        mimeType: '',
+                        sizeOriginal: 0,
+                        sizeActual: 0,
+                        chunksTotal: 0,
+                        chunksUploaded: 0,
+                        encryption: false,
+                        compression: 'none',
+                    },
+                },
+            },
+        };
+
+        return request.then((response) => applyDefaults(response, defaults));
     }
 
     /**
@@ -563,7 +601,7 @@ export class Storage extends Service {
         const apiPayload: Payload = {};
 
         const uri = new URL(this.client.config.endpoint + apiPath);
-        return this.client.call(
+        const request = this.client.call(
             'get',
             uri,
             {
@@ -572,6 +610,33 @@ export class Storage extends Service {
             },
             apiPayload,
         );
+        const defaults = {
+            root: 'file',
+            models: {
+                file: {
+                    defaults: {
+                        $id: '',
+                        bucketId: '',
+                        $createdAt: '',
+                        $updatedAt: '',
+                        $permissions: [],
+                        name: '',
+                        folder: '',
+                        key: '',
+                        signature: '',
+                        mimeType: '',
+                        sizeOriginal: 0,
+                        sizeActual: 0,
+                        chunksTotal: 0,
+                        chunksUploaded: 0,
+                        encryption: false,
+                        compression: 'none',
+                    },
+                },
+            },
+        };
+
+        return request.then((response) => applyDefaults(response, defaults));
     }
 
     /**
@@ -580,7 +645,7 @@ export class Storage extends Service {
      * @param {string} params.bucketId - Bucket unique ID.
      * @param {string} params.fileId - File ID.
      * @param {string} params.name - File name.
-     * @param {string[]} params.permissions - An array of permission strings. By default, the current permissions are inherited. [Learn more about permissions](https://appwrite.io/docs/permissions).
+     * @param {string[] | null} params.permissions - An array of permission strings. By default, the current permissions are inherited. [Learn more about permissions](https://appwrite.io/docs/permissions).
      * @throws {AppwriteException}
      * @returns {Promise}
      */
@@ -588,7 +653,7 @@ export class Storage extends Service {
         bucketId: string;
         fileId: string;
         name?: string;
-        permissions?: string[];
+        permissions?: string[] | null;
     }): Promise<Models.File>;
     /**
      * Update a file by its unique ID. Only users with write permissions have access to update this resource.
@@ -596,7 +661,7 @@ export class Storage extends Service {
      * @param {string} bucketId - Bucket unique ID.
      * @param {string} fileId - File ID.
      * @param {string} name - File name.
-     * @param {string[]} permissions - An array of permission strings. By default, the current permissions are inherited. [Learn more about permissions](https://appwrite.io/docs/permissions).
+     * @param {string[] | null} permissions - An array of permission strings. By default, the current permissions are inherited. [Learn more about permissions](https://appwrite.io/docs/permissions).
      * @throws {AppwriteException}
      * @returns {Promise<Models.File>}
      * @deprecated Use the object parameter style method for a better developer experience.
@@ -605,7 +670,7 @@ export class Storage extends Service {
         bucketId: string,
         fileId: string,
         name?: string,
-        permissions?: string[],
+        permissions?: string[] | null,
     ): Promise<Models.File>;
     updateFile(
         paramsOrFirst:
@@ -613,16 +678,16 @@ export class Storage extends Service {
                   bucketId: string;
                   fileId: string;
                   name?: string;
-                  permissions?: string[];
+                  permissions?: string[] | null;
               }
             | string,
-        ...rest: [string?, string?, string[]?]
+        ...rest: [string?, string?, (string[] | null)?]
     ): Promise<Models.File> {
         let params: {
             bucketId: string;
             fileId: string;
             name?: string;
-            permissions?: string[];
+            permissions?: string[] | null;
         };
 
         if (
@@ -634,14 +699,14 @@ export class Storage extends Service {
                 bucketId: string;
                 fileId: string;
                 name?: string;
-                permissions?: string[];
+                permissions?: string[] | null;
             };
         } else {
             params = {
                 bucketId: paramsOrFirst as string,
                 fileId: rest[0] as string,
                 name: rest[1] as string,
-                permissions: rest[2] as string[],
+                permissions: rest[2] as string[] | null,
             };
         }
 
@@ -674,7 +739,7 @@ export class Storage extends Service {
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
-        return this.client.call(
+        const request = this.client.call(
             'put',
             uri,
             {
@@ -684,6 +749,33 @@ export class Storage extends Service {
             },
             apiPayload,
         );
+        const defaults = {
+            root: 'file',
+            models: {
+                file: {
+                    defaults: {
+                        $id: '',
+                        bucketId: '',
+                        $createdAt: '',
+                        $updatedAt: '',
+                        $permissions: [],
+                        name: '',
+                        folder: '',
+                        key: '',
+                        signature: '',
+                        mimeType: '',
+                        sizeOriginal: 0,
+                        sizeActual: 0,
+                        chunksTotal: 0,
+                        chunksUploaded: 0,
+                        encryption: false,
+                        compression: 'none',
+                    },
+                },
+            },
+        };
+
+        return request.then((response) => applyDefaults(response, defaults));
     }
 
     /**

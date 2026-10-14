@@ -1,12 +1,12 @@
 # Appwrite React Native SDK
 
 ![License](https://img.shields.io/github/license/appwrite/sdk-for-react-native.svg?style=flat-square)
-![Version](https://img.shields.io/badge/api%20version-2.3.0-blue.svg?style=flat-square)
+![Version](https://img.shields.io/badge/api%20version-2.5.0-blue.svg?style=flat-square)
 [![Build Status](https://img.shields.io/travis/com/appwrite/sdk-generator?style=flat-square)](https://travis-ci.com/appwrite/sdk-generator)
 [![Twitter Account](https://img.shields.io/twitter/follow/appwrite?color=00acee&label=twitter&style=flat-square)](https://twitter.com/appwrite)
 [![Discord](https://img.shields.io/discord/564160730845151244?label=discord&style=flat-square)](https://appwrite.io/discord)
 
-**This SDK targets Appwrite server version 2.3.x as shipped on Appwrite Cloud.** Self-hosted releases can lag behind Cloud — if you run an older self-hosted build, use a matching older SDK from [previous releases](https://github.com/appwrite/sdk-for-react-native/releases) when APIs differ.
+**This SDK targets Appwrite server version 2.5.x as shipped on Appwrite Cloud.** Self-hosted releases can lag behind Cloud — if you run an older self-hosted build, use a matching older SDK from [previous releases](https://github.com/appwrite/sdk-for-react-native/releases) when APIs differ.
 
 Appwrite is an open-source backend as a service server that abstracts and simplifies complex and repetitive development tasks behind a very simple to use REST API. Appwrite aims to help you develop your apps faster and in a more secure way. Use the React Native SDK to integrate your app with the Appwrite server to easily start interacting with all of Appwrite backend APIs and tools. For full API documentation and tutorials go to [https://appwrite.io/docs](https://appwrite.io/docs)
 
@@ -19,129 +19,6 @@ To install
 ```bash
 npx expo install react-native-appwrite react-native-url-polyfill
 ```
-
-### Push
-
-`Push` connects over a raw TCP socket, so it needs `react-native-tcp-socket` and a development
-or standalone build (native modules do not run in Expo Go).
-
-On Expo SDK 52 and older, enable package exports in `metro.config.js` so `mqtt` resolves to its
-React Native build (Expo SDK 53 and later do this by default):
-
-```js
-config.resolver.unstable_enablePackageExports = true;
-```
-
-#### Background delivery on Android
-
-A subscription with `background: true` keeps delivering after the app is backgrounded, killed or
-the device restarts, until it is unsubscribed or `push.close()` is called (do this on sign-out).
-The SDK's native Android module (autolinked) saves the subscription, and a scheduled job and
-alarm wake the app every 15 to 60 seconds to reconnect; the broker replays what was sent in
-between (`retry: true`). While the app is not on screen, each message is posted as a
-notification that opens the app. It reconnects with the credential saved at subscribe time, so use a session rather
-than a short-lived JWT.
-
-On Android 13 and later, the first background subscription asks the user for the
-`POST_NOTIFICATIONS` runtime permission. If they decline, the subscription still delivers to your
-callback but posts no notification. Notifications show the title, body and image sent with
-`createPush`, and fall back to the subscription's `title` and the raw payload for other messages.
-
-```js
-const sub = await push.subscribe('news', (message) => console.log(message.data), {
-    background: true,
-    title: 'News',
-});
-
-// Optional: immediate delivery even after a kill and during Doze, with a quiet ongoing
-// notification (call while the app is in the foreground).
-await push.setForeground(true);
-```
-
-Notifications are posted while the app is backgrounded or closed. While it is on screen your
-callback shows the message, so none is posted unless the subscription passes
-`notifyInForeground: true`.
-
-#### Delivery while the app is closed
-
-Messages sent while the app is closed arrive at the next scheduled wake-up. While the device is
-awake that is about every 15 seconds, or about every 60 seconds once exact alarms are allowed;
-without exact alarms the wake-ups are inexact, so battery saver can defer them further. In Doze
-(screen off and idle for a while) Android limits background alarms, exact ones included, to about
-one every nine minutes, so a closed app can take several minutes to receive a message: allowing
-exact alarms makes wake-ups punctual, it does not lift Doze. For immediate delivery, also in
-Doze, use `push.setForeground(true)` (see above).
-
-The SDK uses exact alarms on its own whenever the app may schedule them. To allow it:
-
-1. Declare the permissions in your app's `AndroidManifest.xml`. Both are optional and subject to
-   Google Play policy: `SCHEDULE_EXACT_ALARM` needs a declaration in the Play Console, and
-   `USE_EXACT_ALARM` is reserved for alarm, clock and calendar apps (the SDK does not use it).
-
-   ```xml
-   <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
-   <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
-   ```
-
-With Expo, list them under `android.permissions` in `app.json` instead.
-
-2. On Android 13 and later the user has to allow exact alarms, under Settings > Apps > Special app
-   access > Alarms & reminders. Android 12 grants a declared `SCHEDULE_EXACT_ALARM`
-   automatically, and older versions need nothing. Check with `await push.backgroundStatus()`: when `bestEffort` is
-   true, explain why to the user, then from a user action open that screen with `push.requestExactAlarms()`, or
-   ask for the battery-optimisation exemption with `push.requestIgnoreBatteryOptimizations()`. Both return false when there is
-   nothing to ask, including when the permission is not declared. The SDK never opens these
-   screens on its own.
-
-If the user force-stops the app (Settings > Force stop, and on some devices swiping it away from
-recents), Android cancels its alarms and jobs: nothing is delivered until the app is opened
-again, and the broker then replays what was sent meanwhile.
-
-Set the notification icon with
-`<meta-data android:name="io.appwrite.push.notification_icon" android:resource="@drawable/..." />` in your
-`<application>`; without it a generic icon is used.
-
-```js
-const status = await push.backgroundStatus(); // null outside Android
-if (status?.bestEffort) {
-    // Explain why, then from a button press:
-    await push.requestExactAlarms();
-}
-```
-
-Saved background delivery follows the app's current session, also while the app is closed: each
-background run re-reads the session cookie, so a rotated session of the same user replaces the
-saved one, and signing out (no session) or signing in as someone else stops background delivery.
-If the broker still refuses the credential, delivery stops and `onError` reports it the next time
-the app registers one. Still call `push.close()` on sign-out.
-
-#### Upgrading from an earlier release candidate
-
-The Expo config plugin is gone: the native module now declares everything background delivery
-needs. Remove `"react-native-appwrite"` from the `plugins` list in `app.json`, or `expo config`
-fails to load it.
-
-#### Opening a tapped notification
-
-Read the `data` sent with `createPush` when the user taps a background notification:
-
-```js
-// The tap that launched the app (reported once, so call it at startup).
-const opened = await push.getInitialNotification();
-if (opened) {
-    openSale(opened.data.saleId);
-}
-
-// Taps while the app is running, including in the background.
-const stop = push.onNotificationOpened(({ topic, data }) => openSale(data.saleId));
-```
-
-On Android the SDK's native module reports the taps. Elsewhere they come from `expo-notifications`.
-
-Foreground mode runs a `remoteMessaging` foreground service, which Google Play asks apps to
-declare in the Play Console. Apps that never enable it can remove the service from their merged
-manifest with `tools:node="remove"` on `io.appwrite.services.PushService` and
-`android.permission.FOREGROUND_SERVICE_REMOTE_MESSAGING`.
 
 
 ## Getting Started
