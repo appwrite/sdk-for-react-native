@@ -1,6 +1,6 @@
 /**
  * Validate the levels passed to `path()`: a non-empty array of non-empty strings, none holding
- * the level separator `/` or the wildcards `+` and `#` (use `any()` and `all()` for those).
+ * the level separator `/` or the MQTT wildcards `+` and `#`.
  */
 function levelsOf(levels: unknown): string[] {
     if (!Array.isArray(levels)) {
@@ -28,17 +28,14 @@ function levelsOf(levels: unknown): string[] {
                 `"${level}" contains "/", split it: path([${parts}])`,
             );
         }
-        if (level === '+') {
-            throw new Error('"+" is reserved, use any()');
-        }
         if (level.includes('+')) {
-            throw new Error(`"${level}" contains "+", use any() for wildcards`);
-        }
-        if (level === '#') {
-            throw new Error('"#" is reserved, use all()');
+            throw new Error(`"${level}" contains "+", not allowed in a topic`);
         }
         if (level.includes('#')) {
-            throw new Error(`"${level}" contains "#", use all() for wildcards`);
+            throw new Error(`"${level}" contains "#", not allowed in a topic`);
+        }
+        if (level.includes('\0')) {
+            throw new Error(`level at index ${index} contains a NUL character`);
         }
         return level;
     });
@@ -48,11 +45,7 @@ function levelsOf(levels: unknown): string[] {
  * Helper to build MQTT topics for `Push`, level by level.
  *
  *     Topic.path(['user', userId, 'notification']); // "user/123/notification"
- *     Topic.path(['user']).any().path(['notification']); // "user/+/notification"
- *     Topic.path(['org']).any().path(['logs']).all(); // "org/+/logs/#"
- *
- * `any()` matches exactly one level and `all()` everything below, at any depth (including the
- * parent itself). `all()` ends the topic, so it returns a {@link ResolvedTopic}.
+ *     Topic.path(['org', orgId]).path(['logs']); // "org/42/logs"
  */
 export class Topic {
     private constructor(private readonly levels: readonly string[]) {}
@@ -62,40 +55,10 @@ export class Topic {
         return new Topic(levelsOf(levels));
     }
 
-    /** Start a topic with a single-level wildcard (`+`). */
-    static any(): Topic {
-        return new Topic(['+']);
-    }
-
-    /** The multi-level wildcard alone (`#`): matches every topic. */
-    static all(): ResolvedTopic {
-        return new ResolvedTopic(['#']);
-    }
-
     /** Append the given levels. */
     path(levels: string[]): Topic {
         return new Topic([...this.levels, ...levelsOf(levels)]);
     }
-
-    /** Append a single-level wildcard (`+`): matches exactly one level. */
-    any(): Topic {
-        return new Topic([...this.levels, '+']);
-    }
-
-    /** Append the multi-level wildcard (`#`) and end the topic. */
-    all(): ResolvedTopic {
-        return new ResolvedTopic([...this.levels, '#']);
-    }
-
-    toString(): string {
-        return this.levels.join('/');
-    }
-}
-
-/** A topic ended by `all()`: nothing can be appended after the `#` wildcard. */
-export class ResolvedTopic {
-    /** @internal Created by {@link Topic.all}. */
-    constructor(private readonly levels: readonly string[]) {}
 
     toString(): string {
         return this.levels.join('/');

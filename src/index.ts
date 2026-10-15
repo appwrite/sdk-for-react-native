@@ -1,5 +1,6 @@
 export { Client, AppwriteException } from './client';
 export { Account } from './services/account';
+export { Analytics } from './services/analytics';
 export { Apps } from './services/apps';
 export { Avatars } from './services/avatars';
 export { Databases } from './services/databases';
@@ -32,12 +33,12 @@ export type {
     UploadProgress,
 } from './client';
 export type { RealtimeSubscription } from './services/realtime';
-export type { QueryTypes, QueryTypesList } from './query';
-export { Query } from './query';
+export type { QueryTypes, QueryTypesList, QueryInput } from './query';
+export { Query, QueryBuilder, flattenParam } from './query';
 export { Permission } from './permission';
 export { Role } from './role';
 export { ID } from './id';
-export { Topic, ResolvedTopic } from './topic';
+export { Topic } from './topic';
 export { Channel } from './channel';
 export { Operator, Condition } from './operator';
 export { AuthenticatorType } from './enums/authenticator-type';

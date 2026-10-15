@@ -17,26 +17,26 @@
 
     <application>
         <activity
-            android:name="io.appwrite.services.PushOpenActivity"
+            android:name="io.appwrite.reactnative.services.PushOpenActivity"
             android:excludeFromRecents="true"
             android:exported="false"
             android:noHistory="true"
             android:taskAffinity=""
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <service
-            android:name="io.appwrite.services.PushService"
+            android:name="io.appwrite.reactnative.services.PushService"
             android:exported="false"
             android:foregroundServiceType="remoteMessaging"
             android:stopWithTask="false" />
         <service
-            android:name="io.appwrite.services.PushJobService"
+            android:name="io.appwrite.reactnative.services.PushJobService"
             android:exported="false"
             android:permission="android.permission.BIND_JOB_SERVICE" />
         <receiver
-            android:name="io.appwrite.services.PushAlarmReceiver"
+            android:name="io.appwrite.reactnative.services.PushAlarmReceiver"
             android:exported="false" />
         <receiver
-            android:name="io.appwrite.services.PushBootReceiver"
+            android:name="io.appwrite.reactnative.services.PushBootReceiver"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />

@@ -11,7 +11,7 @@ const result = await oauth2.createDeviceAuthorization({
     clientId: '<CLIENT_ID>', // optional
     scope: '<SCOPE>', // optional
     authorizationDetails: '<AUTHORIZATION_DETAILS>', // optional
-    resource: '', // optional
+    resource: [], // optional
     audience: '<AUDIENCE>', // optional
 });
 
