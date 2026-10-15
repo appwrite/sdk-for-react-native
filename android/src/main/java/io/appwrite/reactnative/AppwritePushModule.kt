@@ -7,10 +7,10 @@ import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReactContextBaseJavaModule
 import com.facebook.react.bridge.ReactMethod
 import com.facebook.react.modules.core.DeviceEventManagerModule
-import io.appwrite.services.PushBridge
-import io.appwrite.services.PushMessage
-import io.appwrite.services.PushTap
-import io.appwrite.services.PushTaps
+import io.appwrite.reactnative.services.PushBridge
+import io.appwrite.reactnative.services.PushMessage
+import io.appwrite.reactnative.services.PushTap
+import io.appwrite.reactnative.services.PushTaps
 import org.json.JSONObject
 
 /**

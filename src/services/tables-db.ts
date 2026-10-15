@@ -1,5 +1,5 @@
 import { Service } from '../service';
-import { AppwriteException, Client } from '../client';
+import { AppwriteException, Client, applyDefaults } from '../client';
 import type { Models } from '../models';
 import type { Payload } from '../client';
 
@@ -71,7 +71,7 @@ export class TablesDB extends Service {
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
-        return this.client.call(
+        const request = this.client.call(
             'get',
             uri,
             {
@@ -80,6 +80,34 @@ export class TablesDB extends Service {
             },
             apiPayload,
         );
+        const defaults = {
+            root: 'transactionList',
+            models: {
+                transactionList: {
+                    defaults: {
+                        total: 0,
+                        transactions: [],
+                    },
+                    properties: {
+                        transactions: {
+                            items: 'transaction',
+                        },
+                    },
+                },
+                transaction: {
+                    defaults: {
+                        $id: '',
+                        $createdAt: '',
+                        $updatedAt: '',
+                        status: 'pending',
+                        operations: 0,
+                        expiresAt: '',
+                    },
+                },
+            },
+        };
+
+        return request.then((response) => applyDefaults(response, defaults));
     }
 
     /**
@@ -127,7 +155,7 @@ export class TablesDB extends Service {
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
-        return this.client.call(
+        const request = this.client.call(
             'post',
             uri,
             {
@@ -137,6 +165,23 @@ export class TablesDB extends Service {
             },
             apiPayload,
         );
+        const defaults = {
+            root: 'transaction',
+            models: {
+                transaction: {
+                    defaults: {
+                        $id: '',
+                        $createdAt: '',
+                        $updatedAt: '',
+                        status: 'pending',
+                        operations: 0,
+                        expiresAt: '',
+                    },
+                },
+            },
+        };
+
+        return request.then((response) => applyDefaults(response, defaults));
     }
 
     /**
@@ -190,7 +235,7 @@ export class TablesDB extends Service {
         const apiPayload: Payload = {};
 
         const uri = new URL(this.client.config.endpoint + apiPath);
-        return this.client.call(
+        const request = this.client.call(
             'get',
             uri,
             {
@@ -199,6 +244,23 @@ export class TablesDB extends Service {
             },
             apiPayload,
         );
+        const defaults = {
+            root: 'transaction',
+            models: {
+                transaction: {
+                    defaults: {
+                        $id: '',
+                        $createdAt: '',
+                        $updatedAt: '',
+                        status: 'pending',
+                        operations: 0,
+                        expiresAt: '',
+                    },
+                },
+            },
+        };
+
+        return request.then((response) => applyDefaults(response, defaults));
     }
 
     /**
@@ -285,7 +347,7 @@ export class TablesDB extends Service {
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
-        return this.client.call(
+        const request = this.client.call(
             'patch',
             uri,
             {
@@ -295,6 +357,23 @@ export class TablesDB extends Service {
             },
             apiPayload,
         );
+        const defaults = {
+            root: 'transaction',
+            models: {
+                transaction: {
+                    defaults: {
+                        $id: '',
+                        $createdAt: '',
+                        $updatedAt: '',
+                        status: 'pending',
+                        operations: 0,
+                        expiresAt: '',
+                    },
+                },
+            },
+        };
+
+        return request.then((response) => applyDefaults(response, defaults));
     }
 
     /**
@@ -427,7 +506,7 @@ export class TablesDB extends Service {
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
-        return this.client.call(
+        const request = this.client.call(
             'post',
             uri,
             {
@@ -437,6 +516,23 @@ export class TablesDB extends Service {
             },
             apiPayload,
         );
+        const defaults = {
+            root: 'transaction',
+            models: {
+                transaction: {
+                    defaults: {
+                        $id: '',
+                        $createdAt: '',
+                        $updatedAt: '',
+                        status: 'pending',
+                        operations: 0,
+                        expiresAt: '',
+                    },
+                },
+            },
+        };
+
+        return request.then((response) => applyDefaults(response, defaults));
     }
 
     /**
@@ -567,7 +663,7 @@ export class TablesDB extends Service {
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
-        return this.client.call(
+        const request = this.client.call(
             'get',
             uri,
             {
@@ -576,6 +672,35 @@ export class TablesDB extends Service {
             },
             apiPayload,
         );
+        const defaults = {
+            root: 'rowList',
+            models: {
+                rowList: {
+                    defaults: {
+                        total: 0,
+                        rows: [],
+                    },
+                    properties: {
+                        rows: {
+                            items: 'row',
+                        },
+                    },
+                },
+                row: {
+                    defaults: {
+                        $id: '',
+                        $sequence: '',
+                        $tableId: '',
+                        $databaseId: '',
+                        $createdAt: '',
+                        $updatedAt: '',
+                        $permissions: [],
+                    },
+                },
+            },
+        };
+
+        return request.then((response) => applyDefaults(response, defaults));
     }
 
     /**
@@ -585,8 +710,8 @@ export class TablesDB extends Service {
      * @param {string} params.tableId - Table ID. You can create a new table using the Database service [server integration](https://appwrite.io/docs/references/cloud/server-dart/tablesDB#createTable). Make sure to define columns before creating rows.
      * @param {string} params.rowId - Row ID. Choose a custom ID or generate a random ID with `ID.unique()`. Valid chars are a-z, A-Z, 0-9, period, hyphen, and underscore. Can't start with a special char. Max length is 36 chars.
      * @param {Row extends Models.DefaultRow ? Partial<Models.Row> & Record<string, any> : Partial<Models.Row> & Omit<Row, keyof Models.Row>} params.data - Row data as JSON object.
-     * @param {string[]} params.permissions - An array of permissions strings. By default, only the current user is granted all permissions. [Learn more about permissions](https://appwrite.io/docs/permissions).
-     * @param {string} params.transactionId - Transaction ID for staging the operation.
+     * @param {string[] | null} params.permissions - An array of permissions strings. By default, only the current user is granted all permissions. [Learn more about permissions](https://appwrite.io/docs/permissions).
+     * @param {string | null} params.transactionId - Transaction ID for staging the operation.
      * @throws {AppwriteException}
      * @returns {Promise}
      */
@@ -597,8 +722,8 @@ export class TablesDB extends Service {
         data: Row extends Models.DefaultRow
             ? Partial<Models.Row> & Record<string, any>
             : Partial<Models.Row> & Omit<Row, keyof Models.Row>;
-        permissions?: string[];
-        transactionId?: string;
+        permissions?: string[] | null;
+        transactionId?: string | null;
     }): Promise<Row>;
     /**
      * Create a new Row. Before using this route, you should create a new table resource using either a [server integration](https://appwrite.io/docs/references/cloud/server-dart/tablesDB#createTable) API or directly from your database console.
@@ -607,8 +732,8 @@ export class TablesDB extends Service {
      * @param {string} tableId - Table ID. You can create a new table using the Database service [server integration](https://appwrite.io/docs/references/cloud/server-dart/tablesDB#createTable). Make sure to define columns before creating rows.
      * @param {string} rowId - Row ID. Choose a custom ID or generate a random ID with `ID.unique()`. Valid chars are a-z, A-Z, 0-9, period, hyphen, and underscore. Can't start with a special char. Max length is 36 chars.
      * @param {Row extends Models.DefaultRow ? Partial<Models.Row> & Record<string, any> : Partial<Models.Row> & Omit<Row, keyof Models.Row>} data - Row data as JSON object.
-     * @param {string[]} permissions - An array of permissions strings. By default, only the current user is granted all permissions. [Learn more about permissions](https://appwrite.io/docs/permissions).
-     * @param {string} transactionId - Transaction ID for staging the operation.
+     * @param {string[] | null} permissions - An array of permissions strings. By default, only the current user is granted all permissions. [Learn more about permissions](https://appwrite.io/docs/permissions).
+     * @param {string | null} transactionId - Transaction ID for staging the operation.
      * @throws {AppwriteException}
      * @returns {Promise<Row>}
      * @deprecated Use the object parameter style method for a better developer experience.
@@ -620,8 +745,8 @@ export class TablesDB extends Service {
         data: Row extends Models.DefaultRow
             ? Partial<Models.Row> & Record<string, any>
             : Partial<Models.Row> & Omit<Row, keyof Models.Row>,
-        permissions?: string[],
-        transactionId?: string,
+        permissions?: string[] | null,
+        transactionId?: string | null,
     ): Promise<Row>;
     createRow<Row extends Models.Row = Models.DefaultRow>(
         paramsOrFirst:
@@ -632,8 +757,8 @@ export class TablesDB extends Service {
                   data: Row extends Models.DefaultRow
                       ? Partial<Models.Row> & Record<string, any>
                       : Partial<Models.Row> & Omit<Row, keyof Models.Row>;
-                  permissions?: string[];
-                  transactionId?: string;
+                  permissions?: string[] | null;
+                  transactionId?: string | null;
               }
             | string,
         ...rest: [
@@ -642,8 +767,8 @@ export class TablesDB extends Service {
             (Row extends Models.DefaultRow
                 ? Partial<Models.Row> & Record<string, any>
                 : Partial<Models.Row> & Omit<Row, keyof Models.Row>)?,
-            string[]?,
-            string?,
+            (string[] | null)?,
+            (string | null)?,
         ]
     ): Promise<Row> {
         let params: {
@@ -653,8 +778,8 @@ export class TablesDB extends Service {
             data: Row extends Models.DefaultRow
                 ? Partial<Models.Row> & Record<string, any>
                 : Partial<Models.Row> & Omit<Row, keyof Models.Row>;
-            permissions?: string[];
-            transactionId?: string;
+            permissions?: string[] | null;
+            transactionId?: string | null;
         };
 
         if (
@@ -669,8 +794,8 @@ export class TablesDB extends Service {
                 data: Row extends Models.DefaultRow
                     ? Partial<Models.Row> & Record<string, any>
                     : Partial<Models.Row> & Omit<Row, keyof Models.Row>;
-                permissions?: string[];
-                transactionId?: string;
+                permissions?: string[] | null;
+                transactionId?: string | null;
             };
         } else {
             params = {
@@ -680,8 +805,8 @@ export class TablesDB extends Service {
                 data: rest[2] as Row extends Models.DefaultRow
                     ? Partial<Models.Row> & Record<string, any>
                     : Partial<Models.Row> & Omit<Row, keyof Models.Row>,
-                permissions: rest[3] as string[],
-                transactionId: rest[4] as string,
+                permissions: rest[3] as string[] | null,
+                transactionId: rest[4] as string | null,
             };
         }
 
@@ -734,7 +859,7 @@ export class TablesDB extends Service {
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
-        return this.client.call(
+        const request = this.client.call(
             'post',
             uri,
             {
@@ -744,6 +869,24 @@ export class TablesDB extends Service {
             },
             apiPayload,
         );
+        const defaults = {
+            root: 'row',
+            models: {
+                row: {
+                    defaults: {
+                        $id: '',
+                        $sequence: '',
+                        $tableId: '',
+                        $databaseId: '',
+                        $createdAt: '',
+                        $updatedAt: '',
+                        $permissions: [],
+                    },
+                },
+            },
+        };
+
+        return request.then((response) => applyDefaults(response, defaults));
     }
 
     /**
@@ -862,7 +1005,7 @@ export class TablesDB extends Service {
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
-        return this.client.call(
+        const request = this.client.call(
             'get',
             uri,
             {
@@ -871,6 +1014,24 @@ export class TablesDB extends Service {
             },
             apiPayload,
         );
+        const defaults = {
+            root: 'row',
+            models: {
+                row: {
+                    defaults: {
+                        $id: '',
+                        $sequence: '',
+                        $tableId: '',
+                        $databaseId: '',
+                        $createdAt: '',
+                        $updatedAt: '',
+                        $permissions: [],
+                    },
+                },
+            },
+        };
+
+        return request.then((response) => applyDefaults(response, defaults));
     }
 
     /**
@@ -880,8 +1041,8 @@ export class TablesDB extends Service {
      * @param {string} params.tableId - Table ID.
      * @param {string} params.rowId - Row ID.
      * @param {Row extends Models.DefaultRow ? Partial<Models.Row> & Record<string, any> : Partial<Models.Row> & Partial<Omit<Row, keyof Models.Row>>} params.data - Row data as JSON object. Include all required columns of the row to be created or updated.
-     * @param {string[]} params.permissions - An array of permissions strings. By default, the current permissions are inherited. [Learn more about permissions](https://appwrite.io/docs/permissions).
-     * @param {string} params.transactionId - Transaction ID for staging the operation.
+     * @param {string[] | null} params.permissions - An array of permissions strings. By default, the current permissions are inherited. [Learn more about permissions](https://appwrite.io/docs/permissions).
+     * @param {string | null} params.transactionId - Transaction ID for staging the operation.
      * @throws {AppwriteException}
      * @returns {Promise}
      */
@@ -892,8 +1053,8 @@ export class TablesDB extends Service {
         data?: Row extends Models.DefaultRow
             ? Partial<Models.Row> & Record<string, any>
             : Partial<Models.Row> & Partial<Omit<Row, keyof Models.Row>>;
-        permissions?: string[];
-        transactionId?: string;
+        permissions?: string[] | null;
+        transactionId?: string | null;
     }): Promise<Row>;
     /**
      * Create or update a Row. Before using this route, you should create a new table resource using either a [server integration](https://appwrite.io/docs/references/cloud/server-dart/tablesDB#createTable) API or directly from your database console.
@@ -902,8 +1063,8 @@ export class TablesDB extends Service {
      * @param {string} tableId - Table ID.
      * @param {string} rowId - Row ID.
      * @param {Row extends Models.DefaultRow ? Partial<Models.Row> & Record<string, any> : Partial<Models.Row> & Partial<Omit<Row, keyof Models.Row>>} data - Row data as JSON object. Include all required columns of the row to be created or updated.
-     * @param {string[]} permissions - An array of permissions strings. By default, the current permissions are inherited. [Learn more about permissions](https://appwrite.io/docs/permissions).
-     * @param {string} transactionId - Transaction ID for staging the operation.
+     * @param {string[] | null} permissions - An array of permissions strings. By default, the current permissions are inherited. [Learn more about permissions](https://appwrite.io/docs/permissions).
+     * @param {string | null} transactionId - Transaction ID for staging the operation.
      * @throws {AppwriteException}
      * @returns {Promise<Row>}
      * @deprecated Use the object parameter style method for a better developer experience.
@@ -915,8 +1076,8 @@ export class TablesDB extends Service {
         data?: Row extends Models.DefaultRow
             ? Partial<Models.Row> & Record<string, any>
             : Partial<Models.Row> & Partial<Omit<Row, keyof Models.Row>>,
-        permissions?: string[],
-        transactionId?: string,
+        permissions?: string[] | null,
+        transactionId?: string | null,
     ): Promise<Row>;
     upsertRow<Row extends Models.Row = Models.DefaultRow>(
         paramsOrFirst:
@@ -928,8 +1089,8 @@ export class TablesDB extends Service {
                       ? Partial<Models.Row> & Record<string, any>
                       : Partial<Models.Row> &
                             Partial<Omit<Row, keyof Models.Row>>;
-                  permissions?: string[];
-                  transactionId?: string;
+                  permissions?: string[] | null;
+                  transactionId?: string | null;
               }
             | string,
         ...rest: [
@@ -938,8 +1099,8 @@ export class TablesDB extends Service {
             (Row extends Models.DefaultRow
                 ? Partial<Models.Row> & Record<string, any>
                 : Partial<Models.Row> & Partial<Omit<Row, keyof Models.Row>>)?,
-            string[]?,
-            string?,
+            (string[] | null)?,
+            (string | null)?,
         ]
     ): Promise<Row> {
         let params: {
@@ -949,8 +1110,8 @@ export class TablesDB extends Service {
             data?: Row extends Models.DefaultRow
                 ? Partial<Models.Row> & Record<string, any>
                 : Partial<Models.Row> & Partial<Omit<Row, keyof Models.Row>>;
-            permissions?: string[];
-            transactionId?: string;
+            permissions?: string[] | null;
+            transactionId?: string | null;
         };
 
         if (
@@ -966,8 +1127,8 @@ export class TablesDB extends Service {
                     ? Partial<Models.Row> & Record<string, any>
                     : Partial<Models.Row> &
                           Partial<Omit<Row, keyof Models.Row>>;
-                permissions?: string[];
-                transactionId?: string;
+                permissions?: string[] | null;
+                transactionId?: string | null;
             };
         } else {
             params = {
@@ -978,8 +1139,8 @@ export class TablesDB extends Service {
                     ? Partial<Models.Row> & Record<string, any>
                     : Partial<Models.Row> &
                           Partial<Omit<Row, keyof Models.Row>>,
-                permissions: rest[3] as string[],
-                transactionId: rest[4] as string,
+                permissions: rest[3] as string[] | null,
+                transactionId: rest[4] as string | null,
             };
         }
 
@@ -1025,7 +1186,7 @@ export class TablesDB extends Service {
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
-        return this.client.call(
+        const request = this.client.call(
             'put',
             uri,
             {
@@ -1035,6 +1196,24 @@ export class TablesDB extends Service {
             },
             apiPayload,
         );
+        const defaults = {
+            root: 'row',
+            models: {
+                row: {
+                    defaults: {
+                        $id: '',
+                        $sequence: '',
+                        $tableId: '',
+                        $databaseId: '',
+                        $createdAt: '',
+                        $updatedAt: '',
+                        $permissions: [],
+                    },
+                },
+            },
+        };
+
+        return request.then((response) => applyDefaults(response, defaults));
     }
 
     /**
@@ -1044,8 +1223,8 @@ export class TablesDB extends Service {
      * @param {string} params.tableId - Table ID.
      * @param {string} params.rowId - Row ID.
      * @param {Row extends Models.DefaultRow ? Partial<Models.Row> & Record<string, any> : Partial<Models.Row> & Partial<Omit<Row, keyof Models.Row>>} params.data - Row data as JSON object. Include only columns and value pairs to be updated.
-     * @param {string[]} params.permissions - An array of permissions strings. By default, the current permissions are inherited. [Learn more about permissions](https://appwrite.io/docs/permissions).
-     * @param {string} params.transactionId - Transaction ID for staging the operation.
+     * @param {string[] | null} params.permissions - An array of permissions strings. By default, the current permissions are inherited. [Learn more about permissions](https://appwrite.io/docs/permissions).
+     * @param {string | null} params.transactionId - Transaction ID for staging the operation.
      * @throws {AppwriteException}
      * @returns {Promise}
      */
@@ -1056,8 +1235,8 @@ export class TablesDB extends Service {
         data?: Row extends Models.DefaultRow
             ? Partial<Models.Row> & Record<string, any>
             : Partial<Models.Row> & Partial<Omit<Row, keyof Models.Row>>;
-        permissions?: string[];
-        transactionId?: string;
+        permissions?: string[] | null;
+        transactionId?: string | null;
     }): Promise<Row>;
     /**
      * Update a row by its unique ID. Using the patch method you can pass only specific fields that will get updated.
@@ -1066,8 +1245,8 @@ export class TablesDB extends Service {
      * @param {string} tableId - Table ID.
      * @param {string} rowId - Row ID.
      * @param {Row extends Models.DefaultRow ? Partial<Models.Row> & Record<string, any> : Partial<Models.Row> & Partial<Omit<Row, keyof Models.Row>>} data - Row data as JSON object. Include only columns and value pairs to be updated.
-     * @param {string[]} permissions - An array of permissions strings. By default, the current permissions are inherited. [Learn more about permissions](https://appwrite.io/docs/permissions).
-     * @param {string} transactionId - Transaction ID for staging the operation.
+     * @param {string[] | null} permissions - An array of permissions strings. By default, the current permissions are inherited. [Learn more about permissions](https://appwrite.io/docs/permissions).
+     * @param {string | null} transactionId - Transaction ID for staging the operation.
      * @throws {AppwriteException}
      * @returns {Promise<Row>}
      * @deprecated Use the object parameter style method for a better developer experience.
@@ -1079,8 +1258,8 @@ export class TablesDB extends Service {
         data?: Row extends Models.DefaultRow
             ? Partial<Models.Row> & Record<string, any>
             : Partial<Models.Row> & Partial<Omit<Row, keyof Models.Row>>,
-        permissions?: string[],
-        transactionId?: string,
+        permissions?: string[] | null,
+        transactionId?: string | null,
     ): Promise<Row>;
     updateRow<Row extends Models.Row = Models.DefaultRow>(
         paramsOrFirst:
@@ -1092,8 +1271,8 @@ export class TablesDB extends Service {
                       ? Partial<Models.Row> & Record<string, any>
                       : Partial<Models.Row> &
                             Partial<Omit<Row, keyof Models.Row>>;
-                  permissions?: string[];
-                  transactionId?: string;
+                  permissions?: string[] | null;
+                  transactionId?: string | null;
               }
             | string,
         ...rest: [
@@ -1102,8 +1281,8 @@ export class TablesDB extends Service {
             (Row extends Models.DefaultRow
                 ? Partial<Models.Row> & Record<string, any>
                 : Partial<Models.Row> & Partial<Omit<Row, keyof Models.Row>>)?,
-            string[]?,
-            string?,
+            (string[] | null)?,
+            (string | null)?,
         ]
     ): Promise<Row> {
         let params: {
@@ -1113,8 +1292,8 @@ export class TablesDB extends Service {
             data?: Row extends Models.DefaultRow
                 ? Partial<Models.Row> & Record<string, any>
                 : Partial<Models.Row> & Partial<Omit<Row, keyof Models.Row>>;
-            permissions?: string[];
-            transactionId?: string;
+            permissions?: string[] | null;
+            transactionId?: string | null;
         };
 
         if (
@@ -1130,8 +1309,8 @@ export class TablesDB extends Service {
                     ? Partial<Models.Row> & Record<string, any>
                     : Partial<Models.Row> &
                           Partial<Omit<Row, keyof Models.Row>>;
-                permissions?: string[];
-                transactionId?: string;
+                permissions?: string[] | null;
+                transactionId?: string | null;
             };
         } else {
             params = {
@@ -1142,8 +1321,8 @@ export class TablesDB extends Service {
                     ? Partial<Models.Row> & Record<string, any>
                     : Partial<Models.Row> &
                           Partial<Omit<Row, keyof Models.Row>>,
-                permissions: rest[3] as string[],
-                transactionId: rest[4] as string,
+                permissions: rest[3] as string[] | null,
+                transactionId: rest[4] as string | null,
             };
         }
 
@@ -1189,7 +1368,7 @@ export class TablesDB extends Service {
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
-        return this.client.call(
+        const request = this.client.call(
             'patch',
             uri,
             {
@@ -1199,6 +1378,24 @@ export class TablesDB extends Service {
             },
             apiPayload,
         );
+        const defaults = {
+            root: 'row',
+            models: {
+                row: {
+                    defaults: {
+                        $id: '',
+                        $sequence: '',
+                        $tableId: '',
+                        $databaseId: '',
+                        $createdAt: '',
+                        $updatedAt: '',
+                        $permissions: [],
+                    },
+                },
+            },
+        };
+
+        return request.then((response) => applyDefaults(response, defaults));
     }
 
     /**
@@ -1324,8 +1521,8 @@ export class TablesDB extends Service {
      * @param {string} params.rowId - Row ID.
      * @param {string} params.column - Column key.
      * @param {number} params.value - Value to increment the column by. The value must be a number.
-     * @param {number} params.min - Minimum value for the column. If the current value is lesser than this value, an exception will be thrown.
-     * @param {string} params.transactionId - Transaction ID for staging the operation.
+     * @param {number | null} params.min - Minimum value for the column. If the current value is lesser than this value, an exception will be thrown.
+     * @param {string | null} params.transactionId - Transaction ID for staging the operation.
      * @throws {AppwriteException}
      * @returns {Promise}
      */
@@ -1335,8 +1532,8 @@ export class TablesDB extends Service {
         rowId: string;
         column: string;
         value?: number;
-        min?: number;
-        transactionId?: string;
+        min?: number | null;
+        transactionId?: string | null;
     }): Promise<Row>;
     /**
      * Decrement a specific column of a row by a given value.
@@ -1346,8 +1543,8 @@ export class TablesDB extends Service {
      * @param {string} rowId - Row ID.
      * @param {string} column - Column key.
      * @param {number} value - Value to increment the column by. The value must be a number.
-     * @param {number} min - Minimum value for the column. If the current value is lesser than this value, an exception will be thrown.
-     * @param {string} transactionId - Transaction ID for staging the operation.
+     * @param {number | null} min - Minimum value for the column. If the current value is lesser than this value, an exception will be thrown.
+     * @param {string | null} transactionId - Transaction ID for staging the operation.
      * @throws {AppwriteException}
      * @returns {Promise<Row>}
      * @deprecated Use the object parameter style method for a better developer experience.
@@ -1358,8 +1555,8 @@ export class TablesDB extends Service {
         rowId: string,
         column: string,
         value?: number,
-        min?: number,
-        transactionId?: string,
+        min?: number | null,
+        transactionId?: string | null,
     ): Promise<Row>;
     decrementRowColumn<Row extends Models.Row = Models.DefaultRow>(
         paramsOrFirst:
@@ -1369,11 +1566,18 @@ export class TablesDB extends Service {
                   rowId: string;
                   column: string;
                   value?: number;
-                  min?: number;
-                  transactionId?: string;
+                  min?: number | null;
+                  transactionId?: string | null;
               }
             | string,
-        ...rest: [string?, string?, string?, number?, number?, string?]
+        ...rest: [
+            string?,
+            string?,
+            string?,
+            number?,
+            (number | null)?,
+            (string | null)?,
+        ]
     ): Promise<Row> {
         let params: {
             databaseId: string;
@@ -1381,8 +1585,8 @@ export class TablesDB extends Service {
             rowId: string;
             column: string;
             value?: number;
-            min?: number;
-            transactionId?: string;
+            min?: number | null;
+            transactionId?: string | null;
         };
 
         if (
@@ -1396,8 +1600,8 @@ export class TablesDB extends Service {
                 rowId: string;
                 column: string;
                 value?: number;
-                min?: number;
-                transactionId?: string;
+                min?: number | null;
+                transactionId?: string | null;
             };
         } else {
             params = {
@@ -1406,8 +1610,8 @@ export class TablesDB extends Service {
                 rowId: rest[1] as string,
                 column: rest[2] as string,
                 value: rest[3] as number,
-                min: rest[4] as number,
-                transactionId: rest[5] as string,
+                min: rest[4] as number | null,
+                transactionId: rest[5] as string | null,
             };
         }
 
@@ -1460,7 +1664,7 @@ export class TablesDB extends Service {
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
-        return this.client.call(
+        const request = this.client.call(
             'patch',
             uri,
             {
@@ -1470,6 +1674,24 @@ export class TablesDB extends Service {
             },
             apiPayload,
         );
+        const defaults = {
+            root: 'row',
+            models: {
+                row: {
+                    defaults: {
+                        $id: '',
+                        $sequence: '',
+                        $tableId: '',
+                        $databaseId: '',
+                        $createdAt: '',
+                        $updatedAt: '',
+                        $permissions: [],
+                    },
+                },
+            },
+        };
+
+        return request.then((response) => applyDefaults(response, defaults));
     }
 
     /**
@@ -1480,8 +1702,8 @@ export class TablesDB extends Service {
      * @param {string} params.rowId - Row ID.
      * @param {string} params.column - Column key.
      * @param {number} params.value - Value to increment the column by. The value must be a number.
-     * @param {number} params.max - Maximum value for the column. If the current value is greater than this value, an error will be thrown.
-     * @param {string} params.transactionId - Transaction ID for staging the operation.
+     * @param {number | null} params.max - Maximum value for the column. If the current value is greater than this value, an error will be thrown.
+     * @param {string | null} params.transactionId - Transaction ID for staging the operation.
      * @throws {AppwriteException}
      * @returns {Promise}
      */
@@ -1491,8 +1713,8 @@ export class TablesDB extends Service {
         rowId: string;
         column: string;
         value?: number;
-        max?: number;
-        transactionId?: string;
+        max?: number | null;
+        transactionId?: string | null;
     }): Promise<Row>;
     /**
      * Increment a specific column of a row by a given value.
@@ -1502,8 +1724,8 @@ export class TablesDB extends Service {
      * @param {string} rowId - Row ID.
      * @param {string} column - Column key.
      * @param {number} value - Value to increment the column by. The value must be a number.
-     * @param {number} max - Maximum value for the column. If the current value is greater than this value, an error will be thrown.
-     * @param {string} transactionId - Transaction ID for staging the operation.
+     * @param {number | null} max - Maximum value for the column. If the current value is greater than this value, an error will be thrown.
+     * @param {string | null} transactionId - Transaction ID for staging the operation.
      * @throws {AppwriteException}
      * @returns {Promise<Row>}
      * @deprecated Use the object parameter style method for a better developer experience.
@@ -1514,8 +1736,8 @@ export class TablesDB extends Service {
         rowId: string,
         column: string,
         value?: number,
-        max?: number,
-        transactionId?: string,
+        max?: number | null,
+        transactionId?: string | null,
     ): Promise<Row>;
     incrementRowColumn<Row extends Models.Row = Models.DefaultRow>(
         paramsOrFirst:
@@ -1525,11 +1747,18 @@ export class TablesDB extends Service {
                   rowId: string;
                   column: string;
                   value?: number;
-                  max?: number;
-                  transactionId?: string;
+                  max?: number | null;
+                  transactionId?: string | null;
               }
             | string,
-        ...rest: [string?, string?, string?, number?, number?, string?]
+        ...rest: [
+            string?,
+            string?,
+            string?,
+            number?,
+            (number | null)?,
+            (string | null)?,
+        ]
     ): Promise<Row> {
         let params: {
             databaseId: string;
@@ -1537,8 +1766,8 @@ export class TablesDB extends Service {
             rowId: string;
             column: string;
             value?: number;
-            max?: number;
-            transactionId?: string;
+            max?: number | null;
+            transactionId?: string | null;
         };
 
         if (
@@ -1552,8 +1781,8 @@ export class TablesDB extends Service {
                 rowId: string;
                 column: string;
                 value?: number;
-                max?: number;
-                transactionId?: string;
+                max?: number | null;
+                transactionId?: string | null;
             };
         } else {
             params = {
@@ -1562,8 +1791,8 @@ export class TablesDB extends Service {
                 rowId: rest[1] as string,
                 column: rest[2] as string,
                 value: rest[3] as number,
-                max: rest[4] as number,
-                transactionId: rest[5] as string,
+                max: rest[4] as number | null,
+                transactionId: rest[5] as string | null,
             };
         }
 
@@ -1616,7 +1845,7 @@ export class TablesDB extends Service {
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
-        return this.client.call(
+        const request = this.client.call(
             'patch',
             uri,
             {
@@ -1626,5 +1855,23 @@ export class TablesDB extends Service {
             },
             apiPayload,
         );
+        const defaults = {
+            root: 'row',
+            models: {
+                row: {
+                    defaults: {
+                        $id: '',
+                        $sequence: '',
+                        $tableId: '',
+                        $databaseId: '',
+                        $createdAt: '',
+                        $updatedAt: '',
+                        $permissions: [],
+                    },
+                },
+            },
+        };
+
+        return request.then((response) => applyDefaults(response, defaults));
     }
 }
