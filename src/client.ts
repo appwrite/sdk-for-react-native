@@ -1,7 +1,7 @@
 import { Models } from './models';
 import { Service } from './service';
 import { Platform } from 'react-native';
-import { Query } from './query';
+import { Query, flattenParam } from './query';
 import JSONbigModule from 'json-bigint';
 const JSONbigParser = JSONbigModule({ storeAsString: false });
 const JSONbigSerializer = JSONbigModule({ useNativeBigInt: true });
@@ -44,6 +44,79 @@ export const JSONbig = {
     parse: (text: string) => JSONbigParser.parse(text, reviver),
     stringify: JSONbigSerializer.stringify,
 };
+
+type DefaultsShape = string | { items: DefaultsShape };
+
+type DefaultsModel = {
+    defaults?: Record<string, unknown>;
+    properties?: Record<string, DefaultsShape>;
+};
+
+type Defaults = {
+    root: DefaultsShape;
+    models: Record<string, DefaultsModel>;
+};
+
+export function applyDefaults<T>(value: T, tree: Defaults): T {
+    return fillDefaults(value, tree.root, tree.models) as T;
+}
+
+function cloneDefault(value: unknown): unknown {
+    if (Array.isArray(value)) {
+        return value.map(cloneDefault);
+    }
+    if (typeof value === 'object' && value !== null) {
+        const copy: Record<string, unknown> = {};
+        for (const [key, member] of Object.entries(value)) {
+            copy[key] = cloneDefault(member);
+        }
+        return copy;
+    }
+    return value;
+}
+
+function fillDefaults(
+    value: unknown,
+    shape: DefaultsShape,
+    models: Record<string, DefaultsModel>,
+): unknown {
+    if (typeof shape !== 'string') {
+        if (!Array.isArray(value)) {
+            return value;
+        }
+        const items = shape.items;
+        return value.map((item) => fillDefaults(item, items, models));
+    }
+    const model = models[shape];
+    if (!model || typeof value !== 'object' || value === null) {
+        return value;
+    }
+    if (Array.isArray(value)) {
+        return value;
+    }
+    const result: Record<string, unknown> = { ...model.defaults, ...value };
+    // Each item gets its own copy of a filled-in list or object, so mutating one doesn't change the rest
+    for (const key of Object.keys(model.defaults ?? {})) {
+        if (!Object.prototype.hasOwnProperty.call(value, key)) {
+            result[key] = cloneDefault(result[key]);
+        }
+    }
+    for (const [key, child] of Object.entries(model.properties ?? {})) {
+        if (key in result) {
+            result[key] = fillDefaults(result[key], child, models);
+        }
+    }
+    // The spread drops the non-enumerable JSON toString that Client.call attaches.
+    if (Object.prototype.hasOwnProperty.call(value, 'toString')) {
+        Object.defineProperty(result, 'toString', {
+            value: () => JSONbig.stringify(result),
+            writable: true,
+            enumerable: false,
+            configurable: true,
+        });
+    }
+    return result;
+}
 
 type Payload = {
     [key: string]: any;
@@ -218,8 +291,8 @@ class Client {
         'x-sdk-name': 'React Native',
         'x-sdk-platform': 'client',
         'x-sdk-language': 'reactnative',
-        'x-sdk-version': '1.2.0-rc.4',
-        'X-Appwrite-Response-Format': '2.3.0',
+        'x-sdk-version': '2.0.0',
+        'X-Appwrite-Response-Format': '2.5.0',
     };
 
     /**
@@ -836,6 +909,10 @@ class Client {
         responseType = 'json',
     ): Promise<any> {
         method = method.toUpperCase();
+
+        for (const key of Object.keys(params)) {
+            params[key] = flattenParam(params[key]);
+        }
 
         headers = Object.assign({}, this.headers, headers);
         headers.Origin = `appwrite-${Platform.OS}://${this.config.platform}`;

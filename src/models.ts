@@ -338,7 +338,7 @@ export namespace Models {
         /**
          * Presence status.
          */
-        status?: string;
+        status?: string | null;
         /**
          * Presence source.
          */
@@ -346,7 +346,7 @@ export namespace Models {
         /**
          * Presence expiry date in ISO 8601 format.
          */
-        expiresAt?: string;
+        expiresAt?: string | null;
         /**
          * Presence metadata.
          */
@@ -378,15 +378,15 @@ export namespace Models {
         /**
          * Hashed user password.
          */
-        password?: string;
+        password?: string | null;
         /**
          * Password hashing algorithm.
          */
-        hash?: string;
+        hash?: string | null;
         /**
          * Password hashing algorithm configuration.
          */
-        hashOptions?: object;
+        hashOptions?: object | null;
         /**
          * User registration date in ISO 8601 format.
          */
@@ -418,27 +418,27 @@ export namespace Models {
         /**
          * Canonical form of the user email address.
          */
-        emailCanonical?: string;
+        emailCanonical?: string | null;
         /**
          * Whether the user email is from a free email provider.
          */
-        emailIsFree?: boolean;
+        emailIsFree?: boolean | null;
         /**
          * Whether the user email is from a disposable email provider.
          */
-        emailIsDisposable?: boolean;
+        emailIsDisposable?: boolean | null;
         /**
          * Whether the user email is from a corporate domain.
          */
-        emailIsCorporate?: boolean;
+        emailIsCorporate?: boolean | null;
         /**
          * Whether the user email is in its canonical form.
          */
-        emailIsCanonical?: boolean;
+        emailIsCanonical?: boolean | null;
         /**
          * Whether the password was found in a known data breach the last time it was checked. Null when the password has never been checked.
          */
-        passwordPwned?: boolean;
+        passwordPwned?: boolean | null;
         /**
          * Phone verification status.
          */
@@ -462,11 +462,11 @@ export namespace Models {
         /**
          * Whether the user can impersonate other users.
          */
-        impersonator?: boolean;
+        impersonator?: boolean | null;
         /**
          * ID of the original actor performing the impersonation. Present only when the current request is impersonating another user. Internal audit logs attribute the action to this user, while the impersonated target is recorded only in internal audit payload data.
          */
-        impersonatorUserId?: string;
+        impersonatorUserId?: string | null;
     };
 
     /**
@@ -632,27 +632,27 @@ export namespace Models {
         /**
          * Canonical form of the user email address.
          */
-        emailCanonical?: string;
+        emailCanonical?: string | null;
         /**
          * Whether the user email is from a free email provider.
          */
-        emailIsFree?: boolean;
+        emailIsFree?: boolean | null;
         /**
          * Whether the user email is from a disposable email provider.
          */
-        emailIsDisposable?: boolean;
+        emailIsDisposable?: boolean | null;
         /**
          * Whether the user email is from a corporate domain.
          */
-        emailIsCorporate?: boolean;
+        emailIsCorporate?: boolean | null;
         /**
          * Whether the user email is in its canonical form.
          */
-        emailIsCanonical?: boolean;
+        emailIsCanonical?: boolean | null;
         /**
          * Whether the password was found in a known data breach the last time it was checked. Null when the password has never been checked.
          */
-        passwordPwned?: boolean;
+        passwordPwned?: boolean | null;
         /**
          * Phone verification status.
          */
@@ -676,11 +676,11 @@ export namespace Models {
         /**
          * Whether the user can impersonate other users.
          */
-        impersonator?: boolean;
+        impersonator?: boolean | null;
         /**
          * ID of the original actor performing the impersonation. Present only when the current request is impersonating another user. Internal audit logs attribute the action to this user, while the impersonated target is recorded only in internal audit payload data.
          */
-        impersonatorUserId?: string;
+        impersonatorUserId?: string | null;
     };
 
     /**
@@ -940,47 +940,47 @@ export namespace Models {
         /**
          * City
          */
-        city?: string;
+        city?: string | null;
         /**
          * Name of timezone
          */
-        timeZone?: string;
+        timeZone?: string | null;
         /**
          * Postal code
          */
-        postalCode?: string;
+        postalCode?: string | null;
         /**
          * Latitude
          */
-        latitude?: number;
+        latitude?: number | null;
         /**
          * Longitude
          */
-        longitude?: number;
+        longitude?: number | null;
         /**
          * Autonomous System Number (ASN) of the IP
          */
-        autonomousSystemNumber?: string;
+        autonomousSystemNumber?: string | null;
         /**
          * Organization that owns the ASN
          */
-        autonomousSystemOrganization?: string;
+        autonomousSystemOrganization?: string | null;
         /**
          * Internet service provider of the IP
          */
-        isp?: string;
+        isp?: string | null;
         /**
          * Connection type of the IP (e.g. cable, cellular, corporate)
          */
-        connectionType?: string;
+        connectionType?: string | null;
         /**
          * User type classification of the IP (e.g. residential, business, hosting)
          */
-        connectionUsageType?: string;
+        connectionUsageType?: string | null;
         /**
          * Registered organization of the IP
          */
-        connectionOrganization?: string;
+        connectionOrganization?: string | null;
     };
 
     /**
@@ -1198,7 +1198,7 @@ export namespace Models {
          */
         deploymentId: string;
         /**
-         * The trigger that caused the resource to execute. Possible values can be: `http`, `schedule`, or `event`.
+         * The trigger that caused the resource to execute. Possible values can be: `http`, `schedule`, `event`, or `email`.
          */
         trigger: ExecutionTrigger;
         /**
@@ -1244,7 +1244,7 @@ export namespace Models {
         /**
          * The scheduled time for execution. If left empty, execution will be queued immediately.
          */
-        scheduledAt?: string;
+        scheduledAt?: string | null;
     };
 
     /**
@@ -1379,6 +1379,102 @@ export namespace Models {
          * Token expiration date in ISO 8601 format.
          */
         expire: string;
+    };
+
+    /**
+     * Token Secret
+     */
+    export type TokenSecret = {
+        /**
+         * Token ID.
+         */
+        $id: string;
+        /**
+         * Token creation date in ISO 8601 format.
+         */
+        $createdAt: string;
+        /**
+         * User ID.
+         */
+        userId: string;
+        /**
+         * Token secret key. Exchange it for a session with the create session endpoint.
+         */
+        secret: string;
+        /**
+         * Token expiration date in ISO 8601 format.
+         */
+        expire: string;
+        /**
+         * Security phrase of a token. Empty if security phrase was not requested when creating a token. It includes randomly generated phrase which is also sent in the external resource such as email.
+         */
+        phrase: string;
+    };
+
+    /**
+     * Passkey
+     */
+    export type Passkey = {
+        /**
+         * Passkey ID.
+         */
+        $id: string;
+        /**
+         * Passkey creation date in ISO 8601 format.
+         */
+        $createdAt: string;
+        /**
+         * Passkey update date in ISO 8601 format.
+         */
+        $updatedAt: string;
+        /**
+         * Passkey name.
+         */
+        name: string;
+        /**
+         * Most recent sign-in with this passkey in ISO 8601 format. Empty until the passkey is used to sign in.
+         */
+        accessedAt: string;
+    };
+
+    /**
+     * Passkey Challenge
+     */
+    export type PasskeyChallenge = {
+        /**
+         * Challenge ID. When signing in, pass it back with the credential to receive a token.
+         */
+        $id: string;
+        /**
+         * Challenge creation date in ISO 8601 format.
+         */
+        $createdAt: string;
+        /**
+         * ID of the passkey being registered. Empty for sign-in challenges.
+         */
+        passkeyId: string;
+        /**
+         * Challenge expiration date in ISO 8601 format.
+         */
+        expire: string;
+        /**
+         * WebAuthn options in JSON form. Pass them to `PublicKeyCredential.parseCreationOptionsFromJSON()` when registering, or `PublicKeyCredential.parseRequestOptionsFromJSON()` when signing in.
+         */
+        publicKey: object;
+    };
+
+    /**
+     * Passkeys List
+     */
+    export type PasskeyList = {
+        /**
+         * Total number of passkeys that matched your query.
+         */
+        total: number;
+        /**
+         * List of passkeys.
+         */
+        passkeys: Passkey[];
     };
 
     /**
@@ -1530,7 +1626,7 @@ export namespace Models {
         /**
          * Provider ID.
          */
-        providerId?: string;
+        providerId?: string | null;
         /**
          * The target provider type. Can be one of the following: `email`, `sms` or `push`.
          */
@@ -1694,7 +1790,7 @@ export namespace Models {
         /**
          * Time the secret was last used for authentication in ISO 8601 format. Null if never used.
          */
-        lastAccessedAt?: string;
+        lastAccessedAt?: string | null;
     };
 
     /**
@@ -1736,7 +1832,7 @@ export namespace Models {
         /**
          * Time the secret was last used for authentication in ISO 8601 format. Null if never used.
          */
-        lastAccessedAt?: string;
+        lastAccessedAt?: string | null;
     };
 
     /**
@@ -1808,7 +1904,7 @@ export namespace Models {
         /**
          * Time an access token was last issued for the installation in ISO 8601 format. Null if never used.
          */
-        lastAccessedAt?: string;
+        lastAccessedAt?: string | null;
     };
 
     /**
@@ -1850,7 +1946,7 @@ export namespace Models {
         /**
          * Time the app key was last used for authentication in ISO 8601 format. Null if never used.
          */
-        lastAccessedAt?: string;
+        lastAccessedAt?: string | null;
     };
 
     /**
@@ -2012,11 +2108,11 @@ export namespace Models {
         /**
          * Granted RFC 9396 authorization details as a JSON string.
          */
-        authorization_details?: string;
+        authorization_details?: string | null;
         /**
          * OpenID Connect ID token. Returned when the `openid` scope is granted.
          */
-        id_token?: string;
+        id_token?: string | null;
     };
 
     /**

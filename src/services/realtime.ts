@@ -1,11 +1,12 @@
 import { AppwriteException, Client, JSONbig } from '../client';
 import { Channel, ActionableChannel, ResolvedChannel } from '../channel';
-import { Query } from '../query';
+import { normalizeQueries, type QueryInput } from '../query';
 import { ID } from '../id';
 import { Platform } from 'react-native';
+
 export type RealtimeSubscriptionUpdate = {
     channels?: (string | Channel<any> | ActionableChannel | ResolvedChannel)[];
-    queries?: (string | Query)[];
+    queries?: QueryInput;
 };
 
 export type RealtimeSubscription = {
@@ -212,6 +213,7 @@ export class Realtime {
         const queryParams = `project=${projectId}`;
 
         const jwt = this.client.config.jwt;
+
         const endpoint =
             this.client.config.endpointRealtime !== ''
                 ? this.client.config.endpointRealtime
@@ -256,6 +258,7 @@ export class Realtime {
                                   ...(jwt ? { 'x-appwrite-jwt': jwt } : {}),
                               },
                           }));
+
                 socket.addEventListener('open', () => {
                     if (connectionId !== this.connectionId) {
                         return;
@@ -511,7 +514,7 @@ export class Realtime {
     public async subscribe(
         channel: string | Channel<any> | ActionableChannel | ResolvedChannel,
         callback: (event: RealtimeResponseEvent<any>) => void,
-        queries?: (string | Query)[],
+        queries?: QueryInput,
     ): Promise<RealtimeSubscription>;
 
     /**
@@ -526,7 +529,7 @@ export class Realtime {
             string | Channel<any> | ActionableChannel | ResolvedChannel
         )[],
         callback: (event: RealtimeResponseEvent<any>) => void,
-        queries?: (string | Query)[],
+        queries?: QueryInput,
     ): Promise<RealtimeSubscription>;
 
     /**
@@ -539,7 +542,7 @@ export class Realtime {
     public async subscribe<T>(
         channel: string | Channel<any> | ActionableChannel | ResolvedChannel,
         callback: (event: RealtimeResponseEvent<T>) => void,
-        queries?: (string | Query)[],
+        queries?: QueryInput,
     ): Promise<RealtimeSubscription>;
 
     /**
@@ -554,7 +557,7 @@ export class Realtime {
             string | Channel<any> | ActionableChannel | ResolvedChannel
         )[],
         callback: (event: RealtimeResponseEvent<T>) => void,
-        queries?: (string | Query)[],
+        queries?: QueryInput,
     ): Promise<RealtimeSubscription>;
 
     public async subscribe<T = any>(
@@ -565,7 +568,7 @@ export class Realtime {
             | ResolvedChannel
             | (string | Channel<any> | ActionableChannel | ResolvedChannel)[],
         callback: (event: RealtimeResponseEvent<T>) => void,
-        queries: (string | Query)[] = [],
+        queries: QueryInput = [],
     ): Promise<RealtimeSubscription> {
         const channelArray = Array.isArray(channelsOrChannel)
             ? channelsOrChannel
@@ -577,21 +580,7 @@ export class Realtime {
         );
         const channels = new Set(channelStrings);
 
-        // Convert queries to array of strings
-        // Ensure each query is a separate string in the array
-        const queryStrings: string[] = [];
-        for (const q of queries ?? []) {
-            if (Array.isArray(q)) {
-                // Handle nested arrays: [[q1, q2]] -> [q1, q2]
-                for (const inner of q) {
-                    queryStrings.push(
-                        typeof inner === 'string' ? inner : inner.toString(),
-                    );
-                }
-            } else {
-                queryStrings.push(typeof q === 'string' ? q : q.toString());
-            }
-        }
+        const queryStrings = normalizeQueries(queries);
 
         const subscriptionId = this.generateUniqueSubscriptionId();
 
@@ -642,23 +631,7 @@ export class Realtime {
             }
 
             if (changes.queries !== undefined) {
-                const nextQueries: string[] = [];
-                for (const q of changes.queries) {
-                    if (Array.isArray(q)) {
-                        for (const inner of q) {
-                            nextQueries.push(
-                                typeof inner === 'string'
-                                    ? inner
-                                    : (inner as Query).toString(),
-                            );
-                        }
-                    } else {
-                        nextQueries.push(
-                            typeof q === 'string' ? q : q.toString(),
-                        );
-                    }
-                }
-                subscription.queries = nextQueries;
+                subscription.queries = normalizeQueries(changes.queries);
             }
 
             this.enqueuePendingSubscribe(subscriptionId);

@@ -1,12 +1,12 @@
 # Appwrite React Native SDK
 
 ![License](https://img.shields.io/github/license/appwrite/sdk-for-react-native.svg?style=flat-square)
-![Version](https://img.shields.io/badge/api%20version-2.3.0-blue.svg?style=flat-square)
+![Version](https://img.shields.io/badge/api%20version-2.5.0-blue.svg?style=flat-square)
 [![Build Status](https://img.shields.io/travis/com/appwrite/sdk-generator?style=flat-square)](https://travis-ci.com/appwrite/sdk-generator)
 [![Twitter Account](https://img.shields.io/twitter/follow/appwrite?color=00acee&label=twitter&style=flat-square)](https://twitter.com/appwrite)
 [![Discord](https://img.shields.io/discord/564160730845151244?label=discord&style=flat-square)](https://appwrite.io/discord)
 
-**This SDK targets Appwrite server version 2.3.x as shipped on Appwrite Cloud.** Self-hosted releases can lag behind Cloud — if you run an older self-hosted build, use a matching older SDK from [previous releases](https://github.com/appwrite/sdk-for-react-native/releases) when APIs differ.
+**This SDK targets Appwrite server version 2.5.x as shipped on Appwrite Cloud.** Self-hosted releases can lag behind Cloud — if you run an older self-hosted build, use a matching older SDK from [previous releases](https://github.com/appwrite/sdk-for-react-native/releases) when APIs differ.
 
 Appwrite is an open-source backend as a service server that abstracts and simplifies complex and repetitive development tasks behind a very simple to use REST API. Appwrite aims to help you develop your apps faster and in a more secure way. Use the React Native SDK to integrate your app with the Appwrite server to easily start interacting with all of Appwrite backend APIs and tools. For full API documentation and tutorials go to [https://appwrite.io/docs](https://appwrite.io/docs)
 
@@ -45,7 +45,9 @@ than a short-lived JWT.
 On Android 13 and later, the first background subscription asks the user for the
 `POST_NOTIFICATIONS` runtime permission. If they decline, the subscription still delivers to your
 callback but posts no notification. Notifications show the title, body and image sent with
-`createPush`, and fall back to the subscription's `title` and the raw payload for other messages.
+`createPush`, falling back to the subscription's `title` when only a body is sent. A push with no
+title or body, such as a data-only push, posts no notification and reaches only your callback.
+Messages that are not a JSON object show the subscription's `title` with the raw payload as the body.
 
 ```js
 const sub = await push.subscribe('news', (message) => console.log(message.data), {
@@ -93,17 +95,26 @@ With Expo, list them under `android.permissions` in `app.json` instead.
    nothing to ask, including when the permission is not declared. The SDK never opens these
    screens on its own.
 
+If `backgroundRestricted` is true, the user restricted the app's background usage and messages can
+wait until the app is opened. Exact alarms don't lift it, and neither does foreground mode: Android
+stops a restricted app's foreground service once it leaves the screen. Ask the user to choose
+Unrestricted in the app's battery settings (Settings > Apps > your app > Battery); granting the
+battery optimisation exemption also lets the SDK's alarms and jobs run, and `bestEffort` then
+reflects only the exact-alarm state. It is always false below Android 9.
+
 If the user force-stops the app (Settings > Force stop, and on some devices swiping it away from
 recents), Android cancels its alarms and jobs: nothing is delivered until the app is opened
 again, and the broker then replays what was sent meanwhile.
 
 Set the notification icon with
-`<meta-data android:name="io.appwrite.push.notification_icon" android:resource="@drawable/..." />` in your
+`<meta-data android:name="io.appwrite.reactnative.push.notification_icon" android:resource="@drawable/..." />` in your
 `<application>`; without it a generic icon is used.
 
 ```js
 const status = await push.backgroundStatus(); // null outside Android
-if (status?.bestEffort) {
+if (status?.backgroundRestricted && !status.ignoringBatteryOptimizations) {
+    // Ask the user to choose Unrestricted in the app's battery settings.
+} else if (status?.bestEffort) {
     // Explain why, then from a button press:
     await push.requestExactAlarms();
 }
@@ -140,7 +151,7 @@ On Android the SDK's native module reports the taps. Elsewhere they come from `e
 
 Foreground mode runs a `remoteMessaging` foreground service, which Google Play asks apps to
 declare in the Play Console. Apps that never enable it can remove the service from their merged
-manifest with `tools:node="remove"` on `io.appwrite.services.PushService` and
+manifest with `tools:node="remove"` on `io.appwrite.reactnative.services.PushService` and
 `android.permission.FOREGROUND_SERVICE_REMOTE_MESSAGING`.
 
 
@@ -194,7 +205,12 @@ Once your SDK object is set, access any of the Appwrite services and choose any 
 const account = new Account(client);
 
 // Register User
-account.create(ID.unique(), 'me@example.com', 'password', 'Jane Doe')
+account.create({
+    userId: ID.unique(),
+    email: 'me@example.com',
+    password: 'password',
+    name: 'Jane Doe'
+})
     .then(function (response) {
         console.log(response);
     }, function (error) {
@@ -206,7 +222,7 @@ account.create(ID.unique(), 'me@example.com', 'password', 'Jane Doe')
 ### Full Example
 
 ```js
-import { Client, Account } from 'react-native-appwrite';
+import { Client, Account, ID } from 'react-native-appwrite';
 // Init your React Native SDK
 const client = new Client();
 
@@ -219,7 +235,12 @@ client
 const account = new Account(client);
 
 // Register User
-account.create(ID.unique(), 'me@example.com', 'password', 'Jane Doe')
+account.create({
+    userId: ID.unique(),
+    email: 'me@example.com',
+    password: 'password',
+    name: 'Jane Doe'
+})
     .then(function (response) {
         console.log(response);
     }, function (error) {
@@ -229,11 +250,11 @@ account.create(ID.unique(), 'me@example.com', 'password', 'Jane Doe')
 
 ### Type Safety with Models
 
-The Appwrite React Native SDK provides type safety when working with database documents through generic methods. Methods like `listDocuments`, `getDocument`, and others accept a generic type parameter that allows you to specify your custom model type for full type safety.
+The Appwrite React Native SDK provides type safety when working with table rows through generic methods. Methods like `listRows`, `getRow`, and others accept a generic type parameter that allows you to specify your custom model type for full type safety.
 
 **TypeScript:**
 ```typescript
-interface Book {
+interface Book extends Models.Row {
     name: string;
     author: string;
     releaseYear?: string;
@@ -242,15 +263,15 @@ interface Book {
     isCheckedOut: boolean;
 }
 
-const databases = new Databases(client);
+const tablesDB = new TablesDB(client);
 
 try {
-    const documents = await databases.listDocuments<Book>(
-        'your-database-id',
-        'your-collection-id'
-    );
+    const result = await tablesDB.listRows<Book>({
+        databaseId: 'your-database-id',
+        tableId: 'your-table-id'
+    });
     
-    documents.documents.forEach(book => {
+    result.rows.forEach(book => {
         console.log(`Book: ${book.name} by ${book.author}`); // Now you have full type safety
     });
 } catch (error) {
@@ -270,16 +291,16 @@ try {
  * @property {boolean} isCheckedOut
  */
 
-const databases = new Databases(client);
+const tablesDB = new TablesDB(client);
 
 try {
-    /** @type {Models.DocumentList<Book>} */
-    const documents = await databases.listDocuments(
-        'your-database-id',
-        'your-collection-id'
-    );
+    /** @type {Models.RowList<Book>} */
+    const result = await tablesDB.listRows({
+        databaseId: 'your-database-id',
+        tableId: 'your-table-id'
+    });
     
-    documents.documents.forEach(book => {
+    result.rows.forEach(book => {
         console.log(`Book: ${book.name} by ${book.author}`); // Type hints available in IDE
     });
 } catch (error) {
@@ -295,7 +316,12 @@ The Appwrite React Native SDK raises an `AppwriteException` object with `message
 
 ```javascript
 try {
-    const user = await account.create(ID.unique(), "email@example.com", "password", "Walter O'Brien");
+    const user = await account.create({
+    userId: ID.unique(),
+    email: "email@example.com",
+    password: "password",
+    name: "Walter O'Brien"
+});
     console.log('User created:', user);
 } catch (error) {
     console.error('Appwrite error:', error.message);
