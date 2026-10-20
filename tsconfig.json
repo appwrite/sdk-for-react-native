@@ -9,7 +9,7 @@
         "lib": ["ESNext", "DOM"],
         "listEmittedFiles": false,
         "listFiles": false,
-        "moduleResolution": "node",
+        "moduleResolution": "bundler",
         "noFallthroughCasesInSwitch": true,
         "pretty": true,
         "rootDir": "src",
