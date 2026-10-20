@@ -1160,6 +1160,117 @@ export class Account extends Service {
     }
 
     /**
+     * Get the team memberships of the currently logged in user.
+     *
+     * @param {string[]} params.queries - Array of query strings generated using the Query class provided by the SDK. [Learn more about queries](https://appwrite.io/docs/queries). Maximum of 100 queries are allowed, each 4096 characters long. You may filter on the following attributes: userId, teamId, invited, joined, confirm, roles
+     * @param {boolean} params.total - When set to false, the total count returned will be 0 and will not be calculated.
+     * @throws {AppwriteException}
+     * @returns {Promise}
+     */
+    listMemberships(params?: {
+        queries?: string[];
+        total?: boolean;
+    }): Promise<Models.MembershipList>;
+    /**
+     * Get the team memberships of the currently logged in user.
+     *
+     * @param {string[]} queries - Array of query strings generated using the Query class provided by the SDK. [Learn more about queries](https://appwrite.io/docs/queries). Maximum of 100 queries are allowed, each 4096 characters long. You may filter on the following attributes: userId, teamId, invited, joined, confirm, roles
+     * @param {boolean} total - When set to false, the total count returned will be 0 and will not be calculated.
+     * @throws {AppwriteException}
+     * @returns {Promise<Models.MembershipList>}
+     * @deprecated Use the object parameter style method for a better developer experience.
+     */
+    listMemberships(
+        queries?: string[],
+        total?: boolean,
+    ): Promise<Models.MembershipList>;
+    listMemberships(
+        paramsOrFirst?: { queries?: string[]; total?: boolean } | string[],
+        ...rest: [boolean?]
+    ): Promise<Models.MembershipList> {
+        let params: { queries?: string[]; total?: boolean };
+
+        if (
+            (typeof paramsOrFirst === 'undefined' && rest.length === 0) ||
+            (paramsOrFirst &&
+                typeof paramsOrFirst === 'object' &&
+                !Array.isArray(paramsOrFirst))
+        ) {
+            params = (paramsOrFirst || {}) as {
+                queries?: string[];
+                total?: boolean;
+            };
+        } else {
+            params = {
+                queries: paramsOrFirst as string[],
+                total: rest[0] as boolean,
+            };
+        }
+
+        const queries = params.queries;
+        const total = params.total;
+
+        const apiPath = '/account/memberships';
+        const apiPayload: Payload = {};
+
+        if (typeof queries !== 'undefined') {
+            apiPayload['queries'] = queries;
+        }
+
+        if (typeof total !== 'undefined') {
+            apiPayload['total'] = total;
+        }
+
+        const uri = new URL(this.client.config.endpoint + apiPath);
+        const request = this.client.call(
+            'get',
+            uri,
+            {
+                'X-Appwrite-Project': this.client.config.project,
+                accept: 'application/json',
+            },
+            apiPayload,
+        );
+        const defaults = {
+            root: 'membershipList',
+            models: {
+                membershipList: {
+                    defaults: {
+                        total: 0,
+                        memberships: [],
+                    },
+                    properties: {
+                        memberships: {
+                            items: 'membership',
+                        },
+                    },
+                },
+                membership: {
+                    defaults: {
+                        $id: '',
+                        $createdAt: '',
+                        $updatedAt: '',
+                        userId: '',
+                        userName: '',
+                        userEmail: '',
+                        userPhone: '',
+                        teamId: '',
+                        teamName: '',
+                        invited: '',
+                        joined: '',
+                        confirm: false,
+                        mfa: false,
+                        userAccessedAt: '',
+                        roles: [],
+                    },
+                },
+            },
+        };
+
+        return request.then((response) => applyDefaults(response, defaults));
+    }
+
+    /**
      * Enable or disable MFA on an account.
      *
      * @param {boolean} params.mfa - Enable or disable MFA.
@@ -3623,6 +3734,9 @@ export class Account extends Service {
      *
      * Please note that in order to avoid a [Redirect Attack](https://github.com/OWASP/CheatSheetSeries/blob/master/cheatsheets/Unvalidated_Redirects_and_Forwards_Cheat_Sheet.md) the only valid redirect URLs are the ones from domains you have set when adding your platforms in the console interface.
      *
+     * The new password must satisfy the project's enabled password policies, including custom deny lists. Dictionary entries match the entire password case-sensitively; personal-data terms match substrings case-insensitively. Personal-data validation runs after token verification against the recovered user's ID, name, email, and phone, closing the previous recovery gap for profile-based checks. A rejected password leaves the existing credentials unchanged and the recovery token usable.
+     *
+     *
      * @param {string} params.userId - User ID.
      * @param {string} params.secret - Valid reset token.
      * @param {string} params.password - New user password. Must be between 8 and 256 chars.
@@ -3638,6 +3752,9 @@ export class Account extends Service {
      * Use this endpoint to complete the user account password reset. Both the **userId** and **secret** arguments will be passed as query parameters to the redirect URL you have provided when sending your request to the [POST /account/recovery](https://appwrite.io/docs/references/cloud/client-web/account#createRecovery) endpoint.
      *
      * Please note that in order to avoid a [Redirect Attack](https://github.com/OWASP/CheatSheetSeries/blob/master/cheatsheets/Unvalidated_Redirects_and_Forwards_Cheat_Sheet.md) the only valid redirect URLs are the ones from domains you have set when adding your platforms in the console interface.
+     *
+     * The new password must satisfy the project's enabled password policies, including custom deny lists. Dictionary entries match the entire password case-sensitively; personal-data terms match substrings case-insensitively. Personal-data validation runs after token verification against the recovered user's ID, name, email, and phone, closing the previous recovery gap for profile-based checks. A rejected password leaves the existing credentials unchanged and the recovery token usable.
+     *
      *
      * @param {string} userId - User ID.
      * @param {string} secret - Valid reset token.
@@ -3840,6 +3957,8 @@ export class Account extends Service {
     /**
      * Use this endpoint to complete the user password recovery process using the 6-digit code that was emailed by [createRecoveryOTP](https://appwrite.io/docs/references/cloud/client-web/account#createRecoveryOTP). Pass the **userId** of the user along with the **secret** code from the email and the new **password** to set. If confirmed, this route will return a 200 status code, the code is consumed and the user's password is updated.
      *
+     * The new password must satisfy the project's enabled password policies, including custom deny lists. Dictionary entries match the entire password case-sensitively; personal-data terms match substrings case-insensitively. Personal-data validation runs after token verification against the recovered user's ID, name, email, and phone, closing the previous recovery gap for profile-based checks. A rejected password leaves the existing credentials unchanged and the recovery token usable.
+     *
      *
      * @param {string} params.userId - User ID.
      * @param {string} params.secret - Valid recovery OTP code.
@@ -3854,6 +3973,8 @@ export class Account extends Service {
     }): Promise<Models.Token>;
     /**
      * Use this endpoint to complete the user password recovery process using the 6-digit code that was emailed by [createRecoveryOTP](https://appwrite.io/docs/references/cloud/client-web/account#createRecoveryOTP). Pass the **userId** of the user along with the **secret** code from the email and the new **password** to set. If confirmed, this route will return a 200 status code, the code is consumed and the user's password is updated.
+     *
+     * The new password must satisfy the project's enabled password policies, including custom deny lists. Dictionary entries match the entire password case-sensitively; personal-data terms match substrings case-insensitively. Personal-data validation runs after token verification against the recovered user's ID, name, email, and phone, closing the previous recovery gap for profile-based checks. A rejected password leaves the existing credentials unchanged and the recovery token usable.
      *
      *
      * @param {string} userId - User ID.
@@ -5377,6 +5498,8 @@ export class Account extends Service {
      * @param {string} params.targetId - Target ID. Choose a custom ID or generate a random ID with `ID.unique()`. Valid chars are a-z, A-Z, 0-9, period, hyphen, and underscore. Can't start with a special char. Max length is 36 chars.
      * @param {string} params.identifier - The target identifier (token, email, phone etc.)
      * @param {string} params.providerId - Provider ID. Message will be sent to this target from the specified provider ID. If no provider ID is set the first setup provider will be used.
+     * @param {string} params.bundleId - App bundle ID of the device registering an APNs token. Without `providerId`, routes the target to the enabled APNs provider for this bundle ID and `environment`.
+     * @param {string} params.environment - APNs environment the token belongs to, `sandbox` or `production`. Used with `bundleId`.
      * @throws {AppwriteException}
      * @returns {Promise}
      */
@@ -5384,6 +5507,8 @@ export class Account extends Service {
         targetId: string;
         identifier: string;
         providerId?: string;
+        bundleId?: string;
+        environment?: string;
     }): Promise<Models.Target>;
     /**
      * Use this endpoint to register a device for push notifications. Provide a target ID (custom or generated using ID.unique()), a device identifier (usually a device token), and optionally specify which provider should send notifications to this target. The target is automatically linked to the current session and includes device information like brand and model. A session holds one push target per provider, so if one already exists this endpoint updates and returns that target instead of creating a second one, and a device that rotates its token is never notified twice.
@@ -5391,6 +5516,8 @@ export class Account extends Service {
      * @param {string} targetId - Target ID. Choose a custom ID or generate a random ID with `ID.unique()`. Valid chars are a-z, A-Z, 0-9, period, hyphen, and underscore. Can't start with a special char. Max length is 36 chars.
      * @param {string} identifier - The target identifier (token, email, phone etc.)
      * @param {string} providerId - Provider ID. Message will be sent to this target from the specified provider ID. If no provider ID is set the first setup provider will be used.
+     * @param {string} bundleId - App bundle ID of the device registering an APNs token. Without `providerId`, routes the target to the enabled APNs provider for this bundle ID and `environment`.
+     * @param {string} environment - APNs environment the token belongs to, `sandbox` or `production`. Used with `bundleId`.
      * @throws {AppwriteException}
      * @returns {Promise<Models.Target>}
      * @deprecated Use the object parameter style method for a better developer experience.
@@ -5399,17 +5526,27 @@ export class Account extends Service {
         targetId: string,
         identifier: string,
         providerId?: string,
+        bundleId?: string,
+        environment?: string,
     ): Promise<Models.Target>;
     createPushTarget(
         paramsOrFirst:
-            | { targetId: string; identifier: string; providerId?: string }
+            | {
+                  targetId: string;
+                  identifier: string;
+                  providerId?: string;
+                  bundleId?: string;
+                  environment?: string;
+              }
             | string,
-        ...rest: [string?, string?]
+        ...rest: [string?, string?, string?, string?]
     ): Promise<Models.Target> {
         let params: {
             targetId: string;
             identifier: string;
             providerId?: string;
+            bundleId?: string;
+            environment?: string;
         };
 
         if (
@@ -5421,18 +5558,24 @@ export class Account extends Service {
                 targetId: string;
                 identifier: string;
                 providerId?: string;
+                bundleId?: string;
+                environment?: string;
             };
         } else {
             params = {
                 targetId: paramsOrFirst as string,
                 identifier: rest[0] as string,
                 providerId: rest[1] as string,
+                bundleId: rest[2] as string,
+                environment: rest[3] as string,
             };
         }
 
         const targetId = params.targetId;
         const identifier = params.identifier;
         const providerId = params.providerId;
+        const bundleId = params.bundleId;
+        const environment = params.environment;
 
         if (typeof targetId === 'undefined') {
             throw new AppwriteException(
@@ -5459,6 +5602,14 @@ export class Account extends Service {
 
         if (typeof providerId !== 'undefined') {
             apiPayload['providerId'] = providerId;
+        }
+
+        if (typeof bundleId !== 'undefined') {
+            apiPayload['bundleId'] = bundleId;
+        }
+
+        if (typeof environment !== 'undefined') {
+            apiPayload['environment'] = environment;
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
@@ -5498,18 +5649,24 @@ export class Account extends Service {
      *
      * @param {string} params.targetId - Target ID.
      * @param {string} params.identifier - The target identifier (token, email, phone etc.)
+     * @param {string} params.bundleId - App bundle ID of the device registering an APNs token. Routes an APNs target to the enabled APNs provider for this bundle ID and `environment`.
+     * @param {string} params.environment - APNs environment the token belongs to, `sandbox` or `production`. Used with `bundleId`.
      * @throws {AppwriteException}
      * @returns {Promise}
      */
     updatePushTarget(params: {
         targetId: string;
         identifier: string;
+        bundleId?: string;
+        environment?: string;
     }): Promise<Models.Target>;
     /**
      * Update the currently logged in user's push notification target. You can modify the target's identifier (device token) and provider ID (token, email, phone etc.). The target must exist and belong to the current user. If you change the provider ID, notifications will be sent through the new messaging provider instead.
      *
      * @param {string} targetId - Target ID.
      * @param {string} identifier - The target identifier (token, email, phone etc.)
+     * @param {string} bundleId - App bundle ID of the device registering an APNs token. Routes an APNs target to the enabled APNs provider for this bundle ID and `environment`.
+     * @param {string} environment - APNs environment the token belongs to, `sandbox` or `production`. Used with `bundleId`.
      * @throws {AppwriteException}
      * @returns {Promise<Models.Target>}
      * @deprecated Use the object parameter style method for a better developer experience.
@@ -5517,12 +5674,26 @@ export class Account extends Service {
     updatePushTarget(
         targetId: string,
         identifier: string,
+        bundleId?: string,
+        environment?: string,
     ): Promise<Models.Target>;
     updatePushTarget(
-        paramsOrFirst: { targetId: string; identifier: string } | string,
-        ...rest: [string?]
+        paramsOrFirst:
+            | {
+                  targetId: string;
+                  identifier: string;
+                  bundleId?: string;
+                  environment?: string;
+              }
+            | string,
+        ...rest: [string?, string?, string?]
     ): Promise<Models.Target> {
-        let params: { targetId: string; identifier: string };
+        let params: {
+            targetId: string;
+            identifier: string;
+            bundleId?: string;
+            environment?: string;
+        };
 
         if (
             paramsOrFirst &&
@@ -5532,16 +5703,22 @@ export class Account extends Service {
             params = (paramsOrFirst || {}) as {
                 targetId: string;
                 identifier: string;
+                bundleId?: string;
+                environment?: string;
             };
         } else {
             params = {
                 targetId: paramsOrFirst as string,
                 identifier: rest[0] as string,
+                bundleId: rest[1] as string,
+                environment: rest[2] as string,
             };
         }
 
         const targetId = params.targetId;
         const identifier = params.identifier;
+        const bundleId = params.bundleId;
+        const environment = params.environment;
 
         if (typeof targetId === 'undefined' || targetId === '') {
             throw new AppwriteException(
@@ -5563,6 +5740,14 @@ export class Account extends Service {
 
         if (typeof identifier !== 'undefined') {
             apiPayload['identifier'] = identifier;
+        }
+
+        if (typeof bundleId !== 'undefined') {
+            apiPayload['bundleId'] = bundleId;
+        }
+
+        if (typeof environment !== 'undefined') {
+            apiPayload['environment'] = environment;
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);

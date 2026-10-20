@@ -538,12 +538,14 @@ export class TablesDB extends Service {
     /**
      * Get a list of all the user's rows in a given table. You can use the query params to filter your results.
      *
+     * Rows returned by aggregate, groupBy or distinct queries hold only the columns they select, group or aggregate, typed as a row types them, with a joined column named by its join alias (`alias.column`). They have no `$id`, `$sequence`, `$createdAt`, `$updatedAt`, `$permissions`, `$databaseId` or `$tableId` unless they select or group it, and neither does a right or full join row that no row of this table matched.
+     *
      * @param {string} params.databaseId - Database ID.
      * @param {string} params.tableId - Table ID. You can create a new table using the TablesDB service [server integration](https://appwrite.io/docs/products/databases/tables#create-table).
      * @param {string[]} params.queries - Array of query strings generated using the Query class provided by the SDK. [Learn more about queries](https://appwrite.io/docs/queries). Maximum of 100 queries are allowed, each 4096 characters long.
      * @param {string} params.transactionId - Transaction ID to read uncommitted changes within the transaction.
      * @param {boolean} params.total - When set to false, the total count returned will be 0 and will not be calculated.
-     * @param {number} params.ttl - TTL (seconds) for caching list responses. Responses are stored in an in-memory key-value cache, keyed per project, table, schema version (columns and indexes), caller authorization roles, and the exact query — so users with different permissions never share cached entries. Schema changes invalidate cached entries automatically; row writes do not, so choose a TTL you are comfortable serving as stale data. Set to 0 to disable caching. Must be between 0 and 86400 (24 hours).
+     * @param {number} params.ttl - TTL (seconds) for caching list responses. Responses are stored in an in-memory key-value cache, keyed per project, table, schema version (columns and indexes), caller authorization roles, and the exact query — so users with different permissions never share cached entries. Schema changes invalidate cached entries automatically; row writes do not, so choose a TTL you are comfortable serving as stale data. Set to 0 to disable caching. Lists with join queries are not cached. Must be between 0 and 86400 (24 hours).
      * @throws {AppwriteException}
      * @returns {Promise}
      */
@@ -558,12 +560,14 @@ export class TablesDB extends Service {
     /**
      * Get a list of all the user's rows in a given table. You can use the query params to filter your results.
      *
+     * Rows returned by aggregate, groupBy or distinct queries hold only the columns they select, group or aggregate, typed as a row types them, with a joined column named by its join alias (`alias.column`). They have no `$id`, `$sequence`, `$createdAt`, `$updatedAt`, `$permissions`, `$databaseId` or `$tableId` unless they select or group it, and neither does a right or full join row that no row of this table matched.
+     *
      * @param {string} databaseId - Database ID.
      * @param {string} tableId - Table ID. You can create a new table using the TablesDB service [server integration](https://appwrite.io/docs/products/databases/tables#create-table).
      * @param {string[]} queries - Array of query strings generated using the Query class provided by the SDK. [Learn more about queries](https://appwrite.io/docs/queries). Maximum of 100 queries are allowed, each 4096 characters long.
      * @param {string} transactionId - Transaction ID to read uncommitted changes within the transaction.
      * @param {boolean} total - When set to false, the total count returned will be 0 and will not be calculated.
-     * @param {number} ttl - TTL (seconds) for caching list responses. Responses are stored in an in-memory key-value cache, keyed per project, table, schema version (columns and indexes), caller authorization roles, and the exact query — so users with different permissions never share cached entries. Schema changes invalidate cached entries automatically; row writes do not, so choose a TTL you are comfortable serving as stale data. Set to 0 to disable caching. Must be between 0 and 86400 (24 hours).
+     * @param {number} ttl - TTL (seconds) for caching list responses. Responses are stored in an in-memory key-value cache, keyed per project, table, schema version (columns and indexes), caller authorization roles, and the exact query — so users with different permissions never share cached entries. Schema changes invalidate cached entries automatically; row writes do not, so choose a TTL you are comfortable serving as stale data. Set to 0 to disable caching. Lists with join queries are not cached. Must be between 0 and 86400 (24 hours).
      * @throws {AppwriteException}
      * @returns {Promise<Models.RowList<Row>>}
      * @deprecated Use the object parameter style method for a better developer experience.
@@ -872,6 +876,177 @@ export class TablesDB extends Service {
         const defaults = {
             root: 'row',
             models: {
+                row: {
+                    defaults: {
+                        $id: '',
+                        $sequence: '',
+                        $tableId: '',
+                        $databaseId: '',
+                        $createdAt: '',
+                        $updatedAt: '',
+                        $permissions: [],
+                    },
+                },
+            },
+        };
+
+        return request.then((response) => applyDefaults(response, defaults));
+    }
+
+    /**
+     * Get a list of all the user's rows in a given table using a POST request. This behaves identically to the list rows endpoint but accepts the queries in the request body, allowing much larger `queries` arrays than can fit in a URL query string.
+     *
+     *
+     * @param {string} params.databaseId - Database ID.
+     * @param {string} params.tableId - Table ID. You can create a new table using the TablesDB service [server integration](https://appwrite.io/docs/products/databases/tables#create-table).
+     * @param {string[]} params.queries - Array of query strings generated using the Query class provided by the SDK. [Learn more about queries](https://appwrite.io/docs/queries). Maximum of 100 queries are allowed, each 4096 characters long.
+     * @param {string | null} params.transactionId - Transaction ID to read uncommitted changes within the transaction.
+     * @param {boolean} params.total - When set to false, the total count returned will be 0 and will not be calculated.
+     * @param {number} params.ttl - TTL (seconds) for caching list responses. Responses are stored in an in-memory key-value cache, keyed per project, table, schema version (columns and indexes), caller authorization roles, and the exact query — so users with different permissions never share cached entries. Schema changes invalidate cached entries automatically; row writes do not, so choose a TTL you are comfortable serving as stale data. Set to 0 to disable caching. Lists with join queries are not cached. Must be between 0 and 86400 (24 hours).
+     * @throws {AppwriteException}
+     * @returns {Promise}
+     */
+    createQuery<Row extends Models.Row = Models.DefaultRow>(params: {
+        databaseId: string;
+        tableId: string;
+        queries?: string[];
+        transactionId?: string | null;
+        total?: boolean;
+        ttl?: number;
+    }): Promise<Models.RowList<Row>>;
+    /**
+     * Get a list of all the user's rows in a given table using a POST request. This behaves identically to the list rows endpoint but accepts the queries in the request body, allowing much larger `queries` arrays than can fit in a URL query string.
+     *
+     *
+     * @param {string} databaseId - Database ID.
+     * @param {string} tableId - Table ID. You can create a new table using the TablesDB service [server integration](https://appwrite.io/docs/products/databases/tables#create-table).
+     * @param {string[]} queries - Array of query strings generated using the Query class provided by the SDK. [Learn more about queries](https://appwrite.io/docs/queries). Maximum of 100 queries are allowed, each 4096 characters long.
+     * @param {string | null} transactionId - Transaction ID to read uncommitted changes within the transaction.
+     * @param {boolean} total - When set to false, the total count returned will be 0 and will not be calculated.
+     * @param {number} ttl - TTL (seconds) for caching list responses. Responses are stored in an in-memory key-value cache, keyed per project, table, schema version (columns and indexes), caller authorization roles, and the exact query — so users with different permissions never share cached entries. Schema changes invalidate cached entries automatically; row writes do not, so choose a TTL you are comfortable serving as stale data. Set to 0 to disable caching. Lists with join queries are not cached. Must be between 0 and 86400 (24 hours).
+     * @throws {AppwriteException}
+     * @returns {Promise<Models.RowList<Row>>}
+     * @deprecated Use the object parameter style method for a better developer experience.
+     */
+    createQuery<Row extends Models.Row = Models.DefaultRow>(
+        databaseId: string,
+        tableId: string,
+        queries?: string[],
+        transactionId?: string | null,
+        total?: boolean,
+        ttl?: number,
+    ): Promise<Models.RowList<Row>>;
+    createQuery<Row extends Models.Row = Models.DefaultRow>(
+        paramsOrFirst:
+            | {
+                  databaseId: string;
+                  tableId: string;
+                  queries?: string[];
+                  transactionId?: string | null;
+                  total?: boolean;
+                  ttl?: number;
+              }
+            | string,
+        ...rest: [string?, string[]?, (string | null)?, boolean?, number?]
+    ): Promise<Models.RowList<Row>> {
+        let params: {
+            databaseId: string;
+            tableId: string;
+            queries?: string[];
+            transactionId?: string | null;
+            total?: boolean;
+            ttl?: number;
+        };
+
+        if (
+            paramsOrFirst &&
+            typeof paramsOrFirst === 'object' &&
+            !Array.isArray(paramsOrFirst)
+        ) {
+            params = (paramsOrFirst || {}) as {
+                databaseId: string;
+                tableId: string;
+                queries?: string[];
+                transactionId?: string | null;
+                total?: boolean;
+                ttl?: number;
+            };
+        } else {
+            params = {
+                databaseId: paramsOrFirst as string,
+                tableId: rest[0] as string,
+                queries: rest[1] as string[],
+                transactionId: rest[2] as string | null,
+                total: rest[3] as boolean,
+                ttl: rest[4] as number,
+            };
+        }
+
+        const databaseId = params.databaseId;
+        const tableId = params.tableId;
+        const queries = params.queries;
+        const transactionId = params.transactionId;
+        const total = params.total;
+        const ttl = params.ttl;
+
+        if (typeof databaseId === 'undefined' || databaseId === '') {
+            throw new AppwriteException(
+                'Missing required parameter: "databaseId"',
+            );
+        }
+
+        if (typeof tableId === 'undefined' || tableId === '') {
+            throw new AppwriteException(
+                'Missing required parameter: "tableId"',
+            );
+        }
+
+        const apiPath = '/tablesdb/{databaseId}/tables/{tableId}/rows/query'
+            .replace('{databaseId}', encodeURIComponent(String(databaseId)))
+            .replace('{tableId}', encodeURIComponent(String(tableId)));
+        const apiPayload: Payload = {};
+
+        if (typeof queries !== 'undefined') {
+            apiPayload['queries'] = queries;
+        }
+
+        if (typeof transactionId !== 'undefined') {
+            apiPayload['transactionId'] = transactionId;
+        }
+
+        if (typeof total !== 'undefined') {
+            apiPayload['total'] = total;
+        }
+
+        if (typeof ttl !== 'undefined') {
+            apiPayload['ttl'] = ttl;
+        }
+
+        const uri = new URL(this.client.config.endpoint + apiPath);
+        const request = this.client.call(
+            'post',
+            uri,
+            {
+                'X-Appwrite-Project': this.client.config.project,
+                'content-type': 'application/json',
+                accept: 'application/json',
+            },
+            apiPayload,
+        );
+        const defaults = {
+            root: 'rowList',
+            models: {
+                rowList: {
+                    defaults: {
+                        total: 0,
+                        rows: [],
+                    },
+                    properties: {
+                        rows: {
+                            items: 'row',
+                        },
+                    },
+                },
                 row: {
                     defaults: {
                         $id: '',

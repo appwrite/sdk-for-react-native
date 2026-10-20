@@ -1,5 +1,16 @@
 # Change log
 
+## 3.0.0
+
+* Breaking: `expo-file-system` is a peer dependency (`>=18.0.0`); install it in your app
+* Breaking: `expo` peer dependency requires `>=52.0.0`
+* Added: `createQuery` on `databases`, `documentsDB` and `tablesDB` to send list queries in the request body
+* Added: `account.listMemberships`
+* Added: `bundleId` and `environment` on `account.createPushTarget` and `account.updatePushTarget` for APNs routing
+* Fixed: uploads on Expo SDK 54 and later use `expo-file-system/legacy` instead of crashing
+* Fixed: Android upload chunks are deleted from the cache once their request completes
+* Updated: `package.json` declares `engines.node` `>=20.0.0`
+
 ## 2.0.0
 
 * Breaking: requests send `X-Appwrite-Response-Format: 2.5.0`; responses follow the 2.5 shapes
