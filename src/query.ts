@@ -652,7 +652,7 @@ export class Query {
         new Query('on', undefined, [left, operator, right]).toString();
 
     /**
-     * Inner join. `table` is the joined collection/table ID.
+     * Inner join. `table` is the joined collection/table ID; without an alias the server names the join after it, if the ID is a valid alias, and otherwise rejects the query.
      */
     static join = (
         table: string,

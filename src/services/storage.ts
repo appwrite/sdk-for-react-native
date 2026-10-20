@@ -2,7 +2,7 @@ import { Service } from '../service';
 import { AppwriteException, Client, applyDefaults } from '../client';
 import type { Models } from '../models';
 import type { UploadProgress, Payload } from '../client';
-import * as FileSystem from 'expo-file-system';
+import { fileSystem } from '../lib/file-system';
 import { Platform as RNPlatform } from 'react-native';
 
 import { ImageGravity } from '../enums/image-gravity';
@@ -329,6 +329,8 @@ export class Storage extends Service {
             accept: 'application/json',
         };
 
+        const FileSystem = fileSystem();
+
         const size = file.size;
 
         if (size <= Service.CHUNK_SIZE) {
@@ -399,12 +401,20 @@ export class Storage extends Service {
                 async () => firstChunk,
             );
 
-            response = await this.client.call(
-                'post',
-                uri,
-                firstChunkHeaders,
-                apiPayload,
-            );
+            try {
+                response = await this.client.call(
+                    'post',
+                    uri,
+                    firstChunkHeaders,
+                    apiPayload,
+                );
+            } finally {
+                if (RNPlatform.OS.toLowerCase() === 'android') {
+                    await FileSystem.deleteAsync(firstPath, {
+                        idempotent: true,
+                    }).catch(() => undefined);
+                }
+            }
             offset = firstChunkEnd;
 
             if (onProgress) {
@@ -483,12 +493,21 @@ export class Storage extends Service {
                 async () => chunkData,
             );
 
-            const chunkResponse = await this.client.call(
-                'post',
-                uri,
-                chunkHeaders,
-                chunkPayload,
-            );
+            let chunkResponse;
+            try {
+                chunkResponse = await this.client.call(
+                    'post',
+                    uri,
+                    chunkHeaders,
+                    chunkPayload,
+                );
+            } finally {
+                if (RNPlatform.OS.toLowerCase() === 'android') {
+                    await FileSystem.deleteAsync(chunkPath, {
+                        idempotent: true,
+                    }).catch(() => undefined);
+                }
+            }
 
             if (failed) {
                 return chunkResponse;

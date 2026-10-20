@@ -1064,6 +1064,183 @@ export class DocumentsDB extends Service {
     }
 
     /**
+     * Get a list of all the user's documents in a given collection using a POST request. This behaves identically to the list documents endpoint but accepts the queries in the request body, allowing much larger `queries` arrays than can fit in a URL query string.
+     *
+     *
+     * @param {string} params.databaseId - Database ID.
+     * @param {string} params.collectionId - Collection ID. You can create a new collection using the Database service [server integration](https://appwrite.io/docs/server/databases#databasesCreateCollection).
+     * @param {string[]} params.queries - Array of query strings generated using the Query class provided by the SDK. [Learn more about queries](https://appwrite.io/docs/queries). Maximum of 100 queries are allowed, each 4096 characters long.
+     * @param {string} params.transactionId - Transaction ID to read uncommitted changes within the transaction.
+     * @param {boolean} params.total - When set to false, the total count returned will be 0 and will not be calculated.
+     * @param {number} params.ttl - TTL (seconds) for cached responses when caching is enabled for select queries. Must be between 0 and 86400 (24 hours).
+     * @throws {AppwriteException}
+     * @returns {Promise}
+     */
+    createQuery<
+        Document extends Models.Document = Models.DefaultDocument,
+    >(params: {
+        databaseId: string;
+        collectionId: string;
+        queries?: string[];
+        transactionId?: string;
+        total?: boolean;
+        ttl?: number;
+    }): Promise<Models.DocumentList<Document>>;
+    /**
+     * Get a list of all the user's documents in a given collection using a POST request. This behaves identically to the list documents endpoint but accepts the queries in the request body, allowing much larger `queries` arrays than can fit in a URL query string.
+     *
+     *
+     * @param {string} databaseId - Database ID.
+     * @param {string} collectionId - Collection ID. You can create a new collection using the Database service [server integration](https://appwrite.io/docs/server/databases#databasesCreateCollection).
+     * @param {string[]} queries - Array of query strings generated using the Query class provided by the SDK. [Learn more about queries](https://appwrite.io/docs/queries). Maximum of 100 queries are allowed, each 4096 characters long.
+     * @param {string} transactionId - Transaction ID to read uncommitted changes within the transaction.
+     * @param {boolean} total - When set to false, the total count returned will be 0 and will not be calculated.
+     * @param {number} ttl - TTL (seconds) for cached responses when caching is enabled for select queries. Must be between 0 and 86400 (24 hours).
+     * @throws {AppwriteException}
+     * @returns {Promise<Models.DocumentList<Document>>}
+     * @deprecated Use the object parameter style method for a better developer experience.
+     */
+    createQuery<Document extends Models.Document = Models.DefaultDocument>(
+        databaseId: string,
+        collectionId: string,
+        queries?: string[],
+        transactionId?: string,
+        total?: boolean,
+        ttl?: number,
+    ): Promise<Models.DocumentList<Document>>;
+    createQuery<Document extends Models.Document = Models.DefaultDocument>(
+        paramsOrFirst:
+            | {
+                  databaseId: string;
+                  collectionId: string;
+                  queries?: string[];
+                  transactionId?: string;
+                  total?: boolean;
+                  ttl?: number;
+              }
+            | string,
+        ...rest: [string?, string[]?, string?, boolean?, number?]
+    ): Promise<Models.DocumentList<Document>> {
+        let params: {
+            databaseId: string;
+            collectionId: string;
+            queries?: string[];
+            transactionId?: string;
+            total?: boolean;
+            ttl?: number;
+        };
+
+        if (
+            paramsOrFirst &&
+            typeof paramsOrFirst === 'object' &&
+            !Array.isArray(paramsOrFirst)
+        ) {
+            params = (paramsOrFirst || {}) as {
+                databaseId: string;
+                collectionId: string;
+                queries?: string[];
+                transactionId?: string;
+                total?: boolean;
+                ttl?: number;
+            };
+        } else {
+            params = {
+                databaseId: paramsOrFirst as string,
+                collectionId: rest[0] as string,
+                queries: rest[1] as string[],
+                transactionId: rest[2] as string,
+                total: rest[3] as boolean,
+                ttl: rest[4] as number,
+            };
+        }
+
+        const databaseId = params.databaseId;
+        const collectionId = params.collectionId;
+        const queries = params.queries;
+        const transactionId = params.transactionId;
+        const total = params.total;
+        const ttl = params.ttl;
+
+        if (typeof databaseId === 'undefined' || databaseId === '') {
+            throw new AppwriteException(
+                'Missing required parameter: "databaseId"',
+            );
+        }
+
+        if (typeof collectionId === 'undefined' || collectionId === '') {
+            throw new AppwriteException(
+                'Missing required parameter: "collectionId"',
+            );
+        }
+
+        const apiPath =
+            '/documentsdb/{databaseId}/collections/{collectionId}/documents/query'
+                .replace('{databaseId}', encodeURIComponent(String(databaseId)))
+                .replace(
+                    '{collectionId}',
+                    encodeURIComponent(String(collectionId)),
+                );
+        const apiPayload: Payload = {};
+
+        if (typeof queries !== 'undefined') {
+            apiPayload['queries'] = queries;
+        }
+
+        if (typeof transactionId !== 'undefined') {
+            apiPayload['transactionId'] = transactionId;
+        }
+
+        if (typeof total !== 'undefined') {
+            apiPayload['total'] = total;
+        }
+
+        if (typeof ttl !== 'undefined') {
+            apiPayload['ttl'] = ttl;
+        }
+
+        const uri = new URL(this.client.config.endpoint + apiPath);
+        const request = this.client.call(
+            'post',
+            uri,
+            {
+                'X-Appwrite-Project': this.client.config.project,
+                'content-type': 'application/json',
+                accept: 'application/json',
+            },
+            apiPayload,
+        );
+        const defaults = {
+            root: 'documentList',
+            models: {
+                documentList: {
+                    defaults: {
+                        total: 0,
+                        documents: [],
+                    },
+                    properties: {
+                        documents: {
+                            items: 'document',
+                        },
+                    },
+                },
+                document: {
+                    defaults: {
+                        $id: '',
+                        $sequence: '',
+                        $collectionId: '',
+                        $databaseId: '',
+                        $createdAt: '',
+                        $updatedAt: '',
+                        $permissions: [],
+                    },
+                },
+            },
+        };
+
+        return request.then((response) => applyDefaults(response, defaults));
+    }
+
+    /**
      * Get a document by its unique ID. This endpoint response returns a JSON object with the document data.
      *
      * @param {string} params.databaseId - Database ID.

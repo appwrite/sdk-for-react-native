@@ -1,0 +1,20 @@
+```javascript
+import { Client, Databases } from 'react-native-appwrite';
+
+const client = new Client()
+    .setEndpoint('https://<REGION>.cloud.appwrite.io/v1') // Your API Endpoint
+    .setProject('<YOUR_PROJECT_ID>'); // Your project ID
+
+const databases = new Databases(client);
+
+const result = await databases.createQuery({
+    databaseId: '<DATABASE_ID>',
+    collectionId: '<COLLECTION_ID>',
+    queries: [], // optional
+    transactionId: '<TRANSACTION_ID>', // optional
+    total: false, // optional
+    ttl: 0, // optional
+});
+
+console.log(result);
+```
