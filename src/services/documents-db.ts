@@ -1,5 +1,10 @@
 import { Service } from '../service';
-import { AppwriteException, Client, applyDefaults } from '../client';
+import {
+    AppwriteException,
+    Client,
+    applyDefaults,
+    encodePath,
+} from '../client';
 import type { Models } from '../models';
 import type { Payload } from '../client';
 
@@ -230,7 +235,7 @@ export class DocumentsDB extends Service {
 
         const apiPath = '/documentsdb/transactions/{transactionId}'.replace(
             '{transactionId}',
-            encodeURIComponent(String(transactionId)),
+            encodePath(transactionId),
         );
         const apiPayload: Payload = {};
 
@@ -334,7 +339,7 @@ export class DocumentsDB extends Service {
 
         const apiPath = '/documentsdb/transactions/{transactionId}'.replace(
             '{transactionId}',
-            encodeURIComponent(String(transactionId)),
+            encodePath(transactionId),
         );
         const apiPayload: Payload = {};
 
@@ -420,7 +425,7 @@ export class DocumentsDB extends Service {
 
         const apiPath = '/documentsdb/transactions/{transactionId}'.replace(
             '{transactionId}',
-            encodeURIComponent(String(transactionId)),
+            encodePath(transactionId),
         );
         const apiPayload: Payload = {};
 
@@ -497,7 +502,7 @@ export class DocumentsDB extends Service {
         const apiPath =
             '/documentsdb/transactions/{transactionId}/operations'.replace(
                 '{transactionId}',
-                encodeURIComponent(String(transactionId)),
+                encodePath(transactionId),
             );
         const apiPayload: Payload = {};
 
@@ -645,11 +650,8 @@ export class DocumentsDB extends Service {
 
         const apiPath =
             '/documentsdb/{databaseId}/collections/{collectionId}/documents'
-                .replace('{databaseId}', encodeURIComponent(String(databaseId)))
-                .replace(
-                    '{collectionId}',
-                    encodeURIComponent(String(collectionId)),
-                );
+                .replace('{databaseId}', encodePath(databaseId))
+                .replace('{collectionId}', encodePath(collectionId));
         const apiPayload: Payload = {};
 
         if (typeof queries !== 'undefined') {
@@ -854,11 +856,8 @@ export class DocumentsDB extends Service {
 
         const apiPath =
             '/documentsdb/{databaseId}/collections/{collectionId}/documents'
-                .replace('{databaseId}', encodeURIComponent(String(databaseId)))
-                .replace(
-                    '{collectionId}',
-                    encodeURIComponent(String(collectionId)),
-                );
+                .replace('{databaseId}', encodePath(databaseId))
+                .replace('{collectionId}', encodePath(collectionId));
         const apiPayload: Payload = {};
 
         if (typeof documentId !== 'undefined') {
@@ -1006,11 +1005,8 @@ export class DocumentsDB extends Service {
 
         const apiPath =
             '/documentsdb/{databaseId}/collections/{collectionId}/documents'
-                .replace('{databaseId}', encodeURIComponent(String(databaseId)))
-                .replace(
-                    '{collectionId}',
-                    encodeURIComponent(String(collectionId)),
-                );
+                .replace('{databaseId}', encodePath(databaseId))
+                .replace('{collectionId}', encodePath(collectionId));
         const apiPayload: Payload = {};
 
         if (typeof documents !== 'undefined') {
@@ -1175,11 +1171,8 @@ export class DocumentsDB extends Service {
 
         const apiPath =
             '/documentsdb/{databaseId}/collections/{collectionId}/documents/query'
-                .replace('{databaseId}', encodeURIComponent(String(databaseId)))
-                .replace(
-                    '{collectionId}',
-                    encodeURIComponent(String(collectionId)),
-                );
+                .replace('{databaseId}', encodePath(databaseId))
+                .replace('{collectionId}', encodePath(collectionId));
         const apiPayload: Payload = {};
 
         if (typeof queries !== 'undefined') {
@@ -1347,15 +1340,9 @@ export class DocumentsDB extends Service {
 
         const apiPath =
             '/documentsdb/{databaseId}/collections/{collectionId}/documents/{documentId}'
-                .replace('{databaseId}', encodeURIComponent(String(databaseId)))
-                .replace(
-                    '{collectionId}',
-                    encodeURIComponent(String(collectionId)),
-                )
-                .replace(
-                    '{documentId}',
-                    encodeURIComponent(String(documentId)),
-                );
+                .replace('{databaseId}', encodePath(databaseId))
+                .replace('{collectionId}', encodePath(collectionId))
+                .replace('{documentId}', encodePath(documentId));
         const apiPayload: Payload = {};
 
         if (typeof queries !== 'undefined') {
@@ -1539,15 +1526,9 @@ export class DocumentsDB extends Service {
 
         const apiPath =
             '/documentsdb/{databaseId}/collections/{collectionId}/documents/{documentId}'
-                .replace('{databaseId}', encodeURIComponent(String(databaseId)))
-                .replace(
-                    '{collectionId}',
-                    encodeURIComponent(String(collectionId)),
-                )
-                .replace(
-                    '{documentId}',
-                    encodeURIComponent(String(documentId)),
-                );
+                .replace('{databaseId}', encodePath(databaseId))
+                .replace('{collectionId}', encodePath(collectionId))
+                .replace('{documentId}', encodePath(documentId));
         const apiPayload: Payload = {};
 
         if (typeof data !== 'undefined') {
@@ -1736,15 +1717,9 @@ export class DocumentsDB extends Service {
 
         const apiPath =
             '/documentsdb/{databaseId}/collections/{collectionId}/documents/{documentId}'
-                .replace('{databaseId}', encodeURIComponent(String(databaseId)))
-                .replace(
-                    '{collectionId}',
-                    encodeURIComponent(String(collectionId)),
-                )
-                .replace(
-                    '{documentId}',
-                    encodeURIComponent(String(documentId)),
-                );
+                .replace('{databaseId}', encodePath(databaseId))
+                .replace('{collectionId}', encodePath(collectionId))
+                .replace('{documentId}', encodePath(documentId));
         const apiPayload: Payload = {};
 
         if (typeof data !== 'undefined') {
@@ -1886,15 +1861,9 @@ export class DocumentsDB extends Service {
 
         const apiPath =
             '/documentsdb/{databaseId}/collections/{collectionId}/documents/{documentId}'
-                .replace('{databaseId}', encodeURIComponent(String(databaseId)))
-                .replace(
-                    '{collectionId}',
-                    encodeURIComponent(String(collectionId)),
-                )
-                .replace(
-                    '{documentId}',
-                    encodeURIComponent(String(documentId)),
-                );
+                .replace('{databaseId}', encodePath(databaseId))
+                .replace('{collectionId}', encodePath(collectionId))
+                .replace('{documentId}', encodePath(documentId));
         const apiPayload: Payload = {};
 
         if (typeof transactionId !== 'undefined') {
@@ -2049,13 +2018,10 @@ export class DocumentsDB extends Service {
 
         const apiPath =
             '/documentsdb/{databaseId}/collections/{collectionId}/documents/{documentId}/{attribute}/decrement'
-                .replace('{databaseId}', encodeURIComponent(String(databaseId)))
-                .replace(
-                    '{collectionId}',
-                    encodeURIComponent(String(collectionId)),
-                )
-                .replace('{documentId}', encodeURIComponent(String(documentId)))
-                .replace('{attribute}', encodeURIComponent(String(attribute)));
+                .replace('{databaseId}', encodePath(databaseId))
+                .replace('{collectionId}', encodePath(collectionId))
+                .replace('{documentId}', encodePath(documentId))
+                .replace('{attribute}', encodePath(attribute));
         const apiPayload: Payload = {};
 
         if (typeof value !== 'undefined') {
@@ -2236,13 +2202,10 @@ export class DocumentsDB extends Service {
 
         const apiPath =
             '/documentsdb/{databaseId}/collections/{collectionId}/documents/{documentId}/{attribute}/increment'
-                .replace('{databaseId}', encodeURIComponent(String(databaseId)))
-                .replace(
-                    '{collectionId}',
-                    encodeURIComponent(String(collectionId)),
-                )
-                .replace('{documentId}', encodeURIComponent(String(documentId)))
-                .replace('{attribute}', encodeURIComponent(String(attribute)));
+                .replace('{databaseId}', encodePath(databaseId))
+                .replace('{collectionId}', encodePath(collectionId))
+                .replace('{documentId}', encodePath(documentId))
+                .replace('{attribute}', encodePath(attribute));
         const apiPayload: Payload = {};
 
         if (typeof value !== 'undefined') {

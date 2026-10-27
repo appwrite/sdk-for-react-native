@@ -1,5 +1,10 @@
 import { Service } from '../service';
-import { AppwriteException, Client, applyDefaults } from '../client';
+import {
+    AppwriteException,
+    Client,
+    applyDefaults,
+    encodePath,
+} from '../client';
 import type { Models } from '../models';
 import type { Payload } from '../client';
 
@@ -79,7 +84,7 @@ export class Oauth2 extends Service {
 
         const apiPath = '/oauth2/{project_id}/approve'.replace(
             '{project_id}',
-            encodeURIComponent(String(this.client.config.project)),
+            encodePath(this.client.config.project),
         );
         const apiPayload: Payload = {};
 
@@ -302,7 +307,7 @@ export class Oauth2 extends Service {
 
         const apiPath = '/oauth2/{project_id}/authorize'.replace(
             '{project_id}',
-            encodeURIComponent(String(this.client.config.project)),
+            encodePath(this.client.config.project),
         );
         const apiPayload: Payload = {};
 
@@ -569,7 +574,7 @@ export class Oauth2 extends Service {
 
         const apiPath = '/oauth2/{project_id}/authorize'.replace(
             '{project_id}',
-            encodeURIComponent(String(this.client.config.project)),
+            encodePath(this.client.config.project),
         );
         const apiPayload: Payload = {};
 
@@ -742,7 +747,7 @@ export class Oauth2 extends Service {
 
         const apiPath = '/oauth2/{project_id}/device_authorization'.replace(
             '{project_id}',
-            encodeURIComponent(String(this.client.config.project)),
+            encodePath(this.client.config.project),
         );
         const apiPayload: Payload = {};
 
@@ -839,7 +844,7 @@ export class Oauth2 extends Service {
 
         const apiPath = '/oauth2/{project_id}/grants'.replace(
             '{project_id}',
-            encodeURIComponent(String(this.client.config.project)),
+            encodePath(this.client.config.project),
         );
         const apiPayload: Payload = {};
 
@@ -925,11 +930,8 @@ export class Oauth2 extends Service {
         }
 
         const apiPath = '/oauth2/{project_id}/grants/{grant_id}'
-            .replace(
-                '{project_id}',
-                encodeURIComponent(String(this.client.config.project)),
-            )
-            .replace('{grant_id}', encodeURIComponent(String(grantId)));
+            .replace('{project_id}', encodePath(this.client.config.project))
+            .replace('{grant_id}', encodePath(grantId));
         const apiPayload: Payload = {};
 
         const uri = new URL(this.client.config.endpoint + apiPath);
@@ -1063,7 +1065,7 @@ export class Oauth2 extends Service {
 
         const apiPath = '/oauth2/{project_id}/logout'.replace(
             '{project_id}',
-            encodeURIComponent(String(this.client.config.project)),
+            encodePath(this.client.config.project),
         );
         const apiPayload: Payload = {};
 
@@ -1199,7 +1201,7 @@ export class Oauth2 extends Service {
 
         const apiPath = '/oauth2/{project_id}/logout'.replace(
             '{project_id}',
-            encodeURIComponent(String(this.client.config.project)),
+            encodePath(this.client.config.project),
         );
         const apiPayload: Payload = {};
 
@@ -1300,7 +1302,7 @@ export class Oauth2 extends Service {
 
         const apiPath = '/oauth2/{project_id}/organizations'.replace(
             '{project_id}',
-            encodeURIComponent(String(this.client.config.project)),
+            encodePath(this.client.config.project),
         );
         const apiPayload: Payload = {};
 
@@ -1540,7 +1542,7 @@ export class Oauth2 extends Service {
 
         const apiPath = '/oauth2/{project_id}/par'.replace(
             '{project_id}',
-            encodeURIComponent(String(this.client.config.project)),
+            encodePath(this.client.config.project),
         );
         const apiPayload: Payload = {};
 
@@ -1682,7 +1684,7 @@ export class Oauth2 extends Service {
 
         const apiPath = '/oauth2/{project_id}/projects'.replace(
             '{project_id}',
-            encodeURIComponent(String(this.client.config.project)),
+            encodePath(this.client.config.project),
         );
         const apiPayload: Payload = {};
 
@@ -1778,7 +1780,7 @@ export class Oauth2 extends Service {
 
         const apiPath = '/oauth2/{project_id}/reject'.replace(
             '{project_id}',
-            encodeURIComponent(String(this.client.config.project)),
+            encodePath(this.client.config.project),
         );
         const apiPayload: Payload = {};
 
@@ -1892,7 +1894,7 @@ export class Oauth2 extends Service {
 
         const apiPath = '/oauth2/{project_id}/revoke'.replace(
             '{project_id}',
-            encodeURIComponent(String(this.client.config.project)),
+            encodePath(this.client.config.project),
         );
         const apiPayload: Payload = {};
 
@@ -2072,7 +2074,7 @@ export class Oauth2 extends Service {
 
         const apiPath = '/oauth2/{project_id}/token'.replace(
             '{project_id}',
-            encodeURIComponent(String(this.client.config.project)),
+            encodePath(this.client.config.project),
         );
         const apiPayload: Payload = {};
 

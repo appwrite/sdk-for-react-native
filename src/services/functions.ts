@@ -1,5 +1,10 @@
 import { Service } from '../service';
-import { AppwriteException, Client, applyDefaults } from '../client';
+import {
+    AppwriteException,
+    Client,
+    applyDefaults,
+    encodePath,
+} from '../client';
 import type { Models } from '../models';
 import type { Payload } from '../client';
 
@@ -76,7 +81,7 @@ export class Functions extends Service {
 
         const apiPath = '/functions/{functionId}/executions'.replace(
             '{functionId}',
-            encodeURIComponent(String(functionId)),
+            encodePath(functionId),
         );
         const apiPayload: Payload = {};
 
@@ -270,7 +275,7 @@ export class Functions extends Service {
 
         const apiPath = '/functions/{functionId}/executions'.replace(
             '{functionId}',
-            encodeURIComponent(String(functionId)),
+            encodePath(functionId),
         );
         const apiPayload: Payload = {};
 
@@ -415,8 +420,8 @@ export class Functions extends Service {
         }
 
         const apiPath = '/functions/{functionId}/executions/{executionId}'
-            .replace('{functionId}', encodeURIComponent(String(functionId)))
-            .replace('{executionId}', encodeURIComponent(String(executionId)));
+            .replace('{functionId}', encodePath(functionId))
+            .replace('{executionId}', encodePath(executionId));
         const apiPayload: Payload = {};
 
         const uri = new URL(this.client.config.endpoint + apiPath);

@@ -1,5 +1,10 @@
 import { Service } from '../service';
-import { AppwriteException, Client, applyDefaults } from '../client';
+import {
+    AppwriteException,
+    Client,
+    applyDefaults,
+    encodePath,
+} from '../client';
 import type { Models } from '../models';
 import type { Payload } from '../client';
 
@@ -258,7 +263,7 @@ export class Organization extends Service {
 
         const apiPath = '/organization/installations/{installationId}'.replace(
             '{installationId}',
-            encodeURIComponent(String(installationId)),
+            encodePath(installationId),
         );
         const apiPayload: Payload = {};
 
@@ -357,7 +362,7 @@ export class Organization extends Service {
 
         const apiPath = '/organization/installations/{installationId}'.replace(
             '{installationId}',
-            encodeURIComponent(String(installationId)),
+            encodePath(installationId),
         );
         const apiPayload: Payload = {};
 
@@ -442,7 +447,7 @@ export class Organization extends Service {
 
         const apiPath = '/organization/installations/{installationId}'.replace(
             '{installationId}',
-            encodeURIComponent(String(installationId)),
+            encodePath(installationId),
         );
         const apiPayload: Payload = {};
 

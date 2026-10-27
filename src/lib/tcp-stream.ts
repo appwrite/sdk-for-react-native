@@ -78,6 +78,8 @@ export function createTcpStream({
     socket.setNoDelay(true);
 
     const duplex = new Duplex({
+        // A closed native socket ends both halves so MQTT.js sees 'close' and reconnects.
+        allowHalfOpen: false,
         read() {
             socket.resume();
         },

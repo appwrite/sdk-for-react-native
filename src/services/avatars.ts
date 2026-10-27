@@ -1,5 +1,5 @@
 import { Service } from '../service';
-import { AppwriteException, Client } from '../client';
+import { AppwriteException, Client, encodePath } from '../client';
 import type { Models } from '../models';
 import type { UploadProgress, Payload } from '../client';
 import { fileSystem } from '../lib/file-system';
@@ -107,7 +107,7 @@ export class Avatars extends Service {
 
         const apiPath = '/avatars/browsers/{code}'.replace(
             '{code}',
-            encodeURIComponent(String(code)),
+            encodePath(code),
         );
         const apiPayload: Payload = {};
 
@@ -237,7 +237,7 @@ export class Avatars extends Service {
 
         const apiPath = '/avatars/credit-cards/{code}'.replace(
             '{code}',
-            encodeURIComponent(String(code)),
+            encodePath(code),
         );
         const apiPayload: Payload = {};
 
@@ -433,7 +433,7 @@ export class Avatars extends Service {
 
         const apiPath = '/avatars/flags/{code}'.replace(
             '{code}',
-            encodeURIComponent(String(code)),
+            encodePath(code),
         );
         const apiPayload: Payload = {};
 
@@ -1720,7 +1720,7 @@ export class Avatars extends Service {
 
         const apiPath = '/avatars/browsers/{code}'.replace(
             '{code}',
-            encodeURIComponent(String(code)),
+            encodePath(code),
         );
         const apiPayload: Payload = {};
 
@@ -1780,7 +1780,7 @@ export class Avatars extends Service {
 
         const apiPath = '/avatars/credit-cards/{code}'.replace(
             '{code}',
-            encodeURIComponent(String(code)),
+            encodePath(code),
         );
         const apiPayload: Payload = {};
 
@@ -1877,7 +1877,7 @@ export class Avatars extends Service {
 
         const apiPath = '/avatars/flags/{code}'.replace(
             '{code}',
-            encodeURIComponent(String(code)),
+            encodePath(code),
         );
         const apiPayload: Payload = {};
 

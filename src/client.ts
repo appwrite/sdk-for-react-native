@@ -270,6 +270,14 @@ class AppwriteException extends Error {
     }
 }
 
+export function encodePath(value: unknown): string {
+    const segment = String(value);
+    if (segment === '.' || segment === '..') {
+        throw new AppwriteException('Path parameter cannot be "." or ".."');
+    }
+    return encodeURIComponent(segment);
+}
+
 class Client {
     config: { [key: string]: string } = {
         endpoint: 'https://cloud.appwrite.io/v1',
@@ -291,8 +299,8 @@ class Client {
         'x-sdk-name': 'React Native',
         'x-sdk-platform': 'client',
         'x-sdk-language': 'reactnative',
-        'x-sdk-version': '3.0.0',
-        'X-Appwrite-Response-Format': '2.5.0',
+        'x-sdk-version': '3.1.0',
+        'X-Appwrite-Response-Format': '2.6.2',
     };
 
     /**
