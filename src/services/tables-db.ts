@@ -1,5 +1,10 @@
 import { Service } from '../service';
-import { AppwriteException, Client, applyDefaults } from '../client';
+import {
+    AppwriteException,
+    Client,
+    applyDefaults,
+    encodePath,
+} from '../client';
 import type { Models } from '../models';
 import type { Payload } from '../client';
 
@@ -230,7 +235,7 @@ export class TablesDB extends Service {
 
         const apiPath = '/tablesdb/transactions/{transactionId}'.replace(
             '{transactionId}',
-            encodeURIComponent(String(transactionId)),
+            encodePath(transactionId),
         );
         const apiPayload: Payload = {};
 
@@ -334,7 +339,7 @@ export class TablesDB extends Service {
 
         const apiPath = '/tablesdb/transactions/{transactionId}'.replace(
             '{transactionId}',
-            encodeURIComponent(String(transactionId)),
+            encodePath(transactionId),
         );
         const apiPayload: Payload = {};
 
@@ -420,7 +425,7 @@ export class TablesDB extends Service {
 
         const apiPath = '/tablesdb/transactions/{transactionId}'.replace(
             '{transactionId}',
-            encodeURIComponent(String(transactionId)),
+            encodePath(transactionId),
         );
         const apiPayload: Payload = {};
 
@@ -497,7 +502,7 @@ export class TablesDB extends Service {
         const apiPath =
             '/tablesdb/transactions/{transactionId}/operations'.replace(
                 '{transactionId}',
-                encodeURIComponent(String(transactionId)),
+                encodePath(transactionId),
             );
         const apiPayload: Payload = {};
 
@@ -646,8 +651,8 @@ export class TablesDB extends Service {
         }
 
         const apiPath = '/tablesdb/{databaseId}/tables/{tableId}/rows'
-            .replace('{databaseId}', encodeURIComponent(String(databaseId)))
-            .replace('{tableId}', encodeURIComponent(String(tableId)));
+            .replace('{databaseId}', encodePath(databaseId))
+            .replace('{tableId}', encodePath(tableId));
         const apiPayload: Payload = {};
 
         if (typeof queries !== 'undefined') {
@@ -842,8 +847,8 @@ export class TablesDB extends Service {
         }
 
         const apiPath = '/tablesdb/{databaseId}/tables/{tableId}/rows'
-            .replace('{databaseId}', encodeURIComponent(String(databaseId)))
-            .replace('{tableId}', encodeURIComponent(String(tableId)));
+            .replace('{databaseId}', encodePath(databaseId))
+            .replace('{tableId}', encodePath(tableId));
         const apiPayload: Payload = {};
 
         if (typeof rowId !== 'undefined') {
@@ -1002,8 +1007,8 @@ export class TablesDB extends Service {
         }
 
         const apiPath = '/tablesdb/{databaseId}/tables/{tableId}/rows/query'
-            .replace('{databaseId}', encodeURIComponent(String(databaseId)))
-            .replace('{tableId}', encodeURIComponent(String(tableId)));
+            .replace('{databaseId}', encodePath(databaseId))
+            .replace('{tableId}', encodePath(tableId));
         const apiPayload: Payload = {};
 
         if (typeof queries !== 'undefined') {
@@ -1166,9 +1171,9 @@ export class TablesDB extends Service {
         }
 
         const apiPath = '/tablesdb/{databaseId}/tables/{tableId}/rows/{rowId}'
-            .replace('{databaseId}', encodeURIComponent(String(databaseId)))
-            .replace('{tableId}', encodeURIComponent(String(tableId)))
-            .replace('{rowId}', encodeURIComponent(String(rowId)));
+            .replace('{databaseId}', encodePath(databaseId))
+            .replace('{tableId}', encodePath(tableId))
+            .replace('{rowId}', encodePath(rowId));
         const apiPayload: Payload = {};
 
         if (typeof queries !== 'undefined') {
@@ -1343,9 +1348,9 @@ export class TablesDB extends Service {
         }
 
         const apiPath = '/tablesdb/{databaseId}/tables/{tableId}/rows/{rowId}'
-            .replace('{databaseId}', encodeURIComponent(String(databaseId)))
-            .replace('{tableId}', encodeURIComponent(String(tableId)))
-            .replace('{rowId}', encodeURIComponent(String(rowId)));
+            .replace('{databaseId}', encodePath(databaseId))
+            .replace('{tableId}', encodePath(tableId))
+            .replace('{rowId}', encodePath(rowId));
         const apiPayload: Payload = {};
 
         if (typeof data !== 'undefined') {
@@ -1525,9 +1530,9 @@ export class TablesDB extends Service {
         }
 
         const apiPath = '/tablesdb/{databaseId}/tables/{tableId}/rows/{rowId}'
-            .replace('{databaseId}', encodeURIComponent(String(databaseId)))
-            .replace('{tableId}', encodeURIComponent(String(tableId)))
-            .replace('{rowId}', encodeURIComponent(String(rowId)));
+            .replace('{databaseId}', encodePath(databaseId))
+            .replace('{tableId}', encodePath(tableId))
+            .replace('{rowId}', encodePath(rowId));
         const apiPayload: Payload = {};
 
         if (typeof data !== 'undefined') {
@@ -1666,9 +1671,9 @@ export class TablesDB extends Service {
         }
 
         const apiPath = '/tablesdb/{databaseId}/tables/{tableId}/rows/{rowId}'
-            .replace('{databaseId}', encodeURIComponent(String(databaseId)))
-            .replace('{tableId}', encodeURIComponent(String(tableId)))
-            .replace('{rowId}', encodeURIComponent(String(rowId)));
+            .replace('{databaseId}', encodePath(databaseId))
+            .replace('{tableId}', encodePath(tableId))
+            .replace('{rowId}', encodePath(rowId));
         const apiPayload: Payload = {};
 
         if (typeof transactionId !== 'undefined') {
@@ -1820,10 +1825,10 @@ export class TablesDB extends Service {
 
         const apiPath =
             '/tablesdb/{databaseId}/tables/{tableId}/rows/{rowId}/{column}/decrement'
-                .replace('{databaseId}', encodeURIComponent(String(databaseId)))
-                .replace('{tableId}', encodeURIComponent(String(tableId)))
-                .replace('{rowId}', encodeURIComponent(String(rowId)))
-                .replace('{column}', encodeURIComponent(String(column)));
+                .replace('{databaseId}', encodePath(databaseId))
+                .replace('{tableId}', encodePath(tableId))
+                .replace('{rowId}', encodePath(rowId))
+                .replace('{column}', encodePath(column));
         const apiPayload: Payload = {};
 
         if (typeof value !== 'undefined') {
@@ -2001,10 +2006,10 @@ export class TablesDB extends Service {
 
         const apiPath =
             '/tablesdb/{databaseId}/tables/{tableId}/rows/{rowId}/{column}/increment'
-                .replace('{databaseId}', encodeURIComponent(String(databaseId)))
-                .replace('{tableId}', encodeURIComponent(String(tableId)))
-                .replace('{rowId}', encodeURIComponent(String(rowId)))
-                .replace('{column}', encodeURIComponent(String(column)));
+                .replace('{databaseId}', encodePath(databaseId))
+                .replace('{tableId}', encodePath(tableId))
+                .replace('{rowId}', encodePath(rowId))
+                .replace('{column}', encodePath(column));
         const apiPayload: Payload = {};
 
         if (typeof value !== 'undefined') {

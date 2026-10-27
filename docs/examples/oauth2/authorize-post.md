@@ -10,7 +10,7 @@ const oauth2 = new Oauth2(client);
 const result = await oauth2.authorizePost({
     clientId: '<CLIENT_ID>', // optional
     redirectUri: 'https://example.com', // optional
-    responseType: '', // optional
+    responseType: undefined, // optional
     scope: '<SCOPE>', // optional
     state: '<STATE>', // optional
     nonce: '<NONCE>', // optional

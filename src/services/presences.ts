@@ -1,5 +1,10 @@
 import { Service } from '../service';
-import { AppwriteException, Client, applyDefaults } from '../client';
+import {
+    AppwriteException,
+    Client,
+    applyDefaults,
+    encodePath,
+} from '../client';
 import type { Models } from '../models';
 import type { Payload } from '../client';
 
@@ -170,7 +175,7 @@ export class Presences extends Service {
 
         const apiPath = '/presences/{presenceId}'.replace(
             '{presenceId}',
-            encodeURIComponent(String(presenceId)),
+            encodePath(presenceId),
         );
         const apiPayload: Payload = {};
 
@@ -302,7 +307,7 @@ export class Presences extends Service {
 
         const apiPath = '/presences/{presenceId}'.replace(
             '{presenceId}',
-            encodeURIComponent(String(presenceId)),
+            encodePath(presenceId),
         );
         const apiPayload: Payload = {};
 
@@ -456,7 +461,7 @@ export class Presences extends Service {
 
         const apiPath = '/presences/{presenceId}'.replace(
             '{presenceId}',
-            encodeURIComponent(String(presenceId)),
+            encodePath(presenceId),
         );
         const apiPayload: Payload = {};
 
@@ -554,7 +559,7 @@ export class Presences extends Service {
 
         const apiPath = '/presences/{presenceId}'.replace(
             '{presenceId}',
-            encodeURIComponent(String(presenceId)),
+            encodePath(presenceId),
         );
         const apiPayload: Payload = {};
 

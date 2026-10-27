@@ -1,5 +1,13 @@
 # Change log
 
+## 3.1.0
+
+* Updated: requests send `X-Appwrite-Response-Format: 2.6.2`; the SDK targets Appwrite 2.6.x
+* Updated: `mqtt` dependency to `5.16.1` and `readable-stream` to `4.8.0`
+* Fixed: `Push` reconnects after the broker rejects a connection or the native socket closes
+* Fixed: path parameters `.` and `..` throw `AppwriteException` instead of changing the request URL
+* Fixed: examples leave unset optional params `undefined` instead of passing empty strings
+
 ## 3.0.0
 
 * Breaking: `expo-file-system` is a peer dependency (`>=18.0.0`); install it in your app

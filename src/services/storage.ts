@@ -1,5 +1,10 @@
 import { Service } from '../service';
-import { AppwriteException, Client, applyDefaults } from '../client';
+import {
+    AppwriteException,
+    Client,
+    applyDefaults,
+    encodePath,
+} from '../client';
 import type { Models } from '../models';
 import type { UploadProgress, Payload } from '../client';
 import { fileSystem } from '../lib/file-system';
@@ -96,7 +101,7 @@ export class Storage extends Service {
 
         const apiPath = '/storage/buckets/{bucketId}/files'.replace(
             '{bucketId}',
-            encodeURIComponent(String(bucketId)),
+            encodePath(bucketId),
         );
         const apiPayload: Payload = {};
 
@@ -301,7 +306,7 @@ export class Storage extends Service {
 
         const apiPath = '/storage/buckets/{bucketId}/files'.replace(
             '{bucketId}',
-            encodeURIComponent(String(bucketId)),
+            encodePath(bucketId),
         );
         const apiPayload: Payload = {};
 
@@ -615,8 +620,8 @@ export class Storage extends Service {
         }
 
         const apiPath = '/storage/buckets/{bucketId}/files/{fileId}'
-            .replace('{bucketId}', encodeURIComponent(String(bucketId)))
-            .replace('{fileId}', encodeURIComponent(String(fileId)));
+            .replace('{bucketId}', encodePath(bucketId))
+            .replace('{fileId}', encodePath(fileId));
         const apiPayload: Payload = {};
 
         const uri = new URL(this.client.config.endpoint + apiPath);
@@ -745,8 +750,8 @@ export class Storage extends Service {
         }
 
         const apiPath = '/storage/buckets/{bucketId}/files/{fileId}'
-            .replace('{bucketId}', encodeURIComponent(String(bucketId)))
-            .replace('{fileId}', encodeURIComponent(String(fileId)));
+            .replace('{bucketId}', encodePath(bucketId))
+            .replace('{fileId}', encodePath(fileId));
         const apiPayload: Payload = {};
 
         if (typeof name !== 'undefined') {
@@ -852,8 +857,8 @@ export class Storage extends Service {
         }
 
         const apiPath = '/storage/buckets/{bucketId}/files/{fileId}'
-            .replace('{bucketId}', encodeURIComponent(String(bucketId)))
-            .replace('{fileId}', encodeURIComponent(String(fileId)));
+            .replace('{bucketId}', encodePath(bucketId))
+            .replace('{fileId}', encodePath(fileId));
         const apiPayload: Payload = {};
 
         const uri = new URL(this.client.config.endpoint + apiPath);
@@ -938,8 +943,8 @@ export class Storage extends Service {
         }
 
         const apiPath = '/storage/buckets/{bucketId}/files/{fileId}/download'
-            .replace('{bucketId}', encodeURIComponent(String(bucketId)))
-            .replace('{fileId}', encodeURIComponent(String(fileId)));
+            .replace('{bucketId}', encodePath(bucketId))
+            .replace('{fileId}', encodePath(fileId));
         const apiPayload: Payload = {};
 
         if (typeof token !== 'undefined') {
@@ -1159,8 +1164,8 @@ export class Storage extends Service {
         }
 
         const apiPath = '/storage/buckets/{bucketId}/files/{fileId}/preview'
-            .replace('{bucketId}', encodeURIComponent(String(bucketId)))
-            .replace('{fileId}', encodeURIComponent(String(fileId)));
+            .replace('{bucketId}', encodePath(bucketId))
+            .replace('{fileId}', encodePath(fileId));
         const apiPayload: Payload = {};
 
         if (typeof width !== 'undefined') {
@@ -1302,8 +1307,8 @@ export class Storage extends Service {
         }
 
         const apiPath = '/storage/buckets/{bucketId}/files/{fileId}/view'
-            .replace('{bucketId}', encodeURIComponent(String(bucketId)))
-            .replace('{fileId}', encodeURIComponent(String(fileId)));
+            .replace('{bucketId}', encodePath(bucketId))
+            .replace('{fileId}', encodePath(fileId));
         const apiPayload: Payload = {};
 
         if (typeof token !== 'undefined') {
@@ -1355,8 +1360,8 @@ export class Storage extends Service {
         }
 
         const apiPath = '/storage/buckets/{bucketId}/files/{fileId}/download'
-            .replace('{bucketId}', encodeURIComponent(String(bucketId)))
-            .replace('{fileId}', encodeURIComponent(String(fileId)));
+            .replace('{bucketId}', encodePath(bucketId))
+            .replace('{fileId}', encodePath(fileId));
         const apiPayload: Payload = {};
 
         if (typeof token !== 'undefined') {
@@ -1428,8 +1433,8 @@ export class Storage extends Service {
         }
 
         const apiPath = '/storage/buckets/{bucketId}/files/{fileId}/preview'
-            .replace('{bucketId}', encodeURIComponent(String(bucketId)))
-            .replace('{fileId}', encodeURIComponent(String(fileId)));
+            .replace('{bucketId}', encodePath(bucketId))
+            .replace('{fileId}', encodePath(fileId));
         const apiPayload: Payload = {};
 
         if (typeof width !== 'undefined') {
@@ -1517,8 +1522,8 @@ export class Storage extends Service {
         }
 
         const apiPath = '/storage/buckets/{bucketId}/files/{fileId}/view'
-            .replace('{bucketId}', encodeURIComponent(String(bucketId)))
-            .replace('{fileId}', encodeURIComponent(String(fileId)));
+            .replace('{bucketId}', encodePath(bucketId))
+            .replace('{fileId}', encodePath(fileId));
         const apiPayload: Payload = {};
 
         if (typeof token !== 'undefined') {
