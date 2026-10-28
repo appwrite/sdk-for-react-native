@@ -1,5 +1,10 @@
 import { Service } from '../service';
-import { AppwriteException, Client, applyDefaults } from '../client';
+import {
+    AppwriteException,
+    Client,
+    applyDefaults,
+    encodePath,
+} from '../client';
 import type { Models } from '../models';
 import type { Payload } from '../client';
 
@@ -391,7 +396,7 @@ export class Account extends Service {
 
         const apiPath = '/account/consents/{consentId}'.replace(
             '{consentId}',
-            encodeURIComponent(String(consentId)),
+            encodePath(consentId),
         );
         const apiPayload: Payload = {};
 
@@ -470,7 +475,7 @@ export class Account extends Service {
 
         const apiPath = '/account/consents/{consentId}'.replace(
             '{consentId}',
-            encodeURIComponent(String(consentId)),
+            encodePath(consentId),
         );
         const apiPayload: Payload = {};
 
@@ -553,7 +558,7 @@ export class Account extends Service {
 
         const apiPath = '/account/consents/{consentId}/tokens'.replace(
             '{consentId}',
-            encodeURIComponent(String(consentId)),
+            encodePath(consentId),
         );
         const apiPayload: Payload = {};
 
@@ -673,8 +678,8 @@ export class Account extends Service {
         }
 
         const apiPath = '/account/consents/{consentId}/tokens/{tokenId}'
-            .replace('{consentId}', encodeURIComponent(String(consentId)))
-            .replace('{tokenId}', encodeURIComponent(String(tokenId)));
+            .replace('{consentId}', encodePath(consentId))
+            .replace('{tokenId}', encodePath(tokenId));
         const apiPayload: Payload = {};
 
         const uri = new URL(this.client.config.endpoint + apiPath);
@@ -771,8 +776,8 @@ export class Account extends Service {
         }
 
         const apiPath = '/account/consents/{consentId}/tokens/{tokenId}'
-            .replace('{consentId}', encodeURIComponent(String(consentId)))
-            .replace('{tokenId}', encodeURIComponent(String(tokenId)));
+            .replace('{consentId}', encodePath(consentId))
+            .replace('{tokenId}', encodePath(tokenId));
         const apiPayload: Payload = {};
 
         const uri = new URL(this.client.config.endpoint + apiPath);
@@ -1073,7 +1078,7 @@ export class Account extends Service {
 
         const apiPath = '/account/identities/{identityId}'.replace(
             '{identityId}',
-            encodeURIComponent(String(identityId)),
+            encodePath(identityId),
         );
         const apiPayload: Payload = {};
 
@@ -1425,7 +1430,7 @@ export class Account extends Service {
 
         const apiPath = '/account/mfa/authenticators/{type}'.replace(
             '{type}',
-            encodeURIComponent(String(type)),
+            encodePath(type),
         );
         const apiPayload: Payload = {};
 
@@ -1500,7 +1505,7 @@ export class Account extends Service {
 
         const apiPath = '/account/mfa/authenticators/{type}'.replace(
             '{type}',
-            encodeURIComponent(String(type)),
+            encodePath(type),
         );
         const apiPayload: Payload = {};
 
@@ -1596,7 +1601,7 @@ export class Account extends Service {
 
         const apiPath = '/account/mfa/authenticators/{type}'.replace(
             '{type}',
-            encodeURIComponent(String(type)),
+            encodePath(type),
         );
         const apiPayload: Payload = {};
 
@@ -1725,7 +1730,7 @@ export class Account extends Service {
 
         const apiPath = '/account/mfa/authenticators/{type}'.replace(
             '{type}',
-            encodeURIComponent(String(type)),
+            encodePath(type),
         );
         const apiPayload: Payload = {};
 
@@ -1833,7 +1838,7 @@ export class Account extends Service {
 
         const apiPath = '/account/mfa/authenticators/{type}'.replace(
             '{type}',
-            encodeURIComponent(String(type)),
+            encodePath(type),
         );
         const apiPayload: Payload = {};
 
@@ -1893,7 +1898,7 @@ export class Account extends Service {
 
         const apiPath = '/account/mfa/authenticators/{type}'.replace(
             '{type}',
-            encodeURIComponent(String(type)),
+            encodePath(type),
         );
         const apiPayload: Payload = {};
 
@@ -2953,7 +2958,7 @@ export class Account extends Service {
 
         const apiPath = '/account/passkeys/{passkeyId}'.replace(
             '{passkeyId}',
-            encodeURIComponent(String(passkeyId)),
+            encodePath(passkeyId),
         );
         const apiPayload: Payload = {};
 
@@ -3044,7 +3049,7 @@ export class Account extends Service {
 
         const apiPath = '/account/passkeys/{passkeyId}'.replace(
             '{passkeyId}',
-            encodeURIComponent(String(passkeyId)),
+            encodePath(passkeyId),
         );
         const apiPayload: Payload = {};
 
@@ -3123,7 +3128,7 @@ export class Account extends Service {
 
         const apiPath = '/account/passkeys/{passkeyId}'.replace(
             '{passkeyId}',
-            encodeURIComponent(String(passkeyId)),
+            encodePath(passkeyId),
         );
         const apiPayload: Payload = {};
 
@@ -3204,7 +3209,7 @@ export class Account extends Service {
 
         const apiPath = '/account/passkeys/{passkeyId}/verification'.replace(
             '{passkeyId}',
-            encodeURIComponent(String(passkeyId)),
+            encodePath(passkeyId),
         );
         const apiPayload: Payload = {};
 
@@ -4894,7 +4899,7 @@ export class Account extends Service {
 
         const apiPath = '/account/sessions/oauth2/{provider}'.replace(
             '{provider}',
-            encodeURIComponent(String(provider)),
+            encodePath(provider),
         );
         const apiPayload: Payload = {};
 
@@ -5208,7 +5213,7 @@ export class Account extends Service {
 
         const apiPath = '/account/sessions/{sessionId}'.replace(
             '{sessionId}',
-            encodeURIComponent(String(sessionId)),
+            encodePath(sessionId),
         );
         const apiPayload: Payload = {};
 
@@ -5308,7 +5313,7 @@ export class Account extends Service {
 
         const apiPath = '/account/sessions/{sessionId}'.replace(
             '{sessionId}',
-            encodeURIComponent(String(sessionId)),
+            encodePath(sessionId),
         );
         const apiPayload: Payload = {};
 
@@ -5407,7 +5412,7 @@ export class Account extends Service {
 
         const apiPath = '/account/sessions/{sessionId}'.replace(
             '{sessionId}',
-            encodeURIComponent(String(sessionId)),
+            encodePath(sessionId),
         );
         const apiPayload: Payload = {};
 
@@ -5734,7 +5739,7 @@ export class Account extends Service {
 
         const apiPath = '/account/targets/{targetId}/push'.replace(
             '{targetId}',
-            encodeURIComponent(String(targetId)),
+            encodePath(targetId),
         );
         const apiPayload: Payload = {};
 
@@ -5826,7 +5831,7 @@ export class Account extends Service {
 
         const apiPath = '/account/targets/{targetId}/push'.replace(
             '{targetId}',
-            encodeURIComponent(String(targetId)),
+            encodePath(targetId),
         );
         const apiPayload: Payload = {};
 
@@ -6204,7 +6209,7 @@ export class Account extends Service {
 
         const apiPath = '/account/tokens/oauth2/{provider}'.replace(
             '{provider}',
-            encodeURIComponent(String(provider)),
+            encodePath(provider),
         );
         const apiPayload: Payload = {};
 

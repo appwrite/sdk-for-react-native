@@ -1,5 +1,10 @@
 import { Service } from '../service';
-import { AppwriteException, Client, applyDefaults } from '../client';
+import {
+    AppwriteException,
+    Client,
+    applyDefaults,
+    encodePath,
+} from '../client';
 import type { Models } from '../models';
 import type { Payload } from '../client';
 
@@ -87,7 +92,7 @@ export class Messaging extends Service {
 
         const apiPath = '/messaging/topics/{topicId}/subscribers'.replace(
             '{topicId}',
-            encodeURIComponent(String(topicId)),
+            encodePath(topicId),
         );
         const apiPayload: Payload = {};
 
@@ -191,11 +196,8 @@ export class Messaging extends Service {
         }
 
         const apiPath = '/messaging/topics/{topicId}/subscribers/{subscriberId}'
-            .replace('{topicId}', encodeURIComponent(String(topicId)))
-            .replace(
-                '{subscriberId}',
-                encodeURIComponent(String(subscriberId)),
-            );
+            .replace('{topicId}', encodePath(topicId))
+            .replace('{subscriberId}', encodePath(subscriberId));
         const apiPayload: Payload = {};
 
         const uri = new URL(this.client.config.endpoint + apiPath);

@@ -1,5 +1,10 @@
 import { Service } from '../service';
-import { AppwriteException, Client, applyDefaults } from '../client';
+import {
+    AppwriteException,
+    Client,
+    applyDefaults,
+    encodePath,
+} from '../client';
 import type { Models } from '../models';
 import type { Payload } from '../client';
 
@@ -281,7 +286,7 @@ export class Teams extends Service {
 
         const apiPath = '/teams/{teamId}'.replace(
             '{teamId}',
-            encodeURIComponent(String(teamId)),
+            encodePath(teamId),
         );
         const apiPayload: Payload = {};
 
@@ -373,7 +378,7 @@ export class Teams extends Service {
 
         const apiPath = '/teams/{teamId}'.replace(
             '{teamId}',
-            encodeURIComponent(String(teamId)),
+            encodePath(teamId),
         );
         const apiPayload: Payload = {};
 
@@ -450,7 +455,7 @@ export class Teams extends Service {
 
         const apiPath = '/teams/{teamId}'.replace(
             '{teamId}',
-            encodeURIComponent(String(teamId)),
+            encodePath(teamId),
         );
         const apiPayload: Payload = {};
 
@@ -531,7 +536,7 @@ export class Teams extends Service {
 
         const apiPath = '/teams/{teamId}/installations'.replace(
             '{teamId}',
-            encodeURIComponent(String(teamId)),
+            encodePath(teamId),
         );
         const apiPayload: Payload = {};
 
@@ -659,7 +664,7 @@ export class Teams extends Service {
 
         const apiPath = '/teams/{teamId}/installations'.replace(
             '{teamId}',
-            encodeURIComponent(String(teamId)),
+            encodePath(teamId),
         );
         const apiPayload: Payload = {};
 
@@ -765,11 +770,8 @@ export class Teams extends Service {
         }
 
         const apiPath = '/teams/{teamId}/installations/{installationId}'
-            .replace('{teamId}', encodeURIComponent(String(teamId)))
-            .replace(
-                '{installationId}',
-                encodeURIComponent(String(installationId)),
-            );
+            .replace('{teamId}', encodePath(teamId))
+            .replace('{installationId}', encodePath(installationId));
         const apiPayload: Payload = {};
 
         const uri = new URL(this.client.config.endpoint + apiPath);
@@ -882,11 +884,8 @@ export class Teams extends Service {
         }
 
         const apiPath = '/teams/{teamId}/installations/{installationId}'
-            .replace('{teamId}', encodeURIComponent(String(teamId)))
-            .replace(
-                '{installationId}',
-                encodeURIComponent(String(installationId)),
-            );
+            .replace('{teamId}', encodePath(teamId))
+            .replace('{installationId}', encodePath(installationId));
         const apiPayload: Payload = {};
 
         if (typeof authorizationDetails !== 'undefined') {
@@ -984,11 +983,8 @@ export class Teams extends Service {
         }
 
         const apiPath = '/teams/{teamId}/installations/{installationId}'
-            .replace('{teamId}', encodeURIComponent(String(teamId)))
-            .replace(
-                '{installationId}',
-                encodeURIComponent(String(installationId)),
-            );
+            .replace('{teamId}', encodePath(teamId))
+            .replace('{installationId}', encodePath(installationId));
         const apiPayload: Payload = {};
 
         const uri = new URL(this.client.config.endpoint + apiPath);
@@ -1086,7 +1082,7 @@ export class Teams extends Service {
 
         const apiPath = '/teams/{teamId}/memberships'.replace(
             '{teamId}',
-            encodeURIComponent(String(teamId)),
+            encodePath(teamId),
         );
         const apiPayload: Payload = {};
 
@@ -1295,7 +1291,7 @@ export class Teams extends Service {
 
         const apiPath = '/teams/{teamId}/memberships'.replace(
             '{teamId}',
-            encodeURIComponent(String(teamId)),
+            encodePath(teamId),
         );
         const apiPayload: Payload = {};
 
@@ -1427,11 +1423,8 @@ export class Teams extends Service {
         }
 
         const apiPath = '/teams/{teamId}/memberships/{membershipId}'
-            .replace('{teamId}', encodeURIComponent(String(teamId)))
-            .replace(
-                '{membershipId}',
-                encodeURIComponent(String(membershipId)),
-            );
+            .replace('{teamId}', encodePath(teamId))
+            .replace('{membershipId}', encodePath(membershipId));
         const apiPayload: Payload = {};
 
         const uri = new URL(this.client.config.endpoint + apiPath);
@@ -1547,11 +1540,8 @@ export class Teams extends Service {
         }
 
         const apiPath = '/teams/{teamId}/memberships/{membershipId}'
-            .replace('{teamId}', encodeURIComponent(String(teamId)))
-            .replace(
-                '{membershipId}',
-                encodeURIComponent(String(membershipId)),
-            );
+            .replace('{teamId}', encodePath(teamId))
+            .replace('{membershipId}', encodePath(membershipId));
         const apiPayload: Payload = {};
 
         if (typeof roles !== 'undefined') {
@@ -1655,11 +1645,8 @@ export class Teams extends Service {
         }
 
         const apiPath = '/teams/{teamId}/memberships/{membershipId}'
-            .replace('{teamId}', encodeURIComponent(String(teamId)))
-            .replace(
-                '{membershipId}',
-                encodeURIComponent(String(membershipId)),
-            );
+            .replace('{teamId}', encodePath(teamId))
+            .replace('{membershipId}', encodePath(membershipId));
         const apiPayload: Payload = {};
 
         const uri = new URL(this.client.config.endpoint + apiPath);
@@ -1776,11 +1763,8 @@ export class Teams extends Service {
         }
 
         const apiPath = '/teams/{teamId}/memberships/{membershipId}/status'
-            .replace('{teamId}', encodeURIComponent(String(teamId)))
-            .replace(
-                '{membershipId}',
-                encodeURIComponent(String(membershipId)),
-            );
+            .replace('{teamId}', encodePath(teamId))
+            .replace('{membershipId}', encodePath(membershipId));
         const apiPayload: Payload = {};
 
         if (typeof userId !== 'undefined') {
@@ -1876,7 +1860,7 @@ export class Teams extends Service {
 
         const apiPath = '/teams/{teamId}/prefs'.replace(
             '{teamId}',
-            encodeURIComponent(String(teamId)),
+            encodePath(teamId),
         );
         const apiPayload: Payload = {};
 
@@ -1949,7 +1933,7 @@ export class Teams extends Service {
 
         const apiPath = '/teams/{teamId}/prefs'.replace(
             '{teamId}',
-            encodeURIComponent(String(teamId)),
+            encodePath(teamId),
         );
         const apiPayload: Payload = {};
 
