@@ -55,6 +55,16 @@ declare module 'react-native-tcp-socket' {
         ): Socket;
     }
 
+    export interface PeerCertificate {
+        subject?: { CN?: string };
+        /** SHA-256 of the DER certificate, as colon-separated hex. */
+        fingerprint256?: string;
+    }
+
+    export interface TLSSocket extends Socket {
+        getPeerCertificate(): Promise<PeerCertificate>;
+    }
+
     export interface TcpSocketConnectOpts {
         host?: string;
         port: number;
@@ -69,7 +79,7 @@ declare module 'react-native-tcp-socket' {
             options: TcpSocketConnectOpts,
             callback?: () => void,
         ): Socket;
-        connectTLS(options: TLSSocketOptions, callback?: () => void): Socket;
+        connectTLS(options: TLSSocketOptions, callback?: () => void): TLSSocket;
     }
 
     const TcpSockets: TcpSocketStatic;

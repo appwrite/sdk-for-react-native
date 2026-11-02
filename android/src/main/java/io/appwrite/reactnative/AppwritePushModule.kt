@@ -12,21 +12,33 @@ import io.appwrite.reactnative.services.PushMessage
 import io.appwrite.reactnative.services.PushTap
 import io.appwrite.reactnative.services.PushTaps
 import org.json.JSONObject
+import java.net.InetSocketAddress
+import java.net.Socket
+import java.security.MessageDigest
+import javax.net.ssl.HostnameVerifier
+import javax.net.ssl.HttpsURLConnection
+import javax.net.ssl.SSLPeerUnverifiedException
+import javax.net.ssl.SSLSocket
+import javax.net.ssl.SSLSocketFactory
+import kotlin.concurrent.thread
 
 /**
  * The React Native side of [PushBridge]: the SDK's `Push` hosts its background subscriptions
  * here on Android, and receives their messages and errors as events. It also reports taps on the
  * notifications they post: the one that launched the app, and later ones as events.
  *
- * [emit] sends an event to JS; tests replace it to observe what JS would receive.
+ * [emit] sends an event to JS; tests replace it to observe what JS would receive. [tls] and
+ * [hostnameVerifier] verify the push server; tests replace them to trust a test CA.
  */
 class AppwritePushModule internal constructor(
     private val reactContext: ReactApplicationContext,
+    private val tls: SSLSocketFactory = SSLSocketFactory.getDefault() as SSLSocketFactory,
+    private val hostnameVerifier: HostnameVerifier = HttpsURLConnection.getDefaultHostnameVerifier(),
     private val emit: (String, Map<String, Any?>) -> Unit,
 ) : ReactContextBaseJavaModule(reactContext) {
     constructor(reactContext: ReactApplicationContext) : this(
         reactContext,
-        { event, body ->
+        emit = { event, body ->
             if (reactContext.hasActiveReactInstance()) {
                 reactContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
                     .emit(event, Arguments.makeNativeMap(body))
@@ -147,6 +159,37 @@ class AppwritePushModule internal constructor(
     fun defaultClientId(authMethod: String, credential: String, promise: Promise) =
         settle(promise) { bridge.defaultClientId(authMethod, credential) }
 
+    /**
+     * The SHA-256 fingerprint of the certificate [host]:[port] presents, once verified for [host]
+     * as HTTPS would: the chain, then the hostname against its subjectAltName. JS opens its TLS
+     * socket through react-native-tcp-socket, which checks only the chain, and requires that
+     * socket's certificate to be this one before it writes anything.
+     */
+    @ReactMethod
+    fun verifiedCertificate(host: String, port: Double, promise: Promise) {
+        thread(name = "AppwritePushTls") {
+            settle(promise) {
+                Socket().use { plain ->
+                    plain.connect(InetSocketAddress(host, port.toInt()), TLS_TIMEOUT_MS)
+                    // Layered with the hostname, so the handshake sends it as SNI.
+                    (tls.createSocket(plain, host, port.toInt(), true) as SSLSocket).use { socket ->
+                        socket.soTimeout = TLS_TIMEOUT_MS
+                        // The handshake itself checks the hostname against the subjectAltName...
+                        socket.sslParameters = socket.sslParameters.apply { endpointIdentificationAlgorithm = "HTTPS" }
+                        socket.startHandshake()
+                        // ...and so does the platform's HTTPS verifier, after it.
+                        if (!hostnameVerifier.verify(host, socket.session)) {
+                            throw SSLPeerUnverifiedException("The push server's TLS certificate is not valid for '$host'.")
+                        }
+                        MessageDigest.getInstance("SHA-256")
+                            .digest(socket.session.peerCertificates[0].encoded)
+                            .joinToString(":") { "%02X".format(it) }
+                    }
+                }
+            }
+        }
+    }
+
     // Required by NativeEventEmitter; events are emitted whether or not anyone listens.
     @ReactMethod
     fun addListener(eventName: String) = Unit
@@ -170,6 +213,7 @@ class AppwritePushModule internal constructor(
         const val ERROR_EVENT = "AppwritePushError"
         const val OPENED_EVENT = "AppwritePushOpened"
         const val CONNECTION_EVENT = "AppwritePushConnection"
+        private const val TLS_TIMEOUT_MS = 10_000
         private const val ERROR_CODE = "appwrite_push"
     }
 }
