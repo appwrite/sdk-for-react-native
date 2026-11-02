@@ -1,5 +1,9 @@
 # Change log
 
+## 3.1.1
+
+* Fixed: `Push` on Android verifies the push server's TLS hostname before sending credentials
+
 ## 3.1.0
 
 * Updated: requests send `X-Appwrite-Response-Format: 2.6.2`; the SDK targets Appwrite 2.6.x
