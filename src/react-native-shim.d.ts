@@ -62,6 +62,8 @@ declare module 'react-native-tcp-socket' {
 
     export interface TLSSocketOptions extends TcpSocketConnectOpts {
         rejectUnauthorized?: boolean;
+        /** PEM certificate to trust in place of the system roots. */
+        ca?: string;
     }
 
     interface TcpSocketStatic {
