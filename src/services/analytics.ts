@@ -20,9 +20,10 @@ export class Analytics extends Service {
      * @param {number} params.scrollDepth - Scroll depth percentage 0-100.
      * @param {number} params.engagementTime - Engagement time in seconds, 0-4294967295.
      * @param {string[]} params.props - Custom string properties as a flat key=value list (max 32 entries, alternating key,value).
-     * @param {string} params.userId - Override user ID. Requires API-key auth with analytics.write scope.
+     * @param {string} params.userId - Override user ID. Pass an opaque ID, not personal data such as an email. Requires API-key auth with analytics.write scope.
      * @param {string} params.ip - Override IP address. Requires API-key auth with analytics.write scope.
      * @param {string} params.userAgent - Override user agent. Requires API-key auth with analytics.write scope.
+     * @param {boolean | null} params.interactive - Whether this event is a visitor interaction that ends a bounce. Set false for telemetry such as heartbeats or background syncs. Defaults to true for custom events and false for the automatic engagement, scroll and app lifecycle events. Ignored for views.
      * @throws {AppwriteException}
      * @returns {Promise}
      */
@@ -40,6 +41,7 @@ export class Analytics extends Service {
         userId?: string;
         ip?: string;
         userAgent?: string;
+        interactive?: boolean | null;
     }): Promise<{}>;
     /**
      * Send a tracking event from a browser, native app, or server-side SDK.
@@ -54,9 +56,10 @@ export class Analytics extends Service {
      * @param {number} scrollDepth - Scroll depth percentage 0-100.
      * @param {number} engagementTime - Engagement time in seconds, 0-4294967295.
      * @param {string[]} props - Custom string properties as a flat key=value list (max 32 entries, alternating key,value).
-     * @param {string} userId - Override user ID. Requires API-key auth with analytics.write scope.
+     * @param {string} userId - Override user ID. Pass an opaque ID, not personal data such as an email. Requires API-key auth with analytics.write scope.
      * @param {string} ip - Override IP address. Requires API-key auth with analytics.write scope.
      * @param {string} userAgent - Override user agent. Requires API-key auth with analytics.write scope.
+     * @param {boolean | null} interactive - Whether this event is a visitor interaction that ends a bounce. Set false for telemetry such as heartbeats or background syncs. Defaults to true for custom events and false for the automatic engagement, scroll and app lifecycle events. Ignored for views.
      * @throws {AppwriteException}
      * @returns {Promise<{}>}
      * @deprecated Use the object parameter style method for a better developer experience.
@@ -75,6 +78,7 @@ export class Analytics extends Service {
         userId?: string,
         ip?: string,
         userAgent?: string,
+        interactive?: boolean | null,
     ): Promise<{}>;
     createEvent(
         paramsOrFirst:
@@ -92,6 +96,7 @@ export class Analytics extends Service {
                   userId?: string;
                   ip?: string;
                   userAgent?: string;
+                  interactive?: boolean | null;
               }
             | string,
         ...rest: [
@@ -107,6 +112,7 @@ export class Analytics extends Service {
             string?,
             string?,
             string?,
+            (boolean | null)?,
         ]
     ): Promise<{}> {
         let params: {
@@ -123,6 +129,7 @@ export class Analytics extends Service {
             userId?: string;
             ip?: string;
             userAgent?: string;
+            interactive?: boolean | null;
         };
 
         if (
@@ -144,6 +151,7 @@ export class Analytics extends Service {
                 userId?: string;
                 ip?: string;
                 userAgent?: string;
+                interactive?: boolean | null;
             };
         } else {
             params = {
@@ -160,6 +168,7 @@ export class Analytics extends Service {
                 userId: rest[9] as string,
                 ip: rest[10] as string,
                 userAgent: rest[11] as string,
+                interactive: rest[12] as boolean | null,
             };
         }
 
@@ -176,6 +185,7 @@ export class Analytics extends Service {
         const userId = params.userId;
         const ip = params.ip;
         const userAgent = params.userAgent;
+        const interactive = params.interactive;
 
         if (typeof propertyId === 'undefined' || propertyId === '') {
             throw new AppwriteException(
@@ -243,6 +253,10 @@ export class Analytics extends Service {
 
         if (typeof userAgent !== 'undefined') {
             apiPayload['userAgent'] = userAgent;
+        }
+
+        if (typeof interactive !== 'undefined') {
+            apiPayload['interactive'] = interactive;
         }
 
         const uri = new URL(this.client.config.endpoint + apiPath);
