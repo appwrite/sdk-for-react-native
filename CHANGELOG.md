@@ -1,5 +1,13 @@
 # Change log
 
+## 3.2.0
+
+* Added: `Client.setEnvironment` to act in a project environment; realtime, avatar and storage URLs carry it
+* Added: optional `interactive` param on `Analytics.createEvent` to mark an event as telemetry that does not end a bounce
+* Added: `OAuthProvider.Vipps`
+* Fixed: Android background push reconnects inside the system's network windows instead of minutes later
+* Updated: requests send `X-Appwrite-Response-Format: 2.7.0`; the SDK targets Appwrite 2.7.x
+
 ## 3.1.1
 
 * Fixed: `Push` on Android verifies the push server's TLS hostname before sending credentials

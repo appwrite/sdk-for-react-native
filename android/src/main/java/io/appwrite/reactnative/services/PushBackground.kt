@@ -644,7 +644,10 @@ internal object PushBackground {
             return
         }
         var client = mqtt
-        if (client != null && (current != connectedConfig || networkChanged(context))) {
+        // A client that lost its connection retries on its own backoff, which keeps firing while
+        // Android blocks a backgrounded app's network (the host lookup then fails at once), so it
+        // misses the short windows the scheduled runs are given. A run is such a window: reconnect now.
+        if (client != null && (current != connectedConfig || networkChanged(context) || !isConnected)) {
             disconnect()
             client = null
         }
@@ -1294,6 +1297,19 @@ internal object PushBackground {
                 override fun onAvailable(network: Network) {
                     worker.execute {
                         if (mqtt != null && network != connectedNetwork) {
+                            converge(context, heartbeat = false)
+                        }
+                    }
+                }
+
+                // The app may use the network again (it came on screen, or a run's window opened):
+                // reconnect now rather than when the client's backoff next fires.
+                override fun onBlockedStatusChanged(network: Network, blocked: Boolean) {
+                    if (blocked) {
+                        return
+                    }
+                    worker.execute {
+                        if (mqtt != null && !isConnected) {
                             converge(context, heartbeat = false)
                         }
                     }

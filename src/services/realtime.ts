@@ -210,9 +210,14 @@ export class Realtime {
         }
 
         // URL carries only the project; channels/queries are sent via the subscribe message.
-        const queryParams = `project=${projectId}`;
+        let queryParams = `project=${projectId}`;
 
         const jwt = this.client.config.jwt;
+
+        const environment = this.client.config.environment;
+        if (environment) {
+            queryParams += `&environment=${encodeURIComponent(environment)}`;
+        }
 
         const endpoint =
             this.client.config.endpointRealtime !== ''
@@ -765,7 +770,12 @@ export class Realtime {
                 const cookie = JSONbig.parse(
                     window.localStorage.getItem('cookieFallback') ?? '{}',
                 );
-                session = cookie?.[`a_session_${this.client.config.project}`];
+                // An environment's session is named by its project and environment IDs.
+                const { project, environment } = this.client.config;
+                const name = environment
+                    ? `a_session_${project}_env_${environment}`
+                    : `a_session_${project}`;
+                session = cookie?.[name];
             } catch (error) {
                 console.error('Failed to parse cookie fallback:', error);
             }

@@ -21,6 +21,7 @@ const result = await analytics.createEvent({
     userId: '<USER_ID>', // optional
     ip: '<IP>', // optional
     userAgent: '<USER_AGENT>', // optional
+    interactive: false, // optional
 });
 
 console.log(result);
