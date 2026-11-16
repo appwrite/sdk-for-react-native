@@ -23,6 +23,7 @@ import { Client } from '../client';
 import { createTcpStream } from '../lib/tcp-stream';
 import { Service } from '../service';
 import type { Topic } from '../topic';
+import type { Tracking } from './analytics-tracking';
 
 /** A message delivered on a subscribed topic (the MQTT analog of a Realtime event). */
 export interface PushMessage {
@@ -66,6 +67,8 @@ export interface PushNotificationOpened {
     topic: string;
     /** The `data` sent with the message (e.g. `createPush`), parsed; `{}` when it had none. */
     data: Record<string, unknown>;
+    /** The Appwrite Messaging message id, when the message was sent through Messaging. */
+    messageId?: string;
 }
 
 /** Per-subscription options passed to `subscribe` and `PushSubscription.update`. */
@@ -298,7 +301,9 @@ export class Push extends Service {
      * notification), for immediate delivery even after the app is killed and during Doze,
      * instead of only the scheduled wake-ups. Saved, so it applies after restarts too. Call it
      * while the app is in the foreground: Android 12+ refuses to start the service from the
-     * background. It only affects `background: true` subscriptions. A no-op elsewhere.
+     * background. It needs the `FOREGROUND_SERVICE` and `FOREGROUND_SERVICE_REMOTE_MESSAGING`
+     * permissions declared in the app's manifest, and reports to `onError` without them. It only
+     * affects `background: true` subscriptions. A no-op elsewhere.
      */
     async setForeground(enabled: boolean): Promise<void> {
         await this.native?.setForeground(enabled);
@@ -355,7 +360,7 @@ export class Push extends Service {
                 return null;
             }
             const opened = JSON.parse(json) as NativeOpened;
-            return toOpened(opened.topic, opened.payload);
+            return this.opened(toOpened(opened.topic, opened.payload));
         }
         const notifications = expoNotifications();
         if (!notifications) {
@@ -363,10 +368,11 @@ export class Push extends Service {
         }
         const response = await notifications.getLastNotificationResponseAsync();
         const opened = response ? openedFromExpo(response) : null;
-        if (opened) {
-            await notifications.clearLastNotificationResponseAsync?.();
+        if (!opened) {
+            return null;
         }
-        return opened;
+        await notifications.clearLastNotificationResponseAsync?.();
+        return this.opened(opened);
     }
 
     /**
@@ -390,7 +396,7 @@ export class Push extends Service {
             const subscription = emitter.addListener(
                 'AppwritePushOpened',
                 (event: NativeOpened) =>
-                    callback(toOpened(event.topic, event.payload)),
+                    callback(this.opened(toOpened(event.topic, event.payload))),
             );
             native.listenOpened(true).catch((err) => this.report(err));
             let listening = true;
@@ -412,12 +418,51 @@ export class Push extends Service {
         ): void => {
             const opened = openedFromExpo(response);
             if (opened) {
-                callback(opened);
+                callback(this.opened(opened));
             }
         };
         const subscription =
             notifications.addNotificationResponseReceivedListener(listener);
         return () => subscription.remove();
+    }
+
+    private tracking?: Tracking;
+
+    /**
+     * Send push analytics through `tracking`: `push_received` for each message a background
+     * subscription gets with a notification to show while the app is running, and `push_opened`
+     * for each tap reported by `getInitialNotification` or `onNotificationOpened`, both with the
+     * message's `messageId`.
+     */
+    setTracking(tracking: Tracking): this {
+        this.tracking = tracking;
+        return this;
+    }
+
+    private opened(opened: PushNotificationOpened): PushNotificationOpened {
+        if (
+            this.tracking &&
+            firstTracked(
+                `opened\n${opened.topic}\n${opened.messageId ?? JSON.stringify(opened.data)}`,
+            )
+        ) {
+            this.tracking.pushOpened({ messageId: opened.messageId });
+        }
+        return opened;
+    }
+
+    // Called for messages of background subscriptions, the ones a notification is posted for.
+    private received(message: PushMessage): void {
+        const content = notificationContent(message);
+        if (
+            this.tracking &&
+            content.visible &&
+            firstTracked(
+                `received\n${message.topic}\n${content.messageId ?? message.data}`,
+            )
+        ) {
+            this.tracking.pushReceived({ messageId: content.messageId });
+        }
     }
 
     /**
@@ -1078,6 +1123,9 @@ export class Push extends Service {
                         payload,
                         qos: event.qos,
                     };
+                    if (sub.background) {
+                        this.received(message);
+                    }
                     Promise.resolve()
                         .then(() => sub.callback(message))
                         .catch((err) => this.report(err))
@@ -1592,7 +1640,15 @@ export class Push extends Service {
         // While the app is on screen it shows the message itself: only subscriptions that
         // opted in with notifyInForeground also post a notification then.
         const foreground = AppState.currentState === 'active';
-        for (const sub of this.subscriptions.values()) {
+        const subscriptions = [...this.subscriptions.values()];
+        if (
+            subscriptions.some(
+                (sub) => sub.background && matches(sub.topic, message.topic),
+            )
+        ) {
+            this.received(message);
+        }
+        for (const sub of subscriptions) {
             if (matches(sub.topic, message.topic)) {
                 await sub.callback(message);
                 // Notification is per-subscription: only subs that opted in post one, each
@@ -1665,6 +1721,24 @@ let nativeQueue: Promise<unknown> = Promise.resolve();
 
 let notificationPermissionRequested = false;
 
+// Recently tracked push events. A tap reaches every onNotificationOpened listener, and the
+// native host forwards a message once per matching subscription, so each counts once.
+const trackedPushes = new Map<string, number>();
+
+function firstTracked(key: string): boolean {
+    const now = Date.now();
+    for (const [tracked, at] of trackedPushes) {
+        if (now - at > 10_000) {
+            trackedPushes.delete(tracked);
+        }
+    }
+    if (trackedPushes.has(key)) {
+        return false;
+    }
+    trackedPushes.set(key, now);
+    return true;
+}
+
 /**
  * Android 13+: ask once per run for the notification permission that background messages are
  * posted with. It does not wait for the answer, and a denial only leaves notifications off.
@@ -1691,20 +1765,21 @@ function requestNotificationPermission(): void {
         .catch(() => undefined);
 }
 
-/** A tapped notification's topic and message `data`, parsed from its payload. */
+/** A tapped notification's topic, message `data` and `messageId`, parsed from its payload. */
 function toOpened(topic: string, payload: string): PushNotificationOpened {
-    let data: unknown;
-    try {
-        data = (JSON.parse(payload) as { data?: unknown })?.data;
-    } catch {
-        data = undefined;
-    }
+    const envelope = envelopeOf(payload);
+    const data = envelope?.data;
+    const messageId = envelope?.messageId;
     return {
         topic,
         data:
             typeof data === 'object' && data !== null && !Array.isArray(data)
                 ? (data as Record<string, unknown>)
                 : {},
+        messageId:
+            typeof messageId === 'string' && messageId !== ''
+                ? messageId
+                : undefined,
     };
 }
 
@@ -1738,32 +1813,35 @@ interface NotificationContent {
     title?: string;
     body?: string;
     image?: string;
+    /** The Appwrite Messaging message id the envelope carries. */
+    messageId?: string;
 }
 
-/** The server's `notification` block in a payload, or null when the payload is not a JSON object. */
-function notificationBlock(data: string): Record<string, unknown> | null {
+/** A payload parsed as the server's envelope, or null when it is not a JSON object. */
+function envelopeOf(data: string): Record<string, unknown> | null {
     let envelope: unknown;
     try {
         envelope = JSON.parse(data);
     } catch {
         return null;
     }
-    if (
-        typeof envelope !== 'object' ||
-        envelope === null ||
-        Array.isArray(envelope)
-    ) {
-        return null;
-    }
-    const notification = (envelope as { notification?: unknown }).notification;
-    return typeof notification === 'object' && notification !== null
-        ? (notification as Record<string, unknown>)
-        : {};
+    return typeof envelope === 'object' &&
+        envelope !== null &&
+        !Array.isArray(envelope)
+        ? (envelope as Record<string, unknown>)
+        : null;
 }
 
 /** What a message asks a background notification to show; raw when it is not a JSON object. */
 function notificationContent(message: PushMessage): NotificationContent {
-    const block = notificationBlock(message.data);
+    const envelope = envelopeOf(message.data);
+    const notification = envelope?.notification;
+    const block =
+        envelope === null
+            ? null
+            : typeof notification === 'object' && notification !== null
+              ? (notification as Record<string, unknown>)
+              : {};
     const raw = block === null;
     const field = (name: string): string | undefined => {
         const value = block?.[name];
@@ -1777,6 +1855,10 @@ function notificationContent(message: PushMessage): NotificationContent {
         title,
         body,
         image: field('image'),
+        messageId:
+            typeof envelope?.messageId === 'string' && envelope.messageId !== ''
+                ? envelope.messageId
+                : undefined,
     };
 }
 

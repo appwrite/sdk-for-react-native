@@ -1,6 +1,14 @@
 declare module 'react-native' {
     export const AppState: {
         readonly currentState: string | null;
+        addEventListener(
+            type: 'change',
+            listener: (state: string) => void,
+        ): { remove(): void };
+    };
+
+    export const Dimensions: {
+        get(dim: 'window' | 'screen'): { readonly width: number };
     };
 
     export const Platform: {

@@ -18,6 +18,7 @@ export { Teams } from './services/teams';
 export { VectorsDB } from './services/vectors-db';
 export { Realtime } from './services/realtime';
 export { Push } from './services/push';
+export { Tracking, trackNavigation } from './services/analytics-tracking';
 export type {
     PushBackgroundStatus,
     PushMessage,
@@ -33,6 +34,14 @@ export type {
     UploadProgress,
 } from './client';
 export type { RealtimeSubscription } from './services/realtime';
+export type {
+    NavigationTrackingOptions,
+    PushTrackingOptions,
+    ScreenViewOptions,
+    TrackingEventOptions,
+    TrackedNavigationRef,
+    TrackingOptions,
+} from './services/analytics-tracking';
 export type { QueryTypes, QueryTypesList, QueryInput } from './query';
 export { Query, QueryBuilder, flattenParam } from './query';
 export { Permission } from './permission';

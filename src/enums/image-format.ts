@@ -6,4 +6,5 @@ export enum ImageFormat {
     Heic = 'heic',
     Avif = 'avif',
     Gif = 'gif',
+    Auto = 'auto',
 }

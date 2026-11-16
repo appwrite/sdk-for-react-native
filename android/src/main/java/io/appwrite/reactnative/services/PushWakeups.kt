@@ -15,13 +15,27 @@ class PushJobService : JobService() {
         // A chained job arms the next under the other chained id; the watchdog and an expedited
         // run (handed over by the alarm) only run once. Each stays up while missed messages arrive.
         val chained = params.jobId.takeIf { it == PushBackground.JOB_ID || it == PushBackground.NEXT_JOB_ID }
-        PushBackground.tick(this, chained, PushBackground.JOB_DRAIN_MS) { jobFinished(params, false) }
+        val expedited = params.jobId == PushBackground.EXPEDITED_JOB_ID
+        if (expedited) {
+            PushBackground.expeditedJobRunning = true
+        }
+        PushBackground.tick(this, chained, PushBackground.JOB_DRAIN_MS) {
+            if (expedited) {
+                PushBackground.expeditedJobRunning = false
+            }
+            jobFinished(params, false)
+        }
         return true
     }
 
     // The run re-arms the next one itself, and the watchdog repeats on its own, so a stopped run
     // needs no retry.
-    override fun onStopJob(params: JobParameters): Boolean = false
+    override fun onStopJob(params: JobParameters): Boolean {
+        if (params.jobId == PushBackground.EXPEDITED_JOB_ID) {
+            PushBackground.expeditedJobRunning = false
+        }
+        return false
+    }
 }
 
 /**
@@ -34,8 +48,11 @@ class PushAlarmReceiver : BroadcastReceiver() {
             return
         }
         // On Android 12+ the run goes to an expedited job, which keeps the process runnable while it
-        // connects and the broker replays; it runs here when the system refuses one.
+        // connects and the broker replays; it runs here when the system refuses one. The next alarm
+        // is armed first: an accepted job is not a started one (some phones hold jobs back for
+        // thermal or vendor limits), and the chain must not depend on it.
         if (PushBackground.runExpedited(context)) {
+            PushBackground.armNextAlarm(context)
             return
         }
         val pending = goAsync()

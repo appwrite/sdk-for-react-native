@@ -9,6 +9,16 @@ import com.facebook.react.bridge.ReactMethod
 class AppwriteCookiesModule(reactContext: ReactApplicationContext) : ReactContextBaseJavaModule(reactContext) {
     override fun getName(): String = NAME
 
+    // Read by Tracking for app_updated, so the SDK needs no app-info dependency.
+    override fun getConstants(): Map<String, Any> {
+        val version = try {
+            reactApplicationContext.packageManager.getPackageInfo(reactApplicationContext.packageName, 0).versionName
+        } catch (e: Exception) {
+            null
+        }
+        return mapOf("appVersion" to (version ?: ""))
+    }
+
     @ReactMethod
     fun session(url: String, project: String, promise: Promise) {
         val name = "a_session_$project"

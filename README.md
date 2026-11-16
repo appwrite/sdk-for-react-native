@@ -1,7 +1,7 @@
 # Appwrite React Native SDK
 
 ![License](https://img.shields.io/badge/license-BSD--3--Clause-blue.svg?style=flat-square)
-![Version](https://img.shields.io/badge/api%20version-2.7.0-blue.svg?style=flat-square)
+![Version](https://img.shields.io/badge/api%20version-2.7.2-blue.svg?style=flat-square)
 [![X Account](https://img.shields.io/badge/follow-%40appwrite-000000?logo=x&style=flat-square)](https://x.com/appwrite)
 [![Discord](https://img.shields.io/discord/564160730845151244?label=discord&style=flat-square)](https://appwrite.io/discord)
 
@@ -266,7 +266,65 @@ const stop = push.onNotificationOpened(({ topic, data }) => openSale(data.saleId
 
 On Android the SDK's native module reports the taps. Elsewhere they come from `expo-notifications`.
 
-Foreground mode runs a `remoteMessaging` foreground service, which Google Play asks apps to declare in the Play Console. Apps that never enable it can remove the service from their merged manifest with `tools:node="remove"` on `io.appwrite.reactnative.services.PushService` and `android.permission.FOREGROUND_SERVICE_REMOTE_MESSAGING`.
+### Push analytics
+
+Attach a `Tracking` to send `push_received` for each message a background subscription gets with a notification to show while the app is running, and `push_opened` for each tap reported by `getInitialNotification` or `onNotificationOpened`. Both carry the message's `messageId`, also exposed as `opened.messageId`.
+
+```js
+const tracking = new Tracking(new Analytics(client), '<PROPERTY_ID>');
+tracking.start();
+const push = new Push(client).setTracking(tracking);
+```
+
+`tracking.start()` also sends `first_open` once per install and `app_updated` on the first start after the app's version changes. A reinstall or "clear data" counts as a new install. With another push provider, call `tracking.pushReceived({ messageId, campaign })` and `tracking.pushOpened({ messageId, campaign })` from its handlers. `push_received` is best effort: on iOS, and on Android while the app is killed, the app's code often does not run when a notification arrives.
+
+Report screens from React Navigation by spreading `trackNavigation` onto the container:
+
+```jsx
+const navigationRef = createNavigationContainerRef();
+
+<NavigationContainer ref={navigationRef} {...trackNavigation(tracking, navigationRef)}>
+```
+
+Pass your own `onReady` and `onStateChange` in the third argument, `trackNavigation(tracking, navigationRef, { onStateChange })`, so they run alongside the tracking.
+
+On Android, React Native reports the app as backgrounded when its activity pauses, so system dialogs and pickers (permissions, the photo picker, sharing) send `app_backgrounded` and then `app_foregrounded`. `app_updated` needs the SDK's native module, so it is not sent in Expo Go.
+
+Foreground mode is opt-in, because Google Play asks apps that declare a `remoteMessaging` foreground service to justify it in the Play Console. To use it:
+
+1. Add both permissions to `android/app/src/main/AndroidManifest.xml`, inside `<manifest>` and outside `<application>`:
+
+   ```xml
+   <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+       <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+       <uses-permission android:name="android.permission.FOREGROUND_SERVICE_REMOTE_MESSAGING" />
+
+       <application>
+           ...
+       </application>
+   </manifest>
+   ```
+
+   With Expo, add them to `app.json` instead, then rebuild the native app (`npx expo prebuild`, or a new development build); Expo Go can't load the SDK's native module:
+
+   ```json
+   {
+     "expo": {
+       "android": {
+         "permissions": [
+           "android.permission.FOREGROUND_SERVICE",
+           "android.permission.FOREGROUND_SERVICE_REMOTE_MESSAGING"
+         ]
+       }
+     }
+   }
+   ```
+
+2. In the Play Console, complete the foreground service declaration for remote messaging, under App content > Foreground service permissions.
+
+3. Call `await push.setForeground(true)` while the app is on screen. Without the permissions it reports an error to `onError` and delivery stays on the scheduled wake-ups.
+
+The SDK already declares its `PushService`, so you don't add a `<service>`. To turn foreground mode off again, call `await push.setForeground(false)`.
 
 ## Learn more
 

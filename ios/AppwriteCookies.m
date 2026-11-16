@@ -12,6 +12,13 @@ RCT_EXPORT_MODULE()
     return NO;
 }
 
+// Read by Tracking for app_updated, so the SDK needs no app-info dependency.
+- (NSDictionary *)constantsToExport
+{
+    NSString *version = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
+    return @{@"appVersion": version ?: @""};
+}
+
 RCT_EXPORT_METHOD(session:(NSString *)url
                   project:(NSString *)project
                   resolve:(RCTPromiseResolveBlock)resolve
