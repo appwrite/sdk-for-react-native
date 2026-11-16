@@ -794,6 +794,396 @@ export class Account extends Service {
     }
 
     /**
+     * Create an account switching device. A device is a container, scoped to one browser or app install, that holds multiple sessions and tracks which one is active. Once a device exists, session creation endpoints attach the new session to it automatically, so a single browser can stay signed in to several accounts and switch between them. A device holds at most one session per user: signing in again as a user it already holds replaces that user's session. The device lives as long as its newest session.
+     *
+     * The device secret is returned in a cookie. Run this on app start: if the browser already has a valid device, the existing one is returned with the same status code instead of an error, so it is always safe to call.
+     *
+     * Every session that joins the device rotates the device secret and re-issues the cookie, so an earlier copy of the secret stops working. A client that keeps the secret itself, rather than relying on the cookie, must replace it from each session response.
+     *
+     * @throws {AppwriteException}
+     * @returns {Promise}
+     */
+    createDevice(): Promise<Models.Device> {
+        const apiPath = '/account/devices';
+        const apiPayload: Payload = {};
+
+        const uri = new URL(this.client.config.endpoint + apiPath);
+        const request = this.client.call(
+            'post',
+            uri,
+            {
+                'X-Appwrite-Project': this.client.config.project,
+                'content-type': 'application/json',
+                accept: 'application/json',
+            },
+            apiPayload,
+        );
+        const defaults = {
+            root: 'device',
+            models: {
+                device: {
+                    defaults: {
+                        $id: '',
+                        $createdAt: '',
+                        $updatedAt: '',
+                        expire: '',
+                        activeSessionId: '',
+                        sessions: [],
+                        secret: '',
+                    },
+                    properties: {
+                        sessions: {
+                            items: 'session',
+                        },
+                    },
+                },
+                session: {
+                    defaults: {
+                        $id: '',
+                        $createdAt: '',
+                        $updatedAt: '',
+                        userId: '',
+                        userName: '',
+                        expire: '',
+                        provider: '',
+                        providerUid: '',
+                        providerAccessToken: '',
+                        providerAccessTokenExpiry: '',
+                        providerRefreshToken: '',
+                        ip: '',
+                        osCode: '',
+                        osName: '',
+                        osVersion: '',
+                        clientType: '',
+                        clientCode: '',
+                        clientName: '',
+                        clientVersion: '',
+                        clientEngine: '',
+                        clientEngineVersion: '',
+                        deviceName: '',
+                        deviceBrand: '',
+                        deviceModel: '',
+                        countryCode: '',
+                        countryName: '',
+                        current: false,
+                        factors: [],
+                        secret: '',
+                        mfaUpdatedAt: '',
+                    },
+                },
+            },
+        };
+
+        return request.then((response) => applyDefaults(response, defaults));
+    }
+
+    /**
+     * Get the account switching device for the current browser, including every session it holds, the name of the user each session belongs to, and the ID of the active session. Use the string 'current' to reference the current browser's device.
+     *
+     * @param {string} params.deviceId - Device ID. Use the string 'current' to reference the device of the current browser.
+     * @throws {AppwriteException}
+     * @returns {Promise}
+     */
+    getDevice(params: { deviceId: string }): Promise<Models.Device>;
+    /**
+     * Get the account switching device for the current browser, including every session it holds, the name of the user each session belongs to, and the ID of the active session. Use the string 'current' to reference the current browser's device.
+     *
+     * @param {string} deviceId - Device ID. Use the string 'current' to reference the device of the current browser.
+     * @throws {AppwriteException}
+     * @returns {Promise<Models.Device>}
+     * @deprecated Use the object parameter style method for a better developer experience.
+     */
+    getDevice(deviceId: string): Promise<Models.Device>;
+    getDevice(
+        paramsOrFirst: { deviceId: string } | string,
+    ): Promise<Models.Device> {
+        let params: { deviceId: string };
+
+        if (
+            paramsOrFirst &&
+            typeof paramsOrFirst === 'object' &&
+            !Array.isArray(paramsOrFirst)
+        ) {
+            params = (paramsOrFirst || {}) as { deviceId: string };
+        } else {
+            params = {
+                deviceId: paramsOrFirst as string,
+            };
+        }
+
+        const deviceId = params.deviceId;
+
+        if (typeof deviceId === 'undefined' || deviceId === '') {
+            throw new AppwriteException(
+                'Missing required parameter: "deviceId"',
+            );
+        }
+
+        const apiPath = '/account/devices/{deviceId}'.replace(
+            '{deviceId}',
+            encodePath(deviceId),
+        );
+        const apiPayload: Payload = {};
+
+        const uri = new URL(this.client.config.endpoint + apiPath);
+        const request = this.client.call(
+            'get',
+            uri,
+            {
+                'X-Appwrite-Project': this.client.config.project,
+                accept: 'application/json',
+            },
+            apiPayload,
+        );
+        const defaults = {
+            root: 'device',
+            models: {
+                device: {
+                    defaults: {
+                        $id: '',
+                        $createdAt: '',
+                        $updatedAt: '',
+                        expire: '',
+                        activeSessionId: '',
+                        sessions: [],
+                        secret: '',
+                    },
+                    properties: {
+                        sessions: {
+                            items: 'session',
+                        },
+                    },
+                },
+                session: {
+                    defaults: {
+                        $id: '',
+                        $createdAt: '',
+                        $updatedAt: '',
+                        userId: '',
+                        userName: '',
+                        expire: '',
+                        provider: '',
+                        providerUid: '',
+                        providerAccessToken: '',
+                        providerAccessTokenExpiry: '',
+                        providerRefreshToken: '',
+                        ip: '',
+                        osCode: '',
+                        osName: '',
+                        osVersion: '',
+                        clientType: '',
+                        clientCode: '',
+                        clientName: '',
+                        clientVersion: '',
+                        clientEngine: '',
+                        clientEngineVersion: '',
+                        deviceName: '',
+                        deviceBrand: '',
+                        deviceModel: '',
+                        countryCode: '',
+                        countryName: '',
+                        current: false,
+                        factors: [],
+                        secret: '',
+                        mfaUpdatedAt: '',
+                    },
+                },
+            },
+        };
+
+        return request.then((response) => applyDefaults(response, defaults));
+    }
+
+    /**
+     * Delete the account switching device for the current browser. Every session the device holds is signed out, each firing its own session delete event, the device is removed, and both the device and session cookies are cleared. Use the string 'current' to reference the current browser's device.
+     *
+     * @param {string} params.deviceId - Device ID. Use the string 'current' to reference the device of the current browser.
+     * @throws {AppwriteException}
+     * @returns {Promise}
+     */
+    deleteDevice(params: { deviceId: string }): Promise<{}>;
+    /**
+     * Delete the account switching device for the current browser. Every session the device holds is signed out, each firing its own session delete event, the device is removed, and both the device and session cookies are cleared. Use the string 'current' to reference the current browser's device.
+     *
+     * @param {string} deviceId - Device ID. Use the string 'current' to reference the device of the current browser.
+     * @throws {AppwriteException}
+     * @returns {Promise<{}>}
+     * @deprecated Use the object parameter style method for a better developer experience.
+     */
+    deleteDevice(deviceId: string): Promise<{}>;
+    deleteDevice(paramsOrFirst: { deviceId: string } | string): Promise<{}> {
+        let params: { deviceId: string };
+
+        if (
+            paramsOrFirst &&
+            typeof paramsOrFirst === 'object' &&
+            !Array.isArray(paramsOrFirst)
+        ) {
+            params = (paramsOrFirst || {}) as { deviceId: string };
+        } else {
+            params = {
+                deviceId: paramsOrFirst as string,
+            };
+        }
+
+        const deviceId = params.deviceId;
+
+        if (typeof deviceId === 'undefined' || deviceId === '') {
+            throw new AppwriteException(
+                'Missing required parameter: "deviceId"',
+            );
+        }
+
+        const apiPath = '/account/devices/{deviceId}'.replace(
+            '{deviceId}',
+            encodePath(deviceId),
+        );
+        const apiPayload: Payload = {};
+
+        const uri = new URL(this.client.config.endpoint + apiPath);
+        return this.client.call(
+            'delete',
+            uri,
+            {
+                'X-Appwrite-Project': this.client.config.project,
+                'content-type': 'application/json',
+                accept: 'application/json',
+            },
+            apiPayload,
+        );
+    }
+
+    /**
+     * Switch the active account on an account switching device to one of the sessions it holds. The chosen session becomes active and its secret is written to the browser's session cookie, so subsequent requests authenticate as that account. Use the string 'current' to reference the current browser's device.
+     *
+     * Switching rotates the chosen session's secret. Any other holder of that session, such as a copy kept elsewhere, stops working, so a session should not be shared across devices.
+     *
+     * @param {string} params.deviceId - Device ID. Use the string 'current' to reference the device of the current browser.
+     * @param {string} params.sessionId - ID of the session, held by the device, to make active.
+     * @throws {AppwriteException}
+     * @returns {Promise}
+     */
+    updateDeviceSession(params: {
+        deviceId: string;
+        sessionId: string;
+    }): Promise<Models.Session>;
+    /**
+     * Switch the active account on an account switching device to one of the sessions it holds. The chosen session becomes active and its secret is written to the browser's session cookie, so subsequent requests authenticate as that account. Use the string 'current' to reference the current browser's device.
+     *
+     * Switching rotates the chosen session's secret. Any other holder of that session, such as a copy kept elsewhere, stops working, so a session should not be shared across devices.
+     *
+     * @param {string} deviceId - Device ID. Use the string 'current' to reference the device of the current browser.
+     * @param {string} sessionId - ID of the session, held by the device, to make active.
+     * @throws {AppwriteException}
+     * @returns {Promise<Models.Session>}
+     * @deprecated Use the object parameter style method for a better developer experience.
+     */
+    updateDeviceSession(
+        deviceId: string,
+        sessionId: string,
+    ): Promise<Models.Session>;
+    updateDeviceSession(
+        paramsOrFirst: { deviceId: string; sessionId: string } | string,
+        ...rest: [string?]
+    ): Promise<Models.Session> {
+        let params: { deviceId: string; sessionId: string };
+
+        if (
+            paramsOrFirst &&
+            typeof paramsOrFirst === 'object' &&
+            !Array.isArray(paramsOrFirst)
+        ) {
+            params = (paramsOrFirst || {}) as {
+                deviceId: string;
+                sessionId: string;
+            };
+        } else {
+            params = {
+                deviceId: paramsOrFirst as string,
+                sessionId: rest[0] as string,
+            };
+        }
+
+        const deviceId = params.deviceId;
+        const sessionId = params.sessionId;
+
+        if (typeof deviceId === 'undefined' || deviceId === '') {
+            throw new AppwriteException(
+                'Missing required parameter: "deviceId"',
+            );
+        }
+
+        if (typeof sessionId === 'undefined') {
+            throw new AppwriteException(
+                'Missing required parameter: "sessionId"',
+            );
+        }
+
+        const apiPath = '/account/devices/{deviceId}/session'.replace(
+            '{deviceId}',
+            encodePath(deviceId),
+        );
+        const apiPayload: Payload = {};
+
+        if (typeof sessionId !== 'undefined') {
+            apiPayload['sessionId'] = sessionId;
+        }
+
+        const uri = new URL(this.client.config.endpoint + apiPath);
+        const request = this.client.call(
+            'patch',
+            uri,
+            {
+                'X-Appwrite-Project': this.client.config.project,
+                'content-type': 'application/json',
+                accept: 'application/json',
+            },
+            apiPayload,
+        );
+        const defaults = {
+            root: 'session',
+            models: {
+                session: {
+                    defaults: {
+                        $id: '',
+                        $createdAt: '',
+                        $updatedAt: '',
+                        userId: '',
+                        userName: '',
+                        expire: '',
+                        provider: '',
+                        providerUid: '',
+                        providerAccessToken: '',
+                        providerAccessTokenExpiry: '',
+                        providerRefreshToken: '',
+                        ip: '',
+                        osCode: '',
+                        osName: '',
+                        osVersion: '',
+                        clientType: '',
+                        clientCode: '',
+                        clientName: '',
+                        clientVersion: '',
+                        clientEngine: '',
+                        clientEngineVersion: '',
+                        deviceName: '',
+                        deviceBrand: '',
+                        deviceModel: '',
+                        countryCode: '',
+                        countryName: '',
+                        current: false,
+                        factors: [],
+                        secret: '',
+                        mfaUpdatedAt: '',
+                    },
+                },
+            },
+        };
+
+        return request.then((response) => applyDefaults(response, defaults));
+    }
+
+    /**
      * Update currently logged in user account email address. After changing user address, the user confirmation status will get reset. A new confirmation email is not sent automatically however you can use the send confirmation email endpoint again to send the confirmation email. For security measures, user password is required to complete this request.
      * This endpoint can also be used to convert an anonymous account to a normal one, by passing an email address and a new password.
      *
@@ -2168,6 +2558,7 @@ export class Account extends Service {
                         $createdAt: '',
                         $updatedAt: '',
                         userId: '',
+                        userName: '',
                         expire: '',
                         provider: '',
                         providerUid: '',
@@ -2292,6 +2683,7 @@ export class Account extends Service {
                         $createdAt: '',
                         $updatedAt: '',
                         userId: '',
+                        userName: '',
                         expire: '',
                         provider: '',
                         providerUid: '',
@@ -4156,6 +4548,7 @@ export class Account extends Service {
                         $createdAt: '',
                         $updatedAt: '',
                         userId: '',
+                        userName: '',
                         expire: '',
                         provider: '',
                         providerUid: '',
@@ -4276,6 +4669,7 @@ export class Account extends Service {
                         $createdAt: '',
                         $updatedAt: '',
                         userId: '',
+                        userName: '',
                         expire: '',
                         provider: '',
                         providerUid: '',
@@ -4421,6 +4815,7 @@ export class Account extends Service {
                         $createdAt: '',
                         $updatedAt: '',
                         userId: '',
+                        userName: '',
                         expire: '',
                         provider: '',
                         providerUid: '',
@@ -4635,6 +5030,151 @@ export class Account extends Service {
                         $createdAt: '',
                         $updatedAt: '',
                         userId: '',
+                        userName: '',
+                        expire: '',
+                        provider: '',
+                        providerUid: '',
+                        providerAccessToken: '',
+                        providerAccessTokenExpiry: '',
+                        providerRefreshToken: '',
+                        ip: '',
+                        osCode: '',
+                        osName: '',
+                        osVersion: '',
+                        clientType: '',
+                        clientCode: '',
+                        clientName: '',
+                        clientVersion: '',
+                        clientEngine: '',
+                        clientEngineVersion: '',
+                        deviceName: '',
+                        deviceBrand: '',
+                        deviceModel: '',
+                        countryCode: '',
+                        countryName: '',
+                        current: false,
+                        factors: [],
+                        secret: '',
+                        mfaUpdatedAt: '',
+                    },
+                },
+            },
+        };
+
+        return request.then((response) => applyDefaults(response, defaults));
+    }
+
+    /**
+     * Allow the user to login into their account by providing the username and password they use in the project's LDAP directory. The directory verifies the password; on the first sign-in an account is created from the directory entry, and on later sign-ins the name, email and phone follow the directory. This endpoint requires LDAP to be configured and enabled for the project. A user is limited to 10 active sessions at a time by default. [Learn more about session limits](https://appwrite.io/docs/authentication-security#limits).
+     *
+     * @param {string} params.username - Directory username, matched against the username attribute of the project's LDAP configuration.
+     * @param {string} params.password - Directory password.
+     * @param {number | null} params.duration - Session length in seconds. Minimum is 60 seconds, and it cannot exceed the project maximum session length. Defaults to the project maximum session length.
+     * @throws {AppwriteException}
+     * @returns {Promise}
+     */
+    createLDAPSession(params: {
+        username: string;
+        password: string;
+        duration?: number | null;
+    }): Promise<Models.Session>;
+    /**
+     * Allow the user to login into their account by providing the username and password they use in the project's LDAP directory. The directory verifies the password; on the first sign-in an account is created from the directory entry, and on later sign-ins the name, email and phone follow the directory. This endpoint requires LDAP to be configured and enabled for the project. A user is limited to 10 active sessions at a time by default. [Learn more about session limits](https://appwrite.io/docs/authentication-security#limits).
+     *
+     * @param {string} username - Directory username, matched against the username attribute of the project's LDAP configuration.
+     * @param {string} password - Directory password.
+     * @param {number | null} duration - Session length in seconds. Minimum is 60 seconds, and it cannot exceed the project maximum session length. Defaults to the project maximum session length.
+     * @throws {AppwriteException}
+     * @returns {Promise<Models.Session>}
+     * @deprecated Use the object parameter style method for a better developer experience.
+     */
+    createLDAPSession(
+        username: string,
+        password: string,
+        duration?: number | null,
+    ): Promise<Models.Session>;
+    createLDAPSession(
+        paramsOrFirst:
+            | { username: string; password: string; duration?: number | null }
+            | string,
+        ...rest: [string?, (number | null)?]
+    ): Promise<Models.Session> {
+        let params: {
+            username: string;
+            password: string;
+            duration?: number | null;
+        };
+
+        if (
+            paramsOrFirst &&
+            typeof paramsOrFirst === 'object' &&
+            !Array.isArray(paramsOrFirst)
+        ) {
+            params = (paramsOrFirst || {}) as {
+                username: string;
+                password: string;
+                duration?: number | null;
+            };
+        } else {
+            params = {
+                username: paramsOrFirst as string,
+                password: rest[0] as string,
+                duration: rest[1] as number | null,
+            };
+        }
+
+        const username = params.username;
+        const password = params.password;
+        const duration = params.duration;
+
+        if (typeof username === 'undefined') {
+            throw new AppwriteException(
+                'Missing required parameter: "username"',
+            );
+        }
+
+        if (typeof password === 'undefined') {
+            throw new AppwriteException(
+                'Missing required parameter: "password"',
+            );
+        }
+
+        const apiPath = '/account/sessions/ldap';
+        const apiPayload: Payload = {};
+
+        if (typeof username !== 'undefined') {
+            apiPayload['username'] = username;
+        }
+
+        if (typeof password !== 'undefined') {
+            apiPayload['password'] = password;
+        }
+
+        if (typeof duration !== 'undefined') {
+            apiPayload['duration'] = duration;
+        }
+
+        const uri = new URL(this.client.config.endpoint + apiPath);
+        const request = this.client.call(
+            'post',
+            uri,
+            {
+                'X-Appwrite-Project': this.client.config.project,
+                'content-type': 'application/json',
+                accept: 'application/json',
+            },
+            apiPayload,
+        );
+        const defaults = {
+            root: 'session',
+            models: {
+                session: {
+                    defaults: {
+                        $id: '',
+                        $createdAt: '',
+                        $updatedAt: '',
+                        userId: '',
+                        userName: '',
                         expire: '',
                         provider: '',
                         providerUid: '',
@@ -4758,6 +5298,7 @@ export class Account extends Service {
                         $createdAt: '',
                         $updatedAt: '',
                         userId: '',
+                        userName: '',
                         expire: '',
                         provider: '',
                         providerUid: '',
@@ -4799,7 +5340,7 @@ export class Account extends Service {
      * A user is limited to 10 active sessions at a time by default. [Learn more about session limits](https://appwrite.io/docs/authentication-security#limits).
      *
      *
-     * @param {OAuthProvider} params.provider - OAuth2 Provider. Currently, supported providers are: amazon, apple, appwrite, auth0, authentik, autodesk, bitbucket, bitly, box, cloudflare, dailymotion, discord, disqus, dropbox, etsy, facebook, figma, fusionauth, github, gitlab, google, huggingface, kakao, keycloak, kick, linkedin, microsoft, notion, oidc, okta, paypal, paypalSandbox, podio, resend, salesforce, slack, spotify, stripe, tiktok, tradeshift, tradeshiftBox, twitch, vipps, webflow, wordpress, x, yahoo, yammer, yandex, zoho, zoom.
+     * @param {OAuthProvider} params.provider - OAuth2 Provider. Currently, supported providers are: amazon, apple, appwrite, auth0, authentik, autodesk, bitbucket, bitly, box, cloudflare, dailymotion, discord, disqus, dropbox, etsy, facebook, figma, fusionauth, github, gitlab, google, huggingface, kakao, keycloak, kick, linkedin, microsoft, naver, notion, oidc, okta, paypal, paypalSandbox, podio, resend, salesforce, slack, spotify, stripe, tiktok, tradeshift, tradeshiftBox, twitch, vipps, vippsSandbox, webflow, wordpress, x, yahoo, yammer, yandex, zoho, zoom.
      * @param {string} params.success - URL to redirect back to your app after a successful login attempt.  Only URLs from hostnames in your project's platform list are allowed. This requirement helps to prevent an [open redirect](https://cheatsheetseries.owasp.org/cheatsheets/Unvalidated_Redirects_and_Forwards_Cheat_Sheet.html) attack against your project API.
      * @param {string} params.failure - URL to redirect back to your app after a failed login attempt.  Only URLs from hostnames in your project's platform list are allowed. This requirement helps to prevent an [open redirect](https://cheatsheetseries.owasp.org/cheatsheets/Unvalidated_Redirects_and_Forwards_Cheat_Sheet.html) attack against your project API.
      * @param {string[]} params.scopes - A list of custom OAuth2 scopes. Check each provider internal docs for a list of supported scopes. Maximum of 100 scopes are allowed, each 4096 characters long.
@@ -4822,7 +5363,7 @@ export class Account extends Service {
      * A user is limited to 10 active sessions at a time by default. [Learn more about session limits](https://appwrite.io/docs/authentication-security#limits).
      *
      *
-     * @param {OAuthProvider} provider - OAuth2 Provider. Currently, supported providers are: amazon, apple, appwrite, auth0, authentik, autodesk, bitbucket, bitly, box, cloudflare, dailymotion, discord, disqus, dropbox, etsy, facebook, figma, fusionauth, github, gitlab, google, huggingface, kakao, keycloak, kick, linkedin, microsoft, notion, oidc, okta, paypal, paypalSandbox, podio, resend, salesforce, slack, spotify, stripe, tiktok, tradeshift, tradeshiftBox, twitch, vipps, webflow, wordpress, x, yahoo, yammer, yandex, zoho, zoom.
+     * @param {OAuthProvider} provider - OAuth2 Provider. Currently, supported providers are: amazon, apple, appwrite, auth0, authentik, autodesk, bitbucket, bitly, box, cloudflare, dailymotion, discord, disqus, dropbox, etsy, facebook, figma, fusionauth, github, gitlab, google, huggingface, kakao, keycloak, kick, linkedin, microsoft, naver, notion, oidc, okta, paypal, paypalSandbox, podio, resend, salesforce, slack, spotify, stripe, tiktok, tradeshift, tradeshiftBox, twitch, vipps, vippsSandbox, webflow, wordpress, x, yahoo, yammer, yandex, zoho, zoom.
      * @param {string} success - URL to redirect back to your app after a successful login attempt.  Only URLs from hostnames in your project's platform list are allowed. This requirement helps to prevent an [open redirect](https://cheatsheetseries.owasp.org/cheatsheets/Unvalidated_Redirects_and_Forwards_Cheat_Sheet.html) attack against your project API.
      * @param {string} failure - URL to redirect back to your app after a failed login attempt.  Only URLs from hostnames in your project's platform list are allowed. This requirement helps to prevent an [open redirect](https://cheatsheetseries.owasp.org/cheatsheets/Unvalidated_Redirects_and_Forwards_Cheat_Sheet.html) attack against your project API.
      * @param {string[]} scopes - A list of custom OAuth2 scopes. Check each provider internal docs for a list of supported scopes. Maximum of 100 scopes are allowed, each 4096 characters long.
@@ -5017,6 +5558,7 @@ export class Account extends Service {
                         $createdAt: '',
                         $updatedAt: '',
                         userId: '',
+                        userName: '',
                         expire: '',
                         provider: '',
                         providerUid: '',
@@ -5136,6 +5678,7 @@ export class Account extends Service {
                         $createdAt: '',
                         $updatedAt: '',
                         userId: '',
+                        userName: '',
                         expire: '',
                         provider: '',
                         providerUid: '',
@@ -5236,6 +5779,7 @@ export class Account extends Service {
                         $createdAt: '',
                         $updatedAt: '',
                         userId: '',
+                        userName: '',
                         expire: '',
                         provider: '',
                         providerUid: '',
@@ -5337,6 +5881,7 @@ export class Account extends Service {
                         $createdAt: '',
                         $updatedAt: '',
                         userId: '',
+                        userName: '',
                         expire: '',
                         provider: '',
                         providerUid: '',
@@ -6108,7 +6653,7 @@ export class Account extends Service {
      *
      * A user is limited to 10 active sessions at a time by default. [Learn more about session limits](https://appwrite.io/docs/authentication-security#limits).
      *
-     * @param {OAuthProvider} params.provider - OAuth2 Provider. Currently, supported providers are: amazon, apple, appwrite, auth0, authentik, autodesk, bitbucket, bitly, box, cloudflare, dailymotion, discord, disqus, dropbox, etsy, facebook, figma, fusionauth, github, gitlab, google, huggingface, kakao, keycloak, kick, linkedin, microsoft, notion, oidc, okta, paypal, paypalSandbox, podio, resend, salesforce, slack, spotify, stripe, tiktok, tradeshift, tradeshiftBox, twitch, vipps, webflow, wordpress, x, yahoo, yammer, yandex, zoho, zoom.
+     * @param {OAuthProvider} params.provider - OAuth2 Provider. Currently, supported providers are: amazon, apple, appwrite, auth0, authentik, autodesk, bitbucket, bitly, box, cloudflare, dailymotion, discord, disqus, dropbox, etsy, facebook, figma, fusionauth, github, gitlab, google, huggingface, kakao, keycloak, kick, linkedin, microsoft, naver, notion, oidc, okta, paypal, paypalSandbox, podio, resend, salesforce, slack, spotify, stripe, tiktok, tradeshift, tradeshiftBox, twitch, vipps, vippsSandbox, webflow, wordpress, x, yahoo, yammer, yandex, zoho, zoom.
      * @param {string} params.success - URL to redirect back to your app after a successful login attempt.  Only URLs from hostnames in your project's platform list are allowed. This requirement helps to prevent an [open redirect](https://cheatsheetseries.owasp.org/cheatsheets/Unvalidated_Redirects_and_Forwards_Cheat_Sheet.html) attack against your project API.
      * @param {string} params.failure - URL to redirect back to your app after a failed login attempt.  Only URLs from hostnames in your project's platform list are allowed. This requirement helps to prevent an [open redirect](https://cheatsheetseries.owasp.org/cheatsheets/Unvalidated_Redirects_and_Forwards_Cheat_Sheet.html) attack against your project API.
      * @param {string[]} params.scopes - A list of custom OAuth2 scopes. Check each provider internal docs for a list of supported scopes. Maximum of 100 scopes are allowed, each 4096 characters long.
@@ -6132,7 +6677,7 @@ export class Account extends Service {
      *
      * A user is limited to 10 active sessions at a time by default. [Learn more about session limits](https://appwrite.io/docs/authentication-security#limits).
      *
-     * @param {OAuthProvider} provider - OAuth2 Provider. Currently, supported providers are: amazon, apple, appwrite, auth0, authentik, autodesk, bitbucket, bitly, box, cloudflare, dailymotion, discord, disqus, dropbox, etsy, facebook, figma, fusionauth, github, gitlab, google, huggingface, kakao, keycloak, kick, linkedin, microsoft, notion, oidc, okta, paypal, paypalSandbox, podio, resend, salesforce, slack, spotify, stripe, tiktok, tradeshift, tradeshiftBox, twitch, vipps, webflow, wordpress, x, yahoo, yammer, yandex, zoho, zoom.
+     * @param {OAuthProvider} provider - OAuth2 Provider. Currently, supported providers are: amazon, apple, appwrite, auth0, authentik, autodesk, bitbucket, bitly, box, cloudflare, dailymotion, discord, disqus, dropbox, etsy, facebook, figma, fusionauth, github, gitlab, google, huggingface, kakao, keycloak, kick, linkedin, microsoft, naver, notion, oidc, okta, paypal, paypalSandbox, podio, resend, salesforce, slack, spotify, stripe, tiktok, tradeshift, tradeshiftBox, twitch, vipps, vippsSandbox, webflow, wordpress, x, yahoo, yammer, yandex, zoho, zoom.
      * @param {string} success - URL to redirect back to your app after a successful login attempt.  Only URLs from hostnames in your project's platform list are allowed. This requirement helps to prevent an [open redirect](https://cheatsheetseries.owasp.org/cheatsheets/Unvalidated_Redirects_and_Forwards_Cheat_Sheet.html) attack against your project API.
      * @param {string} failure - URL to redirect back to your app after a failed login attempt.  Only URLs from hostnames in your project's platform list are allowed. This requirement helps to prevent an [open redirect](https://cheatsheetseries.owasp.org/cheatsheets/Unvalidated_Redirects_and_Forwards_Cheat_Sheet.html) attack against your project API.
      * @param {string[]} scopes - A list of custom OAuth2 scopes. Check each provider internal docs for a list of supported scopes. Maximum of 100 scopes are allowed, each 4096 characters long.

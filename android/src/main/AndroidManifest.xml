@@ -10,10 +10,8 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-    <!-- Foreground-service background Push delivery (Push.setForeground). Apps that never enable it can
-         remove PushService and these two permissions with tools:node="remove". -->
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_REMOTE_MESSAGING" />
+    <!-- Foreground mode (Push.setForeground) is opt-in: an app that enables it declares
+         FOREGROUND_SERVICE and FOREGROUND_SERVICE_REMOTE_MESSAGING itself. -->
 
     <application>
         <activity

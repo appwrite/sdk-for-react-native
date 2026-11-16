@@ -180,6 +180,10 @@ internal object PushBackground {
     @Volatile
     var serviceRunning = false
 
+    // Whether the expedited job an alarm handed its run to has started; it runs in this process.
+    @Volatile
+    var expeditedJobRunning = false
+
     // Whether a refused service start was reported, so a job that retries it every run does not
     // report the same failure every 15 seconds.
     @Volatile
@@ -299,13 +303,31 @@ internal object PushBackground {
         val app = context.applicationContext
         PushStore.setForeground(app, enabled)
         serviceStartReported = false
+        if (enabled && !foregroundDeclared(app)) {
+            report(
+                AppwriteException(
+                    "Foreground mode needs the FOREGROUND_SERVICE and FOREGROUND_SERVICE_REMOTE_MESSAGING permissions declared in the app's manifest",
+                ),
+            )
+        }
         ensureService(app)
+    }
+
+    /** Whether the app declares what foreground mode needs: [PushService] and its permissions. */
+    fun foregroundDeclared(context: Context): Boolean {
+        val app = context.applicationContext
+        val service = runCatching {
+            app.packageManager.getServiceInfo(ComponentName(app, PushService::class.java), 0)
+        }.isSuccess
+        return service &&
+            declares(app, Manifest.permission.FOREGROUND_SERVICE) &&
+            (Build.VERSION.SDK_INT < Build.VERSION_CODES.UPSIDE_DOWN_CAKE || declares(app, Manifest.permission.FOREGROUND_SERVICE_REMOTE_MESSAGING))
     }
 
     /** Whether the foreground service should run: foreground mode is enabled and there is work to do. */
     fun wantsService(context: Context): Boolean {
         val app = context.applicationContext
-        return PushStore.foreground(app) && synchronized(lock) {
+        return PushStore.foreground(app) && foregroundDeclared(app) && synchronized(lock) {
             load(app)
             isActive()
         }
@@ -480,11 +502,22 @@ internal object PushBackground {
      * Android 12+: hand a run to an expedited job, which starts at once with network access and
      * keeps the process runnable until it finishes. A broadcast receiver woken in a cached process
      * runs at background priority and can be frozen before it connects. Returns false when the
-     * job cannot be scheduled (older Android, or the expedited quota is used up), so the caller
-     * runs the tick itself.
+     * job cannot be scheduled (older Android, or the expedited quota is used up) or the last one
+     * never started, so the caller runs the tick itself. Returns true without a new job while the
+     * last one is still running.
      */
     fun runExpedited(context: Context): Boolean {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
+            return false
+        }
+        val jobs = context.getSystemService(JobScheduler::class.java) ?: return false
+        // The last hand-off is still pending. A running one keeps its run; one that never started
+        // is held back by the system, so run in the receiver.
+        if (jobs.getPendingJob(EXPEDITED_JOB_ID) != null) {
+            if (expeditedJobRunning) {
+                return true
+            }
+            jobs.cancel(EXPEDITED_JOB_ID)
             return false
         }
         return try {
@@ -492,9 +525,21 @@ internal object PushBackground {
                 .setExpedited(true)
                 .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
                 .build()
-            context.getSystemService(JobScheduler::class.java)?.schedule(job) == JobScheduler.RESULT_SUCCESS
+            jobs.schedule(job) == JobScheduler.RESULT_SUCCESS
         } catch (e: Exception) {
             false
+        }
+    }
+
+    /** Arm the next alarm of the chain without touching the jobs (the alarm handed its run to one). */
+    fun armNextAlarm(context: Context) {
+        val app = context.applicationContext
+        val active = synchronized(lock) {
+            load(app)
+            isActive()
+        }
+        if (active) {
+            schedule(app, INTERVAL_MS, alarmOnly = true)
         }
     }
 
@@ -1216,7 +1261,7 @@ internal object PushBackground {
             exactAlarms = Build.VERSION.SDK_INT < Build.VERSION_CODES.S ||
                 app.getSystemService(AlarmManager::class.java)?.canScheduleExactAlarms() == true,
             ignoringBatteryOptimizations = app.getSystemService(PowerManager::class.java)?.isIgnoringBatteryOptimizations(app.packageName) == true,
-            foregroundService = PushStore.foreground(app),
+            foregroundService = PushStore.foreground(app) && foregroundDeclared(app),
             backgroundRestricted = Build.VERSION.SDK_INT >= Build.VERSION_CODES.P &&
                 app.getSystemService(ActivityManager::class.java)?.isBackgroundRestricted == true,
         )
@@ -1250,14 +1295,15 @@ internal object PushBackground {
         )
     }
 
+    private fun declares(context: Context, permission: String): Boolean = runCatching {
+        @Suppress("DEPRECATION")
+        context.packageManager.getPackageInfo(context.packageName, PackageManager.GET_PERMISSIONS).requestedPermissions
+    }.getOrNull()?.contains(permission) == true
+
     // Open a settings screen for this package when the app declares [permission].
     private fun openSettings(context: Context, action: String, permission: String): Boolean {
         val app = context.applicationContext
-        val declared = runCatching {
-            @Suppress("DEPRECATION")
-            app.packageManager.getPackageInfo(app.packageName, PackageManager.GET_PERMISSIONS).requestedPermissions
-        }.getOrNull()?.contains(permission) == true
-        if (!declared) {
+        if (!declares(app, permission)) {
             return false
         }
         return try {

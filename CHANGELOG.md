@@ -1,5 +1,19 @@
 # Change log
 
+## 3.3.0
+
+* Added: `Tracking` and `trackNavigation` send app, screen and push analytics through `Analytics`; `start()` sends `first_open` once per install and `app_updated` after a version change
+* Added: `Push.setTracking` sends `push_received` and `push_opened` with the message's `messageId`
+* Added: `messageId` on opened push notifications
+* Added: `Account.createDevice`, `getDevice`, `deleteDevice` and `updateDeviceSession`, and the `Device` model
+* Added: `Account.createLDAPSession`
+* Added: `Session.userName`
+* Added: `ImageFormat.Auto` on `Storage.getFilePreview` and the avatar endpoints, serving avif or webp when the `Accept` header supports it
+* Added: `OAuthProvider.Naver` and `OAuthProvider.VippsSandbox`
+* Updated: the SDK no longer declares `FOREGROUND_SERVICE` and `FOREGROUND_SERVICE_REMOTE_MESSAGING` on Android; apps that call `push.setForeground(true)` declare them
+* Fixed: Android background push keeps waking up on phones that hold back expedited jobs
+* Updated: requests send `X-Appwrite-Response-Format: 2.7.2`
+
 ## 3.2.0
 
 * Added: `Client.setEnvironment` to act in a project environment; realtime, avatar and storage URLs carry it

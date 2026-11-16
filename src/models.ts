@@ -350,7 +350,7 @@ export namespace Models {
         /**
          * Presence metadata.
          */
-        metadata?: object;
+        metadata?: object | null;
     };
 
     /**
@@ -714,6 +714,10 @@ export namespace Models {
          */
         userId: string;
         /**
+         * Name of the user the session belongs to. Lets a client label the account, for example in an account switcher.
+         */
+        userName: string;
+        /**
          * Session expiration date in ISO 8601 format.
          */
         expire: string;
@@ -813,6 +817,40 @@ export namespace Models {
          * Most recent date in ISO 8601 format when the session successfully passed MFA challenge.
          */
         mfaUpdatedAt: string;
+    };
+
+    /**
+     * Device
+     */
+    export type Device = {
+        /**
+         * Device ID.
+         */
+        $id: string;
+        /**
+         * Device creation date in ISO 8601 format.
+         */
+        $createdAt: string;
+        /**
+         * Device update date in ISO 8601 format.
+         */
+        $updatedAt: string;
+        /**
+         * Device expiration date in ISO 8601 format.
+         */
+        expire: string;
+        /**
+         * ID of the session that is currently active on the device. Empty when no session is active, for example right after the active session was deleted.
+         */
+        activeSessionId: string;
+        /**
+         * List of sessions the device holds. Switch between them to change the active account.
+         */
+        sessions: Session[];
+        /**
+         * Secret used to authenticate the device. Carried by the device cookie; only included in the response if the request was made with an API key.
+         */
+        secret: string;
     };
 
     /**
