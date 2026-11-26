@@ -1303,6 +1303,8 @@ export class Videos extends Service {
         const uri = new URL(this.client.config.endpoint + apiPath);
         apiPayload['project'] = this.client.config.project;
 
+        apiPayload['environment'] = this.client.config.environment;
+
         apiPayload['impersonateuserid'] = this.client.config.impersonateuserid;
 
         for (const [key, value] of Object.entries(
@@ -1382,6 +1384,8 @@ export class Videos extends Service {
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         apiPayload['project'] = this.client.config.project;
+
+        apiPayload['environment'] = this.client.config.environment;
 
         apiPayload['impersonateuserid'] = this.client.config.impersonateuserid;
 
@@ -1463,6 +1467,8 @@ export class Videos extends Service {
         const uri = new URL(this.client.config.endpoint + apiPath);
         apiPayload['project'] = this.client.config.project;
 
+        apiPayload['environment'] = this.client.config.environment;
+
         apiPayload['impersonateuserid'] = this.client.config.impersonateuserid;
 
         for (const [key, value] of Object.entries(
@@ -1542,6 +1548,8 @@ export class Videos extends Service {
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         apiPayload['project'] = this.client.config.project;
+
+        apiPayload['environment'] = this.client.config.environment;
 
         apiPayload['impersonateuserid'] = this.client.config.impersonateuserid;
 
@@ -1652,6 +1660,8 @@ export class Videos extends Service {
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         apiPayload['project'] = this.client.config.project;
+
+        apiPayload['environment'] = this.client.config.environment;
 
         apiPayload['impersonateuserid'] = this.client.config.impersonateuserid;
 
@@ -2118,6 +2128,8 @@ export class Videos extends Service {
         const uri = new URL(this.client.config.endpoint + apiPath);
         apiPayload['project'] = this.client.config.project;
 
+        apiPayload['environment'] = this.client.config.environment;
+
         apiPayload['impersonateuserid'] = this.client.config.impersonateuserid;
 
         for (const [key, value] of Object.entries(
@@ -2194,6 +2206,8 @@ export class Videos extends Service {
         const uri = new URL(this.client.config.endpoint + apiPath);
         apiPayload['project'] = this.client.config.project;
 
+        apiPayload['environment'] = this.client.config.environment;
+
         apiPayload['impersonateuserid'] = this.client.config.impersonateuserid;
 
         for (const [key, value] of Object.entries(
@@ -2246,6 +2260,8 @@ export class Videos extends Service {
         const uri = new URL(this.client.config.endpoint + apiPath);
         apiPayload['project'] = this.client.config.project;
 
+        apiPayload['environment'] = this.client.config.environment;
+
         apiPayload['impersonateuserid'] = this.client.config.impersonateuserid;
 
         for (const [key, value] of Object.entries(
@@ -2289,6 +2305,8 @@ export class Videos extends Service {
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         apiPayload['project'] = this.client.config.project;
+
+        apiPayload['environment'] = this.client.config.environment;
 
         apiPayload['impersonateuserid'] = this.client.config.impersonateuserid;
 
@@ -2334,6 +2352,8 @@ export class Videos extends Service {
         const uri = new URL(this.client.config.endpoint + apiPath);
         apiPayload['project'] = this.client.config.project;
 
+        apiPayload['environment'] = this.client.config.environment;
+
         apiPayload['impersonateuserid'] = this.client.config.impersonateuserid;
 
         for (const [key, value] of Object.entries(
@@ -2377,6 +2397,8 @@ export class Videos extends Service {
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         apiPayload['project'] = this.client.config.project;
+
+        apiPayload['environment'] = this.client.config.environment;
 
         apiPayload['impersonateuserid'] = this.client.config.impersonateuserid;
 
@@ -2433,6 +2455,8 @@ export class Videos extends Service {
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         apiPayload['project'] = this.client.config.project;
+
+        apiPayload['environment'] = this.client.config.environment;
 
         apiPayload['impersonateuserid'] = this.client.config.impersonateuserid;
 
@@ -2500,6 +2524,8 @@ export class Videos extends Service {
         const uri = new URL(this.client.config.endpoint + apiPath);
         apiPayload['project'] = this.client.config.project;
 
+        apiPayload['environment'] = this.client.config.environment;
+
         apiPayload['impersonateuserid'] = this.client.config.impersonateuserid;
 
         for (const [key, value] of Object.entries(
@@ -2543,6 +2569,8 @@ export class Videos extends Service {
 
         const uri = new URL(this.client.config.endpoint + apiPath);
         apiPayload['project'] = this.client.config.project;
+
+        apiPayload['environment'] = this.client.config.environment;
 
         apiPayload['impersonateuserid'] = this.client.config.impersonateuserid;
 
