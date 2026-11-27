@@ -7,7 +7,7 @@ const client = new Client()
 
 const avatars = new Avatars(client);
 
-const result = avatars.getFlag({
+const result = await avatars.getFlag({
     code: Flag.Afghanistan,
     width: 0, // optional
     height: 0, // optional

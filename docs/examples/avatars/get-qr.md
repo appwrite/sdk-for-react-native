@@ -7,7 +7,7 @@ const client = new Client()
 
 const avatars = new Avatars(client);
 
-const result = avatars.getQR({
+const result = await avatars.getQR({
     text: '<TEXT>',
     size: 1, // optional
     margin: 0, // optional

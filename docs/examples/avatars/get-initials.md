@@ -7,7 +7,7 @@ const client = new Client()
 
 const avatars = new Avatars(client);
 
-const result = avatars.getInitials({
+const result = await avatars.getInitials({
     name: '<NAME>', // optional
     width: 0, // optional
     height: 0, // optional

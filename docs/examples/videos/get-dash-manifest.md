@@ -7,7 +7,7 @@ const client = new Client()
 
 const videos = new Videos(client);
 
-const result = videos.getDashManifest({
+const result = await videos.getDashManifest({
     videoId: '<VIDEO_ID>',
 });
 

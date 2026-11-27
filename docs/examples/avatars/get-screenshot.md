@@ -14,7 +14,7 @@ const client = new Client()
 
 const avatars = new Avatars(client);
 
-const result = avatars.getScreenshot({
+const result = await avatars.getScreenshot({
     url: 'https://example.com',
     headers: {
         'Accept-Language': 'en-US,en;q=0.9',

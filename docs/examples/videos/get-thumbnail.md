@@ -7,7 +7,7 @@ const client = new Client()
 
 const videos = new Videos(client);
 
-const result = videos.getThumbnail({
+const result = await videos.getThumbnail({
     videoId: '<VIDEO_ID>',
     thumbnailId: '<THUMBNAIL_ID>',
     width: 0, // optional
