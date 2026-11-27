@@ -7,7 +7,7 @@ const client = new Client()
 
 const videos = new Videos(client);
 
-const result = videos.getTimeline({
+const result = await videos.getTimeline({
     videoId: '<VIDEO_ID>',
 });
 

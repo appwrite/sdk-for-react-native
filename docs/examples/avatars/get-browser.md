@@ -7,7 +7,7 @@ const client = new Client()
 
 const avatars = new Avatars(client);
 
-const result = avatars.getBrowser({
+const result = await avatars.getBrowser({
     code: Browser.AvantBrowser,
     width: 0, // optional
     height: 0, // optional

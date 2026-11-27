@@ -7,7 +7,7 @@ const client = new Client()
 
 const videos = new Videos(client);
 
-const result = videos.getCmafDashManifest({
+const result = await videos.getCmafDashManifest({
     videoId: '<VIDEO_ID>',
 });
 

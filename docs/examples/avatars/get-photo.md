@@ -7,7 +7,7 @@ const client = new Client()
 
 const avatars = new Avatars(client);
 
-const result = avatars.getPhoto({
+const result = await avatars.getPhoto({
     width: 0, // optional
     height: 0, // optional
     quality: 0, // optional

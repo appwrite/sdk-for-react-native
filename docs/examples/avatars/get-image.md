@@ -7,7 +7,7 @@ const client = new Client()
 
 const avatars = new Avatars(client);
 
-const result = avatars.getImage({
+const result = await avatars.getImage({
     url: 'https://example.com',
     width: 0, // optional
     height: 0, // optional

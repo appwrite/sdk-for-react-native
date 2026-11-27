@@ -7,7 +7,7 @@ const client = new Client()
 
 const videos = new Videos(client);
 
-const result = videos.getHlsManifest({
+const result = await videos.getHlsManifest({
     videoId: '<VIDEO_ID>',
 });
 

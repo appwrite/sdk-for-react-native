@@ -7,7 +7,7 @@ const client = new Client()
 
 const storage = new Storage(client);
 
-const result = storage.getFileView({
+const result = await storage.getFileView({
     bucketId: '<BUCKET_ID>',
     fileId: '<FILE_ID>',
     token: '<TOKEN>', // optional

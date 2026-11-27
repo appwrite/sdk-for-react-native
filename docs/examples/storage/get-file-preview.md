@@ -12,7 +12,7 @@ const client = new Client()
 
 const storage = new Storage(client);
 
-const result = storage.getFilePreview({
+const result = await storage.getFilePreview({
     bucketId: '<BUCKET_ID>',
     fileId: '<FILE_ID>',
     width: 0, // optional

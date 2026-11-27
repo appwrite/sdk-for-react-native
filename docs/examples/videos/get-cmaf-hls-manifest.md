@@ -7,7 +7,7 @@ const client = new Client()
 
 const videos = new Videos(client);
 
-const result = videos.getCmafHlsManifest({
+const result = await videos.getCmafHlsManifest({
     videoId: '<VIDEO_ID>',
 });
 

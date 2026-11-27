@@ -7,7 +7,7 @@ const client = new Client()
 
 const avatars = new Avatars(client);
 
-const result = avatars.getFavicon({
+const result = await avatars.getFavicon({
     url: 'https://example.com',
 });
 

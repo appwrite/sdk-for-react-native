@@ -7,7 +7,7 @@ const client = new Client()
 
 const videos = new Videos(client);
 
-const result = videos.getCaptionManifest({
+const result = await videos.getCaptionManifest({
     videoId: '<VIDEO_ID>',
     output: VideoOutput.Hls,
     captionId: '<CAPTION_ID>',
